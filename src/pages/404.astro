@@ -1,0 +1,16 @@
+---
+// The 404: the site's own page hero and the ways back, in the home page's system. Cloudflare answers every unknown
+// path with it (wrangler.jsonc, not_found_handling).
+import PageHero from '../components/PageHero.astro';
+import { site } from '../config/site';
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+<SiteLayout bodyClass="home nf-page" title={`Page not found: ${site.name}`} description="This address is not a page on opendecisio.com.">
+	<div class="nf">
+		<PageHero
+			label="404"
+			lede="Nothing lives at this address. It may have moved with the docs, or it may have a typo."
+			links={[{ href: '/', text: 'Home' }, { href: '/docs/', text: 'Docs' }, { href: '/benchmarks/', text: 'Benchmarks' }, { href: '/demos/', text: 'Demos' }]}
+		>This page <em class="hl">isn't here</em></PageHero>
+	</div>
+</SiteLayout>

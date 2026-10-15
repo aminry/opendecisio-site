@@ -1,0 +1,44 @@
+---
+// One tabbed code block for every way in: Ollama, a GPU server, Docker and a Mac with MLX, each at most twelve lines
+// and each the README's own block (home.mjs), set like the hero's install line: 14 px mono, a "$" prompt on each command,
+// the command, its flags and its comments in their own colours, and the box as wide as its longest line.
+import { install, laptop } from '../../lib/home.mjs';
+const tabs = [
+	{ id: 'ollama', label: 'Ollama', text: laptop().pull, docs: '/docs/quickstart/ollama/' },
+	{ id: 'gpu', label: 'GPU', text: install('GPU server'), docs: '/docs/quickstart/gpu-server/' },
+	{ id: 'docker', label: 'Docker', text: install('Docker'), docs: '/docs/quickstart/docker/' },
+	{ id: 'mlx', label: 'MLX', text: install('Mac with MLX'), docs: '/docs/quickstart/mac-mlx/' },
+];
+for (const t of tabs) if (t.text.split('\n').length > 12) throw new Error(`index: the ${t.label} block is longer than twelve lines`);
+// A line into its parts: the command, then each argument (a flag, a path or a word), then any trailing comment.
+const parse = (line: string) => {
+	if (line.trim().startsWith('#')) return { comment: line.trim(), only: true, cmd: '', args: [] as string[] };
+	const m = /^(.*?)(\s+#.*)?$/.exec(line)!;
+	const words = m[1].trim().split(/\s+/).filter(Boolean);
+	return { comment: m[2]?.trim(), only: m[1].trim() === '' && !!m[2], cmd: words[0], args: words.slice(1) };
+};
+const kind = (w: string) => (/^--?[A-Za-z]/.test(w) ? 'fl' : /^(https?:\/\/|[\w.-]+\/[\w./-]+$)/.test(w) ? 'pa' : 'ar');
+---
+<section class="section" id="try" aria-labelledby="try-h">
+	<div class="wrap">
+		<div class="section__head"><p class="kicker">Get started</p><h2 id="try-h">Four ways in, <em class="hl">one command each.</em></h2></div>
+		<div class="gs" data-tabs data-reveal>
+			<div class="gs__bar">
+				<div class="gs__tabs" role="tablist" aria-label="Where to run it">
+					{tabs.map((t, i) => <button type="button" role="tab" id={`gs-${t.id}`} aria-controls={`gsp-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'}>{t.label}</button>)}
+				</div>
+			</div>
+			{tabs.map((t, i) => (
+				<div class:list={['gs__panel', { on: i === 0 }]} role="tabpanel" id={`gsp-${t.id}`} aria-labelledby={`gs-${t.id}`}>
+					<div class="gs__box"><pre class="gcode" aria-label={`${t.label}: start`}><code>{t.text.split('\n').map((line) => {
+						const p = parse(line);
+						return p.only
+							? <span class="gc-line gc-only"><span class="gc-c">{p.comment}</span></span>
+							: <span class="gc-line" data-cmd={`${[p.cmd, ...p.args].join(' ')}`}><span class="gc-p" aria-hidden="true">$ </span><span class="gc-cmd">{p.cmd}</span>{p.args.map((a) => <> <span class={`gc-${kind(a)}`}>{a}</span></>)}{p.comment && <span class="gc-c">{'  '}{p.comment}</span>}</span>;
+					})}</code></pre><button type="button" class="install__copy gs__copy" data-copy-panel hidden>copy</button></div>
+					<p class="small"><a href={t.docs}>The {t.label} guide</a>, and <a href="/docs/quickstart/">every path</a>.</p>
+				</div>
+			))}
+		</div>
+	</div>
+</section>

@@ -1,0 +1,98 @@
+# Opens a pull request that moves the site to decisio's latest release: the pin,
+# the clips' record and posters, and every published command run again on the
+# CPU stand-in. Daily, and on demand.
+name: bump-decisio
+
+on:
+  schedule:
+    - cron: '17 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: bump-decisio
+  cancel-in-progress: false
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Is there a newer release?
+        id: release
+        run: |
+          latest=$(gh api repos/aminry/decisio/releases/latest --jq .tag_name)
+          pinned=$(jq -r .tag upstream.json)
+          branch="bump/decisio-${latest}"
+          echo "tag=${latest}" >> "$GITHUB_OUTPUT"
+          echo "branch=${branch}" >> "$GITHUB_OUTPUT"
+          if [ "$latest" = "$pinned" ]; then
+            echo "The site is on ${pinned}, the latest release."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          elif git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
+            echo "A pull request branch for ${latest} already exists."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pin the release
+        if: steps.release.outputs.skip == 'false'
+        run: |
+          tag='${{ steps.release.outputs.tag }}'
+          commit=$(git ls-remote https://github.com/aminry/decisio "refs/tags/${tag}^{}" | cut -f1)
+          [ -n "$commit" ] || commit=$(git ls-remote https://github.com/aminry/decisio "refs/tags/${tag}" | cut -f1)
+          jq --arg tag "$tag" --arg commit "$commit" '.tag = $tag | .commit = $commit' upstream.json > upstream.json.new
+          mv upstream.json.new upstream.json
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        if: steps.release.outputs.skip == 'false'
+        with:
+          node-version: 22
+          cache: npm
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        if: steps.release.outputs.skip == 'false'
+      - name: Install
+        if: steps.release.outputs.skip == 'false'
+        run: |
+          npm ci
+          sudo apt-get update -q && sudo apt-get install -y -q ffmpeg
+
+      - name: Clips and posters
+        if: steps.release.outputs.skip == 'false'
+        run: npm run media
+
+      - name: Run every published command on the CPU stand-in
+        id: verify
+        if: steps.release.outputs.skip == 'false'
+        continue-on-error: true
+        shell: bash
+        run: node scripts/verify-commands.mjs 2>&1 | tee verify.log
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always() && steps.release.outputs.skip == 'false'
+        with:
+          name: verify-log
+          path: verify.log
+          retention-days: 30
+
+      - name: Commit through the API (signed by GitHub) and open the pull request
+        if: always() && steps.release.outputs.skip == 'false' && steps.verify.outcome != 'cancelled'
+        run: node scripts/open-bump-pr.mjs
+        env:
+          BUMP_TAG: ${{ steps.release.outputs.tag }}
+          BUMP_BRANCH: ${{ steps.release.outputs.branch }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Start the checks on the pull request
+        if: always() && steps.release.outputs.skip == 'false' && steps.verify.outcome != 'cancelled'
+        run: gh workflow run ci.yml --ref '${{ steps.release.outputs.branch }}'

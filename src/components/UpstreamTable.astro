@@ -1,0 +1,40 @@
+---
+// A table from a decisio file, as written there; columns that name a base
+// carry its colour. Stacks into labelled rows on phones.
+import { baseOfName, colourOf } from '../config/bases.mjs';
+import { jevbenchCounts } from '../lib/text.mjs';
+interface Props { head: string[]; rows: string[][]; numeric?: boolean; caption?: string; }
+const { head, rows, numeric = true, caption } = Astro.props;
+const strip = (html: string) => html.replace(/<[^>]+>/g, '');
+const colour = (h: string) => {
+	const base = baseOfName(h);
+	return base ? colourOf(base) : undefined;
+};
+---
+<div class="table-scroll" tabindex="0" role="region" aria-label={caption ?? "Table"}>
+	<table class="data-table data-table--stack">
+		{caption && <caption class="sr-only">{caption}</caption>}
+		<thead>
+			<tr>
+				{head.map((h, i) => (
+					<th scope="col" class:list={[{ num: numeric && i > 0, 'base-col': !!colour(h) }, colour(h)]}>
+						{colour(h) && <span class="dot" aria-hidden="true"></span>}<span set:html={h} />
+					</th>
+				))}
+			</tr>
+		</thead>
+		<tbody>
+			{rows.map((row) => (
+				<tr>
+					{row.map((cell, i) =>
+						i === 0 ? (
+							<th scope="row" set:html={jevbenchCounts(cell)} />
+						) : (
+							<td class:list={[{ num: numeric }, colour(head[i])]} data-label={strip(head[i])}><span set:html={jevbenchCounts(cell)} /></td>
+						),
+					)}
+				</tr>
+			))}
+		</tbody>
+	</table>
+</div>

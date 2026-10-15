@@ -1,0 +1,34 @@
+---
+// A demo clip from the pinned release: sized, with its poster as a lazily
+// loaded image over it (a video's poster attribute loads with the page), its
+// source attached only when it nears the viewport, played only when the reader
+// has not asked for reduced motion, and always pausable.
+import media from '../../data/media.json';
+interface Props { name: string; caption: string; base?: string; }
+const { name, caption, base } = Astro.props;
+const size = (media.clips as Record<string, { width: number; height: number }>)[name];
+if (!size) throw new Error(`Clip: ${name} is not in src/data/media.json; run npm run media`);
+---
+<figure class:list={['clip', base]}>
+	<div class="clip__frame">
+		<video
+			class="clip__video"
+			data-src={`/media/upstream/${name}.mp4`}
+			width={size.width}
+			height={size.height}
+			preload="none"
+			muted
+			loop
+			playsinline
+			aria-describedby={`clip-${name}`}
+		></video>
+		<img class="clip__poster" src={`/posters/${name}.webp`} width={size.width} height={size.height} loading="lazy" decoding="async" alt="" />
+	</div>
+	<div class="clip__bar">
+		<button class="clip__toggle" type="button" aria-pressed="false" data-label-play="Play clip" data-label-pause="Pause clip" aria-label="Play clip">
+			<svg class="clip__icon clip__icon--play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z"></path></svg>
+			<svg class="clip__icon clip__icon--pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h3v11H4zM9 2.5h3v11H9z"></path></svg>
+		</button>
+		<figcaption class="clip__caption" id={`clip-${name}`}>{base && <span class="dot" aria-hidden="true"></span>}<span set:html={caption} /></figcaption>
+	</div>
+</figure>

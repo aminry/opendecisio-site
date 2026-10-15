@@ -1,0 +1,462 @@
+/* Articles and news, in the home page's system (home.css: body.home): Geist, the dark base with its light twin, glass
+   cards with the same radii and offset shadow, accent labels, and the same timings (120, 240 and 480 ms;
+   cubic-bezier(.16, 1, .3, 1) for the outs). Motion is a card rising once on load and a lift on hover; it stops under
+   prefers-reduced-motion. */
+
+/* The index's hero is the shared page hero (src/components/PageHero.astro, pages.css). */
+/* The cards: the newest spans two columns of three. */
+.posts {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 24px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (max-width: 64rem) {
+	.posts {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 40rem) {
+	.posts {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.post-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 22px 24px 20px;
+}
+
+.post-card--lead {
+	grid-column: span 2;
+	padding: 30px 32px 26px;
+	background: linear-gradient(180deg, color-mix(in srgb, var(--d-accent-fill) 10%, var(--d-surface-2)), var(--d-surface));
+}
+
+@media (max-width: 40rem) {
+	.post-card--lead {
+		grid-column: auto;
+		padding: 22px 24px 20px;
+	}
+}
+
+.post-card:focus-within {
+	border-color: var(--d-accent-line);
+}
+
+.post-card__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 0.6rem;
+	margin: 0;
+	font: 500 12px/1.4 var(--h-mono);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--d-accent);
+}
+
+.home .post-card__title {
+	margin: 0;
+	font-size: 22px;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	text-shadow: none;
+}
+
+.home .post-card--lead .post-card__title {
+	font-size: clamp(26px, 2.6vw, 36px);
+	line-height: 1.1;
+	letter-spacing: -0.03em;
+	max-width: 24ch;
+}
+
+/* The whole card is the link: the title's link covers it, and stays the one tab stop. */
+.post-card__title a {
+	color: var(--h-ink);
+	text-decoration: none;
+}
+
+.post-card__title a::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: 14px;
+}
+
+.post-card__title a:focus-visible {
+	outline: none;
+}
+
+.post-card:focus-within {
+	outline: 2px solid var(--d-focus);
+	outline-offset: 3px;
+}
+
+.post-card__text {
+	margin: 0;
+	color: var(--h-dim);
+	font-size: 16px;
+}
+
+.post-card__note {
+	position: relative;
+	z-index: 1;
+	margin: 0;
+	padding-top: 10px;
+	border-top: 1px solid var(--h-line);
+	color: var(--h-dim);
+	font-size: 14px;
+}
+
+.post-card__note a {
+	color: var(--d-link);
+}
+
+.post-card__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin: 0;
+}
+
+.post-tag {
+	font: 500 11px/1 var(--h-mono);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	padding: 5px 9px;
+	color: var(--h-dim);
+	border: 1px solid var(--h-line-2);
+	border-radius: 99px;
+}
+
+.post-card__go {
+	margin-top: auto;
+	padding-top: 6px;
+	font: 500 13px/1 var(--h-mono);
+	letter-spacing: 0.06em;
+	color: var(--d-accent);
+}
+
+.post-card__go::after {
+	content: '->';
+	display: inline-block;
+	margin-left: 0.5em;
+	transition: transform var(--t-base) var(--e-out);
+}
+
+.post-card:hover .post-card__go::after {
+	transform: translateX(4px);
+}
+
+/* No posts yet. */
+.posts-empty {
+	max-width: 40rem;
+	margin: 0;
+	padding: 28px 30px;
+}
+
+.posts-empty__title {
+	margin: 0 0 6px;
+	color: var(--h-ink);
+	font-size: 22px;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+.posts-empty__text {
+	margin: 0;
+	color: var(--h-dim);
+}
+
+/* One post. */
+.home .post__head {
+	padding-block: 48px 36px;
+}
+
+.home .post__head h1 {
+	max-width: 22ch;
+}
+
+.post__head .kicker a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.post__head .kicker a:hover {
+	text-decoration: underline;
+}
+
+.post__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 0.7rem;
+	margin: 0;
+	font: 500 13px/1.4 var(--h-mono);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--d-accent);
+}
+
+.home .post__origin {
+	max-width: 40rem;
+	margin: 22px 0 0;
+	padding: 14px 18px;
+	font-size: 15px;
+	color: var(--h-dim);
+}
+
+/* The body at a reading width; beside it on a wide screen, the other posts of its kind, staying in view. */
+.post__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 46rem);
+	justify-content: start;
+	gap: 64px;
+	padding-bottom: 96px;
+}
+
+@media (min-width: 75rem) {
+	.post__grid {
+		grid-template-columns: minmax(0, 46rem) minmax(0, 20rem);
+		justify-content: space-between;
+		align-items: start;
+	}
+
+	.post__more {
+		position: sticky;
+		top: 96px;
+	}
+}
+
+.prose {
+	color: color-mix(in srgb, var(--d-ink) 88%, var(--h-bg));
+	font-size: 18px;
+	line-height: 1.7;
+}
+
+.prose > * + * {
+	margin-top: 1.1em;
+}
+
+.home .prose h2 {
+	margin-top: 2.2em;
+	font-size: clamp(24px, 2.4vw, 32px);
+	text-shadow: none;
+	letter-spacing: -0.03em;
+}
+
+.home .prose h3 {
+	margin-top: 1.8em;
+	font-size: 20px;
+}
+
+.prose a {
+	color: var(--d-link);
+	text-underline-offset: 0.2em;
+}
+
+.prose ul,
+.prose ol {
+	padding-left: 1.3em;
+}
+
+.prose li + li {
+	margin-top: 0.4em;
+}
+
+.prose li::marker {
+	color: var(--d-accent);
+}
+
+.prose blockquote {
+	margin-inline: 0;
+	padding: 4px 0 4px 20px;
+	border-left: 3px solid var(--d-accent-line);
+	color: var(--h-dim);
+}
+
+.prose :not(pre) > code {
+	font-size: 0.88em;
+	padding: 0.1em 0.35em;
+	border: 1px solid var(--h-line);
+	border-radius: 6px;
+	background: color-mix(in srgb, var(--d-ink) 6%, transparent);
+}
+
+/* Code: Expressive Code frames a fenced block (the docs' code, scrolled sideways, never wrapped); a bare pre gets the
+   home page's code panel. */
+.prose pre:not(.expressive-code pre) {
+	margin: 1.4em 0;
+	padding: 16px 20px;
+	overflow-x: auto;
+	border: 1px solid var(--h-line-2);
+	border-radius: 12px;
+	background: var(--d-code-bg);
+	box-shadow: 5px 5px 0 var(--h-ink-shadow);
+	color: var(--d-code-ink);
+	font: 14px/1.7 var(--h-mono);
+	white-space: pre;
+}
+
+.prose img,
+.prose video {
+	max-width: 100%;
+	height: auto;
+	border: 1px solid var(--d-line-strong);
+	border-radius: 12px;
+	box-shadow: inset 0 1px 0 var(--d-hi), 6px 6px 0 var(--d-shadow);
+}
+
+.prose .table-wrap {
+	container-type: inline-size;
+}
+
+.prose table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 15px;
+	font-variant-numeric: tabular-nums;
+}
+
+.prose th,
+.prose td {
+	padding: 8px 12px;
+	border-bottom: 1px solid var(--h-line);
+	text-align: left;
+}
+
+/* A table with three columns or more in a column narrower than 40rem becomes one labelled block per row, so nothing scrolls or clips. */
+@container (max-width: 40rem) {
+	.prose .docs-table:has(tr > :nth-child(3)) :is(thead, tbody, tr, td) {
+		display: block;
+	}
+
+	.prose .docs-table:has(tr > :nth-child(3)) thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+	}
+
+	.prose .docs-table:has(tr > :nth-child(3)) tr {
+		padding-block: 10px;
+		border-bottom: 1px solid var(--h-line);
+	}
+
+	.prose .docs-table:has(tr > :nth-child(3)) td {
+		padding: 2px 0;
+		border: 0;
+	}
+
+	.prose .docs-table:has(tr > :nth-child(3)) td:first-child {
+		font-weight: 650;
+	}
+
+	.prose .docs-table:has(tr > :nth-child(3)) td[data-label]:not(:first-child)::before {
+		content: attr(data-label) ': ';
+		color: var(--h-dim);
+	}
+}
+
+.prose hr {
+	border: 0;
+	border-top: 1px solid var(--h-line);
+	margin-block: 2.4em;
+}
+
+.home .post__more-h {
+	margin: 0 0 var(--d-space-4);
+	font: 500 12px/1.2 var(--h-mono);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	text-shadow: none;
+	color: var(--h-dim);
+}
+
+/* The rail's cards: the date, the title and the link. */
+.posts--rail {
+	grid-template-columns: minmax(0, 1fr);
+	gap: 16px;
+}
+
+@media (min-width: 40rem) and (max-width: 74.99rem) {
+	.posts--rail {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.posts--rail .post-card {
+	padding: 16px 18px;
+	gap: 8px;
+}
+
+.home .posts--rail .post-card__title {
+	font-size: 16px;
+	line-height: 1.3;
+}
+
+.post__feed {
+	margin: 28px 0 0;
+}
+
+.home .post__feed .chip {
+	display: inline-block;
+	padding: 6px 14px;
+	text-decoration: none;
+}
+
+/* Motion: each card rises once on load, a step apart; the hero's label and headline settle first. */
+@media (prefers-reduced-motion: no-preference) {
+	.post__head > .wrap > * {
+		animation: post-rise var(--t-slow) var(--e-out) both;
+	}
+
+	.post__head > .wrap > :nth-child(2) {
+		animation-delay: 60ms;
+	}
+
+	.post__head > .wrap > :nth-child(n + 3) {
+		animation-delay: 120ms;
+	}
+
+	/* Backwards only, so once it has run the animation leaves the card's tilt alone. */
+	.post-card {
+		animation: post-rise var(--t-slow) var(--e-out) backwards;
+	}
+
+	.post-card[data-i='1'] { animation-delay: 80ms; }
+	.post-card[data-i='2'] { animation-delay: 140ms; }
+	.post-card[data-i='3'] { animation-delay: 200ms; }
+	.post-card[data-i='4'] { animation-delay: 260ms; }
+	.post-card[data-i='5'] { animation-delay: 320ms; }
+	.post-card[data-i='6'] { animation-delay: 380ms; }
+}
+
+@keyframes post-rise {
+	from {
+		opacity: 0;
+		transform: translateY(14px);
+	}
+}
+
+/* A fenced block is a dark panel in both themes, as the home page's code is, so in the light theme its tokens take
+   Expressive Code's dark-panel colours (--0) instead of the light ones (--1). */
+:root[data-theme='light'] .prose .expressive-code .ec-line span.ec-tok {
+	color: var(--0, #d5deea);
+}
+
+/* The hero's glow: with no panel in front of it here, smaller, fainter and higher than on the home page. */
+.post__head .hero__glow {
+	width: 560px;
+	height: 400px;
+	top: -220px;
+	right: -80px;
+	opacity: 0.55;
+}

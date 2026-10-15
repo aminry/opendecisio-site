@@ -1,0 +1,14 @@
+node_modules/
+dist/
+dist-*/
+.astro/
+.upstream/
+public/media/upstream/
+.lighthouseci/
+test-results/
+playwright-report/
+.DS_Store
+public/social-preview.png
+.verify/
+.lighthouse/
+.browser/

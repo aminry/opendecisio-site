@@ -1,0 +1,54 @@
+---
+// The index of articles or news, in the home page's style: a hero (label, headline, one sentence, the feed), the
+// newest post as a larger card and the rest as a grid of cards, newest first; with no posts, a quiet panel that says so
+// and points at the feed and the repository. The cards rise in once on load (CSS only, off under reduced motion).
+import { dateText, externalNote, isExternal, isoDay, readingMinutes, where } from '../lib/posts.mjs';
+import { site } from '../config/site';
+import PageHero from './PageHero.astro';
+import '../styles/home.css';
+import '../styles/posts.css';
+interface Props { kind: 'articles' | 'news'; items: any[]; label: string; headline: string; lede: string; }
+const { kind, items, label, headline, lede } = Astro.props;
+const [first, ...rest] = items;
+const card = (p: any, lead = false) => ({
+	href: where(kind, p),
+	out: isExternal(p),
+	note: isExternal(p) ? externalNote(p) : '',
+	title: p.data.title,
+	text: p.data.description ?? p.data.summary,
+	when: dateText(p.data.date),
+	iso: isoDay(p.data.date),
+	minutes: isExternal(p) ? 0 : readingMinutes(p),
+	tags: (p.data.tags ?? []).filter((t: string) => t.toLowerCase() !== (p.data.originalSite ?? '').toLowerCase()),
+	from: p.data.originalSite,
+	lead,
+});
+const cards = [first && card(first, true), ...rest.map((p) => card(p))].filter(Boolean) as ReturnType<typeof card>[];
+---
+<PageHero label={label} lede={lede} links={[{ href: `/${kind}/rss.xml`, text: 'RSS feed' }, kind === 'articles' ? { href: '/news/', text: 'News' } : { href: '/articles/', text: 'Articles' }]}>{headline}</PageHero>
+<section class="section posts-list">
+	<div class="wrap">
+		{cards.length === 0 ? (
+			<div class="posts-empty glass">
+				<p class="posts-empty__title">Nothing here yet.</p>
+				<p class="posts-empty__text">The first posts are on their way. The <a href={`/${kind}/rss.xml`}>RSS feed</a> will carry them, and the <a href={`${site.repository}/releases`}>releases</a> and <a href="/docs/releases/">the changelog</a> have what has shipped.</p>
+			</div>
+		) : (
+			<ul class="posts">
+				{cards.map((c, i) => (
+					<li class:list={['post-card', 'tile', 'tilt', { 'post-card--lead': c.lead, 'tile--active': c.lead }]} data-i={i}>
+						<p class="post-card__meta"><time datetime={c.iso}>{c.when}</time>{c.out ? <><span aria-hidden="true">·</span><span>on {c.from}</span></> : <><span aria-hidden="true">·</span><span>{c.minutes} min read</span></>}</p>
+						<h2 class="post-card__title" data-history={c.out ? '' : undefined}><a href={c.href}>{c.title}</a></h2>
+						<p class="post-card__text">{c.text}</p>
+						{c.note && <p class="post-card__note" set:html={c.note} />}
+						{c.tags.length > 0 && <p class="post-card__tags">{c.tags.map((t: string) => <span class="post-tag">{t}</span>)}</p>}
+						<span class="post-card__go" aria-hidden="true">{c.out ? `Read on ${c.from}` : 'Read'}</span>
+					</li>
+				))}
+			</ul>
+		)}
+	</div>
+</section>
+<script>
+	import '../scripts/depth.ts';
+</script>

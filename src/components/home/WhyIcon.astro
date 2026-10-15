@@ -1,0 +1,40 @@
+---
+// A larger animated graphic for each "Why Decisio" card; it draws when the card scrolls into view. The bars of the first
+// one are a recorded decision's own probabilities; the rest are drawings, with no text in them.
+interface Props { kind: number; bars?: number[]; }
+const { kind, bars = [0.9, 0.6, 0.35] } = Astro.props;
+---
+<svg class="wi" viewBox="0 0 240 96" aria-hidden="true">
+	{kind === 0 ? (
+		<>
+			{/* One read, three answers: a document, three lines fanning out, three bars. */}
+			<rect class="wi-doc" x="8" y="24" width="38" height="48" rx="5" />
+			<path class="wi-line wi-dimline" d="M16 38H38M16 48H38M16 58H30" />
+			{[18, 48, 78].map((y, i) => (
+				<>
+					<path class="wi-line" pathLength="1" d={`M48 48C84 48 84 ${y} 112 ${y}`} />
+					<rect class="wi-rail" x="116" y={y - 5} width="112" height="10" rx="5" />
+					<rect class="wi-grow wi-hot" x="116" y={y - 5} width={Math.max(3, (bars[i] ?? 0.3) * 112).toFixed(1)} height="10" rx="5" />
+				</>
+			))}
+		</>
+	) : kind === 1 ? (
+		<>
+			{/* A long prompt and a long list of options: a bar that fills the whole window, and a field of options. */}
+			<rect class="wi-rail" x="8" y="12" width="224" height="14" rx="7" />
+			<rect class="wi-grow wi-hot" x="8" y="12" width="224" height="14" rx="7" />
+			{Array.from({ length: 5 }, (_, r) => Array.from({ length: 16 }, (_, c) => <circle class="wi-pop wi-dot" cx={14 + c * 14.2} cy={44 + r * 11} r="3.2" />))}
+		</>
+	) : (
+		<>
+			{/* Your hardware, no per-token bill: a chip, its pins, and a meter that stays at zero. */}
+			<rect class="wi-chip" x="22" y="22" width="52" height="52" rx="9" />
+			<path class="wi-line wi-dimline" d="M34 12V22M48 12V22M62 12V22M34 74V84M48 74V84M62 74V84M12 36H22M12 48H22M12 60H22M74 36H84M74 48H84M74 60H84" />
+			<rect class="wi-core wi-pop" x="36" y="36" width="24" height="24" rx="4" />
+			<rect class="wi-rail" x="112" y="44" width="116" height="10" rx="5" />
+			<path class="wi-line wi-hot-s" pathLength="1" d="M112 36V62M170 40V58M228 40V58" />
+			<circle class="wi-coin" cx="170" cy="22" r="9" />
+			<path class="wi-line wi-strike" pathLength="1" d="M160 32L180 12" />
+		</>
+	)}
+</svg>

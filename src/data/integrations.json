@@ -1,0 +1,101 @@
+{
+	"source": {
+		"repository": "aminry/decisio-examples",
+		"commit": "343691565ad708f99389bc863e3f64c398856fed",
+		"note": "Each integration's README in decisio-examples at the commit that the recorded decisions come from; the version and check counts are also in decisio's README (Works with), which the build compares them with.",
+		"files": {
+			"langchain": { "path": "integrations/langchain/README.md", "sha256": "7e0fb9cef47480357dbcf3086d15ba8ff6ecb1554dcb302b6191150d308863d6" },
+			"ai-sdk": { "path": "integrations/ai-sdk/README.md", "sha256": "53077b044918c8b92ca4716bc101d4ea09d2ec86d424befa5af0a9f16e12a4dc" },
+			"n8n": { "path": "integrations/n8n/README.md", "sha256": "3091962d9f15c2767ad01173d65094447b4133aafe6b58b471b9c11e87f8a5b4" },
+			"tanstack": { "path": "integrations/tanstack/README.md", "sha256": "a6f840cec2b0fb36fb59775650aed2057d3c3681f2c2e4f032c337c9d35011a6" },
+			"pipecat": { "path": "integrations/pipecat/README.md", "sha256": "89c8d95c0eb2777f838c0a89d5b561cf784dd939b68b920648e946ddd544d50a" }
+		}
+	},
+	"items": [
+		{
+			"id": "langchain",
+			"name": "LangChain",
+			"readmeName": "LangChain",
+			"package": "langchain-typesafe",
+			"version": "0.0.1a3",
+			"checks": 42,
+			"language": "Python 3.12",
+			"entry": "TypeSafeClassifier",
+			"baseUrl": "no /v1: the class appends it; the base_url argument or TYPESAFE_BASE_URL",
+			"v1": false,
+			"key": "required: a dummy one works (ValueError without)",
+			"on422": "TypeSafeUnprocessableEntityError, status 422, the server's detail on its body; not retried",
+			"timeout": "30 seconds, no retries",
+			"snippet": { "lang": "python", "text": "from langchain_typesafe import TypeSafeClassifier\n\nclassifier = TypeSafeClassifier(base_url=\"http://127.0.0.1:8000\", api_key=\"unused\")" },
+			"findings": "Nothing broke. The class marks itself beta and logs a warning when built. It checks a question before sending (a choice with no options never reaches the server), and it drops the abstention fields, so a caller cannot tell that a server abstained."
+		},
+		{
+			"id": "ai-sdk",
+			"name": "Vercel AI SDK",
+			"readmeName": "Vercel AI SDK",
+			"package": "ai + @ai-sdk/typesafe-ai",
+			"version": "ai 7.0.131, @ai-sdk/typesafe-ai 3.0.15",
+			"checks": 42,
+			"language": "Node 22",
+			"entry": "createTypeSafeAi(...).decisionModel(...) with experimental_decide",
+			"baseUrl": "must end in /v1 (http://host:port/v1); TYPESAFE_AI_BASE_URL is read when the provider is created",
+			"v1": true,
+			"key": "required: apiKey or TYPESAFE_AI_API_KEY (LoadAPIKeyError without)",
+			"on422": "APICallError, statusCode 422, not retryable; the message is the server's detail as JSON",
+			"timeout": "none set (Node's fetch defaults apply); maxRetries 2 for retryable failures",
+			"snippet": { "lang": "js", "text": "import { createTypeSafeAi } from \"@ai-sdk/typesafe-ai\";\n\nconst typesafe = createTypeSafeAi({ baseURL: \"http://127.0.0.1:8000/v1\", apiKey: \"unused\" });\nconst model = typesafe.decisionModel(\"decisio-gemma-4-31b-it-letters\");" },
+			"findings": "The one real difference from the other integrations is that baseURL needs /v1; without it the call fails loudly with a 404. The decision function throws if the chosen option is not the most probable one, which a server run with --abstain-option can produce; that case was emulated, not seen on a real abstaining server."
+		},
+		{
+			"id": "n8n",
+			"name": "n8n",
+			"readmeName": "n8n",
+			"package": "n8n-nodes-jev",
+			"version": "n8n 2.35.7, n8n-nodes-jev 0.2.3",
+			"checks": 44,
+			"language": "Node 22 (n8n 2.42 and later need Node 24 and were not run)",
+			"entry": "the community node's credential and its decision nodes",
+			"baseUrl": "the credential's Base URL, with no /v1; its default is the hosted address, so a self-hosted server changes it",
+			"v1": false,
+			"key": "required in the credential: any string",
+			"on422": "a NodeApiError with httpCode 422 and the server's detail; with Continue on Error the detail is only in the item's error object",
+			"timeout": "none unless added under Options; retries only on 429 and 529",
+			"snippet": null,
+			"findings": "Nothing broke. Simplify Output is on by default and returns one flat value per question, so probabilities, legend and usage are dropped; turn it off to get the server's response unchanged."
+		},
+		{
+			"id": "tanstack",
+			"name": "TanStack AI",
+			"readmeName": "TanStack AI",
+			"package": "@tanstack/ai + @tanstack/ai-typesafe",
+			"version": "@tanstack/ai 0.65.1, @tanstack/ai-typesafe 0.1.8",
+			"checks": 39,
+			"language": "Node 22",
+			"entry": "createTypesafeDecider(...) with decide()",
+			"baseUrl": "no /v1: the adapter posts to {baseURL}/v1/systemone; there is no environment variable for it",
+			"v1": false,
+			"key": "required: createTypesafeDecider takes it directly, typesafeDecider reads TYPESAFE_API_KEY",
+			"on422": "an Error whose message starts \"TypeSafe evaluate request failed: 422 Unprocessable Entity\" and carries the body; not retried",
+			"timeout": "none set (Node's fetch defaults apply); no retries",
+			"snippet": { "lang": "js", "text": "import { createTypesafeDecider } from \"@tanstack/ai-typesafe\";\n\nconst adapter = createTypesafeDecider(\"decisio-gemma-4-31b-it-letters\", \"unused\", { baseURL: \"http://127.0.0.1:8000\" });" },
+			"findings": "Nothing broke. A base URL ending in /v1 posts to /v1/v1/systemone and fails with a 404, the opposite of the Vercel AI SDK's provider. The adapter drops the abstention fields and the x-decisio response headers."
+		},
+		{
+			"id": "pipecat",
+			"name": "Pipecat",
+			"readmeName": "Pipecat",
+			"package": "pipecat-ai[jev]",
+			"version": "pipecat-ai 1.12.0",
+			"checks": 39,
+			"language": "Python 3.12",
+			"entry": "JevClient and JevClassifier in pipecat.classifiers.jev",
+			"baseUrl": "no /v1; always pass base_url, because the default is the hosted address",
+			"v1": false,
+			"key": "required: JevClient(api_key=\"\") raises ValueError",
+			"on422": "ClassifierError \"HTTP 422\"; the server's detail is discarded",
+			"timeout": "10 seconds; 3 retries, on 429 and 529 only",
+			"snippet": { "lang": "python", "text": "from pipecat.classifiers.jev import JevClient\n\nclient = JevClient(api_key=\"unused\", base_url=\"http://127.0.0.1:8000\")" },
+			"findings": "Nothing broke. A 422 loses its reason (only \"HTTP 422\" is raised), the default timeout is short at 10 seconds, and the classifier's results leave out the abstention fields."
+		}
+	]
+}

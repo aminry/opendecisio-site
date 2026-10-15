@@ -1,0 +1,27 @@
+---
+// "How it works", as three scenes the reader steps through or lets play: the request, the read-once cache and the
+// threshold (src/lib/scenes.mjs, drawn from launch_facts.public.json). All three are in the page; the one on show animates.
+import { scenes } from '../../lib/scenes.mjs';
+const steps = scenes();
+---
+<div class="steps2" data-steps data-reveal>
+	<div class="steps2__tabs" role="tablist" aria-label="How it works">
+		{steps.map((s, i) => (
+			<button type="button" class="steps2__tab" role="tab" id={`tab-${s.id}`} aria-controls={`panel-${s.id}`} aria-selected={i === 0 ? 'true' : 'false'} data-step={i}>
+				<svg class="ti" viewBox="0 0 48 24" aria-hidden="true">
+					{i === 0 ? <><path class="ti-line" pathLength="1" d="M4 12H22" /><rect class="ti-grow" x="26" y="6" width="18" height="4" rx="2" /><rect class="ti-grow" x="26" y="14" width="10" height="4" rx="2" /></>
+						: i === 1 ? <><rect class="ti-grow" x="4" y="9" width="26" height="6" rx="3" /><rect class="ti-pop" x="34" y="9" width="3" height="6" rx="1" /><rect class="ti-pop" x="39" y="9" width="3" height="6" rx="1" /></>
+						: <><rect class="ti-rail" x="4" y="9" width="40" height="6" rx="3" /><rect class="ti-grow" x="4" y="9" width="33" height="6" rx="3" /><path class="ti-line" pathLength="1" d="M37 3V21" /></>}
+				</svg>
+				<b>{i + 1}</b> {s.label}
+			</button>
+		))}
+	</div>
+	{steps.map((s, i) => (
+		<div class:list={['steps2__panel', { on: i === 0 }]} role="tabpanel" id={`panel-${s.id}`} aria-labelledby={`tab-${s.id}`} data-panel={i}>
+			<p class="steps2__text">{s.text}</p>
+			<div class="steps2__scene" set:html={s.svg} />
+		</div>
+	))}
+	<p class="steps2__ctl"><button type="button" class="chip" data-steps-play>Replay</button></p>
+</div>

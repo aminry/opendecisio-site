@@ -1,0 +1,1939 @@
+/* The docs' share of the design system: Starlight's own components, set in
+   the site's type and colour (tokens.css maps the colours). */
+
+.site-title {
+	font-family: var(--d-font-display);
+	font-weight: 650;
+	letter-spacing: -0.01em;
+	color: var(--sl-color-white);
+	gap: 0.55rem;
+}
+
+.site-title img {
+	height: 1.375rem;
+	width: auto;
+}
+
+.sl-markdown-content :is(h1, h2, h3, h4) {
+	letter-spacing: -0.015em;
+}
+
+h1#_top {
+	letter-spacing: -0.025em;
+}
+
+/* A table from the decisio docs fits its column and wraps its cells; nothing is
+   clipped or scrolled at any width (checked by scripts/checks/browser.mjs). In a
+   column narrower than 40rem a table of three columns or more, and narrower than 60rem
+   one of six or more, becomes one block per row, each value labelled by its column (src/lib/rehype-tables.mjs). */
+.sl-markdown-content .table-wrap {
+	container-type: inline-size;
+}
+
+.sl-markdown-content .table-wrap > table {
+	display: table;
+	width: 100%;
+	margin: 0;
+	table-layout: auto;
+	font-size: var(--sl-text-sm);
+	font-variant-numeric: tabular-nums;
+}
+
+/* WebKit does not size a table column by the breaks overflow-wrap: anywhere and
+   word-break: break-word allow (a path in code stayed one unbreakable word), so a
+   path or name in code may break between any two characters, which every engine
+   sizes by. */
+.sl-markdown-content .table-wrap > table :is(th, td, code, a) {
+	overflow-wrap: anywhere;
+	word-break: break-word;
+	white-space: normal;
+}
+
+.sl-markdown-content .table-wrap > table code {
+	word-break: break-all;
+	/* WebKit let the chip's side padding stick out of a cell where a path broke at the cell's edge. */
+	padding-inline: 0;
+}
+
+.sl-markdown-content .table-wrap > table :is(th, td) {
+	min-width: 5rem;
+}
+
+/* A table of four columns or fewer (it is a table only from 40rem) keeps each column
+   at least 8rem, so a column of paths is not squeezed to a few characters a line. */
+.sl-markdown-content .table-wrap > table:not(:has(tr > :nth-child(5))) :is(th, td) {
+	min-width: 8rem;
+}
+
+.sl-markdown-content .table-wrap > table:has(img) {
+	table-layout: fixed;
+}
+
+.sl-markdown-content .table-wrap > table img {
+	max-width: 100%;
+	height: auto;
+}
+
+@container (max-width: 40rem) {
+	.docs-table:has(tr > :nth-child(3)) :is(thead, tbody, tr, td) {
+		display: block;
+	}
+
+	.docs-table:has(tr > :nth-child(3)) thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+	}
+
+	.docs-table:has(tr > :nth-child(3)) tr {
+		padding-block: 0.75rem;
+		border-bottom: 1px solid var(--sl-color-gray-5);
+	}
+
+	.docs-table:has(tr > :nth-child(3)) td {
+		min-width: 0;
+		padding: 0.25rem 0;
+		border: 0;
+	}
+
+	.docs-table:has(tr > :nth-child(3)) td:first-child {
+		font-weight: 600;
+	}
+
+	.docs-table:has(tr > :nth-child(3)) td[data-label]:not(:first-child)::before {
+		content: attr(data-label);
+		display: block;
+		font-size: var(--d-step--2);
+		color: var(--sl-color-gray-3);
+	}
+}
+
+@container (max-width: 60rem) {
+	.docs-table:has(tr > :nth-child(6)) :is(thead, tbody, tr, td) {
+		display: block;
+	}
+
+	.docs-table:has(tr > :nth-child(6)) thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+	}
+
+	.docs-table:has(tr > :nth-child(6)) tr {
+		padding-block: 0.75rem;
+		border-bottom: 1px solid var(--sl-color-gray-5);
+	}
+
+	.docs-table:has(tr > :nth-child(6)) td {
+		min-width: 0;
+		padding: 0.25rem 0;
+		border: 0;
+	}
+
+	.docs-table:has(tr > :nth-child(6)) td:first-child {
+		font-weight: 600;
+	}
+
+	.docs-table:has(tr > :nth-child(6)) td[data-label]:not(:first-child)::before {
+		content: attr(data-label);
+		display: block;
+		font-size: var(--d-step--2);
+		color: var(--sl-color-gray-3);
+	}
+}
+
+/* How each published command was checked, under its block. */
+.sl-markdown-content .checked {
+	margin-top: 0.5rem;
+	font-size: var(--d-step--2);
+	color: var(--sl-color-gray-3);
+	display: flex;
+	gap: 0.4rem;
+	align-items: baseline;
+}
+
+.sl-markdown-content .checked::before {
+	content: '';
+	flex: none;
+	width: 0.5rem;
+	height: 0.5rem;
+	border-radius: 50%;
+	background: currentColor;
+	transform: translateY(0.05rem);
+}
+
+.sl-markdown-content .checked--cpu {
+	color: var(--sl-color-gray-2);
+}
+
+.sl-markdown-content .checked--cpu::before {
+	background: var(--sl-color-accent);
+}
+
+.sl-markdown-content .checked a {
+	color: inherit;
+}
+
+.expressive-code {
+	--ec-brdRad: var(--d-radius-panel);
+}
+
+/* A repository path named in code and linked: it should look like a link. */
+.sl-markdown-content a > code {
+	color: var(--sl-color-text-accent);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.2em;
+}
+
+/* A long line scrolls the block sideways: it is never broken inside a word, a flag or a path. */
+.expressive-code pre {
+	overflow-x: auto;
+}
+
+/* Diagrams drawn at build time (src/lib/diagrams.mjs): inline SVG in the docs' own colours, both themes. */
+.dg-fig {
+	margin: 1.5rem 0;
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+}
+
+.dg {
+	display: block;
+	width: 100%;
+	height: auto;
+	/* The drawings are 720 wide with 14 px text: never shrunk below about 12 px, so a phone scrolls the figure sideways. */
+	min-width: 40rem;
+}
+
+.dg-fig:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: 4px;
+	border-radius: 6px;
+}
+
+.dg-node {
+	fill: var(--sl-color-gray-6);
+	stroke: var(--sl-color-gray-5);
+	stroke-width: 1.5;
+}
+
+.dg-node.dg-accent {
+	fill: var(--sl-color-accent-low);
+	stroke: var(--sl-color-accent);
+}
+
+.dg-base.dg-b0 { stroke: var(--d-base-qwen); }
+.dg-base.dg-b1 { stroke: var(--d-base-g12); }
+.dg-base.dg-b2 { stroke: var(--d-base-g31); }
+
+.dg-text {
+	fill: var(--sl-color-white);
+	font: 14px var(--sl-font);
+}
+
+.dg-text.dg-dim {
+	fill: var(--sl-color-gray-2);
+	font-size: 13px;
+}
+
+.dg-arrow {
+	fill: none;
+	stroke: var(--sl-color-gray-3);
+	stroke-width: 2;
+}
+
+.dg-head {
+	fill: var(--sl-color-gray-3);
+}
+
+.dg-read {
+	fill: var(--sl-color-accent);
+}
+
+.dg-cached {
+	fill: var(--sl-color-accent-low);
+	stroke: var(--sl-color-accent);
+}
+
+.dg-kept {
+	fill: var(--sl-color-accent);
+}
+
+.dg-esc {
+	fill: #8c97a8;
+}
+
+:root[data-theme='light'] .dg-esc {
+	fill: #667386;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.dg-arrow {
+		stroke-dasharray: 1;
+		stroke-dashoffset: 1;
+		animation: dg-draw 900ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
+	}
+}
+
+@keyframes dg-draw {
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+/* The sidebar is the page's own colour, with its hairline: it is fixed to the window, so a different colour left a
+   gap below it wherever the page is taller than the window (a full-page capture, a tall monitor). */
+:root,
+:root[data-theme='light'] {
+	--sl-color-bg-sidebar: var(--sl-color-bg);
+}
+
+/* ---- Docs pages, set like the reference's: a breadcrumb row, a large title and lede, figure panels, TL;DR and
+   glossary, numbered steps, side notes and a plain foot. Same tokens as the home page. ---- */
+
+/* The top of a page. */
+.pt__row {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 0.25rem 1rem;
+	font: 500 0.75rem/1.4 var(--d-font-mono);
+	color: var(--sl-color-gray-3);
+}
+
+.pt__crumb {
+	margin: 0;
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+}
+
+.pt__crumb a {
+	color: var(--sl-color-accent);
+	text-decoration: none;
+}
+
+.pt__crumb a:hover {
+	text-decoration: underline;
+}
+
+.pt__meta {
+	margin: 0;
+	letter-spacing: 0.04em;
+}
+
+.pt h1#_top {
+	margin-top: 0.75rem;
+	color: var(--sl-color-white);
+	font-size: clamp(2.4rem, 1.6rem + 2.8vw, 3.75rem);
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: -0.045em;
+	text-shadow: 0.06em 0.06em 0 var(--d-shadow);
+}
+
+.pt__lede {
+	max-width: 40rem;
+	margin: 1.1rem 0 0;
+	font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
+	line-height: 1.55;
+	color: var(--sl-color-gray-2);
+}
+
+/* Sections: a hairline above each, the full width of the column (on the heading's wrapper, which also holds its
+   anchor link; the heading itself is only as wide as its words), the numbered ones read as steps. */
+.sl-markdown-content .sl-heading-wrapper.level-h2 {
+	margin-top: 3.25rem;
+	padding-top: 2rem;
+	border-top: 1px solid var(--sl-color-gray-5);
+}
+
+.sl-markdown-content h2 {
+	font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+	letter-spacing: -0.03em;
+}
+
+.sl-markdown-content > .pt + .sl-heading-wrapper,
+.sl-markdown-content > :first-child {
+	margin-top: 0;
+}
+
+/* A short table of the words a page uses. */
+.sl-markdown-content .glossary {
+	margin: 1.25rem 0;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 12px;
+	background: var(--sl-color-gray-6);
+	overflow: clip;
+}
+
+.sl-markdown-content .glossary .table-wrap > table {
+	margin: 0;
+}
+
+.sl-markdown-content .glossary th {
+	font: 500 0.7rem/1.4 var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: var(--sl-color-gray-3);
+}
+
+.sl-markdown-content .glossary td:first-child {
+	font-weight: 650;
+	color: var(--sl-color-white);
+	white-space: nowrap;
+}
+
+/* Code blocks: a language label above the code, the box as it is on the home page. */
+.expressive-code .frame {
+	box-shadow: 4px 4px 0 var(--d-shadow);
+	border-radius: 12px;
+}
+
+/* The foot. */
+.site-foot {
+	margin-top: 3.5rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--sl-color-hairline);
+	display: grid;
+	gap: 1.5rem;
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-gray-3);
+}
+
+.site-foot a {
+	color: inherit;
+}
+
+.site-foot__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font: 500 0.75rem/1.4 var(--d-font-mono);
+}
+
+.site-foot__actions a {
+	color: var(--sl-color-accent);
+}
+
+.site-foot__legal {
+	display: grid;
+	gap: 0.5rem;
+}
+
+.site-foot__legal p {
+	margin: 0;
+}
+
+/* ---- Figures ---- */
+.fig {
+	--fig-ease: cubic-bezier(0.16, 1, 0.3, 1);
+	margin: 2rem 0;
+	padding: 1.25rem 1.25rem 1rem;
+	border: 1px solid var(--d-line-strong);
+	border-radius: 16px;
+	background: linear-gradient(180deg, color-mix(in srgb, var(--d-surface-2) 60%, var(--d-surface)), var(--d-surface));
+	box-shadow: inset 0 1px 0 var(--d-hi), 6px 6px 0 var(--d-shadow);
+}
+
+.fig__head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.fig__kicker {
+	margin: 0 0 0.35rem;
+	font: 500 0.6875rem/1.3 var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	color: var(--sl-color-accent);
+}
+
+.fig__title {
+	margin: 0;
+	font-size: 1.05rem;
+	font-weight: 650;
+	line-height: 1.35;
+	color: var(--sl-color-white);
+}
+
+.fig__pause {
+	flex: none;
+	font: 500 0.75rem var(--d-font-mono);
+	padding: 0.4rem 0.75rem;
+	color: var(--sl-color-gray-1);
+	background: transparent;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.fig__pause:hover {
+	border-color: var(--sl-color-accent);
+}
+
+.fig__stage {
+	margin-top: 1rem;
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+}
+
+.fig__svg {
+	display: block;
+	width: 100%;
+	height: auto;
+	min-width: 40rem;
+}
+
+.fig__legend {
+	margin: 0.75rem 0 0;
+	font-size: 0.9rem;
+	color: var(--sl-color-gray-2);
+}
+
+.fig__source {
+	margin: 0.5rem 0 0;
+	font-size: 0.75rem;
+	color: var(--sl-color-gray-3);
+}
+
+.sl-markdown-content .fig p {
+	margin-top: 0;
+}
+
+/* The drawing's own parts. */
+.ft {
+	fill: var(--sl-color-gray-1);
+	font: 14px var(--sl-font);
+}
+
+.ft-b {
+	font-weight: 650;
+	fill: var(--sl-color-white);
+}
+
+.ft-d {
+	fill: var(--sl-color-gray-3);
+	font-size: 12.5px;
+}
+
+.ft-s {
+	fill: var(--sl-color-gray-2);
+	font-size: 13px;
+}
+
+.ft-k {
+	fill: var(--sl-color-accent);
+	font: 500 11px var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+}
+
+.ft-n {
+	fill: var(--sl-color-accent);
+	font: 600 13px var(--d-font-mono);
+}
+
+.f-node {
+	fill: var(--sl-color-gray-6);
+	stroke: var(--sl-color-gray-5);
+	stroke-width: 1;
+}
+
+.f-node--on {
+	stroke: var(--sl-color-accent);
+	stroke-width: 1.5;
+}
+
+.f-line {
+	fill: none;
+	stroke: var(--sl-color-accent);
+	stroke-width: 1.5;
+	stroke-dasharray: 1;
+	stroke-dashoffset: 0;
+}
+
+.f-rail {
+	fill: var(--d-rail);
+}
+
+.f-bar {
+	fill: var(--sl-color-accent);
+	transform-box: fill-box;
+	transform-origin: left center;
+}
+
+/* The delays, in half seconds. */
+.fd-0 { --d: 0ms; }
+.fd-1 { --d: 500ms; }
+.fd-2 { --d: 1000ms; }
+.fd-3 { --d: 1500ms; }
+.fd-4 { --d: 2000ms; }
+.fd-5 { --d: 2500ms; }
+.fd-6 { --d: 3000ms; }
+.fd-7 { --d: 3500ms; }
+.fd-8 { --d: 4000ms; }
+.fd-9 { --d: 4500ms; }
+.fd-10 { --d: 5000ms; }
+
+/* Moving only while the script runs it, and never under reduced motion; held still while paused. */
+@media (prefers-reduced-motion: no-preference) {
+	.fig.is-run :is(.f-pop, .f-node) {
+		animation: f-pop 520ms var(--fig-ease) both;
+		animation-delay: var(--d, 0ms);
+	}
+
+	.fig.is-run .f-line {
+		animation: f-draw 700ms var(--fig-ease) both;
+		animation-delay: var(--d, 0ms);
+	}
+
+	.fig.is-run .f-grow {
+		animation: f-grow 900ms var(--fig-ease) both;
+		animation-delay: var(--d, 0ms);
+	}
+
+	.fig.is-paused :is(.f-pop, .f-node, .f-line, .f-grow) {
+		animation-play-state: paused;
+	}
+}
+
+@keyframes f-pop {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+}
+
+@keyframes f-draw {
+	from {
+		stroke-dashoffset: 1;
+	}
+}
+
+@keyframes f-grow {
+	from {
+		transform: scaleX(0);
+	}
+}
+
+/* Your first decision: the request and the response, side by side. */
+.fig__cols {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.75rem;
+}
+
+@media (max-width: 48rem) {
+	.fig__cols {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.fig__col {
+	margin: 0;
+}
+
+.sl-markdown-content .fig__colhead {
+	margin: 0 0 0.4rem;
+	font: 500 0.6875rem var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	color: var(--sl-color-gray-3);
+}
+
+.fig__json {
+	margin: 0;
+	padding: 0.85rem 1rem;
+	max-height: 30rem;
+	overflow: auto;
+	border-radius: 10px;
+	background: var(--d-code-bg);
+	color: var(--d-code-ink);
+	font: 0.78rem/1.65 var(--d-font-mono);
+	white-space: pre;
+}
+
+.sl-markdown-content .recorded {
+	margin-top: 0.5rem;
+	font-size: var(--d-step--2);
+	color: var(--sl-color-gray-3);
+}
+
+.fig__json .jk {
+	color: #9ec1ff;
+}
+
+.fig__json .j {
+	border-radius: 4px;
+	box-decoration-break: clone;
+	-webkit-box-decoration-break: clone;
+	cursor: default;
+}
+
+.fig__json .j.on {
+	background: color-mix(in srgb, var(--sl-color-accent) 32%, transparent);
+}
+
+.fig__json .j:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: 1px;
+}
+
+.fig__note {
+	display: block;
+	min-height: 3.2em;
+}
+
+/* Choose your machine: what you have, and the path to it. */
+.fig__paths {
+	display: grid;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.fig__path {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 2rem minmax(0, 1fr);
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.6rem 0.75rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 10px;
+	background: var(--sl-color-gray-6);
+}
+
+.fig__path:hover {
+	border-color: var(--sl-color-accent);
+}
+
+.fig__have,
+.fig__to {
+	display: grid;
+	gap: 0.1rem;
+	font-size: 0.8rem;
+	color: var(--sl-color-gray-3);
+}
+
+.fig__have b,
+.fig__to b {
+	font-size: 0.95rem;
+	color: var(--sl-color-white);
+}
+
+.sl-markdown-content .fig__to {
+	text-decoration: none;
+}
+
+.sl-markdown-content .fig__to b {
+	color: var(--sl-color-accent);
+}
+
+.fig__arrow {
+	height: 2px;
+	background: var(--sl-color-accent);
+	position: relative;
+}
+
+.fig__arrow::after {
+	content: '';
+	position: absolute;
+	right: 0;
+	top: -4px;
+	border-left: 7px solid var(--sl-color-accent);
+	border-block: 5px solid transparent;
+}
+
+@media (max-width: 40rem) {
+	.fig__path {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.fig__arrow {
+		width: 2px;
+		height: 1rem;
+	}
+
+	.fig__arrow::after {
+		right: -4px;
+		top: auto;
+		bottom: -1px;
+		border-left: 5px solid transparent;
+		border-right: 5px solid transparent;
+		border-top: 7px solid var(--sl-color-accent);
+		border-bottom: 0;
+	}
+}
+
+/* The sidebar and the page's own table of contents, set like the reference's: small mono group labels, a quiet
+   current page with an accent bar, and "On this page" in the same label style. */
+.sidebar-content summary .large {
+	font: 500 0.6875rem/1.4 var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	color: var(--sl-color-gray-3);
+}
+
+.sidebar-content a {
+	font-size: 0.9rem;
+	border-radius: 8px;
+}
+
+.sidebar-content a[aria-current='page'] {
+	background: var(--sl-color-accent-low);
+	color: var(--sl-color-white);
+	box-shadow: inset 2px 0 0 var(--sl-color-accent);
+}
+
+/* The table of contents comes before the page in the HTML, so a first paint can happen before the page's column
+   exists; alone in the row, Starlight's right-sidebar container (and the fixed sidebar placed from it) would start at
+   the left and then jump right, a layout shift of 0.43 on a slow machine. Pinned to the row's end, it starts where it
+   stays. */
+@media (min-width: 72rem) {
+	.right-sidebar-container {
+		margin-inline-start: auto;
+	}
+}
+
+.right-sidebar-panel h2 {
+	font: 500 0.6875rem/1.4 var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	color: var(--sl-color-gray-3);
+}
+
+.fig__stage:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: 4px;
+	border-radius: 6px;
+}
+
+/* ---- Figures of "Use it from" ---- */
+.ft-code {
+	font: 12.5px var(--d-font-mono);
+	fill: var(--sl-color-gray-1);
+}
+
+.fig__ways {
+	display: grid;
+	grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+	gap: 1rem;
+	align-items: stretch;
+}
+
+@media (max-width: 40rem) {
+	.fig__ways {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.fig__list,
+.fig__routes,
+.fig__cards,
+.fig__tick {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.fig__list {
+	display: grid;
+	gap: 0.5rem;
+}
+
+.sl-markdown-content .fig__list li,
+.sl-markdown-content .fig__routes li,
+.sl-markdown-content .fig__cards li {
+	margin: 0;
+}
+
+.fig__list a,
+.fig__routes a,
+.fig__routes li > div {
+	display: grid;
+	gap: 0.15rem;
+	padding: 0.6rem 0.8rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 10px;
+	background: var(--sl-color-gray-6);
+	text-decoration: none;
+	color: var(--sl-color-gray-3);
+	font-size: 0.8rem;
+}
+
+.fig__list a:hover,
+.fig__routes a:hover {
+	border-color: var(--sl-color-accent);
+}
+
+.fig__list b {
+	font-size: 0.95rem;
+	color: var(--sl-color-accent);
+}
+
+.fig__sink {
+	display: grid;
+	align-content: center;
+	gap: 0.6rem;
+	padding-left: 1.25rem;
+	border-left: 2px solid var(--sl-color-accent);
+}
+
+.fig__route,
+.fig__server {
+	display: grid;
+	gap: 0.15rem;
+	padding: 0.7rem 0.9rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 10px;
+	background: var(--sl-color-gray-6);
+	font-size: 0.8rem;
+	color: var(--sl-color-gray-3);
+}
+
+.fig__route b {
+	font: 600 0.9rem var(--d-font-mono);
+	color: var(--sl-color-accent);
+}
+
+.fig__server {
+	border-color: var(--sl-color-accent);
+}
+
+.fig__server b {
+	font-size: 1rem;
+	color: var(--sl-color-white);
+}
+
+.fig__routes {
+	display: grid;
+	gap: 0.4rem;
+}
+
+.fig__verbs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 0.75rem;
+}
+
+.fig__verbs code {
+	font: 0.8rem var(--d-font-mono);
+	color: var(--sl-color-white);
+	background: none;
+	padding: 0;
+}
+
+.fig__verbs code b {
+	color: var(--sl-color-accent);
+	font-weight: 600;
+}
+
+.fig__what {
+	font-size: 0.8rem;
+}
+
+/* A client change, as a diff. */
+.fig__diffhead {
+	margin: 0 0 0.4rem;
+	font: 500 0.6875rem var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.14em;
+	color: var(--sl-color-gray-3);
+}
+
+.fig__code {
+	margin: 0;
+	padding: 0.85rem 1rem;
+	border-radius: 10px;
+	background: var(--d-code-bg);
+	color: var(--d-code-ink);
+	font: 0.8rem/1.8 var(--d-font-mono);
+	white-space: pre;
+	overflow-x: auto;
+}
+
+.fig__code .d-del,
+.fig__code .d-add {
+	display: block;
+}
+
+.fig__code .d-del {
+	color: #f19c9c;
+	text-decoration: line-through;
+	text-decoration-color: color-mix(in srgb, #f19c9c 60%, transparent);
+}
+
+.fig__code .d-add {
+	color: #8ee0b8;
+}
+
+.fig__same {
+	margin-top: 0.9rem;
+}
+
+.fig__tick {
+	display: grid;
+	gap: 0.35rem;
+	font-size: 0.85rem;
+	color: var(--sl-color-gray-2);
+}
+
+.fig__tick li::before {
+	content: '';
+	display: inline-block;
+	width: 0.45rem;
+	height: 0.45rem;
+	margin-right: 0.55rem;
+	border-radius: 50%;
+	background: var(--sl-color-accent);
+	vertical-align: 0.1em;
+}
+
+.fig__tick--note li::before {
+	background: var(--sl-color-gray-3);
+}
+
+/* The five integrations. */
+.fig__cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+	gap: 0.6rem;
+}
+
+.fig__card {
+	display: grid;
+	gap: 0.3rem;
+	align-content: start;
+	padding: 0.75rem 0.85rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 10px;
+	background: var(--sl-color-gray-6);
+	font-size: 0.8rem;
+	color: var(--sl-color-gray-3);
+}
+
+.fig__card b {
+	font-size: 1rem;
+	color: var(--sl-color-white);
+}
+
+.fig__ver {
+	font: 0.72rem/1.4 var(--d-font-mono);
+	overflow-wrap: anywhere;
+}
+
+.fig__checks {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	color: var(--sl-color-gray-1);
+}
+
+.fig__tickmark {
+	flex: none;
+	width: 0.9rem;
+	height: 0.9rem;
+	border-radius: 50%;
+	background: var(--sl-color-accent);
+	position: relative;
+}
+
+.fig__tickmark::after {
+	content: '';
+	position: absolute;
+	left: 0.28rem;
+	top: 0.12rem;
+	width: 0.22rem;
+	height: 0.4rem;
+	border: solid var(--sl-color-black);
+	border-width: 0 2px 2px 0;
+	transform: rotate(45deg);
+}
+
+.fig__rule code {
+	font-size: 0.75rem;
+}
+
+/* A checked integration's facts, as a definition list. */
+.sl-markdown-content .integ {
+	display: grid;
+	grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr);
+	margin: 1rem 0;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 12px;
+	overflow: clip;
+}
+
+.sl-markdown-content .integ dt,
+.sl-markdown-content .integ dd {
+	margin: 0;
+	padding: 0.6rem 0.9rem;
+	border-top: 1px solid var(--sl-color-gray-5);
+	font-size: var(--sl-text-sm);
+}
+
+.sl-markdown-content .integ dt:first-of-type,
+.sl-markdown-content .integ dt:first-of-type + dd {
+	border-top: 0;
+}
+
+.sl-markdown-content .integ dt {
+	font-weight: 650;
+	color: var(--sl-color-white);
+	background: var(--sl-color-gray-6);
+}
+
+@media (max-width: 40rem) {
+	.sl-markdown-content .integ {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.sl-markdown-content .integ dd {
+		border-top: 0;
+		padding-top: 0;
+	}
+}
+
+/* ---- Figures of the Guides ---- */
+.f-bar--grey {
+	fill: var(--sl-color-gray-3);
+}
+
+.f-bar--read {
+	fill: var(--sl-color-gray-2);
+}
+
+/* The latency chart: points only. */
+.lc-tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin-bottom: 0.75rem;
+}
+
+.lc-tab {
+	font: 500 0.75rem var(--d-font-mono);
+	padding: 0.4rem 0.7rem;
+	color: var(--sl-color-gray-2);
+	background: transparent;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.lc-tab[aria-selected='true'] {
+	color: var(--sl-color-white);
+	border-color: var(--sl-color-accent);
+	background: var(--sl-color-accent-low);
+}
+
+.lc-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem 1rem;
+	margin-bottom: 0.5rem;
+	font-size: 0.8rem;
+	color: var(--sl-color-gray-2);
+}
+
+.lc-key::before {
+	content: '';
+	display: inline-block;
+	width: 0.7rem;
+	height: 0.7rem;
+	margin-right: 0.4rem;
+	border-radius: 50%;
+	background: var(--base);
+	vertical-align: -0.05em;
+}
+
+.lc-qwen {
+	--base: var(--d-base-qwen);
+}
+
+.lc-g12 {
+	--base: var(--d-base-g12);
+}
+
+.lc-g31 {
+	--base: var(--d-base-g31);
+}
+
+.lc-dot {
+	fill: var(--base);
+	stroke: var(--sl-color-black);
+	stroke-width: 2;
+	cursor: default;
+}
+
+.lc-dot:focus-visible,
+.lc-dot:hover {
+	outline: none;
+	stroke: var(--sl-color-white);
+}
+
+.lc-grid {
+	stroke: var(--sl-color-gray-5);
+	stroke-width: 1;
+}
+
+.lc-note,
+.lc-tip {
+	margin: 0.4rem 0 0;
+	font-size: 0.85rem;
+	color: var(--sl-color-gray-2);
+}
+
+.lc-tip {
+	min-height: 1.4em;
+	font-family: var(--d-font-mono);
+	color: var(--sl-color-accent);
+}
+
+.lc-more {
+	margin-top: 0.75rem;
+	font-size: 0.85rem;
+}
+
+.lc-table {
+	width: 100%;
+	margin-top: 0.5rem;
+	border-collapse: collapse;
+	font-size: 0.8rem;
+}
+
+.lc-table caption {
+	text-align: left;
+	color: var(--sl-color-gray-3);
+	padding-bottom: 0.4rem;
+}
+
+.lc-table th,
+.lc-table td {
+	padding: 0.4rem 0.5rem;
+	border-top: 1px solid var(--sl-color-gray-5);
+	text-align: left;
+	font-variant-numeric: tabular-nums;
+}
+
+/* The threshold slider. */
+.th {
+	display: grid;
+	gap: 0.6rem;
+}
+
+.th__l {
+	font: 500 0.75rem var(--d-font-mono);
+	color: var(--sl-color-gray-2);
+}
+
+.th__in {
+	width: 100%;
+	accent-color: var(--sl-color-accent);
+}
+
+.th__ticks {
+	display: flex;
+	justify-content: space-between;
+	font: 0.75rem var(--d-font-mono);
+	color: var(--sl-color-gray-3);
+}
+
+.th__svg {
+	width: 100%;
+	height: auto;
+}
+
+.th__kept {
+	fill: var(--sl-color-accent);
+}
+
+.sl-markdown-content .th__out {
+	margin: 0;
+	font-size: 0.9rem;
+	color: var(--sl-color-gray-1);
+}
+
+/* Image input: three steps. */
+.fig__flow {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 1.5rem minmax(0, 1fr) 1.5rem minmax(0, 1fr);
+	align-items: stretch;
+	gap: 0.4rem;
+}
+
+@media (max-width: 40rem) {
+	.fig__flow {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.fig__flow > .fig__to {
+		height: 1rem;
+	}
+}
+
+.fig__step {
+	display: grid;
+	gap: 0.25rem;
+	align-content: start;
+	padding: 0.7rem 0.85rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 10px;
+	background: var(--sl-color-gray-6);
+	font-size: 0.8rem;
+	color: var(--sl-color-gray-3);
+}
+
+.fig__step b {
+	font-size: 0.95rem;
+	color: var(--sl-color-white);
+}
+
+.fig__step--on {
+	border-color: var(--sl-color-accent);
+}
+
+.fig__flow > .fig__to {
+	align-self: center;
+	height: 2px;
+	background: var(--sl-color-accent);
+}
+
+.fig__step code {
+	color: var(--sl-color-gray-1);
+}
+
+.ft-xs {
+	font-size: 11px;
+}
+
+/* ---- Figures of "Run it" ---- */
+.fig__steps {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+	gap: 0.6rem;
+	margin: 0 0 1rem;
+	padding: 0;
+	list-style: none;
+	counter-reset: step;
+}
+
+.sl-markdown-content .fig__steps li {
+	margin: 0;
+}
+
+.fig__steps .fig__step {
+	counter-increment: step;
+}
+
+.fig__steps .fig__step::before {
+	content: counter(step);
+	display: inline-grid;
+	place-items: center;
+	width: 1.4rem;
+	height: 1.4rem;
+	margin-bottom: 0.2rem;
+	border-radius: 50%;
+	background: var(--sl-color-gray-5);
+	color: var(--sl-color-white);
+	font: 600 0.7rem var(--d-font-mono);
+}
+
+.fig__steps .fig__step--on::before {
+	background: var(--sl-color-accent);
+	color: var(--sl-color-black);
+}
+
+.fig__groups {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+	gap: 0.6rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.sl-markdown-content .fig__groups li {
+	margin: 0;
+}
+
+.fig__groups a {
+	display: grid;
+	gap: 0.3rem;
+	height: 100%;
+	padding: 0.7rem 0.85rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 10px;
+	background: var(--sl-color-gray-6);
+	text-decoration: none;
+}
+
+.fig__groups a:hover {
+	border-color: var(--sl-color-accent);
+}
+
+.fig__groups b {
+	color: var(--sl-color-white);
+}
+
+.fig__n {
+	font: 0.72rem var(--d-font-mono);
+	color: var(--sl-color-accent);
+}
+
+.fig__chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+}
+
+.fig__chips code {
+	font-size: 0.68rem;
+	padding: 0.1rem 0.35rem;
+	color: var(--sl-color-gray-2);
+}
+
+.fig__list--tight li div {
+	display: grid;
+	gap: 0.1rem;
+	padding: 0.5rem 0.7rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 8px;
+	background: var(--sl-color-gray-6);
+	font-size: 0.75rem;
+	color: var(--sl-color-gray-3);
+}
+
+.fig__list--tight li div b {
+	font-size: 0.85rem;
+	color: var(--sl-color-accent);
+}
+
+.fig__list--tight {
+	display: grid;
+	gap: 0.35rem;
+}
+
+.fig__timeline {
+	display: grid;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0 0 0 1rem;
+	border-left: 2px solid var(--sl-color-accent);
+	list-style: none;
+}
+
+.sl-markdown-content .fig__timeline li {
+	margin: 0;
+}
+
+.fig__timeline a {
+	display: grid;
+	gap: 0.15rem;
+	padding: 0.55rem 0.8rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 10px;
+	background: var(--sl-color-gray-6);
+	text-decoration: none;
+	color: var(--sl-color-gray-2);
+	font-size: 0.85rem;
+}
+
+.fig__timeline a:hover {
+	border-color: var(--sl-color-accent);
+}
+
+.fig__timeline b {
+	font: 600 0.9rem var(--d-font-mono);
+	color: var(--sl-color-accent);
+}
+
+.fig__trouble {
+	display: grid;
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.sl-markdown-content .fig__trouble li {
+	display: grid;
+	gap: 0.2rem;
+	margin: 0;
+	padding: 0.6rem 0.8rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 10px;
+	background: var(--sl-color-gray-6);
+	font-size: 0.85rem;
+	color: var(--sl-color-gray-3);
+}
+
+.fig__trouble b {
+	color: var(--sl-color-white);
+}
+
+.fig__fix {
+	color: var(--sl-color-gray-1);
+}
+
+.fig__fix::before {
+	content: 'Do: ';
+	font: 600 0.7rem var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--sl-color-accent);
+}
+
+/* ---- Figures of "Understand" ---- */
+.f-bar--base {
+	fill: var(--base);
+}
+
+.fig__bases {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+	gap: 0.7rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.sl-markdown-content .fig__bases li {
+	margin: 0;
+}
+
+.fig__base {
+	display: grid;
+	gap: 0.4rem;
+	align-content: start;
+	padding: 0.85rem 0.95rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-top: 3px solid var(--base, var(--sl-color-accent));
+	border-radius: 10px;
+	background: var(--sl-color-gray-6);
+}
+
+.fig__base b {
+	font-size: 1.05rem;
+	color: var(--sl-color-white);
+}
+
+.fig__tag {
+	font-size: 0.8rem;
+	color: var(--sl-color-gray-2);
+}
+
+.fig__base dl {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 0.15rem 0.75rem;
+	margin: 0.4rem 0 0;
+	font-size: 0.78rem;
+}
+
+.fig__base dt {
+	color: var(--sl-color-gray-3);
+}
+
+.fig__base dd {
+	margin: 0;
+	text-align: right;
+	font: 600 0.78rem var(--d-font-mono);
+	color: var(--sl-color-white);
+}
+
+.fig__matrix {
+	display: grid;
+	gap: 0.4rem;
+	font-size: 0.8rem;
+}
+
+.fig__mrow {
+	display: grid;
+	grid-template-columns: 8rem repeat(4, minmax(0, 1fr));
+	gap: 0.4rem;
+}
+
+.fig__mrow > span {
+	padding: 0.5rem 0.6rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 8px;
+	background: var(--sl-color-gray-6);
+	color: var(--sl-color-gray-2);
+}
+
+.fig__mhead > span {
+	background: none;
+	border: 0;
+	font: 500 0.68rem var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--sl-color-gray-3);
+	padding-block: 0;
+}
+
+.fig__mbase {
+	font-weight: 650;
+	color: var(--sl-color-white);
+	border-left: 3px solid var(--base) !important;
+}
+
+@media (max-width: 56rem) {
+	.fig__mrow {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.fig__mhead {
+		display: none;
+	}
+
+	.fig__mrow > span[data-col]::before {
+		content: attr(data-col) ': ';
+		font-weight: 650;
+		color: var(--sl-color-gray-3);
+	}
+}
+
+.fig__map {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	gap: 0.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.sl-markdown-content .fig__map li {
+	margin: 0;
+}
+
+.fig__map a {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	height: 100%;
+	padding: 0.55rem 0.75rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 10px;
+	background: var(--sl-color-gray-6);
+	text-decoration: none;
+	color: var(--sl-color-gray-1);
+	font-size: 0.85rem;
+}
+
+.fig__map a:hover {
+	border-color: var(--sl-color-accent);
+}
+
+.fig__num {
+	display: inline-grid;
+	place-items: center;
+	flex: none;
+	width: 1.5rem;
+	height: 1.5rem;
+	border-radius: 50%;
+	background: var(--sl-color-accent-low);
+	font: 600 0.72rem var(--d-font-mono);
+	color: var(--sl-color-white);
+}
+
+.fig__chiplist {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.sl-markdown-content .fig__chiplist li {
+	margin: 0;
+}
+
+.fig__chiplist a {
+	display: block;
+	padding: 0.4rem 0.75rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 999px;
+	background: var(--sl-color-gray-6);
+	text-decoration: none;
+	color: var(--sl-color-gray-1);
+	font-size: 0.82rem;
+}
+
+.fig__chiplist a:hover {
+	border-color: var(--sl-color-accent);
+}
+
+.fig__cards--wide {
+	grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr));
+}
+
+a.fig__card {
+	text-decoration: none;
+}
+
+a.fig__card:hover {
+	border-color: var(--sl-color-accent);
+}
+
+.fig code {
+	color: var(--sl-color-gray-1);
+}
+
+.fig .fig__json code,
+.fig .fig__code code {
+	color: inherit;
+}
+
+/* ---- Round 6 (after shad0w, Apache-2.0; NOTICE): callouts, steps and tabs ---- */
+
+/* Callouts: a tinted card with a coloured edge, its kind's icon and name. Note is blue, tip the accent, caution a warm
+   red-orange and danger red; violet stays Jev's, so Starlight's purple (its tip) is the accent here. */
+:root {
+	--sl-color-blue-low: #0d1c33;
+	--sl-color-blue: #7fb0ff;
+	--sl-color-blue-high: #cfe0ff;
+	--sl-color-purple-low: #2a1c06;
+	--sl-color-purple: #fba41c;
+	--sl-color-purple-high: #ffd79a;
+	--sl-color-orange-low: #2b1309;
+	--sl-color-orange: #ff7a45;
+	--sl-color-orange-high: #ffc9b0;
+	--sl-color-red-low: #2c0b0f;
+	--sl-color-red: #ff5c6c;
+	--sl-color-red-high: #ffc2c8;
+}
+
+:root[data-theme='light'] {
+	--sl-color-blue-low: #e4eefc;
+	--sl-color-blue: #1f5fbf;
+	--sl-color-blue-high: #123b78;
+	--sl-color-purple-low: #fdecd0;
+	--sl-color-purple: #b86a00;
+	--sl-color-purple-high: #6e3c00;
+	--sl-color-orange-low: #fde7dd;
+	--sl-color-orange: #c2501f;
+	--sl-color-orange-high: #7a2a0c;
+	--sl-color-red-low: #fde3e5;
+	--sl-color-red: #c0262d;
+	--sl-color-red-high: #7a1219;
+}
+
+.sl-markdown-content .starlight-aside {
+	--a: var(--sl-color-blue);
+	--a-low: var(--sl-color-blue-low);
+	--a-high: var(--sl-color-blue-high);
+	margin: 1.5rem 0;
+	padding: 1rem 1.15rem 1.05rem;
+	border: 1px solid color-mix(in srgb, var(--a) 40%, transparent);
+	border-left: 4px solid var(--a);
+	border-radius: 12px;
+	background: var(--a-low);
+	box-shadow: inset 0 1px 0 var(--d-hi), 4px 4px 0 var(--d-shadow);
+	color: var(--sl-color-gray-1);
+}
+
+.sl-markdown-content .starlight-aside--tip {
+	--a: var(--sl-color-purple);
+	--a-low: var(--sl-color-purple-low);
+	--a-high: var(--sl-color-purple-high);
+}
+
+.sl-markdown-content .starlight-aside--caution {
+	--a: var(--sl-color-orange);
+	--a-low: var(--sl-color-orange-low);
+	--a-high: var(--sl-color-orange-high);
+}
+
+.sl-markdown-content .starlight-aside--danger {
+	--a: var(--sl-color-red);
+	--a-low: var(--sl-color-red-low);
+	--a-high: var(--sl-color-red-high);
+}
+
+.sl-markdown-content .starlight-aside__title {
+	display: flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin: 0 0 0.45rem;
+	font: 600 0.75rem/1.2 var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: var(--a-high);
+}
+
+.sl-markdown-content .starlight-aside__icon {
+	box-sizing: content-box;
+	width: 14px;
+	height: 14px;
+	padding: 5px;
+	border-radius: 50%;
+	color: var(--a-low);
+	background: var(--a);
+}
+
+.sl-markdown-content .starlight-aside__content {
+	color: var(--sl-color-gray-1);
+}
+
+.sl-markdown-content .starlight-aside__content a {
+	color: var(--a-high);
+}
+
+/* Steps: each number in an accent circle, a line joining it to the next. */
+.sl-markdown-content .steps > ol {
+	counter-reset: step;
+	list-style: none;
+	margin: 1.5rem 0;
+	padding: 0;
+}
+
+.sl-markdown-content .steps > ol > li {
+	counter-increment: step;
+	position: relative;
+	margin: 0;
+	padding: 0 0 1.5rem 3.25rem;
+	min-height: 2.25rem;
+}
+
+.sl-markdown-content .steps > ol > li::before {
+	content: counter(step);
+	position: absolute;
+	left: 0;
+	top: -0.1rem;
+	display: grid;
+	place-items: center;
+	width: 2.1rem;
+	height: 2.1rem;
+	border-radius: 50%;
+	font: 700 0.95rem/1 var(--d-font-mono);
+	color: var(--d-on-accent);
+	background: var(--d-accent-fill);
+	box-shadow: 3px 3px 0 var(--d-shadow);
+}
+
+.sl-markdown-content .steps > ol > li:not(:last-child)::after {
+	content: '';
+	position: absolute;
+	left: calc(1.05rem - 1px);
+	top: 2.35rem;
+	bottom: 0.3rem;
+	width: 2px;
+	background: linear-gradient(var(--d-accent-line), color-mix(in srgb, var(--d-accent-line) 25%, transparent));
+}
+
+.sl-markdown-content .steps > ol > li > :first-child {
+	margin-top: 0;
+}
+
+.sl-markdown-content .steps > ol > li > p:first-child strong:first-child {
+	color: var(--sl-color-white);
+}
+
+/* Tabs: one panel at a time once scripts run; without them every panel shows under its label. */
+.sl-markdown-content .tabs {
+	margin: 1.5rem 0;
+}
+
+.sl-markdown-content .tabs__list {
+	display: none;
+	flex-wrap: wrap;
+	gap: 0.25rem;
+	margin: 0 0 0.75rem;
+	border-bottom: 1px solid var(--d-line-strong);
+}
+
+.js .sl-markdown-content .tabs__list {
+	display: flex;
+}
+
+.sl-markdown-content .tabs__list [role='tab'] {
+	margin: 0 0 -1px;
+	padding: 0.55rem 0.9rem;
+	border: 0;
+	border-bottom: 2px solid transparent;
+	background: none;
+	color: var(--sl-color-gray-3);
+	font: 500 0.875rem var(--d-font-mono);
+	cursor: pointer;
+}
+
+.sl-markdown-content .tabs__list [role='tab']:hover {
+	color: var(--sl-color-white);
+}
+
+.sl-markdown-content .tabs__list [role='tab'][aria-selected='true'] {
+	color: var(--sl-color-accent);
+	border-bottom-color: var(--d-accent-line);
+}
+
+.sl-markdown-content .tabs__list [role='tab']:focus-visible,
+.sl-markdown-content .tabs__panel:focus-visible {
+	outline: 2px solid var(--d-focus);
+	outline-offset: 2px;
+}
+
+.sl-markdown-content .tabs__panel > :first-child,
+.sl-markdown-content .tabs__panel > .tabs__label + * {
+	margin-top: 0;
+}
+
+.sl-markdown-content .tabs__label {
+	margin: 1rem 0 0.5rem;
+	font: 600 0.75rem/1.2 var(--d-font-mono);
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: var(--sl-color-accent);
+}
+
+.js .sl-markdown-content .tabs__label {
+	display: none;
+}
+
+/* Before the script has run, the first panel only; after, the one picked. */
+.js .sl-markdown-content .tabs:not(.tabs--ready) > .tabs__panel:not(:nth-child(2)),
+.sl-markdown-content .tabs > .tabs__panel[hidden] {
+	display: none;
+}
+
+/* The glossary, raised like the figures, its cells clear of its edge. */
+.sl-markdown-content .glossary {
+	border-color: var(--d-line-strong);
+	box-shadow: inset 0 1px 0 var(--d-hi), 4px 4px 0 var(--d-shadow);
+}
+
+.sl-markdown-content .glossary :is(th, td):first-child {
+	padding-inline-start: 1rem;
+}
+
+.sl-markdown-content .glossary :is(th, td):last-child {
+	padding-inline-end: 1rem;
+}
+
+/* A numbered section's number, in the accent circle the steps use. */
+.sl-markdown-content h2 .step-n {
+	display: inline-grid;
+	place-items: center;
+	width: 1.45em;
+	height: 1.45em;
+	margin-right: 0.35em;
+	border-radius: 50%;
+	vertical-align: 0.08em;
+	font: 700 0.62em/1 var(--d-font-mono);
+	letter-spacing: 0;
+	color: var(--d-on-accent);
+	background: var(--d-accent-fill);
+	box-shadow: 3px 3px 0 var(--d-shadow);
+}

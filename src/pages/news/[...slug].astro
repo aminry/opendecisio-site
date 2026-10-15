@@ -1,0 +1,10 @@
+---
+import PostPage from '../../components/PostPage.astro';
+import { posts } from '../../lib/posts.mjs';
+
+export async function getStaticPaths() {
+	return (await posts('news')).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+---
+<PostPage kind="news" entry={entry} />

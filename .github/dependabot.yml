@@ -1,0 +1,25 @@
+# Dependency updates: the site's npm packages and the GitHub Actions its workflows use, weekly, with minor and patch
+# updates grouped into one pull request each. Each update is a pull request from main, checked by CI like any other.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+  - package-ecosystem: npm
+    directory: /design/logos
+    schedule:
+      interval: monthly
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']

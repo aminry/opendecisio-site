@@ -1,0 +1,45 @@
+---
+// The privacy page: who runs the site, what is counted, and that nothing is sold or shared, as tiles under the
+// site's page hero.
+import PageHero from '../components/PageHero.astro';
+import { site } from '../config/site';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { breadcrumbs } from '../lib/jsonld.mjs';
+const issue = `${site.repository}/issues/new?title=${encodeURIComponent('Privacy question')}`;
+---
+<SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Privacy', path: '/privacy/' }])} title={`Privacy: ${site.name}`} description="Tachara LLC runs opendecisio.com. It counts visits without cookies, and sells or shares no personal data.">
+	<PageHero label="Privacy" lede="This site counts visits, without cookies, and nothing else.">Visits counted, <em class="hl">nothing else</em></PageHero>
+	<section class="section psec" aria-label="The privacy notice">
+		<div class="wrap">
+			<ul class="ptiles privacy" data-reveal>
+				<li class="ptile tile">
+					<h2 id="who">Who runs this site</h2>
+					<p>Tachara LLC operates opendecisio.com.</p>
+				</li>
+				<li class="ptile tile">
+					<h2 id="counted">What is counted</h2>
+					<p>Visits are counted with Cloudflare Web Analytics, which uses no cookies and no fingerprinting. It collects page views, the referrer, the visitor's country and the type of device.</p>
+				</li>
+				<li class="ptile tile">
+					<h2 id="shared">What we do with it</h2>
+					<p>We sell or share no personal data.</p>
+				</li>
+				<li class="ptile tile">
+					<h2 id="device">On your device</h2>
+					<p>The site sets no cookies of its own. Your choice of light or dark theme is kept in your browser's local storage and is never sent to us.</p>
+				</li>
+				<li class="ptile tile">
+					<h2 id="elsewhere">Other sites</h2>
+					<p>Links to GitHub, Hugging Face and PyPI go to those sites, which follow their own privacy policies.</p>
+				</li>
+				<li class="ptile tile">
+					<h2 id="contact">Contact</h2>
+					<p>Ask on <a href={issue}>an issue in the {site.name} repository</a>.</p>
+				</li>
+			</ul>
+		</div>
+	</section>
+</SiteLayout>
+<script>
+	import '../scripts/reveal.ts';
+</script>

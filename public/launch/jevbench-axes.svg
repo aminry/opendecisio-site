@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="907.2pt" height="576pt" viewBox="0 0 907.2 576" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <title>JevBench v1.6.1, axis by axis</title>
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title>JevBench v1.6.1, axis by axis</dc:title>
+    <dc:date>2026-10-14T23:41:25.216895</dc:date>
+    <dc:description>Table of JevBench v1.6.1 scores for 11 rows: ten open-weights systems from the board's file and Jev 1.13.0 as a reference row, in alphabetical order, with six columns (overall, intelligence, sealed questions, calibration, speed, cost). Each cell is a plain value; the table has no shading or marks. Decisio 31B v0.8.0's values are overall 71.69, intelligence 70.4, sealed questions 73.3, calibration 88.7, speed 91.2, cost 51.7. The Decisio rows are the board's v0.8.0 entries: Decisio 31B v0.8.0 (71.69) and Decisio 12B v0.8.0 (68.17). The board's decisio v0.9.0 12B entry (67.76) is not among the rows shown.</dc:description>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.9.4, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 576 
+L 907.2 576 
+L 907.2 0 
+L 0 0 
+z
+" style="fill: #fcfcfb"/>
+  </g>
+  <g id="axes_1">
+   <g id="line2d_1">
+    <path d="M 19.461567 144.295307 
+L 887.738433 144.295307 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 19.461567 176.243214 
+L 887.738433 176.243214 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 19.461567 208.191121 
+L 887.738433 208.191121 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 19.461567 240.139027 
+L 887.738433 240.139027 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 19.461567 272.086934 
+L 887.738433 272.086934 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 19.461567 304.034841 
+L 887.738433 304.034841 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_7">
+    <path d="M 19.461567 335.982748 
+L 887.738433 335.982748 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_8">
+    <path d="M 19.461567 367.930655 
+L 887.738433 367.930655 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_9">
+    <path d="M 19.461567 399.878562 
+L 887.738433 399.878562 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_10">
+    <path d="M 19.461567 431.826469 
+L 887.738433 431.826469 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_11">
+    <path d="M 19.461567 463.774376 
+L 887.738433 463.774376 
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #e6e5e1; stroke-width: 0.8; stroke-linecap: square"/>
+   </g>
+   <g id="patch_2">
+    <path d="M 21.437918 491.365751 
+L 54.377101 491.365751 
+L 54.377101 476.843975 
+L 21.437918 476.843975 
+L 21.437918 491.365751 
+z
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #0b0b0b; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="76.064816" transform="rotate(-0 302.079758 76.064816)">Overall</text>
+   </g>
+   <g id="text_2">
+    <text style="fill: #8a8984; font: 8.8px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="93.772042" transform="rotate(-0 302.079758 93.772042)">composite score</text>
+   </g>
+   <g id="text_3">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="75.991144" transform="rotate(-0 408.802711 75.991144)">Intelligence</text>
+   </g>
+   <g id="text_4">
+    <text style="fill: #8a8984; font: 8.8px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="93.725979" transform="rotate(-0 408.802711 93.725979)">right answers</text>
+   </g>
+   <g id="text_5">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="76.17712" transform="rotate(-0 515.525664 76.17712)">Sealed questions</text>
+   </g>
+   <g id="text_6">
+    <text style="fill: #8a8984; font: 8.8px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="93.782354" transform="rotate(-0 515.525664 93.782354)">never published</text>
+   </g>
+   <g id="text_7">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="76.064816" transform="rotate(-0 622.248617 76.064816)">Calibration</text>
+   </g>
+   <g id="text_8">
+    <text style="fill: #8a8984; font: 8.8px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="93.756229" transform="rotate(-0 622.248617 93.756229)">probabilities you can trust</text>
+   </g>
+   <g id="text_9">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="76.17712" transform="rotate(-0 728.97157 76.17712)">Speed</text>
+   </g>
+   <g id="text_10">
+    <text style="fill: #8a8984; font: 8.8px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="93.772042" transform="rotate(-0 728.97157 93.772042)">faster answers</text>
+   </g>
+   <g id="text_11">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="76.064816" transform="rotate(-0 835.694523 76.064816)">Cost</text>
+   </g>
+   <g id="text_12">
+    <text style="fill: #8a8984; font: 8.8px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="93.725979" transform="rotate(-0 835.694523 93.725979)">higher is cheaper</text>
+   </g>
+   <g id="text_13">
+    <text style="fill: #52514e; font: 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="131.157291" transform="rotate(-0 235.542608 131.157291)">Cygnet</text>
+   </g>
+   <g id="text_14">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="126.891031" transform="rotate(-0 302.079758 126.891031)">68.55</text>
+   </g>
+   <g id="text_15">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="138.484203" transform="rotate(-0 302.079758 138.484203)">64.42 to 69.94</text>
+   </g>
+   <g id="text_16">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="131.247564" transform="rotate(-0 408.802711 131.247564)">54.8</text>
+   </g>
+   <g id="text_17">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="131.247564" transform="rotate(-0 515.525664 131.247564)">51.3</text>
+   </g>
+   <g id="text_18">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="131.247564" transform="rotate(-0 622.248617 131.247564)">87.0</text>
+   </g>
+   <g id="text_19">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="131.247564" transform="rotate(-0 728.97157 131.247564)">91.8</text>
+   </g>
+   <g id="text_20">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="131.247564" transform="rotate(-0 835.694523 131.247564)">56.4</text>
+   </g>
+   <g id="text_21">
+    <text style="fill: #52514e; font: 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="163.068244" transform="rotate(-0 235.542608 163.068244)">decider-12b v1</text>
+   </g>
+   <g id="text_22">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="158.838938" transform="rotate(-0 302.079758 158.838938)">70.42</text>
+   </g>
+   <g id="text_23">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="170.43211" transform="rotate(-0 302.079758 170.43211)">68.09 to 71.63</text>
+   </g>
+   <g id="text_24">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="163.195471" transform="rotate(-0 408.802711 163.195471)">60.6</text>
+   </g>
+   <g id="text_25">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="163.195471" transform="rotate(-0 515.525664 163.195471)">59.5</text>
+   </g>
+   <g id="text_26">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="163.195471" transform="rotate(-0 622.248617 163.195471)">83.8</text>
+   </g>
+   <g id="text_27">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="163.195471" transform="rotate(-0 728.97157 163.195471)">90.5</text>
+   </g>
+   <g id="text_28">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="163.195471" transform="rotate(-0 835.694523 163.195471)">57.8</text>
+   </g>
+   <g id="text_29">
+    <text style="fill: #52514e; font: 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="195.016151" transform="rotate(-0 235.542608 195.016151)">decider-12b v2</text>
+   </g>
+   <g id="text_30">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="190.786845" transform="rotate(-0 302.079758 190.786845)">70.88</text>
+   </g>
+   <g id="text_31">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="202.380017" transform="rotate(-0 302.079758 202.380017)">68.54 to 72.21</text>
+   </g>
+   <g id="text_32">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="195.143378" transform="rotate(-0 408.802711 195.143378)">63.0</text>
+   </g>
+   <g id="text_33">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="195.143378" transform="rotate(-0 515.525664 195.143378)">63.6</text>
+   </g>
+   <g id="text_34">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="195.143378" transform="rotate(-0 622.248617 195.143378)">82.0</text>
+   </g>
+   <g id="text_35">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="195.143378" transform="rotate(-0 728.97157 195.143378)">90.5</text>
+   </g>
+   <g id="text_36">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="195.143378" transform="rotate(-0 835.694523 195.143378)">57.8</text>
+   </g>
+   <g id="text_37">
+    <text style="fill: #2a78d6; font: 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="227.004449" transform="rotate(-0 235.542608 227.004449)">Decisio 12B v0.8.0 (ours)</text>
+   </g>
+   <g id="text_38">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="222.734752" transform="rotate(-0 302.079758 222.734752)">68.17</text>
+   </g>
+   <g id="text_39">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="234.327924" transform="rotate(-0 302.079758 234.327924)">57.37 to 69.65</text>
+   </g>
+   <g id="text_40">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="227.091285" transform="rotate(-0 408.802711 227.091285)">52.3</text>
+   </g>
+   <g id="text_41">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="227.091285" transform="rotate(-0 515.525664 227.091285)">51.6</text>
+   </g>
+   <g id="text_42">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="227.091285" transform="rotate(-0 622.248617 227.091285)">89.2</text>
+   </g>
+   <g id="text_43">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="227.091285" transform="rotate(-0 728.97157 227.091285)">87.0</text>
+   </g>
+   <g id="text_44">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="227.091285" transform="rotate(-0 835.694523 227.091285)">59.3</text>
+   </g>
+   <g id="text_45">
+    <text style="fill: #2a78d6; font: 700 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="258.952356" transform="rotate(-0 235.542608 258.952356)">Decisio 31B v0.8.0 (ours)</text>
+   </g>
+   <g id="text_46">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="254.682659" transform="rotate(-0 302.079758 254.682659)">71.69</text>
+   </g>
+   <g id="text_47">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="266.275831" transform="rotate(-0 302.079758 266.275831)">69.86 to 72.81</text>
+   </g>
+   <g id="text_48">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="259.039192" transform="rotate(-0 408.802711 259.039192)">70.4</text>
+   </g>
+   <g id="text_49">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="259.039192" transform="rotate(-0 515.525664 259.039192)">73.3</text>
+   </g>
+   <g id="text_50">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="259.039192" transform="rotate(-0 622.248617 259.039192)">88.7</text>
+   </g>
+   <g id="text_51">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="259.039192" transform="rotate(-0 728.97157 259.039192)">91.2</text>
+   </g>
+   <g id="text_52">
+    <text style="fill: #0b0b0b; font: 700 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="259.039192" transform="rotate(-0 835.694523 259.039192)">51.7</text>
+   </g>
+   <g id="text_53">
+    <text style="fill: #52514e; font: 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="290.859872" transform="rotate(-0 235.542608 290.859872)">deck-31B</text>
+   </g>
+   <g id="text_54">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="286.630566" transform="rotate(-0 302.079758 286.630566)">68.68</text>
+   </g>
+   <g id="text_55">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="298.223738" transform="rotate(-0 302.079758 298.223738)">67.07 to 69.74</text>
+   </g>
+   <g id="text_56">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="290.987099" transform="rotate(-0 408.802711 290.987099)">73.0</text>
+   </g>
+   <g id="text_57">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="290.987099" transform="rotate(-0 515.525664 290.987099)">75.8</text>
+   </g>
+   <g id="text_58">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="290.987099" transform="rotate(-0 622.248617 290.987099)">82.2</text>
+   </g>
+   <g id="text_59">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="290.987099" transform="rotate(-0 728.97157 290.987099)">86.7</text>
+   </g>
+   <g id="text_60">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="290.987099" transform="rotate(-0 835.694523 290.987099)">49.7</text>
+   </g>
+   <g id="text_61">
+    <text style="fill: #52514e; font: 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="322.844732" transform="rotate(-0 235.542608 322.844732)">H2O-Lightning-4B</text>
+   </g>
+   <g id="text_62">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="318.578473" transform="rotate(-0 302.079758 318.578473)">72.52</text>
+   </g>
+   <g id="text_63">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="330.171645" transform="rotate(-0 302.079758 330.171645)">69.79 to 73.79</text>
+   </g>
+   <g id="text_64">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="322.935006" transform="rotate(-0 408.802711 322.935006)">60.0</text>
+   </g>
+   <g id="text_65">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="322.935006" transform="rotate(-0 515.525664 322.935006)">59.0</text>
+   </g>
+   <g id="text_66">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="322.935006" transform="rotate(-0 622.248617 322.935006)">90.0</text>
+   </g>
+   <g id="text_67">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="322.935006" transform="rotate(-0 728.97157 322.935006)">92.6</text>
+   </g>
+   <g id="text_68">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="322.935006" transform="rotate(-0 835.694523 322.935006)">60.3</text>
+   </g>
+   <g id="text_69">
+    <text style="fill: #52514e; font: 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="354.792639" transform="rotate(-0 235.542608 354.792639)">Quyet-1.0-Large</text>
+   </g>
+   <g id="text_70">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="350.52638" transform="rotate(-0 302.079758 350.52638)">71.39</text>
+   </g>
+   <g id="text_71">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="362.119552" transform="rotate(-0 302.079758 362.119552)">69.84 to 72.21</text>
+   </g>
+   <g id="text_72">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="354.882913" transform="rotate(-0 408.802711 354.882913)">73.4</text>
+   </g>
+   <g id="text_73">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="354.882913" transform="rotate(-0 515.525664 354.882913)">71.6</text>
+   </g>
+   <g id="text_74">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="354.882913" transform="rotate(-0 622.248617 354.882913)">90.0</text>
+   </g>
+   <g id="text_75">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="354.882913" transform="rotate(-0 728.97157 354.882913)">86.9</text>
+   </g>
+   <g id="text_76">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="354.882913" transform="rotate(-0 835.694523 354.882913)">50.5</text>
+   </g>
+   <g id="text_77">
+    <text style="fill: #52514e; font: 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="386.703593" transform="rotate(-0 235.542608 386.703593)">torchcast-decision-12b</text>
+   </g>
+   <g id="text_78">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="382.474287" transform="rotate(-0 302.079758 382.474287)">69.91</text>
+   </g>
+   <g id="text_79">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="394.067459" transform="rotate(-0 302.079758 394.067459)">67.22 to 71.47</text>
+   </g>
+   <g id="text_80">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="386.83082" transform="rotate(-0 408.802711 386.83082)">60.5</text>
+   </g>
+   <g id="text_81">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="386.83082" transform="rotate(-0 515.525664 386.83082)">61.1</text>
+   </g>
+   <g id="text_82">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="386.83082" transform="rotate(-0 622.248617 386.83082)">82.9</text>
+   </g>
+   <g id="text_83">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="386.83082" transform="rotate(-0 728.97157 386.83082)">91.7</text>
+   </g>
+   <g id="text_84">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="386.83082" transform="rotate(-0 835.694523 386.83082)">56.4</text>
+   </g>
+   <g id="text_85">
+    <text style="fill: #52514e; font: 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="418.6515" transform="rotate(-0 235.542608 418.6515)">Winnow-12B Q8</text>
+   </g>
+   <g id="text_86">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="414.422194" transform="rotate(-0 302.079758 414.422194)">68.89</text>
+   </g>
+   <g id="text_87">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="426.015366" transform="rotate(-0 302.079758 426.015366)">66.45 to 70.46</text>
+   </g>
+   <g id="text_88">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="418.778727" transform="rotate(-0 408.802711 418.778727)">59.5</text>
+   </g>
+   <g id="text_89">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="418.778727" transform="rotate(-0 515.525664 418.778727)">59.2</text>
+   </g>
+   <g id="text_90">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="418.778727" transform="rotate(-0 622.248617 418.778727)">83.0</text>
+   </g>
+   <g id="text_91">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="418.778727" transform="rotate(-0 728.97157 418.778727)">86.7</text>
+   </g>
+   <g id="text_92">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="418.778727" transform="rotate(-0 835.694523 418.778727)">56.6</text>
+   </g>
+   <g id="text_93">
+    <text style="fill: #52514e; font: 11px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: end" x="235.542608" y="450.639798" transform="rotate(-0 235.542608 450.639798)">Jev 1.13.0 (reference)</text>
+   </g>
+   <g id="text_94">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="446.370101" transform="rotate(-0 302.079758 446.370101)">71.49</text>
+   </g>
+   <g id="text_95">
+    <text style="fill: #52514e; font: 7.6px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="302.079758" y="457.963273" transform="rotate(-0 302.079758 457.963273)">69.14 to 72.40</text>
+   </g>
+   <g id="text_96">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="408.802711" y="450.726634" transform="rotate(-0 408.802711 450.726634)">63.6</text>
+   </g>
+   <g id="text_97">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="515.525664" y="450.726634" transform="rotate(-0 515.525664 450.726634)">61.6</text>
+   </g>
+   <g id="text_98">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="622.248617" y="450.726634" transform="rotate(-0 622.248617 450.726634)">90.6</text>
+   </g>
+   <g id="text_99">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="728.97157" y="450.726634" transform="rotate(-0 728.97157 450.726634)">91.5</text>
+   </g>
+   <g id="text_100">
+    <text style="fill: #0b0b0b; font: 11.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: middle" x="835.694523" y="450.726634" transform="rotate(-0 835.694523 450.726634)">54.7</text>
+   </g>
+   <g id="text_101">
+    <text style="fill: #52514e; font: 9.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start" x="60.964938" y="486.522167" transform="rotate(-0 60.964938 486.522167)">Decisio 31B v0.8.0</text>
+   </g>
+   <g id="patch_3">
+    <path d="M 19.461567 271.602875 
+L 887.738433 271.602875 
+L 887.738433 240.623087 
+L 19.461567 240.623087 
+L 19.461567 271.602875 
+z
+" clip-path="url(#peef9001a33)" style="fill: none; stroke: #0b0b0b; stroke-width: 2.2; stroke-linejoin: miter"/>
+   </g>
+  </g>
+  <g id="text_102">
+   <text style="fill: #0b0b0b; font: 700 14px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start" x="18.144" y="24.475625" transform="rotate(-0 18.144 24.475625)">JevBench v1.6.1, axis by axis</text>
+  </g>
+  <g id="text_103">
+   <text style="fill: #52514e; font: 10.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start" x="18.144" y="48.53475" transform="rotate(-0 18.144 48.53475)">Ten open-weights systems in alphabetical order and Jev 1.13.0 as a reference row; plain values, 0 to 100</text>
+  </g>
+  <g id="text_104">
+   <text style="fill: #8a8984; font: 8px 'Helvetica', 'Arial', 'DejaVu Sans'" transform="translate(18.144 546.29925)">Source: benchmarkheaven.com/api/jevbench/v1.6.1 (view A), read 2026-10-09, sha256 5cd8c1332226ea9c179883d2285c0d8b8cc593ae38f2645197364a7ddd9c83c1. Current standings: benchmarkheaven.com/jev-models.</text>
+   <text style="fill: #8a8984; font: 8px 'Helvetica', 'Arial', 'DejaVu Sans'" transform="translate(18.144 556.79925)">The four axes have no published intervals; the composite shows its 95% interval in small text. A fixed set of systems, in alphabetical order, with no shading or marks.</text>
+   <text style="fill: #8a8984; font: 8px 'Helvetica', 'Arial', 'DejaVu Sans'" transform="translate(18.144 567.318)">The Decisio rows are the board's v0.8.0 entries (31B 71.69, 12B 68.17); the 12B's v0.9.0 entry (67.76) is not among these rows.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="peef9001a33">
+   <rect x="18.144" y="51.84" width="870.912" height="457.92"/>
+  </clipPath>
+ </defs>
+</svg>

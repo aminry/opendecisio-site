@@ -1,0 +1,28 @@
+---
+import { nav } from '../../config/nav.mjs';
+import { site } from '../../config/site';
+import ThemeSelect from './ThemeSelect.astro';
+const path = Astro.url.pathname;
+---
+<header class="site-header">
+	<div class="wrap site-header__row">
+		<a class="brand" href="/">
+			{/* The Fork mark (design/logos): a path takes one branch of a fork. */}
+			<svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true" width="24" height="24">
+				<path class="brand__other" d="M16 18L8.5 10.5" fill="none" stroke-width="3.5" stroke-linecap="round"></path>
+				<path class="brand__taken" d="M16 29V18L23 9.25" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+				<path class="brand__head" d="M28 3L26.51 12.06L19.49 6.44Z"></path>
+			</svg>
+			<span>{site.name}</span>
+		</a>
+		<div class="site-header__end">
+			<button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav" hidden><span class="sr-only">Menu</span><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg></button>
+			<nav aria-label="Main" id="site-nav">
+				<ul class="nav">
+					{nav.map((l) => <li><a href={l.href} aria-current={l.href.startsWith('/') && path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a></li>)}
+				</ul>
+			</nav>
+			<ThemeSelect />
+		</div>
+	</div>
+</header>

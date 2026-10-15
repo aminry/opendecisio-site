@@ -1,0 +1,10 @@
+{
+	"video": "/media/reel/decisio_reel.mp4",
+	"poster": "/media/reel/poster-site.jpg",
+	"width": 1280,
+	"height": 864,
+	"sha256": "4c984835e91d36d24df44b12caa2b3b20261107e49c2c1ad19624ed142d8bf9c",
+	"source": "the project's demo reel, cut of 2026-10-09",
+	"credit": "The driving clip draws map data from OpenStreetMap (ODbL, \u00a9 OpenStreetMap contributors).",
+	"poster_note": "The frame at 20 s of decisio_reel.mp4 (ffmpeg -ss 20 -frames:v 1), because the reel's own poster is its opening Pong scene, which leaves the lower third of the frame empty."
+}

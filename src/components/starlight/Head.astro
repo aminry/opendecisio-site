@@ -1,0 +1,21 @@
+---
+// Starlight's head, plus structured data: the docs page as a TechArticle and
+// its breadcrumb trail.
+import { Font } from 'astro:assets';
+import Default from '@astrojs/starlight/components/Head.astro';
+import { breadcrumbs, techArticle } from '../../lib/jsonld.mjs';
+import Analytics from '../Analytics.astro';
+
+const { entry } = Astro.locals.starlightRoute;
+const path = Astro.url.pathname;
+const trail = [{ name: 'Docs', path: '/docs/' }];
+if (path !== '/docs/') trail.push({ name: entry.data.title, path });
+const data = [techArticle({ title: entry.data.title, description: entry.data.description ?? '', path }), breadcrumbs(trail)];
+---
+<Default />
+{/* Scripts run: the docs' tabs show one panel from the first paint (src/styles/docs.css). */}
+<script is:inline>document.documentElement.classList.add('js');</script>
+<Font cssVariable="--font-geist" preload />
+<Font cssVariable="--font-geist-mono" preload />
+{data.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+<Analytics />

@@ -1,0 +1,60 @@
+---
+// The capabilities table as the questions a buyer asks (src/lib/buyer.mjs): a tick, a cross or a few words
+// for decisio and for Jev 1.13, and a link to the row's sources in a disclosure below the table, where the
+// upstream cells, the quotes and the snapshot are kept (src/scripts/disclose.ts opens it for the link).
+import { buyerQuestions } from '../lib/buyer.mjs';
+
+const t = buyerQuestions();
+const cell = (c: { mark: string | null; text: string }) => c;
+---
+<div class="buyer" data-launch="buyer">
+	<div class="table-scroll" tabindex="0" role="region" aria-label="What a buyer asks, for decisio and for Jev 1.13">
+		<table class="data-table data-table--stack buyer__table">
+			<caption class="sr-only">The questions a buyer asks, answered for decisio and for Jev 1.13, with a link to each row's sources</caption>
+			<thead>
+				<tr>
+					<th scope="col">Question</th>
+					<th scope="col">decisio</th>
+					<th scope="col">Jev 1.13</th>
+					<th scope="col">Sources</th>
+				</tr>
+			</thead>
+			<tbody>
+				{t.rows.map((r) => (
+					<tr>
+						<th scope="row">{r.question}</th>
+						{[['decisio', cell(r.decisio)], ['Jev 1.13', cell(r.jev)]].map(([who, c]) => (
+							<td data-label={who as string}>
+								<span>
+									{c.mark === 'yes' && <><span class="buyer__tick" aria-hidden="true">✓</span><span class="sr-only">Yes: </span></>}
+									{c.mark === 'no' && <><span class="buyer__cross" aria-hidden="true">✗</span><span class="sr-only">No: </span></>}
+									{c.text}
+								</span>
+							</td>
+						))}
+						<td data-label="Sources"><span><a href={`#src-${r.id}`}>Sources</a></span></td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	</div>
+	<details class="disc buyer__sources">
+		<summary>Sources, row by row <span class="disc__n">{t.rows.length} rows</span></summary>
+		<div class="disc__body" data-table-notes>
+		{t.intro.map((p) => <p set:html={p} />)}
+		<ol class="buyer__list">
+			{t.rows.map((r) => (
+				<li id={`src-${r.id}`}>
+					<strong>{r.question}</strong>
+					{r.sources.map((s) => (
+						<dl class="buyer__src">
+							<dt>decisio ({s.label})</dt><dd set:html={s.ours} />
+							<dt>Jev 1.13 ({s.label})</dt><dd set:html={s.theirs} />
+						</dl>
+					))}
+				</li>
+			))}
+		</ol>
+		</div>
+	</details>
+</div>

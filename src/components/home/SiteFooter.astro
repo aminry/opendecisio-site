@@ -1,0 +1,19 @@
+---
+import { independence, site } from '../../config/site';
+import { pin } from '../../lib/upstream.mjs';
+---
+<footer class="site-footer">
+	<div class="wrap site-footer__grid">
+		<p class="site-footer__independence">{independence}</p>
+		<ul class="site-footer__links">
+			<li><a href={site.repository}>GitHub</a></li>
+			<li><a href={site.pypi}>PyPI</a></li>
+			<li><a href="/docs/">Docs</a></li>
+			<li><a href="/docs/releases/">Releases</a></li>
+			<li><a href="/privacy/">Privacy</a></li>
+		</ul>
+		<p class="site-footer__meta">
+			{site.licence}. The documentation is built from <a href={`${site.repository}/tree/${pin.tag}`}>{site.name} {pin.tag}</a>.
+		</p>
+	</div>
+</footer>

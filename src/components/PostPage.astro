@@ -1,0 +1,67 @@
+---
+// One post, in the home page's style: a label, the headline, a row with the date, the author and the reading time, the
+// body at a reading width, and the other posts of its kind beside it on a wide screen and below it on a narrow one. (A piece first published elsewhere has no page: its
+// card links to the original.)
+import { render } from 'astro:content';
+import { site } from '../config/site';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { breadcrumbs } from '../lib/jsonld.mjs';
+import { dateText, isExternal, isoDay, posts, readingMinutes, url, where } from '../lib/posts.mjs';
+import '../styles/home.css';
+import '../styles/posts.css';
+interface Props { kind: 'articles' | 'news'; entry: any; }
+const { kind, entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const here = url(kind, entry.id);
+const label = kind === 'articles' ? 'Articles' : 'News';
+const more = (await posts(kind)).filter((p) => p.id !== entry.id).slice(0, 2);
+const outLabel = (p: any) => (isExternal(p) ? `on ${p.data.originalSite}` : `${readingMinutes(p)} min read`);
+const jsonLd = [
+	breadcrumbs([{ name: label, path: `/${kind}/` }, { name: d.title, path: `/${kind}/${entry.id}/` }]),
+	{
+		'@context': 'https://schema.org',
+		'@type': kind === 'articles' ? 'Article' : 'NewsArticle',
+		headline: d.title,
+		datePublished: isoDay(d.date),
+		url: here,
+		mainEntityOfPage: here,
+		author: { '@type': 'Person', name: d.author ?? 'Amin Roudaki' },
+		publisher: { '@type': 'Organization', name: site.name, url: site.url },
+		inLanguage: 'en',
+	},
+];
+---
+<SiteLayout bodyClass="home" title={`${d.title}: ${site.name}`} description={d.description ?? d.summary} jsonLd={jsonLd} ogType="article">
+	<article class="post">
+		<header class="hero post__head">
+			<div class="hero__glow" data-parallax aria-hidden="true"></div>
+			<div class="wrap">
+				<p class="kicker"><a href={`/${kind}/`}>{label}</a></p>
+				<h1>{d.title}</h1>
+				<p class="post__meta"><time datetime={isoDay(d.date)}>{dateText(d.date)}</time>{d.author && <><span aria-hidden="true">·</span><span>{d.author}</span></>}<span aria-hidden="true">·</span><span>{readingMinutes(entry)} min read</span></p>
+			</div>
+		</header>
+		<div class="wrap post__grid">
+			<div class="post__body prose" data-history><Content /></div>
+			{more.length > 0 && (
+				<aside class="post__more" aria-labelledby="more-h">
+					<h2 id="more-h" class="post__more-h">More {label.toLowerCase()}</h2>
+					<ul class="posts posts--rail">
+						{more.map((p) => (
+							<li class="post-card tile tilt">
+								<p class="post-card__meta"><time datetime={isoDay(p.data.date)}>{dateText(p.data.date)}</time><span aria-hidden="true">·</span><span>{outLabel(p)}</span></p>
+								<h3 class="post-card__title"><a href={where(kind, p)}>{p.data.title}</a></h3>
+								<span class="post-card__go" aria-hidden="true">{isExternal(p) ? `Read on ${p.data.originalSite}` : 'Read'}</span>
+							</li>
+						))}
+					</ul>
+					<p class="post__feed"><a class="chip" href={`/${kind}/rss.xml`}>RSS feed</a></p>
+				</aside>
+			)}
+		</div>
+	</article>
+	<script>
+		import '../scripts/depth.ts';
+	</script>
+</SiteLayout>

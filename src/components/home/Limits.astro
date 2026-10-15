@@ -1,0 +1,13 @@
+---
+// "Honest limits": what the numbers on this page do not say, one line each (limits in src/lib/launch.mjs).
+import { limits } from '../../lib/launch.mjs';
+const items = limits();
+---
+<section class="section band" id="limits" aria-labelledby="limits-h" data-launch="limits">
+	<div class="wrap">
+		<div class="section__head"><p class="kicker">Read this</p><h2 id="limits-h">Honest <em class="hl">limits</em></h2></div>
+		<ul class="cards3 limits" data-reveal>
+			{items.map((i) => <li class="card3 tile tilt"><span class="card3__t">{i.title}</span><span class="card3__l">{i.text}</span></li>)}
+		</ul>
+	</div>
+</section>

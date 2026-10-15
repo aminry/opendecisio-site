@@ -1,0 +1,148 @@
+---
+import AxisByAxis from '../components/AxisByAxis.astro';
+import ManyQuestions from '../components/ManyQuestions.astro';
+import Closing from '../components/home/Closing.astro';
+import GetStarted from '../components/home/GetStarted.astro';
+import Limits from '../components/home/Limits.astro';
+import Proof from '../components/home/Proof.astro';
+import TeachIt from '../components/home/TeachIt.astro';
+import HomeDemo from '../components/home/HomeDemo.astro';
+import HowSteps from '../components/home/HowSteps.astro';
+import Reel from '../components/home/Reel.astro';
+import WhyDecisio from '../components/home/WhyDecisio.astro';
+import { independence, site } from '../config/site';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { laptop, oneSentence } from '../lib/home.mjs';
+import LaunchImage from '../components/LaunchImage.astro';
+import { protoData, routing } from '../lib/launch.mjs';
+import '../styles/home.css';
+import { pin } from '../lib/upstream.mjs';
+
+// The hero's kicker rolls through these, ending on the last; its box is as wide as the widest, so nothing moves.
+const flip = ['read once', 'answered in one pass', 'on your own hardware'];
+const rt = routing();
+const proto = protoData();
+const onLaptop = laptop();
+// The two Ollama listings' pull commands, for the install tabs: the lines of the README's own block.
+const pulls = onLaptop.pull.split('\n').filter((l) => l.startsWith('ollama pull')).map((l) => ({ cmd: l, name: /decisio-gemma/.test(l) ? 'Gemma' : 'Qwen' }));
+if (pulls.length !== 2) throw new Error('index: the README no longer has two Ollama pull commands');
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareSourceCode',
+	name: site.name,
+	description: oneSentence(),
+	url: site.url,
+	codeRepository: site.repository,
+	programmingLanguage: 'Python',
+	license: 'https://www.apache.org/licenses/LICENSE-2.0',
+	version: pin.tag.replace(/^v/, ''),
+};
+---
+<SiteLayout bodyClass="home" title={`${site.name}: typed decisions from an open model`} description={oneSentence()} jsonLd={jsonLd}>
+	<section class="hero">
+		<div class="hero__glow" data-parallax aria-hidden="true"></div>
+		<div class="wrap hero__grid">
+			<div class="hero__copy">
+				<a class="pill" href="/docs/releases/"><b>{pin.tag}</b> Release notes</a>
+				<p class="kicker">Typed decisions, <span class="flip" data-flip={flip.join('|')} aria-hidden="true"><span class="flip__w">{flip.at(-1)}</span>{flip.map((w) => <span class="flip__s">{w}</span>)}</span><span class="sr-only">on your own hardware</span></p>
+				<h1>Decisions you can trust, on <em class="hl">your own hardware</em>. Open source.</h1>
+				<p class="lede">Typed questions go in. A probability for every option comes out, in one pass.</p>
+				<ul class="chips" data-launch="stats">
+					<li class="chip2"><b><span class="count" data-to={proto.hero.stats.single} data-final={String(proto.hero.stats.single)}>{proto.hero.stats.single}</span> ms</b> for one question about a new 300-token text</li>
+					<li class="chip2"><b><span class="count" data-to={parseFloat(proto.hero.stats.seconds)} data-dec="2" data-final={proto.hero.stats.seconds.replace(' s', '')}>{proto.hero.stats.seconds.replace(' s', '')}</span> s</b> for 50 questions about a 3,000-token document</li>
+					<li class="chip2"><b><span class="count" data-to={proto.hero.stats.longTokens} data-final={proto.hero.stats.longTokens.toLocaleString('en-US')}>{proto.hero.stats.longTokens.toLocaleString('en-US')}</span> tokens</b> in one document</li>
+				</ul>
+				<div class="install" data-install>
+					<div class="install__tabs" role="tablist" aria-label="Ollama listing">
+						{pulls.map((p, i) => <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-cmd={p.cmd}>{p.name}</button>)}
+					</div>
+					<code class="install__cmd"><span class="install__p" aria-hidden="true">$</span> <span data-install-cmd>{pulls[0].cmd}</span></code>
+					<button type="button" class="install__copy" data-copy>copy</button>
+				</div>
+				<div class="actions hero__try">
+					<a class="button button--primary" href="#try">Get started</a>
+					<a class="button" href="#proof">See the proof</a>
+					<a class="button" href={site.repository}>GitHub</a>
+				</div>
+			</div>
+			<HomeDemo />
+		</div>
+	</section>
+
+	<TeachIt />
+
+	<Proof />
+
+	<section class="section band" id="how" aria-labelledby="how-h">
+		<div class="wrap">
+			<div class="section__head"><p class="kicker">How it works</p><h2 id="how-h">Read once. <em class="hl">Answer fast.</em></h2><p>No training: one pass for each question.</p></div>
+			<HowSteps />
+		</div>
+	</section>
+
+	<section class="section" id="race" aria-labelledby="many-questions">
+		<div class="wrap"><ManyQuestions chart="linear" race /></div>
+	</section>
+
+	<section class="section band" id="grid" aria-labelledby="axis-by-axis">
+		<div class="wrap"><AxisByAxis interactive /></div>
+	</section>
+
+	<section class="section" id="threshold" aria-labelledby="use-probability">
+		<div class="wrap">
+			<div class="section__head"><p class="kicker">Routing</p><h2 id="use-probability">Use the <em class="hl">probability</em></h2><p>Keep the answers above a threshold you pick and send the rest to a person or a larger model. <a href="https://github.com/aminry/decisio-examples/tree/main/examples/05-escalate-when-unsure">Example 5</a> measured what that buys.</p></div>
+			<div class="route glass" data-route data-reveal hidden>
+				<label class="route__ctl">Keep answers at or above <input type="range" min="0" max="5" step="1" value="3" aria-label="Threshold, one stop for each measured value from 0.5 to 0.95" /></label>
+				<span class="route__track" aria-hidden="true"><span class="route__kept" data-route-kept></span></span>
+				<p class="route__out" data-route-out aria-live="polite"></p>
+			</div>
+			<details class="more">
+				<summary>Every threshold, as measured</summary>
+				<div class="table-scroll" tabindex="0" role="region" aria-label="What escalating the unsure answers does, from example 5" data-launch="routing">
+					<table class="data-table data-table--stack">
+						<thead>
+							<tr>
+								<th scope="col">Rule</th>
+								<th scope="col" class="num">Escalated</th>
+								<th scope="col" class="num">Right on the rest</th>
+								<th scope="col" class="num">95% interval</th>
+								<th scope="col" class="num">Confidently wrong (wrong, kept)</th>
+								<th scope="col" class="num">Wrong answers escalated</th>
+							</tr>
+						</thead>
+						<tbody>
+							{rt.rows.map((r) => (
+								<tr>
+									<th scope="row">{r.rule}</th>
+									<td class="num" data-label="Escalated"><span>{r.escalated} ({r.share})</span></td>
+									<td class="num" data-label="Right on the rest"><span>{r.accuracy}</span></td>
+									<td class="num" data-label="95% interval"><span>{r.interval ?? 'not applicable'}</span></td>
+									<td class="num" data-label="Confidently wrong"><span>{r.confident}</span></td>
+									<td class="num" data-label="Wrong answers escalated"><span>{r.caught}</span></td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+				<figure class="lc-fig" data-launch="routing-curve">
+					<LaunchImage name="routing-curve" width={1800} height={1120} alt={`Line chart of accuracy on the questions kept against the share of questions escalated, for thresholds from 0.5 to 0.95 on Gemma 4 31B, with the 0.8 and 0.9 points marked. ${rt.captionText}`} />
+				</figure>
+			</details>
+		</div>
+	</section>
+
+	<WhyDecisio />
+
+	<Reel />
+
+	<GetStarted />
+
+	<Limits />
+
+	<Closing />
+	<div id="proto" data-d={JSON.stringify(proto)} hidden></div>
+	<script>
+		import '../scripts/proto.ts';
+		import '../scripts/depth.ts';
+	</script>
+</SiteLayout>

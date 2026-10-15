@@ -1,0 +1,28 @@
+---
+// Proof: three measured values on the board's file, each beside Jev 1.13.0's (proofCards in src/lib/launch.mjs, from
+// the launch facts' stable claims), and the board behind "See the board". No rank (decided 2026-10-15): the live board has today's standings.
+import { BOARD_URL, proofCards } from '../../lib/launch.mjs';
+import JevbenchChart from './JevbenchChart.astro';
+const p = proofCards();
+---
+<section class="section" id="proof" aria-labelledby="proof-h">
+	<div class="wrap">
+		<div class="section__head"><p class="kicker">On the board</p><h2 id="proof-h">What the <em class="hl">public board</em> says</h2></div>
+		<div data-reveal>
+		<ul class="cards3">
+			{p.cards.map((c, i) => (
+				<li class={`card3 tile tilt${i === 0 ? ' tile--active' : ''}`}>
+					<span class="card3__n">{c.suffix ? <>{c.final}{c.suffix}</> : <span class="count" data-to={c.n} data-dec={c.dec} data-final={c.final}>{c.final}</span>}</span>
+					<span class="card3__l">{c.text}</span>
+				</li>
+			))}
+		</ul>
+		<p class="proof__line">JevBench {p.revision}, the board's file of October 2026, decisio v0.8.0 rows. <a href={BOARD_URL}>The live board</a> has today's standings.</p>
+		</div>
+		<details class="more board" data-reveal>
+			<summary>See the board</summary>
+			<p class="board__claim" data-launch="lead">{p.claimText} <a class="board__lim" href="#limits">Honest limits</a></p>
+			<JevbenchChart />
+		</details>
+	</div>
+</section>

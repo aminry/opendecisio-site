@@ -1,0 +1,237 @@
+# The site's checks. To spend few runner minutes, a pull request and a push to main run the build with its content checks,
+# Lighthouse and the links, and the browser checks in Chromium alone (in two halves, so a job stays short). The other two
+# engines, Firefox and WebKit, and the run of every published command on the CPU stand-in (verify-examples) run
+#   - nightly on main (the schedule below), and on demand (workflow_dispatch; the bump workflow dispatches it for its
+#     pull request, because a pull request opened by GITHUB_TOKEN starts no pull_request run);
+#   - verify-examples also on any pull request or push that changes a code sample, the sources of the examples, the
+#     verification plan or upstream.json (the `changes` job below).
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # What this run is for: the engines to test, and whether the examples need running again.
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
+    outputs:
+      engines: ${{ steps.what.outputs.engines }}
+      verify: ${{ steps.what.outputs.verify }}
+      skip: ${{ steps.what.outputs.skip }}
+    steps:
+      - id: what
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+          PR: ${{ github.event.pull_request.number }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          # The files whose change means the examples may differ: the docs' pages (their code samples), the code that writes
+          # a sample (site-blocks, the figures' recorded decision, the home page's blocks, the facts they come from), the plan
+          # and the runner that runs them, the record, and the release they run against.
+          pattern='^(src/content/docs/|src/lib/(site-blocks|blocks|home|launch|remark-upstream)\.mjs$|src/lib/figures/core\.mjs$|src/lib/docs-figures\.mjs$|src/data/launch/|verification/|scripts/(verify-commands|verify-ollama)\.mjs$|scripts/checks/verify-record\.mjs$|upstream\.json$)'
+          case "$EVENT" in
+            pull_request) files=$(gh pr diff "$PR" --repo "$REPO" --name-only) ;;
+            push)
+              if [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then files=x; else
+                files=$(gh api "repos/$REPO/compare/$BEFORE...$AFTER" --jq '.files[].filename'); fi ;;
+            *) files= ;;
+          esac
+          skip=false
+          case "$EVENT" in
+            schedule|workflow_dispatch) engines='["chromium","webkit","firefox"]'; verify=true ;;
+            *)
+              engines='["chromium"]'
+              if printf '%s\n' "$files" | grep -Eq "$pattern" || [ "$files" = x ]; then verify=true; else verify=false; fi ;;
+          esac
+          # The nightly run is for new commits: if the last full run (a nightly or an on-demand one) on main was of this very
+          # commit, there is nothing new to test, and the whole run is skipped, quietly (every other job needs this one).
+          if [ "$EVENT" = schedule ]; then
+            last=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?branch=main&status=completed&per_page=30" --jq '[.workflow_runs[]|select(.event=="schedule" or .event=="workflow_dispatch")][0].head_sha // ""')
+            if [ "$last" = "$AFTER" ]; then skip=true; verify=false; fi
+          fi
+          echo "engines=$engines" >> "$GITHUB_OUTPUT"
+          echo "verify=$verify" >> "$GITHUB_OUTPUT"
+          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+          echo "engines $engines, verify $verify, skip $skip ($EVENT)"
+
+  build:
+    needs: changes
+    if: needs.changes.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+      - name: The pinned decisio release
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .upstream
+          key: upstream-${{ hashFiles('upstream.json') }}
+      - run: npm ci
+      - name: Build from the pinned release
+        run: npm run build
+      - name: Content rules
+        run: node scripts/checks/content.mjs
+      - name: The JevBench claims are those launch_facts.public.json allows
+        run: node scripts/checks/launch.mjs
+      - name: Wording the facts allow in one place only
+        run: node scripts/checks/wording.mjs
+      - name: No rank and no comparison on any page
+        run: node scripts/checks/claims.mjs
+      - name: Nothing internal in the public repository
+        run: node scripts/checks/internal.mjs
+      - name: Nothing internal on any built page, decisio's rendered docs included
+        run: node scripts/checks/internal.mjs --dist
+      - name: llms.txt and llms-full.txt
+        run: node scripts/checks/llms.mjs
+      - name: Every docs page follows the page pattern
+        run: node scripts/checks/docs-pattern.mjs
+      - name: Articles and news (canonical links, feeds, the launch rules)
+        run: node scripts/checks/posts.mjs
+      - name: The analytics beacon and the privacy page
+        run: node scripts/checks/analytics.mjs
+      - name: Colour contrast of the tokens
+        run: node scripts/checks/contrast.mjs
+      - name: Every published code block is in the verification plan
+        run: node scripts/verify-commands.mjs --dry-run
+      - name: Internal links and anchors
+        run: node scripts/checks/links.mjs
+      - name: External-link retry rules, against a local server
+        run: node scripts/checks/external-selftest.mjs
+      - name: Cloudflare accepts the configuration (wrangler deploy --dry-run)
+        run: npx wrangler deploy --dry-run
+        env:
+          WRANGLER_SEND_METRICS: 'false'
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: site
+          path: dist
+          retention-days: 7
+
+  browsers:
+    # The browser checks in each engine Safari, Chrome and Firefox are built on: Chromium on every run, the others nightly
+    # and on demand (the `changes` job).
+    needs: [build, changes]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: ${{ fromJSON(needs.changes.outputs.engines) }}
+        # Each engine's pages in two halves: 39 pages took 27 to 31 minutes in one job, which is the job's limit.
+        shard: ['1/2', '2/2']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: site
+          path: dist
+      - name: The browser for the checks
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ matrix.engine }}-${{ hashFiles('package-lock.json') }}
+      - run: npx playwright install --with-deps ${{ matrix.engine }}
+      - name: WCAG 2.2 AA, CSP, failed requests, layout shift, keyboard reach, media, search (phone, tablet, desktop; light, dark)
+        run: node scripts/checks/browser.mjs
+        env:
+          ENGINES: ${{ matrix.engine }}
+          SHARD: ${{ matrix.shard }}
+      - name: Screenshots of every page, for review
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: screenshots-${{ matrix.engine }}-${{ strategy.job-index }}
+          path: .browser/${{ matrix.engine }}
+          retention-days: 7
+
+  lighthouse-and-links:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: site
+          path: dist
+      - name: Lighthouse 95 or better in all four categories
+        run: node scripts/checks/lighthouse.mjs
+      - name: External links
+        run: node scripts/checks/links.mjs --external
+      - name: The Ollama listing is the one the Ollama blocks were run against
+        run: node scripts/checks/ollama-listing.mjs
+
+  # Every published command that the CPU stand-in can serve is run, in order, from a fresh clone of the pinned release;
+  # the record the run writes must agree with the committed one (scripts/checks/verify-record.mjs).
+  verify-examples:
+    needs: changes
+    if: needs.changes.outputs.verify == 'true' && needs.changes.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          cache: npm
+      - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+      - name: The pinned decisio release
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .upstream
+          key: upstream-${{ hashFiles('upstream.json') }}
+      - run: npm ci
+      - name: Fetch the pinned release
+        run: node scripts/fetch-upstream.mjs
+      - name: Keep the committed record
+        run: cp verification/commands.json "$RUNNER_TEMP/commands.committed.json"
+      - name: Run every published command on the CPU stand-in
+        shell: bash
+        run: node scripts/verify-commands.mjs 2>&1 | tee verify.log
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: The run agrees with the committed record
+        run: node scripts/checks/verify-record.mjs "$RUNNER_TEMP/commands.committed.json"
+      # The record this run wrote rides with its log: a release bump takes it from here when the bump's own run could not write it.
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: verify-log
+          path: |
+            verify.log
+            verification/commands.json
+          retention-days: 14

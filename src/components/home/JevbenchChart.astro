@@ -1,0 +1,69 @@
+---
+// JevBench on the home page: ten open-weights systems from the board's file and Jev as a reference row, by composite
+// score, with no rank (decided 2026-10-15) drawn here as our own SVG, in the page's font and on the card's background, from launch_facts.public.json
+// (src/lib/launch.mjs): each row's interval draws in when it scrolls into view. Where the screen is too narrow to read it,
+// the same rows as a table. Higher is better.
+import { BOARD_URL as boardUrl, fixed, jevbench, openRows } from '../../lib/launch.mjs';
+
+const j = jevbench();
+const rows = openRows();
+const W = 820;
+const X0 = 280;
+const X1 = 600;
+const MIN = 64;
+const MAX = 76;
+const TOP = 40;
+const ROW = 34;
+const GAP = 22;
+const x = (v: number) => X0 + ((Math.min(Math.max(v, MIN), MAX) - MIN) / (MAX - MIN)) * (X1 - X0);
+const y = (i: number) => TOP + i * ROW + (rows[i]?.jev ? GAP : 0);
+// Room under the axis label's baseline for its descenders (the comma was clipped).
+const H = y(rows.length - 1) + 60;
+const ticks = [64, 66, 68, 70, 72, 74, 76];
+const alt = `Dot and interval chart of JevBench ${j.revision} composite scores with 95% intervals: ten open-weights systems from the board's file and Jev 1.13.0 as a reference row, in alphabetical order; every row is in the table on this page and on the benchmarks page.`;
+---
+<figure class="jb" data-launch="chart">
+	<div class="jb__lc">
+		<svg class="bc" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="bc-t bc-d" xmlns="http://www.w3.org/2000/svg">
+			<title id="bc-t">JevBench v1.6.1 composite scores with 95% intervals: ten open-weights systems and Jev 1.13.0</title>
+			<desc id="bc-d">{alt}</desc>
+			<g class="bc-grid">
+				{ticks.map((t) => <><path d={`M${x(t)} ${TOP - 14}V${H - 40}`} /><text x={x(t)} y={H - 20} text-anchor="middle">{t}</text></>)}
+			</g>
+			<g class="bc-rows">
+				{rows.map((r, i) => (
+					<g class:list={['bc-row', { 'bc-ours': r.ours, 'bc-jev': r.jev }]}>
+						<text class="bc-l" x={X0 - 14} y={y(i) + 4} text-anchor="end">{r.label}</text>
+						<path class="bc-ci" pathLength="1" d={`M${x(r.lo)} ${y(i)}H${x(r.hi)}`} />
+						{r.lo < MIN && <path class="bc-arrow" d={`M${X0 - 2} ${y(i)}l9 -5v10z`} />}
+						<circle class="bc-dot" cx={x(r.score)} cy={y(i)} r="5.5" />
+						<text class="bc-v" x={X1 + 20} y={y(i) + 4}>{fixed(r.score)} <tspan class="bc-r">[{fixed(r.lo)}, {fixed(r.hi)}]</tspan></text>
+					</g>
+				))}
+			</g>
+			<text class="bc-ax" x={(X0 + X1) / 2} y={H - 6} text-anchor="middle">JevBench score, with its 95% interval</text>
+		</svg>
+	</div>
+	<div class="jb__fallback table-scroll">
+		<table class="data-table data-table--stack">
+			<caption class="sr-only">JevBench {j.revision}: ten open-weights systems from the board's file, in alphabetical order, with Jev 1.13.0 as a reference row</caption>
+			<thead>
+				<tr>
+					<th scope="col">System</th>
+					<th scope="col" class="num">Score</th>
+					<th scope="col" class="num">95% interval</th>
+				</tr>
+			</thead>
+			<tbody>
+				{rows.map((r) => (
+					<tr class:list={[r.base, { 'row--ours': r.ours }]}>
+						<th scope="row">{r.label}</th>
+						<td class="num" data-label="Score"><span>{r.ours ? <strong>{fixed(r.score)}</strong> : fixed(r.score)}</span></td>
+						<td class="num" data-label="95% interval"><span>{fixed(r.lo)} to {fixed(r.hi)}</span></td>
+					</tr>
+				))}
+			</tbody>
+		</table>
+	</div>
+	<figcaption class="jb__src small"><a href={boardUrl}>The JevBench board</a>: its file for revision {j.revision}, sha256 <code>{j.sha256.slice(0, 12)}</code>.</figcaption>
+</figure>

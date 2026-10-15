@@ -1,0 +1,13 @@
+// Cloudflare Workers with static assets: no Worker script, only the built site.
+// _headers in dist/ sets the security headers; 404.html answers unknown paths.
+{
+	"name": "opendecisio-site",
+	"compatibility_date": "2026-10-01",
+	"assets": {
+		"directory": "./dist",
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "404-page"
+	},
+	// Pull-request builds run `wrangler preview`, which needs this block (empty: assets and settings stay above).
+	"previews": {}
+}

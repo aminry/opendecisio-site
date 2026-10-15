@@ -1,0 +1,21 @@
+---
+// The hero of the site's own pages other than home (articles, news, benchmarks, demos, privacy, the 404): the home
+// hero without its demo. A label, the headline (the slot, which may set one phrase in the accent), one or two
+// sentences, and the page's chips. It settles in once on load (pages.css), and not under reduced motion.
+import '../styles/home.css';
+import '../styles/pages.css';
+interface Props { label: string; lede: string; links?: { href: string; text: string }[]; }
+const { label, lede, links = [] } = Astro.props;
+---
+<section class="hero page-hero">
+	<div class="hero__glow" data-parallax aria-hidden="true"></div>
+	<div class="wrap">
+		<p class="kicker">{label}</p>
+		<h1><slot /></h1>
+		<p class="page-hero__lede">{lede}</p>
+		{links.length > 0 && <p class="page-hero__links">{links.map((l) => <a class="chip" href={l.href}>{l.text}</a>)}</p>}
+	</div>
+</section>
+<script>
+	import '../scripts/depth.ts';
+</script>

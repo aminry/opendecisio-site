@@ -1,0 +1,48 @@
+{
+  "name": "opendecisio-site",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "fetch-upstream": "node scripts/fetch-upstream.mjs",
+    "dev": "node scripts/fetch-upstream.mjs && astro dev --force",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs",
+    "media": "node scripts/fetch-upstream.mjs && node scripts/media.mjs",
+    "verify": "node scripts/fetch-upstream.mjs && node scripts/verify-commands.mjs"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "7.3.1",
+    "@astrojs/sitemap": "3.7.4",
+    "@astrojs/starlight": "0.42.5",
+    "@fontsource-variable/geist": "5.3.0",
+    "@fontsource-variable/geist-mono": "5.3.0",
+    "astro": "7.3.5",
+    "github-slugger": "2.0.0",
+    "hast-util-to-html": "9.0.5",
+    "hast-util-to-string": "3.0.1",
+    "mdast-util-to-hast": "13.2.1",
+    "mdast-util-to-string": "4.0.0",
+    "remark-directive": "4.0.0",
+    "remark-frontmatter": "5.0.0",
+    "remark-gfm": "4.0.1",
+    "remark-parse": "11.0.0",
+    "sharp": "0.35.5",
+    "tar": "7.5.22",
+    "unified": "11.0.5",
+    "unist-util-visit": "5.1.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "lighthouse": "13.5.0",
+    "node-html-parser": "9.0.4",
+    "playwright": "1.63.0",
+    "wrangler": "4.147.0"
+  },
+  "overrides": {
+    "postcss-selector-parser": "7.1.6"
+  }
+}

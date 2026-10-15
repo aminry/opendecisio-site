@@ -1,0 +1,27 @@
+---
+// The frame of the site's own pages (home, benchmarks, demos).
+import '../styles/tokens.css';
+import '../styles/site.css';
+import SiteFooter from '../components/home/SiteFooter.astro';
+import SiteHead from '../components/home/SiteHead.astro';
+import SiteHeader from '../components/home/SiteHeader.astro';
+interface Props { title: string; description: string; jsonLd?: object | object[]; bodyClass?: string; canonical?: string; ogType?: 'website' | 'article'; }
+const { title, description, jsonLd, bodyClass, canonical, ogType } = Astro.props;
+---
+<html lang="en" data-theme="dark">
+	<head>
+		<SiteHead title={title} description={description} jsonLd={jsonLd} canonical={canonical} ogType={ogType} />
+	</head>
+	<body class={bodyClass}>
+		<a class="skip-link" href="#main">Skip to content</a>
+		<SiteHeader />
+		<main id="main">
+			<slot />
+		</main>
+		<SiteFooter />
+		<script>
+			import '../components/home/theme.ts';
+			import '../components/home/clips.ts';
+		</script>
+	</body>
+</html>

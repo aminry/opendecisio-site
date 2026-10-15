@@ -1,0 +1,28 @@
+---
+// The demo reel, under the hero: muted, with the browser's own controls, its poster shown first and
+// nothing downloaded until it is played. The reel has no sound and its captions are burned in, so the
+// text below says what it shows.
+import chapters from '../../data/launch/reel_chapters.json';
+import { reel } from '../../lib/reel.mjs';
+
+const r = reel();
+---
+{r && (
+	<section class="section reel" aria-labelledby="reel" data-launch="reel">
+		<div class="wrap">
+			<div class="section__head">
+				<p class="kicker">Demos</p>
+				<h2 id="reel">Watch it <em class="hl">decide</em></h2>
+				<p>Decisions in real time, from Decisio's own demos and one recorded run. Each clip is cut at the speed it happened. Nothing is sped up.</p>
+			</div>
+			<div class="reel__box"><video class="reel__video" controls muted playsinline preload="none" poster={r.poster} width={r.width} height={r.height} aria-label="The Decisio demo reel: Pong with the three bases, driving, support triage, a browser agent and support routing, each at the speed it happened.">
+				<source src={r.video} type="video/mp4" />
+			</video><button type="button" class="reel__play" hidden><span class="sr-only">Play the reel</span><svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></button></div>
+			{/* Provisional start times (reel_chapters.json) until the final timestamps arrive; each button seeks the one video. */}
+			<div class="reel__scroll" tabindex="0" role="region" aria-label="Chapters of the reel"><ol class="reel__chapters">
+				{chapters.chapters.map((c) => <li><button type="button" class="chip" data-chapter={c.start} hidden>{c.title}</button></li>)}
+			</ol></div>
+			<p class="mt-3 small muted">{r.credit}</p>
+		</div>
+	</section>
+)}

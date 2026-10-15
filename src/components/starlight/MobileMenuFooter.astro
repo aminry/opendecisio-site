@@ -1,0 +1,34 @@
+---
+// The mobile menu's footer: the site's main navigation and the theme choice.
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import { nav } from '../../config/nav.mjs';
+---
+<div class="mobile-footer">
+	<ul class="mobile-nav">
+		{nav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+	</ul>
+	<ThemeSelect />
+</div>
+
+<style>
+	@layer starlight.core {
+		.mobile-footer {
+			display: grid;
+			gap: 1rem;
+			border-top: 1px solid var(--sl-color-gray-6);
+			padding-top: 1rem;
+		}
+		.mobile-nav {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 1rem 1.25rem;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		.mobile-nav a {
+			color: var(--sl-color-gray-2);
+			text-decoration: none;
+		}
+	}
+</style>

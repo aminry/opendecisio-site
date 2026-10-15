@@ -1,0 +1,13 @@
+{
+	"provisional": true,
+	"note": "Start times are the running sum of the reel's segment lengths; final timestamps replace them.",
+	"chapters": [
+		{ "title": "Title", "start": 0 },
+		{ "title": "Pong, the three bases", "start": 3 },
+		{ "title": "Driving, Gemma 4 31B", "start": 15 },
+		{ "title": "Support triage, Gemma 4 12B", "start": 29 },
+		{ "title": "A browser agent, Gemma 4 12B", "start": 43 },
+		{ "title": "Example 1, recorded decisions", "start": 55.3 },
+		{ "title": "End", "start": 60.5 }
+	]
+}

@@ -1,0 +1,41 @@
+---
+// The README's Benchmarks table: one column per base in its colour, with the
+// record each column comes from under its head.
+import { baseOfName, colourOf } from '../config/bases.mjs';
+import { benchmarkRecords, benchmarks } from '../lib/home.mjs';
+import { jevbenchCounts } from '../lib/text.mjs';
+import Source from './Source.astro';
+
+const b = benchmarks();
+const records = benchmarkRecords();
+const strip = (html: string) => html.replace(/<[^>]+>/g, '');
+const columns = b.head.slice(1).map((h) => {
+	const base = baseOfName(h)!;
+	return { html: h, colour: colourOf(base), record: records[base as keyof typeof records] };
+});
+---
+<div class="table-scroll" tabindex="0" role="region" aria-label="Benchmarks of each base">
+	<table class="data-table data-table--stack">
+		<thead>
+			<tr>
+				<th scope="col">Measure</th>
+				{columns.map((c) => (
+					<th scope="col" class:list={['num', 'base-col', c.colour]}>
+						<span class="dot" aria-hidden="true"></span><span set:html={c.html} />
+						<Source record={c.record} />
+					</th>
+				))}
+			</tr>
+		</thead>
+		<tbody>
+			{b.accuracy.map((row) => (
+				<tr>
+					<th scope="row"><span set:html={jevbenchCounts(row[0])} />{/^Image input/.test(row[0]) && <Source record={records.image} />}</th>
+					{row.slice(1).map((cell, i) => (
+						<td class:list={['num', columns[i].colour]} data-label={strip(columns[i].html)}><span set:html={cell} /></td>
+					))}
+				</tr>
+			))}
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,31 @@
+---
+// The three bases as the --base flag that chooses each, in its colour, with
+// the README's own words for when to choose it, its checkpoint and provenance.
+import { colourOf } from '../config/bases.mjs';
+import { bases, guidanceFor } from '../lib/home.mjs';
+import Source from './Source.astro';
+
+interface Props { short?: boolean; }
+const { short = true } = Astro.props;
+const flagOf = (html: string) => html.match(/<code>([^<]+)<\/code>/)?.[1] ?? '';
+const rows = bases().map((row) => {
+	const flag = flagOf(row.base);
+	const name = flag.replace(/-it$/, '');
+	// The README's own words for when to choose this base, found by the base's name.
+	const g = guidanceFor(name);
+	const why = short ? g.lead : [g.lead, ...g.rest].join(' ');
+	return { flag, colour: colourOf(name), default: /\(default\)/.test(row.base), why, checkpoint: row.checkpoint, provenance: row.provenance };
+});
+---
+<div class="flags">
+	{rows.map((row) => (
+		<article class:list={['flag', row.colour]}>
+			<h3 class="flag__line"><span class="flag__name">--base</span> <span class="flag__value">{row.flag}</span>{row.default && <span class="flag__default">default</span>}</h3>
+			<div class="flag__text">
+				<p class="flag__why" set:html={row.why} />
+				<p class="flag__meta"><span set:html={row.checkpoint} />. <span set:html={row.provenance} />.</p>
+			</div>
+		</article>
+	))}
+	<p class="flags__src"><Source record="README.md" label="Source" anchor="choosing-a-base" /></p>
+</div>

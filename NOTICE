@@ -1,0 +1,11 @@
+opendecisio.com, the website of the Decisio project
+Copyright Tachara LLC
+
+This site's design adapts techniques from the website of shad0w
+(https://2796gaurav.github.io/shad0w/, source https://github.com/2796gaurav/shad0w),
+which is licensed under the Apache License, Version 2.0
+(http://www.apache.org/licenses/LICENSE-2.0). Adapted, not copied: the palette's
+structure (a near-black base with a deep navy family and one warm accent), hard
+offset shadows that settle on hover, pointer-following spotlights, staggered
+reveals with a time-out, number tickers, and section spacing. No text, images or
+code files are copied from it.

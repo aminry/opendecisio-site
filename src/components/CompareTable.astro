@@ -1,0 +1,52 @@
+---
+// A table from docs/comparison.md: each cell its value, with the comparison's mark taken off (no mark and no bold,
+// Amin, 2026-10-15); our columns carry their base's colour. Stacks into one labelled block per row on a phone.
+import { baseOfName, colourOf } from '../config/bases.mjs';
+import { site } from '../config/site';
+import { markOf } from '../lib/comparison.mjs';
+import { jevbenchCounts } from '../lib/text.mjs';
+import HeadLabel from './HeadLabel.astro';
+interface Props { head: string[]; rows: string[][]; caption: string; numeric?: boolean; }
+const { head, rows, caption, numeric = true } = Astro.props;
+const strip = (h: string) => h.replace(/<[^>]+>/g, '').trim();
+// "decisio · Qwen3.6-35B-A3B" or a bare base name: ours.
+const ours = (h: string) => baseOfName(strip(h).replace(/^decisio\s*·\s*/i, '').replace(new RegExp(`^${site.name}\\s*·\\s*`, 'i'), ''));
+const colour = (h: string) => {
+	const base = ours(h);
+	return base ? colourOf(base) : undefined;
+};
+const label = (h: string) => strip(h).replace(/^decisio\s*·\s*/i, `${site.name} · `);
+---
+<div class="table-scroll" tabindex="0" role="region" aria-label={caption}>
+	<table class="data-table data-table--stack compare">
+		<caption class="sr-only">{caption}</caption>
+		<thead>
+			<tr>
+				{head.map((h, i) => (
+					<th scope="col" class:list={[{ num: numeric && i > 0, 'base-col': !!colour(h) }, colour(h)]}>
+						{i === 0 ? <span set:html={strip(h) ? label(h) : ''} /> : <HeadLabel html={h} dot={!!colour(h)} />}
+					</th>
+				))}
+			</tr>
+		</thead>
+		<tbody>
+			{rows.map((row) => (
+				<tr>
+					{row.map((cell, i) => {
+						if (i === 0) return <th scope="row" set:html={jevbenchCounts(cell.replace(/<\/?strong>/g, ''))} />;
+						const { value } = markOf(cell);
+						// A figure stays on one line; a sentence wraps, and stacks under its label on a phone.
+						const prose = !numeric || strip(value).length > 24;
+						return (
+							<td class:list={[{ num: numeric && !prose, prose }, colour(head[i])]} data-label={label(head[i])}>
+								<span>
+									<span set:html={value} />
+								</span>
+							</td>
+						);
+					})}
+				</tr>
+			))}
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,62 @@
+---
+// "How Decisio compares" on the benchmarks page, from docs/comparison.md at the pinned release, the one place on the
+// site where Jev and the other entries appear: the headline in a card (its lettered notes in a disclosure), the
+// capabilities in a card, and every index benchmark by area, each area a disclosure. Values and intervals with their
+// date, no marks and no rank (decided 2026-10-15). The opening is the site's own: decisio's at this pin names the
+// entries by their standing and says the Decision Index submission is pending; the board now lists decisio's rows.
+import { comparison } from '../lib/comparison.mjs';
+import { jevFromCard } from '../lib/jev.mjs';
+import { pin } from '../lib/upstream.mjs';
+import BuyerTable from './BuyerTable.astro';
+import CompareTable from './CompareTable.astro';
+import HeadlineTables from './HeadlineTables.astro';
+import Source from './Source.astro';
+const c = comparison()!;
+// The board field behind Jev's GPQA Diamond value, as EVAL_CARD section 8.1 names it.
+const jev = jevFromCard();
+const gpqa = jev?.fieldFor['GPQA Diamond'];
+---
+<div class="compares">
+	<div class="pcard tile" data-reveal>
+		<div class="pcard__head">
+			<h3 class="pcard__title" id="compares-headline">The headline</h3>
+			<p class="pcard__meta">as of 2026-10-05; each cell a value with its 95% interval where there is one</p>
+		</div>
+		<HeadlineTables />
+	</div>
+
+	<div class="pcard tile" data-reveal>
+		<div class="pcard__head">
+			<h3 class="pcard__title" id="compares-capabilities">Capabilities</h3>
+			<p class="pcard__meta">decisio from its documentation; Jev 1.13 from TypeSafe's public documentation, read 2026-10-05</p>
+		</div>
+		<BuyerTable />
+	</div>
+
+	<div class="pcard tile" data-reveal>
+		<div class="pcard__head">
+			<h3 class="pcard__title" id="compares-every">Every index benchmark</h3>
+			<p class="pcard__meta">one row per benchmark, by area, as of 2026-10-05</p>
+		</div>
+		<div class="disc__body" data-table-notes>{c.everyIntro.map((p) => <p set:html={p} />)}</div>
+		{c.groups.map((g) => (
+			<details class="disc">
+				<summary>{g.title} <span class="disc__n">{g.table!.rows.length} rows</span></summary>
+				<div class="disc__body">
+					{g.intro.map((p) => <p set:html={p} />)}
+					<CompareTable head={g.table!.head} rows={g.table!.rows} caption={g.title} />
+				</div>
+			</details>
+		))}
+		<p class="pcard__foot" data-table-notes>
+			<Source record="docs/comparison.md" label="Source" />{' '}
+			{gpqa && jev && (
+				<>
+					Jev's GPQA Diamond is the board's <code>{gpqa.field}</code> ({gpqa.detail}); <span set:html={jev.boardShows.replace(/^The board file holds a second Jev value for GPQA Diamond, /, 'the board file also holds ')} />{' '}
+					<Source record="EVAL_CARD.md" label="Field" anchor={jev.heading.toLowerCase().replace(/[^a-z0-9 -]/g, '').trim().replace(/ /g, '-')} />
+				</>
+			)}
+		</p>
+		<p class="pcard__foot">Each value and interval is in <Source record="runs/2026-10-05_comparison/" label="runs/2026-10-05_comparison/" />, decisio {pin.tag}. No figure here comes from a call of ours to TypeSafe's API.</p>
+	</div>
+</div>

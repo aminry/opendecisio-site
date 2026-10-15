@@ -1,0 +1,166 @@
+/* The design system's tokens: type, spacing, radii and colour, for light and
+   dark. Every page reads these, the site's own pages through site.css and the
+   docs through the Starlight mapping at the end. Dark is the root theme, as in
+   Starlight; [data-theme='light'] overrides it. */
+
+:root {
+	/* Type: Geist for everything, Geist Mono for flags and code (loaded by astro.config.mjs fonts). */
+	--d-font-body: var(--font-geist);
+	--d-font-display: var(--font-geist);
+	--d-font-mono: var(--font-geist-mono);
+
+	/* Type scale: a major third on 17px; headings step up fluidly with the viewport. */
+	--d-step--2: 0.75rem;
+	--d-step--1: 0.875rem;
+	--d-step-0: 1.0625rem;
+	--d-step-1: 1.328rem;
+	--d-step-2: 1.66rem;
+	--d-step-3: clamp(1.75rem, 1.4rem + 1.2vw, 2.075rem);
+	--d-step-hero: clamp(2.35rem, 1.5rem + 3.6vw, 3.9rem);
+	--d-step-flag: clamp(1.05rem, 0.55rem + 2.1vw, 2rem);
+
+	/* Spacing: a 4px base. */
+	--d-space-1: 0.25rem;
+	--d-space-2: 0.5rem;
+	--d-space-3: 0.75rem;
+	--d-space-4: 1rem;
+	--d-space-5: 1.5rem;
+	--d-space-6: 2rem;
+	--d-space-7: 3rem;
+	--d-space-8: 4rem;
+	--d-section: clamp(3.5rem, 2.5rem + 4vw, 6rem);
+	--d-gutter: clamp(1.25rem, 0.75rem + 2.5vw, 2.5rem);
+	--d-max: 72rem;
+
+	--d-radius-panel: 10px;
+	--d-radius-control: 8px;
+
+	/* Colour, dark: a near-black base with deep navy surfaces and one warm amber (round 6, after shad0w's palette;
+	   NOTICE). The accent has three jobs: text and links (--d-accent, 4.5:1), lines, bars and marks (--d-accent-line,
+	   3:1) and fills behind dark text (--d-accent-fill, with --d-on-accent); in dark one amber does all three. */
+	--d-bg: #03050a;
+	--d-navy: #14213d;
+	--d-surface: #0b1221;
+	--d-surface-2: #0f192e;
+	--d-ink: #e6e8ec;
+	--d-strong: #ffffff;
+	--d-muted: #9ba9bb;
+	--d-line: #1a2236;
+	--d-line-strong: #2c3850;
+	--d-accent: #fba41c;
+	--d-accent-hover: #ffbb4f;
+	--d-accent-line: #fba41c;
+	--d-accent-fill: #fba41c;
+	--d-accent-fill-hover: #ffbb4f;
+	--d-on-accent: #0a0a0a;
+	--d-link: #fba41c;
+	--d-focus: #fba41c;
+	--d-bar: #fba41c;
+	--d-bar-dim: #7c8799;
+	--d-rail: #141d2f;
+	--d-code-bg: #070b14;
+	--d-code-ink: #d5deea;
+	/* The accent inside a code block, whose background is dark in both themes. */
+	--d-code-accent: #fba41c;
+	--d-panel: #0b1221;
+
+	/* Depth: the hard offset shadow under raised things, the highlight on their top edge, the grid behind a hero. */
+	--d-shadow: color-mix(in srgb, var(--d-navy) 85%, transparent);
+	--d-hi: color-mix(in srgb, #ffffff 9%, transparent);
+	--d-grid: color-mix(in srgb, var(--d-ink) 7%, transparent);
+
+	/* Charts: Decisio in the accent, Jev in violet (and nothing else in violet), every other system in grey. */
+	--d-jev: #c084fc;
+	--d-other: #7c8799;
+	/* A second grey, where a chart tells two kinds of other system apart (the prefix cache in the speed charts). */
+	--d-other-2: #b4bdca;
+
+	/* One colour per base, wherever that base appears: the 31B, the default, in the accent. Qwen's blue is close to
+	   Jev's violet for deuteranopes, so the two never share a chart. */
+	--d-base-qwen: #60a5fa;
+	--d-base-g12: #4fd1bf;
+	--d-base-g31: #fba41c;
+
+	/* Starlight, dark. */
+	--sl-font: var(--d-font-body);
+	--sl-font-mono: var(--d-font-mono);
+	--sl-color-white: #ffffff;
+	--sl-color-gray-1: #e6e8ec;
+	--sl-color-gray-2: #c2ccd9;
+	--sl-color-gray-3: #8e9caf;
+	--sl-color-gray-4: #5b6a7e;
+	--sl-color-gray-5: #1f2a40;
+	--sl-color-gray-6: #0b1221;
+	--sl-color-black: #03050a;
+	--sl-color-accent-low: #2a1c06;
+	--sl-color-accent: #fba41c;
+	--sl-color-accent-high: #ffd79a;
+	--sl-text-h1: var(--d-step-3);
+	--sl-text-h2: 1.6rem;
+	--sl-text-h3: 1.28rem;
+	--sl-text-h4: 1.1rem;
+	--sl-text-h5: 1rem;
+	--sl-content-width: 46rem;
+}
+
+:root[data-theme='light'] {
+	--d-bg: #f3f5f9;
+	--d-surface: #ffffff;
+	--d-surface-2: #e8edf5;
+	--d-ink: #0e1a2b;
+	--d-strong: #0b1426;
+	--d-muted: #4b5870;
+	--d-line: #dde3eb;
+	--d-line-strong: #b8c2cf;
+	--d-accent: #985300;
+	--d-accent-hover: #7a4300;
+	--d-accent-line: #b86a00;
+	--d-accent-fill: #fba41c;
+	--d-on-accent: #0a0a0a;
+	--d-link: #985300;
+	--d-focus: #985300;
+	--d-bar: #b86a00;
+	--d-bar-dim: #808898;
+	--d-rail: #e3e8f0;
+	--d-code-bg: #0e1a2b;
+	--d-code-ink: #e2e8f0;
+	--d-panel: #ffffff;
+
+	--d-shadow: color-mix(in srgb, var(--d-navy) 18%, transparent);
+	--d-hi: color-mix(in srgb, #ffffff 80%, transparent);
+	--d-grid: color-mix(in srgb, var(--d-navy) 7%, transparent);
+
+	--d-jev: #6d28d9;
+	--d-other: #808898;
+	--d-other-2: #4b5870;
+
+	--d-base-qwen: #1d5fbf;
+	--d-base-g12: #0b7266;
+	--d-base-g31: #985300;
+
+	--sl-color-white: #0e1a2b;
+	--sl-color-gray-1: #1e2a3b;
+	--sl-color-gray-2: #334155;
+	--sl-color-gray-3: #4b5870;
+	--sl-color-gray-4: #8592a3;
+	--sl-color-gray-5: #c9d1dc;
+	--sl-color-gray-6: #e8edf5;
+	--sl-color-gray-7: #f3f5f9;
+	--sl-color-black: #ffffff;
+	--sl-color-accent-low: #fdecd0;
+	--sl-color-accent: #985300;
+	--sl-color-accent-high: #6e3c00;
+}
+
+/* A base's colour, set by its class on any element. */
+.base-qwen {
+	--base: var(--d-base-qwen);
+}
+
+.base-g12 {
+	--base: var(--d-base-g12);
+}
+
+.base-g31 {
+	--base: var(--d-base-g31);
+}

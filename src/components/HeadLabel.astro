@@ -1,0 +1,9 @@
+---
+// A column or row header, in two lines where the name is long, with the
+// base's dot (when given) on its first line.
+import { twoLines } from '../lib/heads.mjs';
+interface Props { html: string; dot?: boolean; }
+const { html, dot = false } = Astro.props;
+const [first, second] = twoLines(html);
+---
+<span class="head2"><span>{dot && <span class="dot" aria-hidden="true"></span>}{first}</span>{second && <span class="head2__second">{second}</span>}</span>

@@ -1,0 +1,8 @@
+---
+// The record a figure comes from, named beside it in small type.
+import { recordUrl } from '../lib/records.mjs';
+interface Props { record: string; label?: string; anchor?: string; }
+const { record, label, anchor } = Astro.props;
+const href = recordUrl(record) + (anchor ? `#${anchor}` : '');
+---
+<span class="src">{label ?? 'Record'}: <a href={href}><code>{record}</code></a></span>

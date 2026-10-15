@@ -1,0 +1,6 @@
+---
+// The Cloudflare Web Analytics beacon, added by us on every page (the automatic setup in Cloudflare's dashboard is off):
+// one deferred script, no cookies. See src/config/site.ts for the token, where it reports and the policy that allows it.
+import { analytics } from '../config/site';
+---
+{analytics.token && <script is:inline defer src={`${analytics.script}/beacon.min.js`} data-cf-beacon={JSON.stringify({ token: analytics.token, send: { to: analytics.send } })}></script>}

@@ -1,0 +1,110 @@
+{
+	"tag": "v0.13.0",
+	"clips": {
+		"browser_reading_gemma-4-12b": {
+			"width": 1280,
+			"height": 808,
+			"duration": 9.1,
+			"poster_at": 2.27,
+			"sha256": "8ebf8ea85beee67ab51e257be5fa9c9acd21eb3e28f0bc46733f6e05667eed37"
+		},
+		"browser_reading_gemma-4-31b": {
+			"width": 1280,
+			"height": 808,
+			"duration": 9.1,
+			"poster_at": 2.27,
+			"sha256": "f495aae9fa3cbfc2c11db400a2abde0f2b9a737bb630ee1f459d85295b15ed84"
+		},
+		"browser_reading_qwen3.6-35b-a3b": {
+			"width": 1280,
+			"height": 786,
+			"duration": 18.73,
+			"poster_at": 4.68,
+			"sha256": "5633f7a2fd9c1199d821d153f67b4c3db3a24def0aa2d27aed253219a6553f31"
+		},
+		"browser_travel_gemma-4-12b": {
+			"width": 1280,
+			"height": 808,
+			"duration": 12.3,
+			"poster_at": 3.08,
+			"sha256": "19f90c43d951365dc19aed2dab0ace92d6371a906aca1464ea42ce4d1b1a7872"
+		},
+		"browser_travel_gemma-4-31b": {
+			"width": 1280,
+			"height": 808,
+			"duration": 11.5,
+			"poster_at": 2.88,
+			"sha256": "a1cd3baf1ebf867e22670021d1351b596b2e72d946689b0eb8a3f86c59ce0e84"
+		},
+		"browser_travel_qwen3.6-35b-a3b": {
+			"width": 1280,
+			"height": 786,
+			"duration": 13.1,
+			"poster_at": 3.27,
+			"sha256": "091539445616d1ad9ddb0813b8c980f13f6bdbbc6e381f193af8b80ab4234f47"
+		},
+		"browser_travel_qwen3.6-35b-a3b_beside_cygnet": {
+			"width": 1920,
+			"height": 590,
+			"duration": 16.1,
+			"poster_at": 4.03,
+			"sha256": "4e97dad0273ff6b508da54a0cea08b4b8443d41742203799f42f1e014ecdeccc"
+		},
+		"driving_gemma-4-12b": {
+			"width": 1280,
+			"height": 786,
+			"duration": 111.7,
+			"poster_at": 27.93,
+			"sha256": "73b002b7d3e6d82536866df4d789c5d54866578c4b126e6c222a3e39c08bccfa"
+		},
+		"driving_gemma-4-31b": {
+			"width": 1280,
+			"height": 786,
+			"duration": 106.6,
+			"poster_at": 26.65,
+			"sha256": "8ea95d926034ebdc066b5a3f516d02d2905b5f58b913b154cde8ceaf69dea68a"
+		},
+		"driving_qwen3.6-35b-a3b": {
+			"width": 1280,
+			"height": 764,
+			"duration": 106.53,
+			"poster_at": 26.63,
+			"sha256": "c10268d99c0101c915106b48c8ac0f3f4417143212416cc485d659cd62dc71fd"
+		},
+		"driving_qwen3.6-35b-a3b_beside_cygnet": {
+			"width": 1920,
+			"height": 574,
+			"duration": 111.33,
+			"poster_at": 27.83,
+			"sha256": "bf04c75735d968c41643843e847d9b07360d741fcaecb2104b3904589c2e937c"
+		},
+		"pong_three_bases": {
+			"width": 1280,
+			"height": 586,
+			"duration": 51.03,
+			"poster_at": 12.76,
+			"sha256": "e87a94bd9075b3d3c90d130a8de3f39a310c56ed34ef2b6dd632a3de07c2f2b2"
+		},
+		"triage_gemma-4-12b": {
+			"width": 1280,
+			"height": 818,
+			"duration": 126.67,
+			"poster_at": 31.67,
+			"sha256": "f3b6956dbb1f7682db39792617a1dffec9526001bc06087b4f85383b54d6a897"
+		},
+		"triage_gemma-4-31b": {
+			"width": 1280,
+			"height": 818,
+			"duration": 126.8,
+			"poster_at": 31.7,
+			"sha256": "f41b18d0dcb11c7c95517301533e0d00299c5c036887e24338365ed3cebcfc0e"
+		},
+		"triage_qwen3.6-35b-a3b": {
+			"width": 1280,
+			"height": 804,
+			"duration": 126.67,
+			"poster_at": 31.67,
+			"sha256": "ee44658e8ad3f8f43c3497201fa9252f74220e317cc53b2a043674ca3fb04bb3"
+		}
+	}
+}

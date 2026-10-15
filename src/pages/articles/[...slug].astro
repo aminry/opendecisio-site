@@ -1,0 +1,11 @@
+---
+import PostPage from '../../components/PostPage.astro';
+import { isExternal, posts } from '../../lib/posts.mjs';
+
+export async function getStaticPaths() {
+	// A piece first published elsewhere has no page here: its card links to the original (docs/POSTS.md).
+	return (await posts('articles')).filter((e) => !isExternal(e)).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+---
+<PostPage kind="articles" entry={entry} />

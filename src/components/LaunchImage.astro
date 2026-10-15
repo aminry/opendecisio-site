@@ -1,0 +1,11 @@
+---
+// One of the board charts, in its light and its dark version: the one for the theme in use is shown
+// (the theme is the html element's data-theme, set before the page paints). Both are lazy, so only the
+// one on show is fetched. The chart's text is the SVG's own text; `alt` says what it shows.
+interface Props { name: string; alt: string; width: number; height: number; }
+const { name, alt, width, height } = Astro.props;
+---
+<span class="lc">
+	<img class="lc__img lc__img--light" src={`/launch/${name}.svg`} width={width} height={height} alt={alt} loading="lazy" decoding="async" />
+	<img class="lc__img lc__img--dark" src={`/launch/${name}-dark.svg`} width={width} height={height} alt={alt} loading="lazy" decoding="async" />
+</span>

@@ -1,0 +1,33 @@
+---
+// Each system's intelligence score on the board's open items and on its sealed items, side by side,
+// from launch_facts.public.json (src/lib/launch.mjs), in alphabetical order. The marks are decorative; the rows' text carries
+// the figures. Its card on the benchmarks page gives the title.
+import { fixed, jevbench } from '../lib/launch.mjs';
+
+const j = jevbench();
+const lo = 48;
+const hi = 78;
+const at = (v: number) => `${(((v - lo) / (hi - lo)) * 100).toFixed(2)}%`;
+const ticks = [50, 55, 60, 65, 70, 75];
+---
+<figure class="jb jb--so" data-launch="chart-sealed">
+	<figcaption class="jb__cap">
+		The board scores each system's intelligence on two sets of items, open ones and sealed ones it keeps back; each row shows both scores, the open one as a ring and the sealed one as a dot.
+	</figcaption>
+	<ol class="jb__rows">
+		{j.rows.map((r) => (
+			<li class:list={['jb__row', r.base, { 'jb__row--ours': r.ours, 'jb__row--jev': r.id === 'jev' }]}>
+				<span class="jb__name">{r.name}</span>
+				<span class="jb__track" aria-hidden="true">
+					<span class="jb__bar jb__bar--link" style={`--l:${at(Math.min(r.iOpen, r.iSealed))};--w:${((Math.abs(r.iSealed - r.iOpen) / (hi - lo)) * 100).toFixed(2)}%`}></span>
+					<span class="jb__dot jb__dot--ring" style={`--l:${at(r.iOpen)}`}></span>
+					<span class="jb__dot" style={`--l:${at(r.iSealed)}`}></span>
+				</span>
+				<span class="jb__val"><strong>{fixed(r.iSealed)}</strong><small>{fixed(r.iOpen)} open</small></span>
+			</li>
+		))}
+	</ol>
+	<div class="jb__axis" aria-hidden="true">
+		{ticks.map((t) => <span style={`--l:${at(t)}`}>{t}</span>)}
+	</div>
+</figure>

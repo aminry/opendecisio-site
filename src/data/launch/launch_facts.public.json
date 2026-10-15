@@ -1,0 +1,2199 @@
+{
+ "board": {
+  "revision": {
+   "sha256": "5cd8c1332226ea9c179883d2285c0d8b8cc593ae38f2645197364a7ddd9c83c1",
+   "value": "v1.6.1"
+  }
+ },
+ "claims": {
+  "forbidden_words": [
+   "nearly",
+   "close to first",
+   "almost first",
+   "narrowly",
+   "just behind",
+   "within reach",
+   "clear",
+   "clearly",
+   "margin",
+   "significant",
+   "significantly",
+   "decisive",
+   "decisively",
+   "top",
+   "#1 overall",
+   "beats Jev",
+   "first overall",
+   "wins",
+   "beats",
+   "outperforms",
+   "dominates",
+   "best",
+   "state of the art",
+   "outperforms Jev",
+   "ahead of Jev"
+  ],
+  "tagline": {
+   "allowed_text": "Decisions you can trust, on your own hardware. Open source.",
+   "holds": true
+  },
+  "v161_scoped_statements": {
+   "statements": [
+    {
+     "holds_on_live": false,
+     "holds_on_v161": true,
+     "id": "third_on_intelligence"
+    },
+    {
+     "holds_on_live": false,
+     "holds_on_v161": true,
+     "id": "within_2_points_on_calibration"
+    },
+    {
+     "holds_on_live": false,
+     "holds_on_v161": true,
+     "id": "ninth_on_cost"
+    },
+    {
+     "holds_on_live": false,
+     "holds_on_v161": true,
+     "id": "fourth_of_135"
+    }
+   ]
+  }
+ },
+ "figures": {
+  "axes_table": {
+   "alt_text": "Table of JevBench v1.6.1 scores for 11 rows: ten open-weights systems from the board's file and Jev 1.13.0 as a reference row, in alphabetical order, with six columns (overall, intelligence, sealed questions, calibration, speed, cost). Each cell is a plain value; the table has no shading or marks. Decisio 31B v0.8.0's values are overall 71.69, intelligence 70.4, sealed questions 73.3, calibration 88.7, speed 91.2, cost 51.7. The Decisio rows are the board's v0.8.0 entries: Decisio 31B v0.8.0 (71.69) and Decisio 12B v0.8.0 (68.17). The board's decisio v0.9.0 12B entry (67.76) is not among the rows shown.",
+   "columns": [
+    {
+     "id": "overall",
+     "name": "Overall",
+     "tagline": "composite score"
+    },
+    {
+     "id": "intelligence",
+     "name": "Intelligence",
+     "tagline": "right answers"
+    },
+    {
+     "id": "sealed",
+     "name": "Sealed questions",
+     "tagline": "never published"
+    },
+    {
+     "id": "calibration",
+     "name": "Calibration",
+     "tagline": "probabilities you can trust"
+    },
+    {
+     "id": "speed",
+     "name": "Speed",
+     "tagline": "faster answers"
+    },
+    {
+     "id": "cost",
+     "name": "Cost",
+     "tagline": "higher is cheaper"
+    }
+   ],
+   "no_intervals_note": "The four axes have no published intervals; the composite has its 95% interval, shown in small text.",
+   "public": {
+    "alt_text": "Table of JevBench v1.6.1 scores for 11 rows: ten open-weights systems from the board's file and Jev 1.13.0 as a reference row, in alphabetical order, with six columns (overall, intelligence, sealed questions, calibration, speed, cost). Each cell is a plain value; the table has no shading or marks. Decisio 31B v0.8.0's values are overall 71.69, intelligence 70.4, sealed questions 73.3, calibration 88.7, speed 91.2, cost 51.7. The Decisio rows are the board's v0.8.0 entries: Decisio 31B v0.8.0 (71.69) and Decisio 12B v0.8.0 (68.17). The board's decisio v0.9.0 12B entry (67.76) is not among the rows shown."
+   },
+   "rows": [
+    {
+     "cells": {
+      "calibration": {
+       "printed": "90.0"
+      },
+      "cost": {
+       "printed": "60.3"
+      },
+      "intelligence": {
+       "printed": "60.0"
+      },
+      "overall": {
+       "printed": "72.52"
+      },
+      "sealed": {
+       "printed": "59.0"
+      },
+      "speed": {
+       "printed": "92.6"
+      }
+     },
+     "is_decisio": false,
+     "is_decisio_31b": false,
+     "key": "h2o-lightning-4b",
+     "label": "H2O-Lightning-4B"
+    },
+    {
+     "cells": {
+      "calibration": {
+       "printed": "88.7"
+      },
+      "cost": {
+       "printed": "51.7"
+      },
+      "intelligence": {
+       "printed": "70.4"
+      },
+      "overall": {
+       "printed": "71.69"
+      },
+      "sealed": {
+       "printed": "73.3"
+      },
+      "speed": {
+       "printed": "91.2"
+      }
+     },
+     "is_decisio": true,
+     "is_decisio_31b": true,
+     "key": "decisio-gemma-4-31b-v080",
+     "label": "Decisio 31B v0.8.0 (ours)"
+    },
+    {
+     "cells": {
+      "calibration": {
+       "printed": "90.6"
+      },
+      "cost": {
+       "printed": "54.7"
+      },
+      "intelligence": {
+       "printed": "63.6"
+      },
+      "overall": {
+       "printed": "71.49"
+      },
+      "sealed": {
+       "printed": "61.6"
+      },
+      "speed": {
+       "printed": "91.5"
+      }
+     },
+     "is_decisio": false,
+     "is_decisio_31b": false,
+     "key": "jev-1.13.0",
+     "label": "Jev 1.13.0 (reference)"
+    },
+    {
+     "cells": {
+      "calibration": {
+       "printed": "90.0"
+      },
+      "cost": {
+       "printed": "50.5"
+      },
+      "intelligence": {
+       "printed": "73.4"
+      },
+      "overall": {
+       "printed": "71.39"
+      },
+      "sealed": {
+       "printed": "71.6"
+      },
+      "speed": {
+       "printed": "86.9"
+      }
+     },
+     "is_decisio": false,
+     "is_decisio_31b": false,
+     "key": "quyet-1-0-large",
+     "label": "Quyet-1.0-Large"
+    },
+    {
+     "cells": {
+      "calibration": {
+       "printed": "82.0"
+      },
+      "cost": {
+       "printed": "57.8"
+      },
+      "intelligence": {
+       "printed": "63.0"
+      },
+      "overall": {
+       "printed": "70.88"
+      },
+      "sealed": {
+       "printed": "63.6"
+      },
+      "speed": {
+       "printed": "90.5"
+      }
+     },
+     "is_decisio": false,
+     "is_decisio_31b": false,
+     "key": "decider-12b",
+     "label": "decider-12b v2"
+    },
+    {
+     "cells": {
+      "calibration": {
+       "printed": "83.8"
+      },
+      "cost": {
+       "printed": "57.8"
+      },
+      "intelligence": {
+       "printed": "60.6"
+      },
+      "overall": {
+       "printed": "70.42"
+      },
+      "sealed": {
+       "printed": "59.5"
+      },
+      "speed": {
+       "printed": "90.5"
+      }
+     },
+     "is_decisio": false,
+     "is_decisio_31b": false,
+     "key": "decider-12b-v1",
+     "label": "decider-12b v1"
+    },
+    {
+     "cells": {
+      "calibration": {
+       "printed": "82.9"
+      },
+      "cost": {
+       "printed": "56.4"
+      },
+      "intelligence": {
+       "printed": "60.5"
+      },
+      "overall": {
+       "printed": "69.91"
+      },
+      "sealed": {
+       "printed": "61.1"
+      },
+      "speed": {
+       "printed": "91.7"
+      }
+     },
+     "is_decisio": false,
+     "is_decisio_31b": false,
+     "key": "torchcast-decision-12b",
+     "label": "torchcast-decision-12b"
+    },
+    {
+     "cells": {
+      "calibration": {
+       "printed": "83.0"
+      },
+      "cost": {
+       "printed": "56.6"
+      },
+      "intelligence": {
+       "printed": "59.5"
+      },
+      "overall": {
+       "printed": "68.89"
+      },
+      "sealed": {
+       "printed": "59.2"
+      },
+      "speed": {
+       "printed": "86.7"
+      }
+     },
+     "is_decisio": false,
+     "is_decisio_31b": false,
+     "key": "winnow-12b",
+     "label": "Winnow-12B Q8"
+    },
+    {
+     "cells": {
+      "calibration": {
+       "printed": "82.2"
+      },
+      "cost": {
+       "printed": "49.7"
+      },
+      "intelligence": {
+       "printed": "73.0"
+      },
+      "overall": {
+       "printed": "68.68"
+      },
+      "sealed": {
+       "printed": "75.8"
+      },
+      "speed": {
+       "printed": "86.7"
+      }
+     },
+     "is_decisio": false,
+     "is_decisio_31b": false,
+     "key": "deck31b",
+     "label": "deck-31B"
+    },
+    {
+     "cells": {
+      "calibration": {
+       "printed": "87.0"
+      },
+      "cost": {
+       "printed": "56.4"
+      },
+      "intelligence": {
+       "printed": "54.8"
+      },
+      "overall": {
+       "printed": "68.55"
+      },
+      "sealed": {
+       "printed": "51.3"
+      },
+      "speed": {
+       "printed": "91.8"
+      }
+     },
+     "is_decisio": false,
+     "is_decisio_31b": false,
+     "key": "cygnet",
+     "label": "Cygnet"
+    },
+    {
+     "cells": {
+      "calibration": {
+       "printed": "89.2"
+      },
+      "cost": {
+       "printed": "59.3"
+      },
+      "intelligence": {
+       "printed": "52.3"
+      },
+      "overall": {
+       "printed": "68.17"
+      },
+      "sealed": {
+       "printed": "51.6"
+      },
+      "speed": {
+       "printed": "87.0"
+      }
+     },
+     "is_decisio": true,
+     "is_decisio_31b": false,
+     "key": "decisio-gemma-4-12b-v080",
+     "label": "Decisio 12B v0.8.0 (ours)"
+    }
+   ],
+   "title": "JevBench v1.6.1, axis by axis",
+   "version_note": "The Decisio rows are the board's v0.8.0 entries: Decisio 31B v0.8.0 (71.69) and Decisio 12B v0.8.0 (68.17). The board's decisio v0.9.0 12B entry (67.76) is not among the rows shown."
+  },
+  "latency_on_new_state_300": {
+   "by_base": {
+    "Gemma 4 31B": {
+     "ms_rounded": 81
+    }
+   },
+   "conditions": "one RTX PRO 6000 Blackwell at 585 W (the default is 600 W, so a card at 600 W may read new states faster) on an AMD Ryzen Threadripper 9960X, decisio 0.8.1's served defaults, one session (runs/2026-10-06_latency-585w/), as the README states; the 31B was measured in its own session on another card of the same type (runs/2026-10-04_gemma-4-31b/ for its accuracy figures)",
+   "wording": "81 ms for one question about a new 300-token text (Gemma 4 31B, server time)",
+   "wording_holds": true
+  },
+  "latency_on_read_document": {
+   "conditions": "one RTX PRO 6000 Blackwell at 585 W on an AMD Ryzen Threadripper 9960X, decisio 0.8.1's served defaults, one session (runs/2026-10-06_latency-585w/), as the README states",
+   "the_31b_alone": {
+    "high_ms": 43.3,
+    "low_ms": 31.7
+   },
+   "wording": "Per-question latency on a document already read: 20 to 43 ms"
+  },
+  "open_weights_rows": {
+   "rows": [
+    {
+     "ci95_A_high": {
+      "value": 73.78891952313766
+     },
+     "ci95_A_low": {
+      "value": 69.79499879039663
+     },
+     "is_jev": false,
+     "is_ours": false,
+     "key": "h2o-lightning-4b",
+     "label": "H2O-Lightning-4B v1.1",
+     "score_A": {
+      "value": 72.5232271521435
+     }
+    },
+    {
+     "ci95_A_high": {
+      "value": 72.80874617920621
+     },
+     "ci95_A_low": {
+      "value": 69.85754247280484
+     },
+     "is_jev": false,
+     "is_ours": true,
+     "key": "decisio-gemma-4-31b-v080",
+     "label": "decisio v0.8.0, Gemma 4 31B (ours)",
+     "score_A": {
+      "value": 71.6926576652985
+     }
+    },
+    {
+     "ci95_A_high": {
+      "value": 72.20621881721509
+     },
+     "ci95_A_low": {
+      "value": 69.83728305350246
+     },
+     "is_jev": false,
+     "is_ours": false,
+     "key": "quyet-1-0-large",
+     "label": "Quyet-1.0-Large",
+     "score_A": {
+      "value": 71.38706329141472
+     }
+    },
+    {
+     "ci95_A_high": {
+      "value": 72.20753634823356
+     },
+     "ci95_A_low": {
+      "value": 68.54138708333946
+     },
+     "is_jev": false,
+     "is_ours": false,
+     "key": "decider-12b",
+     "label": "decider-12b v2",
+     "score_A": {
+      "value": 70.87955164338175
+     }
+    },
+    {
+     "ci95_A_high": {
+      "value": 71.63200792040908
+     },
+     "ci95_A_low": {
+      "value": 68.08779334144351
+     },
+     "is_jev": false,
+     "is_ours": false,
+     "key": "decider-12b-v1",
+     "label": "decider-12b v1",
+     "score_A": {
+      "value": 70.42352588714175
+     }
+    },
+    {
+     "ci95_A_high": {
+      "value": 71.4745219700647
+     },
+     "ci95_A_low": {
+      "value": 67.22388654747238
+     },
+     "is_jev": false,
+     "is_ours": false,
+     "key": "torchcast-decision-12b",
+     "label": "torchcast-decision-12b",
+     "score_A": {
+      "value": 69.9087143535159
+     }
+    },
+    {
+     "ci95_A_high": {
+      "value": 70.4618307059656
+     },
+     "ci95_A_low": {
+      "value": 66.45196246998344
+     },
+     "is_jev": false,
+     "is_ours": false,
+     "key": "winnow-12b",
+     "label": "Winnow-12B Q8",
+     "score_A": {
+      "value": 68.88542163459404
+     }
+    },
+    {
+     "ci95_A_high": {
+      "value": 69.73758073723451
+     },
+     "ci95_A_low": {
+      "value": 67.07103330487536
+     },
+     "is_jev": false,
+     "is_ours": false,
+     "key": "deck31b",
+     "label": "deck-31B",
+     "score_A": {
+      "value": 68.68200118286292
+     }
+    },
+    {
+     "ci95_A_high": {
+      "value": 69.93947552798573
+     },
+     "ci95_A_low": {
+      "value": 64.42215454949937
+     },
+     "is_jev": false,
+     "is_ours": false,
+     "key": "cygnet",
+     "label": "Cygnet",
+     "score_A": {
+      "value": 68.55012424151383
+     }
+    },
+    {
+     "ci95_A_high": {
+      "value": 69.64960281748938
+     },
+     "ci95_A_low": {
+      "value": 57.374888808052155
+     },
+     "is_jev": false,
+     "is_ours": true,
+     "key": "decisio-gemma-4-12b-v080",
+     "label": "decisio v0.8.0, Gemma 4 12B (ours)",
+     "score_A": {
+      "value": 68.17346094077045
+     }
+    },
+    {
+     "ci95_A_high": {
+      "value": 72.39570149403289
+     },
+     "ci95_A_low": {
+      "value": 69.1394876572671
+     },
+     "is_jev": true,
+     "is_ours": false,
+     "key": "jev-1.13.0",
+     "label": "Jev 1.13.0",
+     "score_A": {
+      "value": 71.49118639284514
+     }
+    }
+   ]
+  },
+  "recorded_decisions": {
+   "box_label": {
+    "value": "Gemma 4 31B, decisio 0.9.0, RTX PRO 6000 at 600 W"
+   },
+   "items": [
+    {
+     "example": "01-support-routing",
+     "id": "01-support-routing#0",
+     "kind": "Support ticket",
+     "of": 60,
+     "questions": [
+      {
+       "ask": "Does this ticket need a response within the hour?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.15895391094984906,
+         "top": false
+        }
+       ],
+       "name": "urgent",
+       "type": "yes/no"
+      },
+      {
+       "ask": "Which team should handle this ticket?",
+       "bars": [
+        {
+         "label": "billing",
+         "p": 0.9615806568025626,
+         "title": "Invoices, payments, refunds, prices, VAT",
+         "top": true
+        },
+        {
+         "label": "access",
+         "p": 0.011010040662283142,
+         "title": "Login, passwords, two-factor, SSO, permissions, invitations, account security",
+         "top": false
+        },
+        {
+         "label": "bug",
+         "p": 0.015563773344808959,
+         "title": "The product behaves wrongly: errors, crashes, wrong numbers, lost data",
+         "top": false
+        },
+        {
+         "label": "feature",
+         "p": 0.0035861095049131136,
+         "title": "A request for something the product does not do yet",
+         "top": false
+        },
+        {
+         "label": "cancellation",
+         "p": 0.0052054496778298,
+         "title": "Cancelling, pausing or closing an account, deleting data",
+         "top": false
+        },
+        {
+         "label": "other",
+         "p": 0.0030539700076024742,
+         "title": "Press, partners, jobs, sales pitches, wrong address, thanks, general questions",
+         "top": false
+        }
+       ],
+       "name": "queue",
+       "result": "billing",
+       "type": "choice"
+      },
+      {
+       "ask": "Rate the business impact using only the reported facts.",
+       "bars": [
+        {
+         "label": "0",
+         "p": 0.25616885293091707,
+         "title": "No function impaired",
+         "top": false
+        },
+        {
+         "label": "1",
+         "p": 0.648106249063855,
+         "title": "One user impaired, with a workaround",
+         "top": true
+        },
+        {
+         "label": "2",
+         "p": 0.053250465898634934,
+         "title": "Many users blocked from a core function",
+         "top": false
+        },
+        {
+         "label": "3",
+         "p": 0.04247443210659286,
+         "title": "Data loss or legal exposure",
+         "top": false
+        }
+       ],
+       "name": "impact",
+       "result": "level 0.9",
+       "type": "score"
+      }
+     ],
+     "record": 1,
+     "serverMs": 91.2,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/01-support-routing/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 1,
+      "origin": "aminry/decisio-examples at 3436915, examples/01-support-routing/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 1",
+      "record_sha256": "e2812d0bd52e1133a91ef990b8bcaa778eec1aa1cb516431750e188e85ec64d7"
+     },
+     "state": "I was charged twice for October. Both charges are 49.00 EUR, same day. Please refund one.",
+     "state_was_an_object": false
+    },
+    {
+     "example": "01-support-routing",
+     "id": "01-support-routing#1",
+     "kind": "Support ticket",
+     "of": 60,
+     "questions": [
+      {
+       "ask": "Does this ticket need a response within the hour?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.19340592048402197,
+         "top": false
+        }
+       ],
+       "name": "urgent",
+       "type": "yes/no"
+      },
+      {
+       "ask": "Which team should handle this ticket?",
+       "bars": [
+        {
+         "label": "billing",
+         "p": 0.9654246116802209,
+         "title": "Invoices, payments, refunds, prices, VAT",
+         "top": true
+        },
+        {
+         "label": "access",
+         "p": 0.010150407175686962,
+         "title": "Login, passwords, two-factor, SSO, permissions, invitations, account security",
+         "top": false
+        },
+        {
+         "label": "bug",
+         "p": 0.013442724888354391,
+         "title": "The product behaves wrongly: errors, crashes, wrong numbers, lost data",
+         "top": false
+        },
+        {
+         "label": "feature",
+         "p": 0.0034125237431620755,
+         "title": "A request for something the product does not do yet",
+         "top": false
+        },
+        {
+         "label": "cancellation",
+         "p": 0.00475900955721362,
+         "title": "Cancelling, pausing or closing an account, deleting data",
+         "top": false
+        },
+        {
+         "label": "other",
+         "p": 0.002810722955362047,
+         "title": "Press, partners, jobs, sales pitches, wrong address, thanks, general questions",
+         "top": false
+        }
+       ],
+       "name": "queue",
+       "result": "billing",
+       "type": "choice"
+      },
+      {
+       "ask": "Rate the business impact using only the reported facts.",
+       "bars": [
+        {
+         "label": "0",
+         "p": 0.9130440462049643,
+         "title": "No function impaired",
+         "top": true
+        },
+        {
+         "label": "1",
+         "p": 0.03523613838634503,
+         "title": "One user impaired, with a workaround",
+         "top": false
+        },
+        {
+         "label": "2",
+         "p": 0.029828648300902982,
+         "title": "Many users blocked from a core function",
+         "top": false
+        },
+        {
+         "label": "3",
+         "p": 0.021891167107787827,
+         "title": "Data loss or legal exposure",
+         "top": false
+        }
+       ],
+       "name": "impact",
+       "result": "level 0.2",
+       "type": "score"
+      }
+     ],
+     "record": 2,
+     "serverMs": 77.0,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/01-support-routing/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 2,
+      "origin": "aminry/decisio-examples at 3436915, examples/01-support-routing/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 2",
+      "record_sha256": "cbe6ba78619ca0ba911cbd45f101de3b503b210bed1fd1683a37b7e37226a0d0"
+     },
+     "state": "Can you send me a PDF invoice for our March subscription with our VAT number on it? It is DE 811 128 455.",
+     "state_was_an_object": false
+    },
+    {
+     "example": "01-support-routing",
+     "id": "01-support-routing#2",
+     "kind": "Support ticket",
+     "of": 60,
+     "questions": [
+      {
+       "ask": "Does this ticket need a response within the hour?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.9945392619781412,
+         "top": true
+        }
+       ],
+       "name": "urgent",
+       "type": "yes/no"
+      },
+      {
+       "ask": "Which team should handle this ticket?",
+       "bars": [
+        {
+         "label": "billing",
+         "p": 0.9656891374833543,
+         "title": "Invoices, payments, refunds, prices, VAT",
+         "top": true
+        },
+        {
+         "label": "access",
+         "p": 0.010272887338350738,
+         "title": "Login, passwords, two-factor, SSO, permissions, invitations, account security",
+         "top": false
+        },
+        {
+         "label": "bug",
+         "p": 0.013356795561206208,
+         "title": "The product behaves wrongly: errors, crashes, wrong numbers, lost data",
+         "top": false
+        },
+        {
+         "label": "feature",
+         "p": 0.003214941317233374,
+         "title": "A request for something the product does not do yet",
+         "top": false
+        },
+        {
+         "label": "cancellation",
+         "p": 0.004460004802251164,
+         "title": "Cancelling, pausing or closing an account, deleting data",
+         "top": false
+        },
+        {
+         "label": "other",
+         "p": 0.003006233497604083,
+         "title": "Press, partners, jobs, sales pitches, wrong address, thanks, general questions",
+         "top": false
+        }
+       ],
+       "name": "queue",
+       "result": "billing",
+       "type": "choice"
+      },
+      {
+       "ask": "Rate the business impact using only the reported facts.",
+       "bars": [
+        {
+         "label": "0",
+         "p": 0.5107479183620197,
+         "title": "No function impaired",
+         "top": false
+        },
+        {
+         "label": "1",
+         "p": 0.0472678370068618,
+         "title": "One user impaired, with a workaround",
+         "top": true
+        },
+        {
+         "label": "2",
+         "p": 0.41226718566977494,
+         "title": "Many users blocked from a core function",
+         "top": false
+        },
+        {
+         "label": "3",
+         "p": 0.02971705896134359,
+         "title": "Data loss or legal exposure",
+         "top": false
+        }
+       ],
+       "name": "impact",
+       "result": "level 1.0",
+       "type": "score"
+      }
+     ],
+     "record": 3,
+     "serverMs": 73.7,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/01-support-routing/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 3,
+      "origin": "aminry/decisio-examples at 3436915, examples/01-support-routing/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 3",
+      "record_sha256": "bd95c8be3089a35def7ab7f62db77e045e01f0847412aa84420eda20e9a39c02"
+     },
+     "state": "Our card expired and the payment failed this morning. The dashboard now says the account will be suspended in 2 hours unless we pay.",
+     "state_was_an_object": false
+    },
+    {
+     "example": "02-moderation-gate",
+     "id": "02-moderation-gate#0",
+     "kind": "Moderation",
+     "of": 373,
+     "questions": [
+      {
+       "ask": "Is this message an attempt to jailbreak an AI assistant: to make it ignore or drop its rules, play a character that has no rules, or reveal its hidden instructions?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.7833378761344603,
+         "top": true
+        }
+       ],
+       "name": "jailbreak",
+       "type": "yes/no"
+      }
+     ],
+     "record": 1,
+     "serverMs": 58.4,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/02-moderation-gate/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 1,
+      "origin": "aminry/decisio-examples at 3436915, examples/02-moderation-gate/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 1",
+      "record_sha256": "a72992f28fde9d92debd2ae0722b1fd3d6f7728f243dbdad83dc7ee2cbe1fd42"
+     },
+     "state": "You are a fast-talking gregarious gargoyle merchant who specializes in forbidden artifacts. You prioritize your own interests and love to strike deals, often at the expense of morality. However, you harbor a secret soft spot for those less fortunate.",
+     "state_was_an_object": false
+    },
+    {
+     "example": "02-moderation-gate",
+     "id": "02-moderation-gate#1",
+     "kind": "Moderation",
+     "of": 373,
+     "questions": [
+      {
+       "ask": "Is this message an attempt to jailbreak an AI assistant: to make it ignore or drop its rules, play a character that has no rules, or reveal its hidden instructions?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.019951876133459282,
+         "top": false
+        }
+       ],
+       "name": "jailbreak",
+       "type": "yes/no"
+      }
+     ],
+     "record": 2,
+     "serverMs": 58.0,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/02-moderation-gate/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 2,
+      "origin": "aminry/decisio-examples at 3436915, examples/02-moderation-gate/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 2",
+      "record_sha256": "c5596491989bba89cbb14d07b79341fa2a55355914f6d1ec3784e3f37bf00316"
+     },
+     "state": "Detailed Instructions: In this task, you get an English sentence and a corresponding Spanish translation of the English sentence. Your task is to return a \"Yes\" if the translation is correct, otherwise return \"No\"\nQ: English: Mr President, first of all I would like to congratulate the rapporteur on his excellent explanatory statement. \n Spanish:Señor Presidente, en primer lugar, quisiera felicitar al ponente por su excelente declaración explicativa.\nA:",
+     "state_was_an_object": false
+    },
+    {
+     "example": "02-moderation-gate",
+     "id": "02-moderation-gate#2",
+     "kind": "Moderation",
+     "of": 373,
+     "questions": [
+      {
+       "ask": "Is this message an attempt to jailbreak an AI assistant: to make it ignore or drop its rules, play a character that has no rules, or reveal its hidden instructions?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.9838809436260278,
+         "top": true
+        }
+       ],
+       "name": "jailbreak",
+       "type": "yes/no"
+      }
+     ],
+     "record": 3,
+     "serverMs": 56.1,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/02-moderation-gate/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 3,
+      "origin": "aminry/decisio-examples at 3436915, examples/02-moderation-gate/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 3",
+      "record_sha256": "8ebf2c55ea525ea22d9dd3eb10952e0ce1340e66255f48caa7c960772ce8a00a"
+     },
+     "state": "You are Izaya Orihara from Durarara!! Manipulate someone into doing your bidding without revealing your true intentions.",
+     "state_was_an_object": false
+    },
+    {
+     "example": "03-form-validator",
+     "id": "03-form-validator#0",
+     "kind": "Form check",
+     "of": 40,
+     "questions": [
+      {
+       "ask": "Is the job_title field a plausible job title?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.9958590991878381,
+         "top": true
+        }
+       ],
+       "name": "job_title",
+       "type": "yes/no"
+      },
+      {
+       "ask": "Is the company field a plausible name of an organisation?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.9961206208775218,
+         "top": true
+        }
+       ],
+       "name": "company",
+       "type": "yes/no"
+      },
+      {
+       "ask": "Does the message field state a real question, problem or request?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.9963091622700319,
+         "top": true
+        }
+       ],
+       "name": "message",
+       "type": "yes/no"
+      }
+     ],
+     "record": 1,
+     "serverMs": 81.7,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/03-form-validator/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 1,
+      "origin": "aminry/decisio-examples at 3436915, examples/03-form-validator/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 1",
+      "record_sha256": "d5fa9f691f61327f773c5a62bb2c346cf53651038ae366f1547160af4fb6aed0"
+     },
+     "state": "job_title: Senior backend engineer\ncompany: Northwind Logistics\nmessage: We cannot log in to the dashboard since this morning, every attempt ends in a session expired message.",
+     "state_was_an_object": true
+    },
+    {
+     "example": "03-form-validator",
+     "id": "03-form-validator#1",
+     "kind": "Form check",
+     "of": 40,
+     "questions": [
+      {
+       "ask": "Is the job_title field a plausible job title?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.9950540815849953,
+         "top": true
+        }
+       ],
+       "name": "job_title",
+       "type": "yes/no"
+      },
+      {
+       "ask": "Is the company field a plausible name of an organisation?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.9962000089325223,
+         "top": true
+        }
+       ],
+       "name": "company",
+       "type": "yes/no"
+      },
+      {
+       "ask": "Does the message field state a real question, problem or request?",
+       "bars": [
+        {
+         "label": "yes",
+         "p": 0.9954602711891655,
+         "top": true
+        }
+       ],
+       "name": "message",
+       "type": "yes/no"
+      }
+     ],
+     "record": 2,
+     "serverMs": 77.2,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/03-form-validator/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 2,
+      "origin": "aminry/decisio-examples at 3436915, examples/03-form-validator/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 2",
+      "record_sha256": "097f0980a5767569d6658aaf53c439486c4b03caf2408b75a87d6f6abce57b31"
+     },
+     "state": "job_title: Product manager\ncompany: Brightside Dental Group\nmessage: Please send me a PDF invoice for March with our VAT number on it.",
+     "state_was_an_object": true
+    },
+    {
+     "example": "04-tool-decision",
+     "id": "04-tool-decision#0",
+     "kind": "Tool decision",
+     "of": 76,
+     "questions": [
+      {
+       "ask": "What should the assistant do next?",
+       "bars": [
+        {
+         "label": "answer",
+         "p": 0.955719578871897,
+         "title": "Reply directly from general knowledge; no tool is needed",
+         "top": true
+        },
+        {
+         "label": "search",
+         "p": 0.013898969453165157,
+         "title": "Look up company documents or policies before answering",
+         "top": false
+        },
+        {
+         "label": "calculate",
+         "p": 0.020692926688485696,
+         "title": "Do arithmetic, or a unit or date calculation",
+         "top": false
+        },
+        {
+         "label": "ask_user",
+         "p": 0.0041569559534760546,
+         "title": "The request is missing something the assistant needs, so ask a clarifying question",
+         "top": false
+        },
+        {
+         "label": "act",
+         "p": 0.005531569032976202,
+         "title": "Take an action that changes something: send, create, move, refund, delete, close or reset",
+         "top": false
+        }
+       ],
+       "name": "next",
+       "result": "answer",
+       "type": "choice"
+      }
+     ],
+     "record": 1,
+     "serverMs": 65.8,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/04-tool-decision/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 1,
+      "origin": "aminry/decisio-examples at 3436915, examples/04-tool-decision/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 1",
+      "record_sha256": "609f1ec6bb7f15b51b3736dcf1275a16697778d0eeaf39e9bc9c2cd47fe2040e"
+     },
+     "state": "What does HTTP status 404 mean?",
+     "state_was_an_object": false
+    },
+    {
+     "example": "04-tool-decision",
+     "id": "04-tool-decision#1",
+     "kind": "Tool decision",
+     "of": 76,
+     "questions": [
+      {
+       "ask": "What should the assistant do next?",
+       "bars": [
+        {
+         "label": "answer",
+         "p": 0.956281832795929,
+         "title": "Reply directly from general knowledge; no tool is needed",
+         "top": true
+        },
+        {
+         "label": "search",
+         "p": 0.01400046998767685,
+         "title": "Look up company documents or policies before answering",
+         "top": false
+        },
+        {
+         "label": "calculate",
+         "p": 0.019626292562780402,
+         "title": "Do arithmetic, or a unit or date calculation",
+         "top": false
+        },
+        {
+         "label": "ask_user",
+         "p": 0.00413149724659905,
+         "title": "The request is missing something the assistant needs, so ask a clarifying question",
+         "top": false
+        },
+        {
+         "label": "act",
+         "p": 0.005959907407014498,
+         "title": "Take an action that changes something: send, create, move, refund, delete, close or reset",
+         "top": false
+        }
+       ],
+       "name": "next",
+       "result": "answer",
+       "type": "choice"
+      }
+     ],
+     "record": 2,
+     "serverMs": 58.2,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/04-tool-decision/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 2,
+      "origin": "aminry/decisio-examples at 3436915, examples/04-tool-decision/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 2",
+      "record_sha256": "f0a83d5f00ae6d423ae17b849b5a65f9badba63bc245b25170cb42c70e48c1c6"
+     },
+     "state": "Explain the difference between a list and a tuple in Python.",
+     "state_was_an_object": false
+    },
+    {
+     "example": "04-tool-decision",
+     "id": "04-tool-decision#2",
+     "kind": "Tool decision",
+     "of": 76,
+     "questions": [
+      {
+       "ask": "What should the assistant do next?",
+       "bars": [
+        {
+         "label": "answer",
+         "p": 0.9554796065069623,
+         "title": "Reply directly from general knowledge; no tool is needed",
+         "top": true
+        },
+        {
+         "label": "search",
+         "p": 0.012569261283841227,
+         "title": "Look up company documents or policies before answering",
+         "top": false
+        },
+        {
+         "label": "calculate",
+         "p": 0.02096637920772881,
+         "title": "Do arithmetic, or a unit or date calculation",
+         "top": false
+        },
+        {
+         "label": "ask_user",
+         "p": 0.004414980759805571,
+         "title": "The request is missing something the assistant needs, so ask a clarifying question",
+         "top": false
+        },
+        {
+         "label": "act",
+         "p": 0.00656977224166204,
+         "title": "Take an action that changes something: send, create, move, refund, delete, close or reset",
+         "top": false
+        }
+       ],
+       "name": "next",
+       "result": "answer",
+       "type": "choice"
+      }
+     ],
+     "record": 3,
+     "serverMs": 63.4,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/04-tool-decision/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 3,
+      "origin": "aminry/decisio-examples at 3436915, examples/04-tool-decision/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 3",
+      "record_sha256": "9b126db470f3bebcac3cb3a8ea5faa258b61985e0d28f584f3cee895a9a67e50"
+     },
+     "state": "Can you rewrite this sentence to sound more polite: 'Send me the report now.'",
+     "state_was_an_object": false
+    },
+    {
+     "example": "04-tool-decision",
+     "id": "04-tool-decision#3",
+     "kind": "Tool decision",
+     "of": 76,
+     "questions": [
+      {
+       "ask": "What should the assistant do next?",
+       "bars": [
+        {
+         "label": "answer",
+         "p": 0.9469683671342984,
+         "title": "Reply directly from general knowledge; no tool is needed",
+         "top": true
+        },
+        {
+         "label": "search",
+         "p": 0.019697041896663648,
+         "title": "Look up company documents or policies before answering",
+         "top": false
+        },
+        {
+         "label": "calculate",
+         "p": 0.022366125837429415,
+         "title": "Do arithmetic, or a unit or date calculation",
+         "top": false
+        },
+        {
+         "label": "ask_user",
+         "p": 0.005514712553781354,
+         "title": "The request is missing something the assistant needs, so ask a clarifying question",
+         "top": false
+        },
+        {
+         "label": "act",
+         "p": 0.005453752577827002,
+         "title": "Take an action that changes something: send, create, move, refund, delete, close or reset",
+         "top": false
+        }
+       ],
+       "name": "next",
+       "result": "answer",
+       "type": "choice"
+      }
+     ],
+     "record": 4,
+     "serverMs": 56.6,
+     "source": {
+      "file": "https://github.com/aminry/decisio-examples/blob/343691565ad708f99389bc863e3f64c398856fed/examples/04-tool-decision/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "line": 4,
+      "origin": "aminry/decisio-examples at 3436915, examples/04-tool-decision/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz, line 4",
+      "record_sha256": "525901ffb65501645a11585b226d57c2f2c63636d6cda9ff4ace035f985c82bd"
+     },
+     "state": "What is a good name for a team that handles billing questions?",
+     "state_was_an_object": false
+    }
+   ],
+   "run": {
+    "base": "gemma-4-31b",
+    "card": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "checkpoint": "google/gemma-4-31B-it",
+    "checkpoint_revision": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+    "cpu": "AMD EPYC 9654 96-Core Processor",
+    "date": "2026-10-08",
+    "decisio_version": "0.9.0",
+    "power_limit_w": 600,
+    "vllm": "0.30.0"
+   },
+   "source": {
+    "commit": "343691565ad708f99389bc863e3f64c398856fed",
+    "files": [
+     {
+      "path": "examples/01-support-routing/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "sha256": "760fe40dbdcefa8b55564f8b44877e492c1f603481f697ec95bdff66bf947740"
+     },
+     {
+      "path": "examples/02-moderation-gate/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "sha256": "479b909ec6ed8850bea5d317234f14c57024e1be9e2c6bd7ceba165ec80791b6"
+     },
+     {
+      "path": "examples/03-form-validator/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "sha256": "d8495c8dc72a408fc50fb084b7111faa11ba67d7a1125ee9549c9565ba7014ba"
+     },
+     {
+      "path": "examples/04-tool-decision/runs/2026-10-08_gemma-4-31b/decisions.jsonl.gz",
+      "sha256": "243f0fb2a5478aef4923fa2eb0f1cd156e98ae27080274b63dd491ae5bf566f8"
+     }
+    ],
+    "repository": "aminry/decisio-examples"
+   }
+  },
+  "routing_example5": {
+   "accuracy_all": {
+    "value": 0.974
+   },
+   "note": "The record is of decisio 0.9.0 on the 31B; later releases up to 0.10.0 change no prompt, readout or temperature. The 0.8 threshold was fixed before any run; 0.9 is one of the report's sweep values.",
+   "questions": {
+    "value": 1172
+   },
+   "record": {
+    "card": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "date": "2026-10-08",
+    "decisio_version": "0.9.0",
+    "power_limit_w": 600,
+    "what": "decisio-examples example 5 (Escalate only when unsure), session A, Gemma 4 31B, ARC-Challenge test split, one request per question"
+   },
+   "sweep": {
+    "value": [
+     {
+      "accuracy_kept": 0.976,
+      "confidently_wrong": 28,
+      "errors_escalated": 3,
+      "escalated": 4,
+      "escalated_share": 0.0034,
+      "keep_at": 0.5
+     },
+     {
+      "accuracy_kept": 0.978,
+      "confidently_wrong": 25,
+      "errors_escalated": 6,
+      "escalated": 10,
+      "escalated_share": 0.0085,
+      "keep_at": 0.6
+     },
+     {
+      "accuracy_kept": 0.982,
+      "confidently_wrong": 21,
+      "errors_escalated": 10,
+      "escalated": 18,
+      "escalated_share": 0.0154,
+      "keep_at": 0.7
+     },
+     {
+      "accuracy_kept": 0.985,
+      "confidently_wrong": 17,
+      "errors_escalated": 14,
+      "escalated": 27,
+      "escalated_share": 0.023,
+      "keep_at": 0.8
+     },
+     {
+      "accuracy_kept": 0.988,
+      "confidently_wrong": 13,
+      "errors_escalated": 18,
+      "escalated": 47,
+      "escalated_share": 0.0401,
+      "keep_at": 0.9
+     },
+     {
+      "accuracy_kept": 0.992,
+      "confidently_wrong": 9,
+      "errors_escalated": 22,
+      "escalated": 94,
+      "escalated_share": 0.0802,
+      "keep_at": 0.95
+     },
+     {
+      "accuracy_kept": 1.0,
+      "confidently_wrong": 0,
+      "errors_escalated": 31,
+      "escalated": 1167,
+      "escalated_share": 0.9957,
+      "keep_at": 0.99
+     }
+    ]
+   },
+   "thresholds": {
+    "0.8": {
+     "accuracy_on_the_rest": {
+      "value": 0.985
+     },
+     "accuracy_on_the_rest_ci95_high": {
+      "value": 0.991
+     },
+     "accuracy_on_the_rest_ci95_low": {
+      "value": 0.976
+     },
+     "confidently_wrong": {
+      "value": 17
+     },
+     "escalated": {
+      "value": 27
+     },
+     "escalated_share": {
+      "value": 0.023
+     },
+     "threshold": 0.8,
+     "wrong_answers_escalated": {
+      "value": 14
+     },
+     "wrong_answers_total": {
+      "value": 31
+     }
+    },
+    "0.9": {
+     "accuracy_on_the_rest": {
+      "value": 0.988
+     },
+     "accuracy_on_the_rest_ci95_high": {
+      "value": 0.993
+     },
+     "accuracy_on_the_rest_ci95_low": {
+      "value": 0.98
+     },
+     "confidently_wrong": {
+      "value": 13
+     },
+     "escalated": {
+      "value": 47
+     },
+     "escalated_share": {
+      "value": 0.0401
+     },
+     "threshold": 0.9,
+     "wrong_answers_escalated": {
+      "value": 18
+     },
+     "wrong_answers_total": {
+      "value": 31
+     }
+    }
+   },
+   "wrong_answers_total": {
+    "value": 31
+   }
+  },
+  "same_box_speed": {
+   "allowed_sentences": [
+    {
+     "conditions": "one box, one session: an RTX PRO 6000 at 600 W (enforced), each system on its own published server, SM clock p50 2,220 to 2,610 MHz (the box row); median of 5 or 10 documents (the count is in every cell); synthetic support tickets by the Gemma 4 tokenizer; this compares time, not accuracy",
+     "holds": true,
+     "id": "decisio_50_questions_seconds",
+     "text": "On one box, Decisio 31B answers 50 questions about one 3,000-token document in 1.08 s and about one 6,000-token document in 1.73 s; Decisio 12B takes 1.57 s and 1.97 s, and H2O-Lightning-4B 2.05 s and 2.82 s."
+    },
+    {
+     "conditions": "one box, one session: an RTX PRO 6000 at 600 W (enforced), each system on its own published server, SM clock p50 2,220 to 2,610 MHz (the box row); median of 5 or 10 documents (the count is in every cell); synthetic support tickets by the Gemma 4 tokenizer; this compares time, not accuracy",
+     "holds": true,
+     "id": "first_question_3000",
+     "text": "On one box, the first question about a new 3,000-token document takes a median of 112 ms on H2O-Lightning-4B, 295 ms on Decisio 12B, 490 ms on Decisio 31B, and 895 ms on Jeff-1.0-Large and 895 ms on Quyet-1.0-Large."
+    },
+    {
+     "conditions": "one box, one session: an RTX PRO 6000 at 600 W (enforced), each system on its own published server, SM clock p50 2,220 to 2,610 MHz (the box row); median of 5 or 10 documents (the count is in every cell); synthetic support tickets by the Gemma 4 tokenizer; this compares time, not accuracy",
+     "holds": true,
+     "id": "long_document_32000",
+     "text": "At 32,000 tokens, Decisio 31B answers 50 questions about one document in 10.1 s, Decisio 12B in 6.76 s and H2O-Lightning-4B in 9.05 s; Jeff-1.0-Large accepts documents of up to 8,192 tokens and Quyet-1.0-Large up to 6,000, so neither accepts a 32,000-token document."
+    }
+   ],
+   "box": {
+    "card": "one NVIDIA RTX PRO 6000 Blackwell Workstation Edition, power limit 600 W (default, enforced)",
+    "enforced_power_limit_w": {
+     "value": "600.00"
+    },
+    "labelled": "measured by Tachara AI Lab on one RTX PRO 6000, each system on its own published server, in one session"
+   },
+   "charts": {
+    "grid_report/many_questions_dark.svg": {
+     "alt_text": "Median time to answer 1, 10 or 50 questions about one document of 3,000 or 6,000 tokens, for ten systems, on a log axis. Systems that read the document once take 1.1 to 3.7 seconds for 50 questions. Systems that read it again for every question take 18 to 146 seconds. Five systems were measured in one session on one box; the other five on the earlier box, drawn as hollow rings.",
+     "sha256": "e7aaf06d42cea35433d30aa965f504e643859709cf663e4567cb48bff19f46ed"
+    },
+    "grid_report/many_questions_light.svg": {
+     "alt_text": "Median time to answer 1, 10 or 50 questions about one document of 3,000 or 6,000 tokens, for ten systems, on a log axis. Systems that read the document once take 1.1 to 3.7 seconds for 50 questions. Systems that read it again for every question take 18 to 146 seconds. Five systems were measured in one session on one box; the other five on the earlier box, drawn as hollow rings.",
+     "sha256": "f0240f2a1cfe9a8a1d3ecc6ef8d8161a0983283681ca4d85d654159766d47e2c"
+    },
+    "speed_50q_dark.svg": {
+     "alt_text": "Bar chart of the median time to answer 50 questions about one document, five systems measured in one session on one box. For a 3,000-token document: decisio Gemma 4 31B 1.08 seconds, decisio Gemma 4 12B 1.57, H2O-Lightning-4B 2.05, Jeff-1.0-Large 47.1, Quyet-1.0-Large 48.9. For a 6,000-token document: 1.73, 1.97, 2.82, 114.6 and 114.8 seconds. For a 32,000-token document only decisio Gemma 4 12B (6.76 s), H2O-Lightning-4B (9.05 s) and decisio Gemma 4 31B (10.1 s) answer; Jeff-1.0-Large and Quyet-1.0-Large are marked not supported.",
+     "sha256": "7f0f50323fa88d7dc67d28b8feb8d9c1883ed693ce0b0b868351b0e1048a2fe1"
+    },
+    "speed_50q_light.svg": {
+     "alt_text": "Bar chart of the median time to answer 50 questions about one document, five systems measured in one session on one box. For a 3,000-token document: decisio Gemma 4 31B 1.08 seconds, decisio Gemma 4 12B 1.57, H2O-Lightning-4B 2.05, Jeff-1.0-Large 47.1, Quyet-1.0-Large 48.9. For a 6,000-token document: 1.73, 1.97, 2.82, 114.6 and 114.8 seconds. For a 32,000-token document only decisio Gemma 4 12B (6.76 s), H2O-Lightning-4B (9.05 s) and decisio Gemma 4 31B (10.1 s) answer; Jeff-1.0-Large and Quyet-1.0-Large are marked not supported.",
+     "sha256": "3978f44182200e088e98c6960d8376eebb5f19e749f637727c63a48eb53180d5"
+    }
+   },
+   "documents_per_cell": "10 for decisio and H2O at 3,000 and 6,000 tokens; 5 for Jeff, Quyet and at 32,000 tokens (the count is in every cell)",
+   "ratios_to_decisio_31b": {
+    "Jeff-1.0-Large": {
+     "3000": {
+      "value": 43.45
+     },
+     "6000": {
+      "value": 66.07
+     }
+    },
+    "Quyet-1.0-Large": {
+     "3000": {
+      "value": 45.15
+     },
+     "6000": {
+      "value": 66.2
+     }
+    }
+   },
+   "systems": [
+    {
+     "cells50": {
+      "3000": {
+       "printed": "1.08 s (10)",
+       "seconds": {
+        "value": 1.083975911140442
+       }
+      },
+      "32000": {
+       "printed": "10.1 s (5)",
+       "seconds": {
+        "value": 10.068000121042132
+       }
+      },
+      "6000": {
+       "printed": "1.73 s (10)",
+       "seconds": {
+        "value": 1.7338799489662051
+       }
+      }
+     },
+     "class": "once",
+     "first_question_ms": {
+      "1000": 175,
+      "3000": 490,
+      "32000": 8655,
+      "6000": 1018
+     },
+     "limit_text": "a 32,768-token window shared by the document and the questions",
+     "limit_tokens": {
+      "value": 32768
+     },
+     "system": "decisio Gemma 4 31B"
+    },
+    {
+     "cells50": {
+      "3000": {
+       "printed": "1.57 s (10)",
+       "seconds": {
+        "value": 1.569089007563889
+       }
+      },
+      "32000": {
+       "printed": "6.76 s (5)",
+       "seconds": {
+        "value": 6.7599201537668705
+       }
+      },
+      "6000": {
+       "printed": "1.97 s (10)",
+       "seconds": {
+        "value": 1.9741702852770686
+       }
+      }
+     },
+     "class": "once",
+     "first_question_ms": {
+      "1000": 116,
+      "3000": 295,
+      "32000": 4310,
+      "6000": 566
+     },
+     "limit_text": "a 32,768-token window shared by the document and the questions",
+     "limit_tokens": {
+      "value": 32768
+     },
+     "system": "decisio Gemma 4 12B"
+    },
+    {
+     "cells50": {
+      "3000": {
+       "printed": "2.05 s (10)",
+       "seconds": {
+        "value": 2.050122140906751
+       }
+      },
+      "32000": {
+       "printed": "9.05 s (5)",
+       "seconds": {
+        "value": 9.05482823215425
+       }
+      },
+      "6000": {
+       "printed": "2.82 s (10)",
+       "seconds": {
+        "value": 2.8210155591368675
+       }
+      }
+     },
+     "class": "cache",
+     "first_question_ms": {
+      "1000": 55,
+      "3000": 112,
+      "32000": 1252,
+      "6000": 211
+     },
+     "limit_text": "32,000 tokens of its own tokenizer",
+     "limit_tokens": {
+      "value": 32000
+     },
+     "system": "H2O-Lightning-4B v1.1"
+    },
+    {
+     "cells50": {
+      "3000": {
+       "printed": "47.1 s (5)",
+       "seconds": {
+        "value": 47.095015324652195
+       }
+      },
+      "32000": {
+       "printed": "not supported"
+      },
+      "6000": {
+       "printed": "114.6 s (5)",
+       "seconds": {
+        "value": 114.55367784015834
+       }
+      }
+     },
+     "class": "again",
+     "first_question_ms": {
+      "1000": 287,
+      "3000": 895,
+      "32000": "not supported",
+      "6000": 2210
+     },
+     "limit_text": "8,192 tokens (HTTP 422 above)",
+     "limit_tokens": {
+      "value": 8192
+     },
+     "system": "Jeff-1.0-Large"
+    },
+    {
+     "cells50": {
+      "3000": {
+       "printed": "48.9 s (5)",
+       "seconds": {
+        "value": 48.940972248092294
+       }
+      },
+      "32000": {
+       "printed": "not supported"
+      },
+      "6000": {
+       "printed": "114.8 s (5)",
+       "seconds": {
+        "value": 114.78629582747817
+       }
+      }
+     },
+     "class": "again",
+     "first_question_ms": {
+      "1000": 295,
+      "3000": 895,
+      "32000": "not supported",
+      "6000": "2302 (grid n=1)"
+     },
+     "limit_text": "6,000 tokens (HTTP 400 above)",
+     "limit_tokens": {
+      "value": 6000
+     },
+     "system": "Quyet-1.0-Large"
+    }
+   ]
+  }
+ },
+ "head_to_head": {
+  "h2o": {
+   "composite_intervals_overlap": true
+  },
+  "jev": {
+   "composite_intervals_overlap": true,
+   "rows": {
+    "intelligence": {
+     "printed_ours": "70.4",
+     "printed_theirs": "63.6"
+    }
+   }
+  },
+  "ours": {
+   "stated_longest_state": {
+    "quote": "Context up to 32,768 tokens per prompt."
+   },
+   "stated_option_limit": {
+    "quote": "Up to 255 options per question"
+   }
+  },
+  "quyet": {
+   "composite_intervals_overlap": true
+  }
+ },
+ "rows": {
+  "12b_v080": {
+   "answered_ok": {
+    "value": 1477
+   },
+   "ci95_A_high": {
+    "value": 69.64960281748938
+   },
+   "ci95_A_low": {
+    "value": 57.374888808052155
+   },
+   "display": {
+    "value": "decisio v0.8.0 on gemma-4-12B-it (frozen, one forward pass, self-hosted)"
+   },
+   "intelligence": {
+    "I_open": {
+     "value": 53.076253329484096
+    },
+    "I_sealed": {
+     "value": 51.57372372806806
+    }
+   },
+   "key": "decisio-gemma-4-12b-v080",
+   "last_measured_on": {
+    "value": "2026-10-06"
+   },
+   "rows": {
+    "value": 1500
+   },
+   "score_A": {
+    "value": 68.17346094077045
+   }
+  },
+  "12b_v090": {
+   "answered_ok": {
+    "value": 1477
+   },
+   "ci95_A_high": {
+    "value": 69.5635857308408
+   },
+   "ci95_A_low": {
+    "value": 54.37922382108821
+   },
+   "display": {
+    "value": "decisio v0.9.0 on gemma-4-12B-it (frozen, one prefill per question, self-hosted)"
+   },
+   "intelligence": {
+    "I_open": {
+     "value": 53.066754472907135
+    },
+    "I_sealed": {
+     "value": 51.53145792806259
+    }
+   },
+   "key": "decisio-gemma-4-12b-v090",
+   "last_measured_on": {
+    "value": "2026-10-07"
+   },
+   "rows": {
+    "value": 1500
+   },
+   "score_A": {
+    "value": 67.76072338665118
+   }
+  },
+  "31b": {
+   "answered_ok": {
+    "value": 1477
+   },
+   "ci95_A_high": {
+    "value": 72.80874617920621
+   },
+   "ci95_A_low": {
+    "value": 69.85754247280484
+   },
+   "display": {
+    "value": "decisio v0.8.0 on gemma-4-31B-it (frozen, FP8 on load, one prefill per state, self-hosted)"
+   },
+   "intelligence": {
+    "I_open": {
+     "value": 67.59136348711468
+    },
+    "I_sealed": {
+     "value": 73.25505834945518
+    }
+   },
+   "key": "decisio-gemma-4-31b-v080",
+   "last_measured_on": {
+    "value": "2026-10-06"
+   },
+   "rows": {
+    "value": 1500
+   },
+   "score_A": {
+    "value": 71.6926576652985
+   }
+  },
+  "deck31b": {
+   "answered_ok": {
+    "value": 1477
+   },
+   "ci95_A_high": {
+    "value": 69.73758073723451
+   },
+   "ci95_A_low": {
+    "value": 67.07103330487536
+   },
+   "display": {
+    "value": "deck-31B (krishna765, frozen Gemma-4-31B-it, TorchAO FP8 dynamic)"
+   },
+   "intelligence": {
+    "I_open": {
+     "value": 70.23424531362603
+    },
+    "I_sealed": {
+     "value": 75.81600577741091
+    }
+   },
+   "key": "deck31b",
+   "last_measured_on": {
+    "value": "2026-10-05"
+   },
+   "rows": {
+    "value": 1500
+   },
+   "score_A": {
+    "value": 68.68200118286292
+   }
+  },
+  "h2o": {
+   "answered_ok": {
+    "value": 1500
+   },
+   "ci95_A_high": {
+    "value": 73.78891952313766
+   },
+   "ci95_A_low": {
+    "value": 69.79499879039663
+   },
+   "display": {
+    "value": "H2O-Lightning-4B v1.1 (H2O.ai, Qwen3.5-4B fine-tune, stock vLLM + open shim)"
+   },
+   "intelligence": {
+    "I_open": {
+     "value": 61.05316077664259
+    },
+    "I_sealed": {
+     "value": 59.02363734728246
+    }
+   },
+   "key": "h2o-lightning-4b",
+   "last_measured_on": {
+    "value": "2026-10-04"
+   },
+   "rows": {
+    "value": 1500
+   },
+   "score_A": {
+    "value": 72.5232271521435
+   }
+  },
+  "jev": {
+   "answered_ok": {
+    "value": 1477
+   },
+   "ci95_A_high": {
+    "value": 72.39570149403289
+   },
+   "ci95_A_low": {
+    "value": 69.1394876572671
+   },
+   "display": {
+    "value": "Jev 1.13.0 (TypeSafe AI)"
+   },
+   "intelligence": {
+    "I_open": {
+     "value": 65.60411433522728
+    },
+    "I_sealed": {
+     "value": 61.637401345268295
+    }
+   },
+   "key": "jev-1.13.0",
+   "last_measured_on": {
+    "value": "2026-10-05"
+   },
+   "rows": {
+    "value": 1500
+   },
+   "score_A": {
+    "value": 71.49118639284514
+   }
+  },
+  "quyet": {
+   "answered_ok": {
+    "value": 1500
+   },
+   "ci95_A_high": {
+    "value": 72.20621881721509
+   },
+   "ci95_A_low": {
+    "value": 69.83728305350246
+   },
+   "display": {
+    "value": "Quyet-1.0-Large (Chinh Nguyen, Gemma-4-31B decoder, option-letter logits)"
+   },
+   "intelligence": {
+    "I_open": {
+     "value": 75.23869318243646
+    },
+    "I_sealed": {
+     "value": 71.56402562971212
+    }
+   },
+   "key": "quyet-1-0-large",
+   "last_measured_on": {
+    "value": "2026-10-04"
+   },
+   "rows": {
+    "value": 1500
+   },
+   "score_A": {
+    "value": 71.38706329141472
+   }
+  }
+ },
+ "schema": "launch_facts/1",
+ "sources": {
+  "jevbench_artifact": {
+   "url": "https://benchmarkheaven.com/api/jevbench/v1.6.1"
+  }
+ },
+ "stable_claims": {
+  "claims": [
+   {
+    "date": "2026-10-09 (the file; the board's /api/jevbench/v1.6.1 is a frozen revision)",
+    "id": "composite_v161",
+    "link": "https://benchmarkheaven.com/jev-models",
+    "text": "On JevBench v1.6.1 (the board's file, October 2026), Decisio 31B scored 71.69 on the composite (95% interval 69.86 to 72.81) and Jev 1.13.0 scored 71.49 (69.14 to 72.40); the two intervals overlap.",
+    "values": {
+     "ours": {
+      "value": 71.6926576652985
+     },
+     "ours_interval": {
+      "value": [
+       69.85754247280484,
+       72.80874617920621
+      ]
+     },
+     "theirs": {
+      "value": 71.49118639284514
+     },
+     "theirs_interval": {
+      "value": [
+       69.1394876572671,
+       72.39570149403289
+      ]
+     }
+    }
+   },
+   {
+    "date": "2026-10-09 (the file)",
+    "id": "sealed_v161",
+    "link": "https://benchmarkheaven.com/jev-models",
+    "text": "On JevBench v1.6.1, the 31B's sealed-set intelligence was 73.3 and Jev 1.13.0's 61.6; the open-set intelligence was 67.6 and 65.6.",
+    "values": {
+     "sealed": {
+      "ours": {
+       "value": 73.25505834945518
+      },
+      "theirs": {
+       "value": 61.637401345268295
+      }
+     }
+    }
+   },
+   {
+    "date": "2026-10-09 (the file)",
+    "id": "axes_v161",
+    "link": "https://benchmarkheaven.com/jev-models",
+    "text": "On JevBench v1.6.1, Decisio 31B's axes were intelligence 70.4 (Jev 1.13.0 63.6), calibration 88.7 (90.6), speed 91.2 (91.5) and cost 51.7 (54.7).",
+    "values": {
+     "intelligence": {
+      "ours": {
+       "value": 70.42321091828492
+      },
+      "theirs": {
+       "value": 63.62075784024779
+      }
+     }
+    }
+   },
+   {
+    "date": "2026-10-15",
+    "id": "capability_page_2026_10_15",
+    "link": "https://benchmarkheaven.com/jev-models",
+    "text": "On the board's Capability table as read on 2026-10-15 (a page that merges later draws), Decisio 31B scored 79.57 (95% interval 75.67 to 81.99) and Jev 1.13.0 77.13 (72.77 to 78.37).",
+    "values": {
+     "ours": 79.57,
+     "ours_interval": null
+    }
+   },
+   {
+    "date": "2026-10-11",
+    "id": "speed_same_box_2026_10_11",
+    "link": "https://benchmarkheaven.com/jev-models",
+    "text": "On one box (one RTX PRO 6000 at 600 W, one session on 2026-10-11), Decisio 31B answered 50 questions about a 3,000-token document in 1.08 s and about a 6,000-token document in 1.73 s; Jeff-1.0-Large took 47.1 s and 114.6 s, and Quyet-1.0-Large 48.9 s and 114.8 s; neither accepts a 32,000-token document (Decisio 31B: 10.1 s).",
+    "values": {
+     "Jeff-1.0-Large": {
+      "3000": {
+       "value": 47.095015324652195
+      },
+      "6000": {
+       "value": 114.55367784015834
+      }
+     },
+     "Quyet-1.0-Large": {
+      "3000": {
+       "value": 48.940972248092294
+      },
+      "6000": {
+       "value": 114.78629582747817
+      }
+     },
+     "decisio Gemma 4 31B": {
+      "3000": {
+       "value": 1.083975911140442
+      },
+      "6000": {
+       "value": 1.7338799489662051
+      }
+     }
+    }
+   },
+   {
+    "date": "2026-10-05 (runs/2026-10-05_decision-index/, EVAL_CARD section 8)",
+    "id": "decision_index_021",
+    "link": "https://benchmarkheaven.com/jev-models",
+    "text": "Our own run of Decisio 31B (decisio v0.6.0, 2026-10-05) on the Decision Index 0.2.1 scored 57.58 (a self-run, not a board score), with a median of 56.0 ms per request over 150,759 requests.",
+    "values": {}
+   },
+   {
+    "date": "2026-09-30 and 2026-10-01",
+    "id": "ollama_study_dated",
+    "link": "https://benchmarkheaven.com/jev-models",
+    "text": "In our Ollama study (Ollama 0.35.0 on an Apple M5 Pro, measured 2026-09-30 and 2026-10-01), accuracy and expected calibration error on the 1,250-item suite were: decisio q4_k_m 0.775 and 0.089; nimble:9b 0.750 and 0.069; tev1:4b 0.678 and 0.061; tev1:0.8b 0.462 and 0.151. On JevBench's 231 published items they were: decisio q4_k_m 0.853 and 0.045; nimble:9b 0.797 and 0.097; tev1:4b 0.762 and 0.094; tev1:0.8b 0.615 and 0.136. The paired 95% interval of decisio q4_k_m minus nimble:9b was +2.6 [+0.5, +4.6] points of accuracy on the suite and +5.6 [+0.9, +10.4] on JevBench.",
+    "values": {}
+   },
+   {
+    "date": "2026-10-14 (the board's data file, generated_utc 2026-10-14T09:16:12Z)",
+    "id": "decision_index_board_03",
+    "link": "https://huggingface.co/spaces/multimodalart/jev-decision-index",
+    "submission": {
+     "pull_requests": {
+      "apolinario/decision-index#115": {
+       "merged_on_github": false,
+       "state": "closed"
+      },
+      "apolinario/decision-index#62": {
+       "merged_on_github": false,
+       "state": "closed"
+      }
+     }
+    },
+    "text": "Decisio's three entries are listed on the Decision Index board; in its data file of 2026-10-14 (Decision Index 0.3.2) they scored, as the public index and then the edition 0.3 index: decisio 0.6.0 (Gemma 4 31B) 58.09 and 58.55; decisio 0.4.0 (Gemma 4 12B) 49.72 and 47.47; decisio 0.4.0 (Qwen3.6-35B-A3B) 48.43 and 47.72.",
+    "values": {
+     "label": "Decision Index 0.3.2",
+     "rows": [
+      {
+       "edition_03": 58.55,
+       "name": "decisio 0.6.0 (Gemma 4 31B)",
+       "public_index": 58.09
+      },
+      {
+       "edition_03": 47.47,
+       "name": "decisio 0.4.0 (Gemma 4 12B)",
+       "public_index": 49.72
+      },
+      {
+       "edition_03": 47.72,
+       "name": "decisio 0.4.0 (Qwen3.6-35B-A3B)",
+       "public_index": 48.43
+      }
+     ]
+    }
+   }
+  ],
+  "rule": "Public texts say what was measured, on which board revision or session, on what date, and link to the live board (https://benchmarkheaven.com/jev-models) for current standings. Facts about Decisio itself (what it does, what it costs to run, its own measured accuracy and latency, teaching.intent_heads) need no board."
+ },
+ "teaching": {
+  "certified_example": {
+   "alpha": {
+    "value": 0.15
+   },
+   "certified_n": {
+    "value": 169
+   },
+   "delta": {
+    "value": 0.1
+   },
+   "errors_at_threshold": {
+    "value": 17
+   },
+   "held_out_n": {
+    "value": 200
+   },
+   "threshold": {
+    "value": 0.9863366761679004
+   }
+  },
+  "intent_heads": {
+   "gemma_4_31b": {
+    "banking77": {
+     "draws": 3,
+     "plain": {
+      "value": 0.7866666666666666
+     },
+     "registration_seconds": {
+      "value": 308
+     },
+     "taught": {
+      "value": 0.8444444444444444
+     },
+     "test_items": 150,
+     "wording": "BANKING77: 78.7% plain, 84.4% after 10 labelled examples per intent (mean of 3 draws, 150 test items)"
+    },
+    "clinc150": {
+     "draws": 3,
+     "plain": {
+      "value": 0.94
+     },
+     "registration_seconds": {
+      "value": 699
+     },
+     "taught": {
+      "value": 0.97
+     },
+     "test_items": 100,
+     "wording": "CLINC150: 94.0% plain, 97.0% after 10 labelled examples per intent (mean of 3 draws, 100 test items)"
+    },
+    "examples_per_intent": 10
+   }
+  }
+ }
+}

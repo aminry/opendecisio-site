@@ -1,0 +1,93 @@
+---
+// The comparison's headline as two tables that never scroll: the scores, for
+// our three bases, Jev and one open entry, with every qualifier a
+// lettered note; then the facts that are sentences, one row per system. The
+// notes are in a disclosure under the tables; the card around them says what a cell is.
+import { baseOfName, colourOf } from '../config/bases.mjs';
+import { site } from '../config/site';
+import { headline } from '../lib/headline.mjs';
+import { jevbenchCounts } from '../lib/text.mjs';
+import HeadLabel from './HeadLabel.astro';
+interface Props { systems?: boolean; }
+const { systems = true } = Astro.props;
+const h = headline()!;
+const plain = (html: string) => html.replace(/<[^>]+>/g, '').trim();
+const colour = (base?: string) => (base ? colourOf(base) : undefined);
+const letters = (ls: string[]) => (ls.length ? ` (${ls.join(', ')})` : '');
+const label = (html: string) => plain(html).replace(/^decisio\s*·\s*/i, `${site.name} · `);
+// Only the notes the tables shown here refer to.
+const used = new Set([
+	...h.numbers.rows.flatMap((r) => r.cells.flatMap((c) => c.letters)),
+	...(systems ? h.systems.rows.flatMap((r) => r.cells.flatMap((c) => ('letters' in c ? c.letters! : [...plain(c.html!).matchAll(/\(([a-z])\)/g)].map((m) => m[1])))) : []),
+]);
+const notes = h.notes.filter((n) => used.has(plain(n).match(/^\(([a-z])\)/)?.[1] ?? ''));
+const added = h.added.filter((a) => used.has(a.letter));
+---
+<div class="table-scroll" tabindex="0" role="region" aria-label="The headline: scores">
+	<table class="data-table data-table--stack compare compare--numbers">
+		<caption class="sr-only">{site.name}'s three bases beside Jev 1.13 and an open entry, {label(h.best)}, as of 2026-10-05</caption>
+		<thead>
+			<tr>
+				<th scope="col"><span class="sr-only">Measure</span></th>
+				{h.numbers.head.slice(1).map((head, i) => {
+					const c = h.numbers.columns[i];
+					return (
+						<th scope="col" class:list={['num', { 'base-col': !!c.base }, colour(c.base)]}>
+							<HeadLabel html={head} dot={!!c.base} />
+						</th>
+					);
+				})}
+			</tr>
+		</thead>
+		<tbody>
+			{h.numbers.rows.map((row) => (
+				<tr>
+					<th scope="row" set:html={jevbenchCounts(row.label.replace(/<\/?strong>/g, ''))} />
+					{row.cells.map((cell, i) => {
+						const c = h.numbers.columns[i];
+						const text = cell.text + letters(cell.letters);
+						return (
+							<td class:list={['num', colour(c.base)]} data-label={label(h.numbers.head[i + 1])}>
+								<span>{text}</span>
+							</td>
+						);
+					})}
+				</tr>
+			))}
+		</tbody>
+	</table>
+</div>
+
+{systems && (
+	<div class="table-scroll mt-6" tabindex="0" role="region" aria-label="The headline: what each system is">
+		<table class="data-table data-table--stack compare compare--systems">
+			<caption class="sr-only">Latency, price or self-hosting cost, context length and what each system is</caption>
+			<thead>
+				<tr>
+					<th scope="col">System</th>
+					{h.systems.facts.map((f) => <th scope="col" set:html={f} />)}
+				</tr>
+			</thead>
+			<tbody>
+				{h.systems.rows.map((row) => (
+					<tr class={colour(row.base)}>
+						<th scope="row"><HeadLabel html={row.name} dot={!!row.base} /></th>
+						{row.cells.map((cell, i) => (
+							<td class:list={[{ num: 'text' in cell && !!cell.text, prose: !('text' in cell && cell.text) }]} data-label={plain(h.systems.facts[i])}>
+								{'text' in cell && cell.text ? <span>{cell.text + letters(cell.letters!)}</span> : <span set:html={cell.html} />}
+							</td>
+						))}
+					</tr>
+				))}
+			</tbody>
+		</table>
+	</div>
+)}
+
+<details class="disc">
+	<summary>The lettered notes <span class="disc__n">{notes.length + added.length} notes</span></summary>
+	<div class="disc__body" data-table-notes>
+		{notes.map((n) => <p set:html={n} />)}
+		{added.map((a) => <p>({a.letter}) {a.sentence}</p>)}
+	</div>
+</details>

@@ -1,0 +1,549 @@
+/* The site's own pages other than home and the posts (benchmarks, demos, privacy, the 404), in the home page's
+   system (home.css: body.home): the page hero, an on-page index of chips, dated stat tiles, raised cards that hold a
+   chart or a table, disclosures for method text, and the demo cards. The same radii, offset shadow and timings
+   (120, 240 and 480 ms; cubic-bezier(.16, 1, .3, 1) for the outs); motion stops under prefers-reduced-motion. */
+
+/* The page hero: the home hero without its demo. One headline, one or two sentences, the page's chips. */
+.home .page-hero {
+	padding-block: 48px 40px;
+}
+
+.home .page-hero h1 {
+	max-width: 18ch;
+}
+
+.page-hero__lede {
+	max-width: 38rem;
+	margin: 0;
+	color: var(--h-dim);
+	font-size: 19px;
+	text-wrap: pretty;
+}
+
+.page-hero__links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin: 28px 0 0;
+}
+
+.home .page-hero__links .chip {
+	display: inline-block;
+	padding: 6px 14px;
+	text-decoration: none;
+}
+
+.page-hero .hero__glow {
+	width: 560px;
+	height: 400px;
+	top: -220px;
+	right: -80px;
+	opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.page-hero > .wrap > * {
+		animation: page-rise var(--t-slow) var(--e-out) both;
+	}
+
+	.page-hero > .wrap > :nth-child(2) {
+		animation-delay: 60ms;
+	}
+
+	.page-hero > .wrap > :nth-child(n + 3) {
+		animation-delay: 120ms;
+	}
+}
+
+@keyframes page-rise {
+	from {
+		opacity: 0;
+		transform: translateY(14px);
+	}
+}
+
+/* The page's sections, as chips under the hero. */
+.pnav {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.pnav__label {
+	font: 500 12px/1 var(--h-mono);
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--h-dim);
+	margin-right: 6px;
+}
+
+.home .pnav .chip {
+	display: inline-block;
+	text-decoration: none;
+}
+
+/* A section of one of these pages: the home section rhythm, with the label above the heading. */
+.home .psec .section__head .kicker {
+	margin: 0 0 10px;
+}
+
+.home .psec .section__head {
+	max-width: 44rem;
+}
+
+/* Dated stat tiles: the home page's .card3 with the date and the source under the label. */
+.card3__d {
+	margin-top: auto;
+	padding-top: 8px;
+	font: 400 12px/1.4 var(--h-mono);
+	color: var(--h-dim);
+}
+
+.card3__d a {
+	color: inherit;
+}
+
+/* A raised card that holds a chart or a table: the tile, with a head (title, then a dated line) and its body. */
+.pcard {
+	padding: 20px 22px;
+	margin-top: var(--d-space-5);
+}
+
+.pcard__head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 6px 16px;
+	margin-bottom: 14px;
+}
+
+.home .pcard__title {
+	margin: 0;
+	font-size: 18px;
+	letter-spacing: -0.01em;
+}
+
+.pcard__meta {
+	margin: 0;
+	font: 400 12px/1.4 var(--h-mono);
+	color: var(--h-dim);
+}
+
+.pcard__meta a {
+	color: inherit;
+}
+
+.pcard .table-scroll {
+	margin: 0;
+}
+
+.pcard .data-table {
+	margin: 0;
+}
+
+.pcard__foot {
+	margin: 14px 0 0;
+	font-size: 13px;
+	color: var(--h-dim);
+}
+
+.pcard__foot + .pcard__foot {
+	margin-top: 6px;
+}
+
+/* Two cards side by side on a wide screen. */
+.pgrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr));
+	gap: 0 20px;
+}
+
+/* A disclosure for method text and the full tables: a quiet line with a turning chevron; its body fades in. */
+.disc {
+	margin-top: var(--d-space-4);
+	border-top: 1px solid var(--d-line);
+}
+
+.pcard .disc {
+	margin-top: 16px;
+}
+
+.disc > summary {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 0;
+	cursor: pointer;
+	list-style: none;
+	font-weight: 600;
+	font-size: 15px;
+}
+
+.disc > summary::-webkit-details-marker {
+	display: none;
+}
+
+.disc > summary::before {
+	content: '';
+	flex: none;
+	width: 8px;
+	height: 8px;
+	border-right: 2px solid var(--d-accent-line);
+	border-bottom: 2px solid var(--d-accent-line);
+	transform: rotate(-45deg);
+	transition: transform var(--t-fast) var(--e-out);
+}
+
+.disc[open] > summary::before {
+	transform: rotate(45deg);
+}
+
+.disc > summary:hover {
+	color: var(--d-accent);
+}
+
+.disc > summary:focus-visible {
+	outline: 2px solid var(--d-focus);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+.disc__n {
+	font: 400 12px/1 var(--h-mono);
+	color: var(--h-dim);
+}
+
+.disc__body {
+	padding: 4px 0 8px;
+}
+
+.disc__body > :first-child {
+	margin-top: 0;
+}
+
+.disc__body p,
+.disc__body li {
+	max-width: 46rem;
+	color: var(--h-dim);
+	font-size: 15px;
+}
+
+.disc__body h3,
+.disc__body h4 {
+	margin-top: var(--d-space-5);
+	font-size: 16px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.disc[open] > .disc__body {
+		animation: page-rise var(--t-base) var(--e-out);
+	}
+}
+
+/* Small tiles of key numbers, inside a card. */
+.minis {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+	gap: 10px;
+	margin: 16px 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.mini {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	padding: 12px 14px;
+	border: 1px solid var(--d-line-strong);
+	border-radius: 12px;
+	background: color-mix(in srgb, var(--d-surface-2) 55%, transparent);
+}
+
+.mini__n {
+	font-size: 24px;
+	font-weight: 700;
+	letter-spacing: -0.03em;
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+}
+
+.mini__l {
+	font-size: 13px;
+	line-height: 1.4;
+	color: var(--h-dim);
+}
+
+/* A demo: its clip on the left with a chip for each take, and what it shows on the right. */
+.demo-card {
+	display: grid;
+	grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+	gap: 24px;
+	padding: 22px;
+	margin-top: var(--d-space-5);
+}
+
+.demo-card__media {
+	min-width: 0;
+}
+
+.demo-card__takes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 0 0 12px;
+}
+
+.demo-card__takes[hidden],
+.demo-card__take[hidden] {
+	display: none;
+}
+
+.demo-card__media .clip {
+	margin: 0;
+}
+
+.home .demo-card__title {
+	margin: 0;
+	font-size: clamp(22px, 2.2vw, 28px);
+	letter-spacing: -0.02em;
+}
+
+.demo-card__line {
+	margin: 8px 0 0;
+	font-size: 16px;
+	color: var(--h-ink);
+	text-wrap: pretty;
+}
+
+.demo-card__meta {
+	margin: 10px 0 0;
+	font: 400 12px/1.5 var(--h-mono);
+	color: var(--h-dim);
+}
+
+.demo-card .disc {
+	grid-column: 1 / -1;
+	margin-top: 0;
+}
+
+.demo-card .disc + .disc {
+	border-top: 1px solid var(--d-line);
+}
+
+@media (max-width: 900px) {
+	.demo-card {
+		grid-template-columns: 1fr;
+		padding: 18px;
+	}
+}
+
+/* Notes of a page laid out as tiles: the privacy page's sections and the benchmarks page's limits. */
+.ptiles {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+	gap: 14px;
+	margin: var(--d-space-5) 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ptile {
+	padding: 18px 20px;
+}
+
+.home .ptile h2,
+.home .ptile h3 {
+	margin: 0 0 8px;
+	font-size: 17px;
+	letter-spacing: -0.01em;
+}
+
+.ptile p {
+	margin: 0;
+	color: var(--h-dim);
+	font-size: 15px;
+	text-wrap: pretty;
+}
+
+.ptile p + p {
+	margin-top: 8px;
+}
+
+.ptile--wide {
+	grid-column: 1 / -1;
+}
+
+/* The 404: the hero alone, then the ways back. */
+.home .nf {
+	padding-bottom: 72px;
+}
+
+/* A home chart inside a card: the card is its panel. */
+.home .pcard .jb {
+	border: 0;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+	padding: 0;
+}
+
+/* The board chart draws in once its card is in view, as it does on the home page when the board opens. */
+@media (prefers-reduced-motion: no-preference) {
+	.pchart.in .bc-ci {
+		stroke-dasharray: 1;
+		animation: draw 480ms var(--e-out) backwards;
+	}
+
+	.pchart.in .bc-dot {
+		animation: fade 240ms var(--e-out) backwards;
+	}
+
+	.pchart.in .bc-row:nth-child(1) * { animation-delay: 80ms; }
+	.pchart.in .bc-row:nth-child(2) * { animation-delay: 160ms; }
+	.pchart.in .bc-row:nth-child(3) * { animation-delay: 240ms; }
+	.pchart.in .bc-row:nth-child(4) * { animation-delay: 320ms; }
+	.pchart.in .bc-row:nth-child(5) * { animation-delay: 400ms; }
+	.pchart.in .bc-row:nth-child(6) * { animation-delay: 480ms; }
+	.pchart.in .bc-row:nth-child(7) * { animation-delay: 560ms; }
+	.pchart.in .bc-row:nth-child(8) * { animation-delay: 640ms; }
+	.pchart.in .bc-row:nth-child(9) * { animation-delay: 720ms; }
+	.pchart.in .bc-row:nth-child(10) * { animation-delay: 800ms; }
+	.pchart.in .bc-row:nth-child(11) * { animation-delay: 880ms; }
+}
+
+/* The board's claims, in the facts' stable wording: a short list under the section's head. */
+.jb__claims {
+	max-width: 46rem;
+	margin: 0;
+	padding-left: 1.25rem;
+	list-style: disc;
+}
+
+.jb__claims li + li {
+	margin-top: var(--d-space-2);
+}
+
+/* A demo's oracle: what judges it, and what that judge is not. */
+.demo-card__oracle {
+	display: grid;
+	grid-template-columns: minmax(8rem, max-content) 1fr;
+	gap: 8px 18px;
+	margin: 0;
+	max-width: 52rem;
+	font-size: 15px;
+}
+
+.demo-card__oracle dt {
+	font-weight: 600;
+}
+
+.demo-card__oracle dd {
+	margin: 0;
+	color: var(--h-dim);
+}
+
+@media (max-width: 40rem) {
+	.demo-card__oracle {
+		grid-template-columns: 1fr;
+		gap: 2px;
+	}
+
+	.demo-card__oracle dd + dt {
+		margin-top: 10px;
+	}
+}
+
+/* A base's chip carries the base's dot. */
+.demo-card__takes .chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+}
+
+.disc__body ol,
+.disc__body ul {
+	max-width: 46rem;
+	padding-left: 1.25rem;
+	color: var(--h-dim);
+}
+
+.disc__body li + li {
+	margin-top: 6px;
+}
+
+/* The benchmarks page's four tiles: four across on a wide screen, two on a mid one, one on a phone. */
+.home .cards3.bench-tiles {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 68rem) {
+	.home .cards3.bench-tiles {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 34rem) {
+	.home .cards3.bench-tiles {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* A card that holds only disclosures needs no rule above the first. */
+.pcard > .disc:first-child {
+	margin-top: 0;
+	border-top: 0;
+}
+
+/* An odd last tile takes the row. */
+.mini:last-child:nth-child(odd) {
+	grid-column: 1 / -1;
+}
+
+/* The first section under the hero sits close to it, with no rule between, as on the posts' index. */
+/* (PageHero's script may sit between the two.) */
+.home .page-hero + .section,
+.home .page-hero + script + .section {
+	border-top: 0;
+	padding-top: 24px;
+}
+
+/* The 404 fills the screen, so its footer sits at the bottom. */
+.home.nf-page {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.home.nf-page main {
+	flex: 1;
+}
+
+/* On a phone a disclosure's count goes under its title. */
+@media (max-width: 40rem) {
+	.disc > summary {
+		flex-wrap: wrap;
+		row-gap: 2px;
+	}
+
+	.disc__n {
+		flex-basis: 100%;
+		padding-left: 18px;
+		line-height: 1.4;
+	}
+}
+
+/* A date that should not break at its hyphens. */
+.nowrap {
+	white-space: nowrap;
+}
+
+/* Inside a disclosure, a table and the notes after it keep a little room between them. */
+.disc__body > * + * {
+	margin-top: 12px;
+}

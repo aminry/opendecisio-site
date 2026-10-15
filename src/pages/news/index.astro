@@ -1,0 +1,12 @@
+---
+import PostIndex from '../../components/PostIndex.astro';
+import { site } from '../../config/site';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { breadcrumbs } from '../../lib/jsonld.mjs';
+import { posts } from '../../lib/posts.mjs';
+
+const items = await posts('news');
+---
+<SiteLayout bodyClass="home" title={`News: ${site.name}`} description="Releases, results and announcements from the Decisio project." jsonLd={breadcrumbs([{ name: 'News', path: '/news/' }])}>
+	<PostIndex kind="news" items={items} label="News" headline="What shipped, and what it measured" lede="Releases, results and announcements from the Decisio project, short and sourced." />
+</SiteLayout>

@@ -1,0 +1,24 @@
+---
+// The top of a docs page, set like shad0w's: a breadcrumb with the group, the reading time and the date the page was
+// last changed, the title, and the page's one-sentence description as its lede.
+import { groupOf } from '../../config/docs-groups.mjs';
+import { readingMinutes } from '../../lib/docs-meta.mjs';
+
+const { entry, lastUpdated } = Astro.locals.starlightRoute;
+const group = groupOf(entry.id.replace(/\/index$/, '').replace(/^index$/, ''));
+const minutes = readingMinutes(entry);
+const date = lastUpdated ? lastUpdated.toISOString().slice(0, 10) : undefined;
+const description = entry.data.description;
+---
+<div class="pt">
+	<div class="pt__row">
+		<p class="pt__crumb"><a href="/docs/">Docs</a>{group && <><span aria-hidden="true"> / </span><span>{group}</span></>}</p>
+		<p class="pt__meta">{minutes} min read{date && <> · updated <time datetime={date}>{date}</time></>}</p>
+	</div>
+	<h1 id="_top">{entry.data.title}</h1>
+	{description && <p class="pt__lede">{description}</p>}
+</div>
+<script>
+	import '../../scripts/docs-figures.ts';
+	import '../../scripts/docs-tabs.ts';
+</script>
