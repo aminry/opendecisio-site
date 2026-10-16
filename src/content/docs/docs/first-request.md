@@ -35,7 +35,7 @@ With a server running ([Get started](/docs/) starts one), send the request and r
 ## 1. The text
 
 `state` is the text the questions are about.
-A prompt, the state with one question, can hold up to 32,768 tokens, and the server reads the state once for all the questions in the request.
+A prompt, the state with one question, can hold the context the server serves (32,768 tokens on the Qwen base, more on a Gemma base where the card fits it), and the server reads the state once for all the questions in the request.
 
 ## 2. The questions
 

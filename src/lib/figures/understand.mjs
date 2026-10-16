@@ -205,7 +205,7 @@ function limitsMap() {
 		{ t: 'Repeatability', x: 'A request repeats exactly on a freshly started server; asked again on one that has already answered it, it can differ slightly. Across sessions it is not promised.', href: '/docs/repeatability/' },
 		{ t: 'Images', x: 'The image route was measured with the Qwen base only.', href: '/docs/guides/images/' },
 		{ t: 'What was fitted on what', x: 'The temperatures were fitted on a private suite, so its ECE figures are in-sample.', href: '/docs/probability/' },
-		{ t: 'Size', x: 'A prompt holds up to 32,768 tokens and a question up to 255 options.', href: '/docs/guides/long-and-wide/' },
+		{ t: 'Size', x: 'A prompt holds the context the server serves, 32,768 tokens or more on a Gemma base, and a question up to 255 options.', href: '/docs/guides/long-and-wide/' },
 		{ t: 'Our own runs, and the board\'s list', x: 'The Decision Index values here are our own runs; decisio\'s rows are listed on the board\'s data file of 2026-10-14.', href: '/benchmarks/#decision-index' },
 	];
 	const body = `<ul class="fig__cards fig__cards--wide">${items.map((it, i) => `<li class="f-pop fd-${Math.min(i, 10)}"><a class="fig__card" href="${it.href}"><b>${esc(it.t)}</b><span>${esc(it.x)}</span></a></li>`).join('')}</ul>`;

@@ -1,6 +1,6 @@
 ---
 title: Long documents and many options
-description: Prompts of 32,768 tokens by default, more as an opt-in, and questions with up to 255 options; what each costs, and where a registered head helps.
+description: Prompts as long as the context the server serves, 32,768 tokens or more on a Gemma base, and questions with up to 255 options; what each costs, and where a registered head helps.
 ---
 
 <!-- Site-written. The first-question times are the launch facts (launch_facts.public.json) (figures.same_box_speed); the limits are docs/api.md and docs/migrating.md; the head's gains are docs/tasks.md, at the pinned release. -->
@@ -38,7 +38,7 @@ print("options answered:", len(answer["probabilities"]))
 
 | Word | Meaning |
 | --- | --- |
-| context | what a prompt can hold: the state with one question, 32,768 tokens by default and more as an opt-in on the Gemma bases |
+| context | what a prompt can hold: the state with one question; 32,768 tokens on the Qwen base, and on a Gemma base the largest length that fits the card, up to the base's ceiling |
 | option | one answer a choice question can give; up to 255 in a question |
 | head | a registered correction on the model's hidden state, kept only for questions with 10 or more options |
 
@@ -46,13 +46,14 @@ print("options answered:", len(answer["probabilities"]))
 
 ## 1. Long documents
 
-A prompt, the state with one question, holds 32,768 tokens by default; one longer is answered with 422 and a `detail` that says the rendered prompt is longer than the context, and the server stays up.
+A prompt, the state with one question, holds the context the server serves: 32,768 tokens on the Qwen base, and on a Gemma base the largest length that fits the card, up to its ceiling (`/health` reports it). One longer is answered with 422 and a `detail` that says the rendered prompt is longer than the context, and the server stays up.
+
 The first question about a document pays for reading it, and that grows with the length: on the 31B, 175 ms at 1,000 tokens, 490 at 3,000, 1,018 at 6,000 and 8,655 at 32,000.
 A later request about it reads it from the cache.
 
-## 2. A longer context, as an opt-in
+## 2. The context length
 
-::upstream{file="docs/running.md" section="A longer context (opt-in)"}
+::upstream{file="docs/running.md" section="The context length"}
 
 ## 3. Many options
 
