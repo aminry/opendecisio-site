@@ -47,6 +47,7 @@ print("options answered:", len(answer["probabilities"]))
 ## 1. Long documents
 
 A prompt, the state with one question, holds the context the server serves: 32,768 tokens on the Qwen base, and on a Gemma base the largest length that fits the card, up to its ceiling (`/health` reports it). One longer is answered with 422 and a `detail` that says the rendered prompt is longer than the context, and the server stays up.
+
 The first question about a document pays for reading it, and that grows with the length: on the 31B, 175 ms at 1,000 tokens, 490 at 3,000, 1,018 at 6,000 and 8,655 at 32,000.
 A later request about it reads it from the cache.
 
