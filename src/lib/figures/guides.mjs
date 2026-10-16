@@ -236,9 +236,9 @@ function longAndWide() {
 <text class="ft ft-d" x="470" y="${30 + 2 * 70 + 6}">grey: plain · blue: with a registered head</text>
 </svg>`;
 	return panel({
-		name: 'long-and-wide', label: 'Long documents, many options', title: '32,768 tokens by default, more as an opt-in, and up to 255 options; a head helps most when the list is long.',
+		name: 'long-and-wide', label: 'Long documents, many options', title: 'As long as the context the server serves, and up to 255 options; a head helps most when the list is long.',
 		desc: `On the 31B the first question about a document takes ${pts.map((t) => `${first[String(t)]} ms at ${fmt(t)} tokens`).join(', ')}. With a registered intent head, accuracy on ${intent.map((m2) => `${m2[1]} (${m2[2]} options) goes from ${m2[3]} to ${m2[4]}`).join(' and ')}.`,
-		body, live: 6, legend: 'A prompt, the state with one question, holds 32,768 tokens by default (the Gemma bases can be started with more), and a question can have up to 255 options.',
+		body, live: 6, legend: 'A prompt, the state with one question, holds the context the server serves (32,768 tokens on the Qwen base; on a Gemma base the largest length that fits the card, up to its ceiling), and a question can have up to 255 options.',
 		source: 'Source: figures.same_box_speed of launch_facts.public.json (one RTX PRO 6000 at 600 W) and the tasks table of docs/tasks.md at the pinned release (Qwen3.6-35B-A3B, 10 labelled examples per intent, mean of six draws).',
 	});
 }

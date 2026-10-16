@@ -41,7 +41,7 @@ A 503 means the engine died; the server exits with code 70 and a restart policy 
 ## 2. Is it the request?
 
 A 422 or a 400 comes with a `detail` that names what is wrong; read it first.
-A prompt over 32,768 tokens is a 422 that says the rendered prompt is longer than the context, and a choice with more than 255 options is a 400.
+A prompt longer than the context the server serves (`/health` reports it) is a 422 that says the rendered prompt is longer than the context, and a choice with more than 255 options is a 400.
 The `model` field does not choose a model, and fields the server does not know are ignored, not rejected.
 
 ## 3. Is it the tasks?

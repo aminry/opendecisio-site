@@ -42,7 +42,7 @@ print("256 options:", status({"q": {"type": "choice", "instructions": "Which?", 
 
 | Word | Meaning |
 | --- | --- |
-| context | what a prompt can hold: the state with one question, up to 32,768 tokens |
+| context | what a prompt can hold: the state with one question; 32,768 tokens on the Qwen base, and on a Gemma base the largest length that fits the card, up to the base's ceiling |
 | session | one run on one machine; every figure is from one card and one run per configuration |
 | power limit | the card's enforced limit in watts; the latency figures are from 585 W, default 600 W |
 
