@@ -71,7 +71,7 @@ function basesCompare() {
 	const mem = must(readme, /\| `gemma-4-31b` \(default\) \|[^|]*30\.6 GiB in memory[^|]*\|[\s\S]*?\| `qwen3\.6-35b-a3b` \|[^|]*(\d+\.\d) GiB in memory[^|]*\|[\s\S]*?\| `gemma-4-12b` \|[^|]*, (\d+\.\d) GiB in memory/, 'the three bases\' memory');
 	has(readme, 'JevBench\'s published items 213 correct against 200 each', 'that the 31B got 213 of JevBench\'s published items right against 200 each');
 	const bases = [
-		{ id: 'g31', name: 'Gemma 4 31B', tag: 'the default, for accuracy', i: 2, mem: '30.6 GiB (FP8)', need: 'a 96 GB card, or a 64 GB Mac', jev: '213 correct' },
+		{ id: 'g31', name: 'Gemma 4 31B', tag: 'the default, for accuracy', i: 2, mem: '30.6 GiB (FP8)', need: 'a 96 GB card, or a 64 GB Mac (48 GB at 4 bits)', jev: '213 correct' },
 		{ id: 'qwen', name: 'Qwen3.6-35B-A3B', tag: 'for speed on long new states and answers that repeat across sessions', i: 0, mem: `${mem[1]} GiB`, need: 'a large card', jev: '200 correct' },
 		{ id: 'g12', name: 'Gemma 4 12B', tag: 'for machines without a 96 GB card', i: 1, mem: `${mem[2]} GiB`, need: 'a 32 GB Mac, or a 16 GB laptop through Ollama', jev: '200 correct' },
 	];
@@ -196,11 +196,12 @@ function limitsMap() {
 	has(card, 'Repeatability across sessions is not promised.', 'that repeatability across sessions is not promised');
 	has(readme, 'It needs a 96 GB card on vLLM', 'the 31B\'s memory');
 	has(run, 'the 31B is measured on, and needs, a 96 GB card', 'the 31B\'s memory limit');
+	has(readme, 'on a 48 GB Mac (derived from the 64 GB measurement)', 'that the 31B\'s 4-bit conversion is for a 48 GB Mac');
 	has(card, 'the image route was not measured', 'that the image route was measured on the Qwen base only');
 	has(card, 'so the suite\'s ECE figures are in-sample', 'that the temperatures were fitted on the suite');
 	const items = [
 		{ t: 'One card, one session', x: 'Every figure is from one card and one run per configuration.', href: '/docs/evaluation-card/#5-limits' },
-		{ t: 'Hardware', x: 'The 31B is measured on, and needs, a 96 GB card (or a 64 GB Mac); the 12B runs on a 32 GB Mac or a 16 GB laptop.', href: '/docs/quickstart/' },
+		{ t: 'Hardware', x: 'The 31B is measured on, and needs, a 96 GB card (or a 64 GB Mac, or a 48 GB one from its 4-bit conversion, a size not measured); the 12B runs on a 32 GB Mac or a 16 GB laptop.', href: '/docs/quickstart/' },
 		{ t: 'The host and the power limit', x: 'Latency depends on the CPU and on the card\'s power limit: a card at 600 W may read new states faster than the 585 W measured.', href: '/docs/guides/latency/' },
 		{ t: 'Repeatability', x: 'A request repeats exactly on a freshly started server; asked again on one that has already answered it, it can differ slightly. Across sessions it is not promised.', href: '/docs/repeatability/' },
 		{ t: 'Images', x: 'The image route was measured with the Qwen base only.', href: '/docs/guides/images/' },

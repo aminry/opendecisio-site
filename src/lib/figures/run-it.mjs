@@ -78,10 +78,13 @@ function mlxMemory() {
 	const qwen6 = must(run, /Peak memory at 32,761 tokens of state at 6 and 8 bits: (\d+\.\d) GB and (\d+\.\d) GB/, 'the Qwen 6- and 8-bit peaks');
 	const g12 = must(run, /holds (\d+\.\d) GB of weights and peaks at (\d+\.\d) GB at 32,687 tokens of state, so it runs on a 32 GB Mac/, 'the 12B\'s memory');
 	const g31 = must(run, /\(26\.1 GB to download, (\d+\.\d) GB of weights in memory\)[\s\S]*?It peaks at (\d+\.\d), (\d+\.\d) and (\d+\.\d) GB at about 8k, 16k and 32k tokens of state, against the Mac's GPU memory limit of (\d+\.\d) GB/, 'the 31B\'s memory');
+	const g31q4 = must(run, /The 4-bit conversion `tachara-ai\/decisio-gemma-4-31b-mlx-4bit` \(group size 32, (\d+\.\d) GB of weights\) is for Macs with 48 GB of memory[\s\S]*?The 4-bit conversion peaks at (\d+\.\d), (\d+\.\d) and (\d+\.\d) GB at about 8k, 16k and 32k tokens of state, under a 27 GiB MLX memory limit on a 64 GB Mac/, 'the 31B\'s 4-bit memory');
+	must(run, /A 48 GB Mac is the smallest it starts on by decisio's memory planner, which refuses 32 and 36 GB; no 48 GB Mac was measured\./, 'that no 48 GB Mac was measured');
 	const rows = [
 		{ label: 'Gemma 4 12B, 6-bit', value: Number(g12[2]), text: `${g12[2]} GB` },
 		{ label: 'Qwen, 4-bit', value: Number(qwen4[4]), text: `${qwen4[4]} GB` },
 		{ label: 'Qwen, 6-bit', value: Number(qwen6[1]), text: `${qwen6[1]} GB` },
+		{ label: 'Gemma 4 31B, 4-bit', value: Number(g31q4[4]), text: `${g31q4[4]} GB` },
 		{ label: 'Gemma 4 31B, 6-bit', value: Number(g31[4]), text: `${g31[4]} GB` },
 		{ label: 'Qwen, 8-bit', value: Number(qwen6[2]), text: `${qwen6[2]} GB`, grey: true },
 	];
@@ -89,8 +92,8 @@ function mlxMemory() {
 		name: 'mlx-memory', label: 'A Mac\'s memory', title: 'Peak memory at about 32,000 tokens of state, by base and conversion.',
 		desc: `Peak memory at about 32,000 tokens of state on a Mac: ${rows.map((r) => `${r.label} ${r.text}`).join('; ')}. The 31B was measured on a 64 GB Mac, whose GPU memory limit is ${g31[5]} GB.`,
 		body: bars(rows, { max: 45, width: 330, left: 190 }), live: 6,
-		legend: `The 12B's weights take ${g12[1]} GB, so it runs on a 32 GB Mac. The 31B's take ${g31[1]} GB and it is documented for states up to 16,383 tokens, on the 64 GB Mac that was measured (limit ${g31[5]} GB); the 4-bit Qwen is for Macs with more than 32 GB. GB are 1e9 bytes.`,
-		source: 'Source: docs/running.md "Mac with MLX" at the pinned release (an Apple M5 Pro; runs/2026-10-02_mlx-backend, 2026-10-05_mlx-gemma, 2026-10-06_mlx-qwen-4bit-regate, 2026-10-07_mlx-gemma-31b).',
+		legend: `The 12B's weights take ${g12[1]} GB, so it runs on a 32 GB Mac. The 31B's take ${g31[1]} GB at 6 bits and ${g31q4[1]} GB at 4, both documented for states up to 16,383 tokens and measured only on a 64 GB Mac (limit ${g31[5]} GB; the 4-bit under a 27 GiB limit); the 4-bit 31B is for a 48 GB Mac, a size not measured, and the 4-bit Qwen for Macs with more than 32 GB. GB are 1e9 bytes.`,
+		source: 'Source: docs/running.md "Mac with MLX" at the pinned release (an Apple M5 Pro; runs/2026-10-02_mlx-backend, 2026-10-05_mlx-gemma, 2026-10-06_mlx-qwen-4bit-regate, 2026-10-07_mlx-gemma-31b, 2026-10-16_mlx-gemma-31b-4bit).',
 	});
 }
 

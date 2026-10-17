@@ -1,25 +1,25 @@
 {
-	"tag": "v0.14.0",
-	"commit": "2d30bc72f27493344d71aceb2eb6c4eac4fc1d28",
-	"date": "2026-10-16",
+	"tag": "v0.15.0",
+	"commit": "37976c176b8b8cfeb218b37bae17d4e23769999f",
+	"date": "2026-10-17",
 	"runner": "linux-x64",
 	"blocks": {
 		"5466c85ed7c16c65": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"note": "the install and the server start; the unit tests passed in decisio's own CI on this commit"
 		},
 		"8264ecf29e551fbc": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"note": "the clone is the pinned release, as the check has it; the install and the server start"
 		},
 		"25a39b2b77f85c16": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
 		"643e9b3102b8e77e": {
@@ -27,58 +27,58 @@
 		},
 		"8f11af2eabc6bbfe": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"5cc493cddee4f30b": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"4b473a2e28dc808e": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"note": "the one question alone, as the stand-in answers it"
 		},
 		"0ee8302a99cf1a2f": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"d2bcc600501c2438": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"b8e39aa5af896e09": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
 		"e52a4af57e3dc356": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
 		},
 		"4a4acf27add92e82": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"f6cbcd5a9fc3dc60": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"runtime": "node v22.23.3",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
 		"d04086a256fe44c4": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"runtime": "node v22.23.3",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
@@ -99,71 +99,71 @@
 		},
 		"8ce25428cd21b951": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"29e5a1d4282701a8": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"de70ee7442d32029": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"72182c644904351a": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"b3683dfa1074b049": {
 			"status": "example"
 		},
 		"f6db6123f6c620a4": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"8e1893dfe07a7129": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"f1f8b3bc6973f111": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"2e51eedbfff016ee": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"7f7cb276b5b16179": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"ebacf4f532e09ea5": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"aaaf2b52eaa62e6d": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"95953c278a640239": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"b6bb95d7ceb2a509": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"note": "the install and the server start"
 		},
 		"b1b57b2e75a2a8d6": {
@@ -171,23 +171,23 @@
 		},
 		"8c2a5b518155ccb3": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"c3457e7a7bf24b69": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"065093b062639c13": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"3ef7d4649178b987": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16"
+			"tag": "v0.15.0",
+			"date": "2026-10-17"
 		},
 		"e23a9d899b93f3fe": {
 			"status": "example"
@@ -200,8 +200,8 @@
 		},
 		"f88514bde0c31e5b": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"note": "registers the walk-through task again"
 		},
 		"135f2c5258e4a371": {
@@ -213,7 +213,7 @@
 			"needs": "a GPU host with the NVIDIA Container Toolkit",
 			"record": "runs/2026-10-01_docker-first-gpu-start/"
 		},
-		"1766643f23852d2d": {
+		"ad4e28d67a06c590": {
 			"status": "verbatim",
 			"needs": "a Mac with Apple silicon",
 			"record": "runs/2026-10-03_mlx-regate/"
@@ -244,14 +244,14 @@
 		},
 		"b548306327cee4fa": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
 		},
 		"fe30a8fa5922e73e": {
 			"status": "cpu",
-			"tag": "v0.14.0",
-			"date": "2026-10-16",
+			"tag": "v0.15.0",
+			"date": "2026-10-17",
 			"note": "sets the variables the SDK reads"
 		}
 	}
