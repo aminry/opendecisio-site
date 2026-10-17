@@ -535,10 +535,12 @@ export function limits() {
 	const nums = /(\d+) for decisio and H2O[^;]*; (\d+) for/.exec(docs ?? '');
 	need2(m.box?.card && m.box?.enforced_power_limit_w?.value && nums, 'has no box card, power limit or documents-per-cell for the limits');
 	const recorded = recordedExamples().run;
-	// What the default base needs, in the README's words: the 96 GB card, and the 64 GB Mac it runs on.
+	// What the default base needs, in the README's words: the 96 GB card, the 64 GB Mac it runs on, and the 48 GB Mac
+	// its 4-bit conversion is for, a size derived from the 64 GB measurement.
 	const g31 = guidanceFor('gemma-4-31b');
 	const need = [...g31.rest, ...g31.sub].find((l) => /96 GB card/.test(l));
 	need2(need && /64 GB Mac/.test(need), 'has a README that no longer says the default base needs a 96 GB card or runs on a 64 GB Mac');
+	need2(/from its 4-bit conversion `tachara-ai\/decisio-gemma-4-31b-mlx-4bit` on a 48 GB Mac \(derived from the 64 GB measurement\)/.test(readUpstream('README.md')), 'has a README that no longer says the default base\'s 4-bit conversion is for a 48 GB Mac, derived from the 64 GB measurement');
 	const live = (f.claims.v161_scoped_statements?.statements ?? []).some((s) => s.holds_on_live === false);
 	const items = [
 		{ title: 'One box, one session', text: `Every race figure is from ${m.box.card.replace('NVIDIA ', '')}, each system on its own server.` },
@@ -546,7 +548,7 @@ export function limits() {
 		{ title: 'Time, not accuracy', text: 'The race compares how long fifty questions take, on synthetic support tickets.' },
 		{ title: 'Replayed, not live', text: `The race replays medians of ${nums[2]} or ${nums[1]} documents, and the demo replays decisions recorded on decisio ${recorded.decisio}.` },
 		...(live ? [{ title: 'A snapshot of the board', text: `The values are for JevBench ${j.revision}; the live board has moved since.` }] : []),
-		{ title: 'Hardware', text: 'Gemma 4 31B needs a 96 GB card, or a 64 GB Mac.' },
+		{ title: 'Hardware', text: 'Gemma 4 31B needs a 96 GB card or a 64 GB Mac; its 4-bit conversion is for a 48 GB Mac, a size not measured.' },
 	];
 	items.forEach((i) => { refuse(i.title); refuse(i.text); });
 	return items;

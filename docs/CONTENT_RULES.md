@@ -18,7 +18,7 @@ CI checks the ones a script can check; the review checks the rest.
   `scripts/checks/claims.mjs` reads every built page for both.
 - The Decision Index rows are "listed on the board", in the board's data file of a stated date; nothing on the site says the board validated them.
   decisio's own Decision Index 0.2.1 runs are labelled as our own runs.
-- A claim's qualifiers stay beside it: the board's revision and date, the hardware it ran on (the 31B needs a 96 GB card or a 64 GB Mac), and that intervals overlap where they do.
+- A claim's qualifiers stay beside it: the board's revision and date, the hardware it ran on (the 31B needs a 96 GB card or a 64 GB Mac, or a 48 GB Mac from its 4-bit conversion), and that intervals overlap where they do.
 - Where JevBench's published questions are counted, the page says "on JevBench's 231 published questions".
 
 ## Jev and hosted models
