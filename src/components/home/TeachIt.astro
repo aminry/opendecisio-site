@@ -56,9 +56,9 @@ const proof = d.proof;
 				</div>
 				<div class="teach__c teach__c--hot">
 					<dt>Certified, at most {pct(c.alpha, 0)} wrong ({pct(1 - c.delta, 0)} confidence)</dt>
-					<dd><b data-teach-count={(certShare * 100).toFixed(1)} data-from="0">{pct(certShare)}</b> <span>{c.certified} of {c.n} answers</span></dd>
+					<dd><b data-teach-count={(certShare * 100).toFixed(1)} data-from="0">{pct(certShare)}</b> <span data-teach-of={c.certified} data-n={c.n}>{c.certified} of {c.n} answers</span></dd>
 				</div>
-				<div class="teach__c">
+				<div class="teach__c" data-teach-wait>
 					<dt>Wrong among the certified</dt>
 					<dd><b>{pct(wrongShare)}</b> <span>{c.wrong} of {c.certified}; the other {c.n - c.certified} went to a person</span></dd>
 				</div>

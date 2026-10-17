@@ -2526,6 +2526,15 @@ html:not(.js) .demo__ctl {
 	color: var(--d-accent);
 }
 
+/* A counter whose number the story has not reached yet (src/scripts/teach.ts) waits, dimmed. */
+.teach__c dd {
+	transition: opacity 400ms;
+}
+
+.teach__c--wait dd {
+	opacity: 0.25;
+}
+
 .teach__before {
 	font-size: 18px;
 	font-weight: 600;
