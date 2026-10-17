@@ -8,12 +8,17 @@ const clamp = (x: number) => Math.min(1, Math.max(0, x));
 const ease = (x: number) => 1 - Math.pow(1 - clamp(x), 3);
 const span = (t: number, a: number, b: number) => ease((t - a) / (b - a));
 const END = 15000;
+// The certified share counts up over these milliseconds of the timeline.
+const CERT_FROM = 7300;
+const CERT_TO = 10300;
 
 const stage = document.querySelector<HTMLElement>('[data-teach]');
 if (stage && !reduce) {
 	const play = stage.querySelector<HTMLButtonElement>('[data-teach-play]')!;
 	const acts = $$<HTMLElement>('[data-act]', stage);
 	const counts = $$<HTMLElement>('[data-teach-count]', stage);
+	const ofs = $$<HTMLElement>('[data-teach-of]', stage);
+	const waits = $$<HTMLElement>('[data-teach-wait]', stage);
 	const svgs = $$<SVGSVGElement>('.tc-svg', stage).map((svg) => {
 		const grid = JSON.parse(svg.dataset.tcGrid!);
 		const box = svg.querySelector<SVGRectElement>('.tc-node')!;
@@ -88,9 +93,13 @@ if (stage && !reduce) {
 		counts.forEach((c) => {
 			const to = Number(c.dataset.teachCount);
 			const from = Number(c.dataset.from);
-			const k = c.closest('.teach__c--hot') ? span(t, 7300, 10300) : span(t, 3400, 5600);
+			const k = c.closest('.teach__c--hot') ? span(t, CERT_FROM, CERT_TO) : span(t, 3400, 5600);
 			c.textContent = `${(from + (to - from) * k).toFixed(1)}%`;
 		});
+		// The certified answers count with their share, and the errors among them wait until the count is done, so no
+		// tile states a number the drawing has not reached yet.
+		ofs.forEach((o) => { o.textContent = `${Math.round(Number(o.dataset.teachOf) * span(t, CERT_FROM, CERT_TO))} of ${o.dataset.n} answers`; });
+		waits.forEach((w) => w.classList.toggle('teach__c--wait', t < CERT_TO));
 	}
 
 	let t = 0;
