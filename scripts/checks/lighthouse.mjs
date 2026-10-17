@@ -1,4 +1,4 @@
-// Lighthouse on the home page, a docs page, the benchmarks page and the demos page, served
+// Lighthouse on the home page, a docs page, the benchmarks page and the two demos pages, served
 // with the site's own headers: each of the four categories must score 95 or
 // better (the median of three runs, Lighthouse's default mobile settings).
 // Performance is a timing, and a slow runner can pull all three runs of a page
@@ -14,7 +14,7 @@ import * as chromeLauncher from 'chrome-launcher';
 import lighthouse from 'lighthouse';
 
 const port = 4391;
-const pages = ['/', '/docs/quickstart/', '/benchmarks/', '/demos/'];
+const pages = ['/', '/docs/quickstart/', '/benchmarks/', '/demos/', '/demos/teach-and-certify/'];
 const categories = ['performance', 'accessibility', 'best-practices', 'seo'];
 const MIN = 0.95;
 const RUNS = 3;

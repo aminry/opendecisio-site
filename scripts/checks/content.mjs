@@ -16,7 +16,7 @@ const report = (page, message) => problems.push(`${page}: ${message}`);
 
 // The site's own pages, composed here rather than included from decisio:
 // each figure on them appears once.
-const composed = new Set(['/', '/benchmarks/', '/demos/']);
+const composed = new Set(['/', '/benchmarks/', '/demos/', '/demos/teach-and-certify/']);
 const allow = JSON.parse(readFileSync('scripts/checks/figures-allow.json', 'utf8')).allow;
 const allowed = (route, figure) => allow.some((a) => a.page === route && a.figure === figure);
 const DI_SCORES = /\b(48\.06|49\.43|57\.58)\b/;
