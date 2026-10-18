@@ -9,6 +9,7 @@ import { existsSync, mkdirSync, openSync, readFileSync, rmSync, statSync, writeF
 import { join } from 'node:path';
 import { collectBlocks } from '../src/lib/blocks.mjs';
 import { pin, siteRoot } from '../src/lib/upstream.mjs';
+import { answers, stopAndWait } from './server-control.mjs';
 import { plan } from '../verification/plan.mjs';
 
 const dry = process.argv.includes('--dry-run');
@@ -81,33 +82,12 @@ function stopServer() {
 }
 process.on('exit', stopServer);
 
-async function healthy() {
-	try {
-		return (await fetch(health, { signal: AbortSignal.timeout(2000) })).ok;
-	} catch {
-		return false;
-	}
-}
-
-// Stops the server and waits until it has exited: SIGTERM to its process group, then SIGKILL if it is still running
-// after the grace period. A server that took longer than the old 30 s to stop gracefully left port 8000 answering, and
-// the next block failed with "something else answers" (2026-10-18).
-async function stopServerAndWait(graceSeconds = 20) {
-	const s = server;
-	stopServer();
-	if (!s || s.exitCode !== null || s.signalCode !== null) return;
-	const exited = new Promise((r) => s.once('exit', r));
-	const within = (ms) => Promise.race([exited.then(() => true), new Promise((r) => setTimeout(() => r(false), ms))]);
-	if (await within(graceSeconds * 1000)) return;
-	log(`the server did not stop within ${graceSeconds} s of SIGTERM; sending SIGKILL`);
-	try {
-		process.kill(-s.pid, 'SIGKILL');
-	} catch {}
-	await within(10000);
-}
+const healthy = () => answers(health);
 
 async function startServer(command) {
-	await stopServerAndWait();
+	const previous = server;
+	server = undefined;
+	await stopAndWait(previous, { log });
 	for (let i = 0; i < 30 && (await healthy()); i++) await new Promise((r) => setTimeout(r, 1000));
 	if (await healthy()) fail('something else answers on 127.0.0.1:8000; stop it first');
 	const logPath = join(work, `server-${++serverLogs}.log`);
