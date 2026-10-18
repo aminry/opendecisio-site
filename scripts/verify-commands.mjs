@@ -89,8 +89,25 @@ async function healthy() {
 	}
 }
 
-async function startServer(command) {
+// Stops the server and waits until it has exited: SIGTERM to its process group, then SIGKILL if it is still running
+// after the grace period. A server that took longer than the old 30 s to stop gracefully left port 8000 answering, and
+// the next block failed with "something else answers" (2026-10-18).
+async function stopServerAndWait(graceSeconds = 20) {
+	const s = server;
 	stopServer();
+	if (!s || s.exitCode !== null || s.signalCode !== null) return;
+	const exited = new Promise((r) => s.once('exit', r));
+	const within = (ms) => Promise.race([exited.then(() => true), new Promise((r) => setTimeout(() => r(false), ms))]);
+	if (await within(graceSeconds * 1000)) return;
+	log(`the server did not stop within ${graceSeconds} s of SIGTERM; sending SIGKILL`);
+	try {
+		process.kill(-s.pid, 'SIGKILL');
+	} catch {}
+	await within(10000);
+}
+
+async function startServer(command) {
+	await stopServerAndWait();
 	for (let i = 0; i < 30 && (await healthy()); i++) await new Promise((r) => setTimeout(r, 1000));
 	if (await healthy()) fail('something else answers on 127.0.0.1:8000; stop it first');
 	const logPath = join(work, `server-${++serverLogs}.log`);
