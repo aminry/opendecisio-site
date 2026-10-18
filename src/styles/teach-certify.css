@@ -2,20 +2,6 @@
    colour (--base, from .base-g12 and .base-g31); off-topic traffic is the neutral grey; an alert or a missed promise is
    drawn in ink, not in a colour, so the accent stays the site's. */
 
-.tc-draft {
-	margin-top: var(--d-space-5);
-	margin-bottom: 0;
-	padding: 10px 14px;
-	border: 1px dashed var(--d-accent-line);
-	border-radius: var(--d-radius-control);
-	color: var(--h-dim);
-	font-size: 14px;
-}
-
-.tc-draft b {
-	color: var(--h-ink);
-}
-
 /* Controls: a row of chip groups over each figure. */
 .tc-controls {
 	display: flex;

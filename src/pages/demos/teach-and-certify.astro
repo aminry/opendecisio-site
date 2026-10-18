@@ -48,6 +48,8 @@ const driftLabel = (b: string) => (b === 'g31oos' ? `CLINC150 with out of scope 
 const driftData = Object.fromEntries(Object.entries(drift).map(([b, x]) => [b, { ...x, label: driftLabel(b) }]));
 const fix = d.fix;
 const gk = d.gatekeeper;
+// decisio 0.16.0's alarm and served-path certificate, shown once 0.16.0 is released.
+const r16 = d.release016?.released ? d.release016 : null;
 const range = ([lo, hi]: number[]) => `${pc(lo, 0)} to ${pc(hi, 0)}`;
 // A count that opens a sentence, or stands alone in prose, in words.
 const words = (x: number) => ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'][x] ?? n(x);
@@ -61,8 +63,6 @@ const ds = d.datasets;
 		lede={`We taught Decisio two public sets of customer intents${gk ? " and a coding agent's command rules" : ""} from a few labelled examples each, then asked it to certify which answers can go out with no one checking them. Every message, answer and certificate on this page comes from those runs.`}
 		links={[{ href: '/docs/tasks/', text: 'Teach your first task' }, { href: '/docs/tasks/#what-certified-means', text: 'What certified means' }, { href: '#method', text: 'How it was run' }]}
 	>Pick an error rate, <em class="hl">see what it can automate</em></PageHero>
-
-	<p class="wrap tc-draft" role="note"><b>Draft.</b> This page is for review and is not linked from the site.</p>
 
 	<section class="section psec" aria-labelledby="inbox">
 		<div class="wrap">
@@ -189,7 +189,11 @@ const ds = d.datasets;
 					<div><dt>Wrong answers certified before the alert</dt><dd><b data-drift="before">{n(dr0.wrong_before)}</b></dd></div>
 					<div><dt>And after it, to message {n(dr0.last_reading)}</dt><dd><b data-drift="after">{n(dr0.wrong_after)}</b></dd></div>
 				</dl>
-				<p class="tc-read">The monitor has no labels: it watches the mix of answers and says when the mix moves. As decisio documents, an alert changes no answer and withdraws no certificate; it is the cue to collect new labels and certify again.</p>
+				{r16 ? (
+					<p class="tc-read">The monitor has no labels: it watches the mix of answers and says when the mix moves. In decisio {d.decisio}, where these replays ran on {d.dates.slice(0, -1).join(', ')} and {d.dates.at(-1)}, an alert changed no answer and withdrew no certificate.</p>
+				) : (
+					<p class="tc-read">The monitor has no labels: it watches the mix of answers and says when the mix moves. As decisio documents, an alert changes no answer and withdraws no certificate; it is the cue to collect new labels and certify again.</p>
+				)}
 			</div>
 
 			<div class="pcard tile tc-fix" data-reveal>
@@ -218,6 +222,18 @@ const ds = d.datasets;
 					<p class="tc-pending" role="note"><b>Waiting for its run.</b> The same stream on the same card, with the out-of-scope option taught; its numbers go here, beside the failure above.</p>
 				)}
 			</div>
+
+			{r16 && (
+				<div class="pcard tile tc-fix tc-016" data-reveal>
+					<h3 class="tc-h3">From decisio {r16.version}: the alarm suspends certification</h3>
+					<p class="tc-read">From {r16.version} the confidence alarm suspends certification by default: answers keep coming, but none is marked certified until the traffic looks like the examples again. Measured on {r16.measured_on}, {r16.model}.</p>
+					<ul class="tc-promise" data-table-notes>
+						<li>On a stream whose traffic jumps at message {n(r16.jump.jump_at)}, the first suspended answer came {r16.jump.first_suspended - r16.jump.jump_at} messages after the jump, with {r16.jump.wrong_before} wrong answers certified before it. Certification resumed {r16.jump.resumed_after} messages after the traffic returned to normal.</li>
+						<li>On the {datasetName('clinc150')} stream above, the first suspension came at message {n(r16.clinc.first_suspended)}, with {r16.clinc.wrong_before} wrong answers certified before it, against {n(r16.clinc.wrong_before_014)} under {d.decisio}.</li>
+						<li>On normal traffic it suspended nothing.</li>
+					</ul>
+				</div>
+			)}
 		</div>
 	</section>
 
@@ -305,6 +321,15 @@ const ds = d.datasets;
 						<p>The drift stream holds every in-scope {datasetName('clinc150')} test message once, plus off-topic messages from its out-of-scope list, read one at a time through the task with its 5% certificate. The monitor's state was read every 100 messages.</p>
 					</div>
 				</details>
+				{r16 && (
+					<details class="disc">
+						<summary>Found and fixed in decisio {r16.version}</summary>
+						<div class="disc__body">
+							<p>In {d.decisio}, registration and serving scored a certificate's examples by different paths, so on the card a few confidences moved between the two. {r16.version} certifies on the served path.</p>
+							<p>Re-read through the served path at registration, {r16.served_path.n} of {r16.served_path.n} held-out examples gave the same confidence: the largest shift was {r16.served_path.max_shift.toFixed(1)}.</p>
+						</div>
+					</details>
+				)}
 				<details class="disc">
 					<summary>What to keep in mind</summary>
 					<div class="disc__body">

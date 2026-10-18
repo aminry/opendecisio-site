@@ -47,6 +47,14 @@ export function data() {
 		if (g.drift.certified !== 0 || g.drift.to_ask > g.drift.new_kind) fail('the gatekeeper\'s drift replay is not the one the page states');
 		if (g.rules.at(-1)?.rule !== 'other' || g.rules.at(-1)?.action !== 'ask') fail('the gatekeeper\'s policy has no catch-all rule that asks');
 	}
+	// decisio 0.16.0's results are shown only once it is released (release016.released, set after it is on PyPI), and only
+	// for the version they were measured for.
+	const r = d.release016;
+	if (r) {
+		if (typeof r.released !== 'boolean' || r.version !== '0.16.0') fail(`release016 is for ${r.version}, released ${r.released}`);
+		if (r.jump.first_suspended - r.jump.jump_at <= 0 || r.clinc.wrong_before >= r.clinc.wrong_before_014 || r.false_suspensions !== 0 || r.served_path.max_shift !== 0) fail('release016 is not the result the page states');
+		if (r.clinc.wrong_before_014 !== d.drift.g31.wrong_before) fail('release016 compares with a 0.14.0 count the page does not show');
+	}
 	const ib = d.inbox;
 	if (ib.messages.length % 8 !== 0) fail(`has ${ib.messages.length} inbox messages, not a multiple of eight`);
 	for (const a of ALPHAS) if (ib.targets[a].threshold === null && ib.targets[a].covered !== 0) fail(`inbox at ${a}: certified answers with no threshold`);
