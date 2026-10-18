@@ -1,8 +1,9 @@
 ---
-import { nav } from '../../config/nav.mjs';
+import { currentHref, nav } from '../../config/nav.mjs';
 import { site } from '../../config/site';
 import ThemeSelect from './ThemeSelect.astro';
 const path = Astro.url.pathname;
+const current = currentHref(path);
 ---
 <header class="site-header">
 	<div class="wrap site-header__row">
@@ -19,7 +20,7 @@ const path = Astro.url.pathname;
 			<button type="button" class="nav-toggle" aria-expanded="false" aria-controls="site-nav" hidden><span class="sr-only">Menu</span><svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg></button>
 			<nav aria-label="Main" id="site-nav">
 				<ul class="nav">
-					{nav.map((l) => <li><a href={l.href} aria-current={l.href.startsWith('/') && path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a></li>)}
+					{nav.map((l) => <li><a href={l.href} aria-current={l.href === current ? 'page' : undefined}>{l.label}</a></li>)}
 				</ul>
 			</nav>
 			<ThemeSelect />

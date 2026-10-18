@@ -5,9 +5,10 @@ import config from 'virtual:starlight/user-config';
 import Search from 'virtual:starlight/components/Search';
 import SiteTitle from 'virtual:starlight/components/SiteTitle';
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
-import { nav } from '../../config/nav.mjs';
+import { currentHref, nav } from '../../config/nav.mjs';
 const shouldRenderSearch = config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
 const path = Astro.url.pathname;
+const current = currentHref(path);
 ---
 <div class="header">
 	<div class="title-wrapper sl-flex">
@@ -19,7 +20,7 @@ const path = Astro.url.pathname;
 	<div class="sl-hidden md:sl-flex print:hidden right-group">
 		<nav aria-label="Main">
 			<ul class="site-nav">
-				{nav.map((l) => <li><a href={l.href} aria-current={l.href.startsWith('/') && path.startsWith(l.href) ? 'page' : undefined}>{l.label}</a></li>)}
+				{nav.map((l) => <li><a href={l.href} aria-current={l.href === current ? 'page' : undefined}>{l.label}</a></li>)}
 			</ul>
 		</nav>
 		<ThemeSelect />
