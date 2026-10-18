@@ -35,7 +35,7 @@ def status(questions):
 print("no questions:", status({}))
 print("256 options:", status({"q": {"type": "choice", "instructions": "Which?", "criteria": {f"option_{i:03d}": None for i in range(256)}}}))
 # no questions: 422
-# 256 options: 400
+# 256 options: 422
 ```
 
 :::glossary
