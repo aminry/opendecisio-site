@@ -45,6 +45,9 @@ CI checks the ones a script can check; the review checks the rest.
 
 ## Writing
 
+How pages are written (the reader, the page shapes, tone, plain words, visuals and links) is set by `STYLE_GUIDE.md`.
+These writing rules stay binding and checked:
+
 - No em dash anywhere; a plain hyphen or a rewording.
 - No paragraph of more than three sentences on the docs pages and the site's own pages; `scripts/checks/docs-pattern.mjs` checks it.
 - In Markdown sources, one sentence per line.
