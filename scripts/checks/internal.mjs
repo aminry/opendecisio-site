@@ -33,22 +33,15 @@ const textOf = (file) => {
 	const attrs = doc.querySelectorAll('*').flatMap((el) => Object.entries(el.attributes).filter(([k]) => /^(href|src|title|alt|aria-label|data-[\w-]+)$/.test(k)).map(([k, v]) => `[${k}] ${v}`));
 	return `${doc.querySelector('body')?.structuredText ?? ''}\n${attrs.join('\n')}`;
 };
-// Known and being fixed at the source: the launch facts' routing record still names its session ("session A"); its
-// owners are removing it from launch_facts.public.json (2026-10-18). Only this exact phrase is let through, and once no
-// file has it any more the check fails until this exception is removed, so the label is caught from then on.
-const PENDING = '(Escalate only when unsure), session A';
-let pendingSeen = 0;
 const problems = [];
 for (const file of files) {
 	textOf(file).split('\n').forEach((line, i) => {
-		if (line.includes(PENDING)) { pendingSeen++; line = line.split(PENDING).join(''); }
 		for (const [what, re] of MARKERS) {
 			const m = re.exec(line);
 			if (m) problems.push(`${file}:${i + 1}: ${what}: "${line.slice(Math.max(0, m.index - 60), m.index + 80).trim()}"`);
 		}
 	});
 }
-if (!pendingSeen) problems.push(`the exception for "${PENDING}" is no longer needed (no file has it): remove PENDING from scripts/checks/internal.mjs so the label is caught`);
 if (problems.length) {
 	console.error(`internal: ${problems.length} lines name what a public ${dist ? 'site' : 'repository'} should not\n  ${problems.join('\n  ')}`);
 	process.exit(1);

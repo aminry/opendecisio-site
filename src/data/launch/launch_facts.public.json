@@ -1372,7 +1372,7 @@
     "date": "2026-10-08",
     "decisio_version": "0.9.0",
     "power_limit_w": 600,
-    "what": "decisio-examples example 5 (Escalate only when unsure), session A, Gemma 4 31B, ARC-Challenge test split, one request per question"
+    "what": "decisio-examples example 5 (Escalate only when unsure), Gemma 4 31B, ARC-Challenge test split, one request per question"
    },
    "sweep": {
     "value": [
