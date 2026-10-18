@@ -43,7 +43,13 @@ const report = (engine, route, variant, message) => problems.push(`${engine} ${r
 function observe(theme) {
 	localStorage.setItem('starlight-theme', theme);
 	window.__csp = [];
-	document.addEventListener('securitypolicyviolation', (e) => window.__csp.push(`${e.violatedDirective} ${e.blockedURI || 'inline'} ${e.sample || ''}`));
+	// A report against a <select> that carries no style attribute is kept apart (selectQuirk, below decides).
+	window.__cspSelect = [];
+	document.addEventListener('securitypolicyviolation', (e) => {
+		const line = `${e.violatedDirective} ${e.blockedURI || 'inline'} ${e.sample || ''}`;
+		if (e.violatedDirective === 'style-src-attr' && !e.sample && e.target instanceof HTMLSelectElement && !e.target.hasAttribute('style')) window.__cspSelect.push(`${line}(a <select> with no style attribute)`);
+		else window.__csp.push(line);
+	});
 	window.__cls = null;
 	window.__shifts = [];
 	try {
@@ -100,6 +106,31 @@ function movedScore() {
 // The analytics beacon is the one request the checks must not make for real: it would count every run as a visit. Its
 // script is answered with an empty one and any other request to its host with 204, so a page that loads it still loads
 // cleanly (the CSP that allows it is checked by scripts/checks/analytics.mjs).
+// The WebKit <select> exception (2026-10-17). WebKit 27.2, the WebKit in Playwright 1.64.0, reports every <select>
+// under style-src-attr 'none' as an inline style, with a console line, though nothing sets a style on it: a bare
+// <select> alone on a page with that policy does it, Chromium 156 does not, and the control renders as styled. No WebKit
+// bug was filed for it as of 2026-10-17 (other projects set the same report aside, e.g. cloudamqp/lavinmq#2393).
+// - In WebKit 27.x those reports, a <select> with no style attribute and no sample, and one console line for each, are
+//   set aside; any other CSP report still fails, a style set on the select included.
+// - In a WebKit newer than 27.x the same reports are set aside too, but the run fails with one line saying the exception
+//   fired, so it is reviewed (is the bug still there? update the version here, or drop the exception) and not kept
+//   silently. In an older WebKit, and in the other engines, they are CSP violations like any other.
+const SELECT_QUIRK = { version: 27, seen: '2026-10-17' };
+const SELECT_QUIRK_LINE = "Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.";
+// Where the exception fired in a WebKit newer than it was made for: version, and the pages.
+const quirkNewer = new Map();
+/** The CSP reports and console lines that are the page's: in WebKit 27 and newer, without the <select> reports and their lines. */
+function ownProblems(engineName, browser, csp, select, errors, where) {
+	const major = Number(browser.version().split('.')[0]);
+	if (engineName !== 'webkit' || major < SELECT_QUIRK.version || !select.length) return { csp: [...csp, ...select], errors };
+	if (major > SELECT_QUIRK.version) {
+		const seen = quirkNewer.get(browser.version()) ?? new Set();
+		quirkNewer.set(browser.version(), seen.add(where));
+	}
+	let skip = select.length;
+	return { csp, errors: errors.filter((e) => !(e === SELECT_QUIRK_LINE && skip-- > 0)) };
+}
+
 async function stubBeacon(context) {
 	await context.route(/https:\/\/(static\.)?cloudflareinsights\.com\//, (route) => (/beacon\.min\.js/.test(route.request().url()) ? route.fulfill({ status: 200, contentType: 'application/javascript', body: '/* the analytics beacon is not run in the checks */' }) : route.fulfill({ status: 204, body: '' })));
 }
@@ -110,6 +141,7 @@ async function stubBeacon(context) {
 async function teachTiles(engineName, browser) {
 	const context = await browser.newContext({ viewport: widths.desktop, ignoreHTTPSErrors: true });
 	await stubBeacon(context);
+	await context.addInitScript(observe, 'light');
 	const page = await context.newPage();
 	await page.clock.install();
 	const errors = [];
@@ -148,7 +180,10 @@ async function teachTiles(engineName, browser) {
 	}
 	if (ahead.length) fail(`the certified count runs ahead of its share: ${ahead.slice(0, 3).join('; ')}`);
 	if (last.share !== final.share || last.count !== final.count || last.n !== final.n || last.dim) fail(`the story ends on ${last.share}% with ${last.count} of ${last.n}${last.dim ? ', the errors tile still dimmed' : ''}, not ${final.share}% with ${final.count} of ${final.n} and the errors tile shown`);
-	for (const e of errors) fail(`console error: ${e}`);
+	const seen = await page.evaluate(() => ({ csp: window.__csp, select: window.__cspSelect }));
+	const own = ownProblems(engineName, browser, seen.csp, seen.select, errors, '/ (teach tiles)');
+	for (const c of own.csp) fail(`CSP violation: ${c}`);
+	for (const e of own.errors) fail(`console error: ${e}`);
 	await context.close();
 }
 
@@ -249,6 +284,7 @@ try {
 
 				const state = await page.evaluate(() => ({
 					csp: window.__csp,
+					cspSelect: window.__cspSelect,
 					cls: window.__cls,
 					shifts: window.__shifts,
 					firstWidth: window.__w0,
@@ -295,10 +331,11 @@ try {
 						.map((el) => `${el.id ? '#' + el.id : el.tagName} in ${el.closest('svg').getAttribute('aria-label')?.slice(0, 40) ?? 'a figure'}`),
 					styled: getComputedStyle(document.body).fontFamily.includes('Geist'),
 				}));
-				for (const c of state.csp) report(engineName, route, v.name, `CSP violation: ${c}`);
+				const own = ownProblems(engineName, browser, state.csp, state.cspSelect, errors, route);
+				for (const c of own.csp) report(engineName, route, v.name, `CSP violation: ${c}`);
 				for (const f of failed) report(engineName, route, v.name, `request failed: ${f}`);
 				// The 404 answers with its own status, which the browser logs; that one line is the page working.
-				for (const e of errors) if (!(route === '/404/' && /status of 404/.test(e))) report(engineName, route, v.name, `console error: ${e}`);
+				for (const e of own.errors) if (!(route === '/404/' && /status of 404/.test(e))) report(engineName, route, v.name, `console error: ${e}`);
 				if (!state.styled) {
 					// What the page had loaded when it was measured, so a failure says why.
 					const why = await page.evaluate(() => ({
@@ -387,7 +424,8 @@ try {
 		await page.keyboard.type('temperature');
 		const found = await page.locator('.pagefind-ui__result').first().waitFor({ timeout: 15000 }).then(() => true, () => false);
 		if (!found) report(engineName, '/docs/', 'search', 'searching "temperature" found nothing');
-		for (const c of await page.evaluate(() => window.__csp)) report(engineName, '/docs/', 'search', `CSP violation: ${c}`);
+		const searched = await page.evaluate(() => ({ csp: window.__csp, select: window.__cspSelect }));
+		for (const c of ownProblems(engineName, browser, searched.csp, searched.select, [], '/docs/ (search)').csp) report(engineName, '/docs/', 'search', `CSP violation: ${c}`);
 		await context.close();
 		await browser.close();
 		console.log(` ${engineName}`);
@@ -395,6 +433,8 @@ try {
 } finally {
 	server.kill();
 }
+
+for (const [version, pages] of quirkNewer) problems.push(`webkit ${version}: the WebKit ${SELECT_QUIRK.version}.x <select> exception (${SELECT_QUIRK.seen}) fired on ${pages.size} pages (${[...pages].slice(0, 3).join(', ')}): check whether this WebKit still reports a bare <select>, then update SELECT_QUIRK in scripts/checks/browser.mjs or drop the exception`);
 
 if (problems.length) {
 	console.error(problems.map((p) => `browser: ${p}`).join('\n'));
