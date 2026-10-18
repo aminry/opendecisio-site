@@ -41,10 +41,12 @@ const first = scatter({ splits: resplits['g31-banking77'].by[START], alpha: Numb
 const c12 = task('g12', 'clinc150'), c31 = task('g31', 'clinc150');
 
 // The drift replay, on each base.
-const drift = { g31: d.drift.g31, g12: d.drift.g12 };
+const drift = { g31: d.drift.g31, g12: d.drift.g12, ...(d.fix && { g31oos: d.fix }) };
 const driftFor = (b: 'g31' | 'g12') => ({ ...drift[b], svg: driftChart(drift[b], `CLINC150, ${baseName(b)}`) });
 const dr0 = driftFor('g31');
-const driftData = Object.fromEntries(Object.entries(drift).map(([b, x]) => [b, { ...x, label: `CLINC150, ${baseName(b)}` }]));
+const driftLabel = (b: string) => (b === 'g31oos' ? `CLINC150 with out of scope taught, ${baseName('g31')}` : `CLINC150, ${baseName(b)}`);
+const driftData = Object.fromEntries(Object.entries(drift).map(([b, x]) => [b, { ...x, label: driftLabel(b) }]));
+const fix = d.fix;
 
 const ds = d.datasets;
 ---
@@ -172,11 +174,12 @@ const ds = d.datasets;
 				<div class="tc-controls">
 					<div class="tc-chips" role="group" aria-label="Base">
 						{(['g31', 'g12'] as const).map((b, i) => <button class:list={['chip', baseClass(b)]} type="button" aria-pressed={String(i === 0)} data-base={b}><span class="dot" aria-hidden="true"></span>{baseName(b)}</button>)}
+						{fix && <button class:list={['chip', baseClass('g31')]} type="button" aria-pressed="false" data-base="g31oos"><span class="dot" aria-hidden="true"></span>{baseName('g31')}, out of scope taught</button>}
 					</div>
 					<p class="tc-key"><span class="tc-key__i"><span class="tc-key__oos" aria-hidden="true"></span>off-topic messages per 100</span> <span class="tc-key__i"><span class="tc-key__wrong" aria-hidden="true"></span>wrong answers certified per 100</span></p>
 				</div>
 				<div class="tc-chart" data-tc-driftchart set:html={dr0.svg} />
-				<dl class="tc-totals" aria-live="polite">
+				<dl class="tc-totals" aria-live="polite" data-table-keys>
 					<div><dt>The certificate's threshold</dt><dd><b data-drift="threshold">{dr0.threshold.toFixed(2)}</b>{' '}<span data-drift="share">{pc(dr0.certified_share)} of the stream certified</span></dd></div>
 					<div><dt>Wrong answers certified before the alert</dt><dd><b data-drift="before">{n(dr0.wrong_before)}</b></dd></div>
 					<div><dt>And after it, to message {n(dr0.last_reading)}</dt><dd><b data-drift="after">{n(dr0.wrong_after)}</b></dd></div>
@@ -187,7 +190,28 @@ const ds = d.datasets;
 			<div class="pcard tile tc-fix" data-reveal>
 				<h3 class="tc-h3">The fix: teach it to say none of these</h3>
 				<p class="tc-read">Give the task a 151st option, out of scope, taught from 10 off-topic examples, and certify it on held-out examples that include 100 off-topic ones. An off-topic message then has a right answer, and the certificate counts it.</p>
-				<p class="tc-pending" role="note"><b>Waiting for its run.</b> The same stream on the same card, with the out-of-scope option taught; its numbers go here, beside the failure above.</p>
+				{fix ? (
+					<>
+						<div class="table-scroll tc-compare">
+							<table class="data-table">
+								<caption>The same drift stream, off-topic rising from 0 to {pc(fix.stream_oos_share, 0)}: {fix.options - 1} options, then the out-of-scope option taught. <span class="nowrap">decisio-gemma-4-31b</span> FP8, decisio {d.decisio}, <span class="nowrap">{fix.date}</span>.</caption>
+								<thead><tr><th scope="col"></th><th scope="col">No out-of-scope option</th><th scope="col">Out of scope taught</th></tr></thead>
+								<tbody>
+									<tr><th scope="row">Wrong among the certified</th><td>{pc(fix.wrong_rate_before)}</td><td>{pc(fix.wrong_rate)}</td></tr>
+									<tr><th scope="row">The alarm, first after message</th><td>{n(d.drift.g31.first_alert_after)}</td><td>{n(fix.first_alert_after)}</td></tr>
+									<tr><th scope="row">Wrong answers certified before it</th><td>{n(d.drift.g31.wrong_before)}</td><td>{n(fix.wrong_before)}</td></tr>
+								</tbody>
+							</table>
+						</div>
+						<ul class="tc-promise" data-table-notes>
+							<li><b>At a 10% target</b> every message was automated and {pc(fix.wrong_rate)} were wrong: the promise held.</li>
+							<li><b>At 5%</b> the same {pc(fix.wrong_rate)} missed the promise, because the certificate's examples were {pc(fix.cert_oos_share)} off-topic, against the stream's {pc(fix.stream_oos_share, 0)}.</li>
+						</ul>
+						<p class="tc-read">The promise covers traffic like the examples; the alarm flags when traffic shifts away from them.</p>
+					</>
+				) : (
+					<p class="tc-pending" role="note"><b>Waiting for its run.</b> The same stream on the same card, with the out-of-scope option taught; its numbers go here, beside the failure above.</p>
+				)}
 			</div>
 		</div>
 	</section>
@@ -197,7 +221,7 @@ const ds = d.datasets;
 			<div class="section__head">
 				<p class="kicker">Method</p>
 				<h2 id="method">How it <em class="hl">was run</em></h2>
-				<p>Decisio {d.decisio}, every serving setting at its default, on {d.dates.join(' and ')}. The model's weights never changed: teaching fits a small head on its hidden states.</p>
+				<p>Decisio {d.decisio}, every serving setting at its default, on {d.dates.length > 1 ? `${d.dates.slice(0, -1).join(', ')} and ${d.dates.at(-1)}` : d.dates[0]}. The model's weights never changed: teaching fits a small head on its hidden states.</p>
 			</div>
 			<div class="pcard tile" data-reveal>
 				<details class="disc">

@@ -29,6 +29,15 @@ export function data() {
 		const upTo = (lo, hi) => dr.series.filter((s) => s.after > lo && s.after <= hi).reduce((a, s) => a + s.wrong, 0);
 		if (upTo(0, dr.first_alert_after) !== dr.wrong_before || upTo(dr.first_alert_after, dr.last_reading) !== dr.wrong_after) fail(`the ${b} drift totals do not follow from its readings`);
 	}
+	// The fix (out of scope taught), when its run is in: its alarm totals follow from its readings too, it certified the
+	// whole stream at one threshold, and its promise held at 10% and not at 5% (its realised error between the two).
+	const f = d.fix;
+	if (f) {
+		const upTo = (lo, hi) => f.series.filter((s) => s.after > lo && s.after <= hi).reduce((a, s) => a + s.wrong, 0);
+		if (upTo(0, f.first_alert_after) !== f.wrong_before || upTo(f.first_alert_after, f.last_reading) !== f.wrong_after) fail('the fix\'s drift totals do not follow from its readings');
+		if (f.certified_share !== 1 || !(f.wrong_rate > 0.05 && f.wrong_rate <= 0.1) || f.held['0.1'] !== true || f.held['0.05'] !== false) fail('the fix\'s promise is not the one the page states (held at 10%, missed at 5%, everything certified)');
+		if (f.cert_oos !== Math.round(f.cert_oos_share * f.cert_examples)) fail('the fix\'s off-topic share of its certifying examples does not follow from its counts');
+	}
 	const ib = d.inbox;
 	if (ib.messages.length % 8 !== 0) fail(`has ${ib.messages.length} inbox messages, not a multiple of eight`);
 	for (const a of ALPHAS) if (ib.targets[a].threshold === null && ib.targets[a].covered !== 0) fail(`inbox at ${a}: certified answers with no threshold`);
