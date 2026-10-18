@@ -2,7 +2,7 @@
 // src/config/docs-groups.mjs has a figure before its first section, a TL;DR section with a checked code block, a
 // "What next" section with links, its reading time and date, and its foot's source and Markdown links; every
 // figure that moves has its Pause button; and no page, legacy or not, has a paragraph of more than three sentences. The legacy pages are listed, so the list can only shrink.
-// The same rule holds on the site's own pages other than home and the posts (benchmarks, demos, privacy, the 404),
+// The same rule holds on the site's own pages other than home and the posts (benchmarks, the demos pages, privacy, the 404),
 // disclosures included.
 //   node scripts/checks/docs-pattern.mjs
 import { readFileSync } from 'node:fs';
@@ -57,7 +57,7 @@ for (const g of docsGroups) {
 	}
 }
 // The site's own pages: no wall of text there either (a table's or a figure's text aside).
-const SITE_PAGES = { '/benchmarks/': 'dist/benchmarks/index.html', '/demos/': 'dist/demos/index.html', '/privacy/': 'dist/privacy/index.html', '/404': 'dist/404.html' };
+const SITE_PAGES = { '/benchmarks/': 'dist/benchmarks/index.html', '/demos/': 'dist/demos/index.html', '/demos/teach-and-certify/': 'dist/demos/teach-and-certify/index.html', '/privacy/': 'dist/privacy/index.html', '/404': 'dist/404.html' };
 for (const [where, file] of Object.entries(SITE_PAGES)) {
 	const main = parse(readFileSync(file, 'utf8')).querySelector('main');
 	if (!main) { problems.push(`${where}: no main`); continue; }

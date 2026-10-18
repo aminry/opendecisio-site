@@ -3,6 +3,10 @@
 	"allow": [
 		{"page": "/demos/", "figure": "91%", "why": "the Qwen base's browser-agent steps (248 of 272) and the triage plain question's lowest accuracy (91.0%, rounded in the triage note)"},
 		{"page": "/demos/", "figure": "1.5", "why": "the driving demo's 1.5 s timeout, a setting, and the triage gain of 1.5 points in its table"},
+		{"page": "/demos/teach-and-certify/", "figure": "2%", "why": "an error target, a setting the reader picks (the chips, the sections that name a target), not a measurement; the certified shares and error rates at each target are stated once"},
+		{"page": "/demos/teach-and-certify/", "figure": "5%", "why": "an error target, a setting the reader picks (the chips, the sections that name a target), not a measurement; the certified shares and error rates at each target are stated once"},
+		{"page": "/demos/teach-and-certify/", "figure": "10%", "why": "an error target, a setting the reader picks (the chips, the sections that name a target), not a measurement; the certified shares and error rates at each target are stated once"},
+		{"page": "/demos/teach-and-certify/", "figure": "30%", "why": "the share each drift replay rises to, a setting of the replay (the out-of-scope stream and the gatekeeper's new kind of command), not a measurement"},
 		{"page": "/benchmarks/", "figure": "20.2", "why": "one measurement, the cached Qwen question on the Threadripper host (20.2 ms): the speed chart shows it from the README table, and EVAL_CARD 5's limit on host dependence quotes it beside two other hosts; both are decisio's text at the pinned release, so they cannot differ"},
 		{"page": "/", "figure": "96GB", "why": "one requirement, the card the default base needs: the README's install table states it, and its guidance states it for the default base and again as the threshold the 12B is for; decisio's own text at one release, so the three cannot differ"},
 		{"page": "/", "figure": "70.4", "why": "the same value in the 'Why Decisio' strengths row and in the axis-by-axis table: both render one launch_facts.public.json value (head_to_head.jev.rows.intelligence, printed), so they cannot differ"},
