@@ -40,7 +40,7 @@
   "v161_scoped_statements": {
    "statements": [
     {
-     "holds_on_live": false,
+     "holds_on_live": true,
      "holds_on_v161": true,
      "id": "third_on_intelligence"
     },
@@ -50,7 +50,7 @@
      "id": "within_2_points_on_calibration"
     },
     {
-     "holds_on_live": false,
+     "holds_on_live": true,
      "holds_on_v161": true,
      "id": "ninth_on_cost"
     },
@@ -2045,10 +2045,10 @@
     }
    },
    {
-    "date": "2026-10-15",
-    "id": "capability_page_2026_10_15",
+    "date": "2026-10-18",
+    "id": "capability_page_2026_10_18",
     "link": "https://benchmarkheaven.com/jev-models",
-    "text": "On the board's Capability table as read on 2026-10-15 (a page that merges later draws), Decisio 31B scored 79.57 (95% interval 75.67 to 81.99) and Jev 1.13.0 77.13 (72.77 to 78.37).",
+    "text": "On the board's Capability table as read on 2026-10-18 (a page that merges later draws), Decisio 31B scored 79.57 (95% interval 75.67 to 81.99) and Jev 1.13.0 77.13 (72.77 to 78.37).",
     "values": {
      "ours": 79.57,
      "ours_interval": null
