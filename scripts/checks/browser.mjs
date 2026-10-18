@@ -12,10 +12,11 @@
 // - every line in a figure painted (no gradient stroke on a line with an empty bounding box);
 // - the page no wider than the screen; and, once per engine, that search works and that the home page's Teach it
 //   tiles never state a count ahead of their share (stepped through on Playwright's clock).
-// It saves a full-page screenshot of every page and variant to .browser/<engine>/.
+// It saves a full-page screenshot of every page and variant to .browser/<engine>/, and its problems, one to a line, to
+// .browser/problems.txt (empty when it passes), which the nightly report reads (scripts/nightly-report.mjs).
 //   ENGINES=chromium,webkit,firefox node scripts/checks/browser.mjs
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
 import { chromium, firefox, webkit } from 'playwright';
@@ -435,6 +436,9 @@ try {
 }
 
 for (const [version, pages] of quirkNewer) problems.push(`webkit ${version}: the WebKit ${SELECT_QUIRK.version}.x <select> exception (${SELECT_QUIRK.seen}) fired on ${pages.size} pages (${[...pages].slice(0, 3).join(', ')}): check whether this WebKit still reports a bare <select>, then update SELECT_QUIRK in scripts/checks/browser.mjs or drop the exception`);
+
+mkdirSync('.browser', { recursive: true });
+writeFileSync(join('.browser', 'problems.txt'), problems.map((p) => `${p}\n`).join(''));
 
 if (problems.length) {
 	console.error(problems.map((p) => `browser: ${p}`).join('\n'));
