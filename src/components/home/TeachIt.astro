@@ -6,6 +6,7 @@
 // launch facts carry them), checked against the pinned release.
 import { teachData } from '../../lib/teach.mjs';
 import { scene } from '../../lib/teach-scene.mjs';
+import { readUpstream } from '../../lib/upstream.mjs';
 const d = teachData();
 const c = d.certify;
 const pct = (x: number, k = 1) => `${(x * 100).toFixed(k)}%`;
@@ -15,13 +16,19 @@ const minutes = Math.round(d.learn.seconds / 60);
 const certShare = c.certified / c.n;
 const wrongShare = c.wrong / c.certified;
 const slider = d.stops.map((s) => ({ label: s.label, rows: s.rows, seconds: s.seconds, examples: s.examples ?? null }));
-// The three lines and the honest line are the section's final copy of 2026-10-15.
+// The three lines and the honest line are the section's final copy of 2026-10-15; the sentence on 0.16.0 follows the
+// honest line (2026-10-18).
 const steps = [
 	{ t: 'Teach.', x: 'Send labelled examples of your question. It takes minutes, and the weights stay as they are.' },
 	{ t: 'Certify.', x: 'The server holds half back and finds the confidence above which your wrong answers stay under a rate you pick.' },
 	{ t: 'Act.', x: 'Every answer says certified or not. Automate the certified ones and send the rest to a person.' },
 ];
 const honest = 'It needs labelled examples, and a certificate holds for one task on one serving setup.';
+// From 0.16.0, in the release's own words (docs/upgrading.md at the pinned release): a task certified on 0.16.0 stops
+// certifying while the confidence alert is on, and one certified earlier needs certifying again to get it.
+const upgrading = readUpstream('docs/upgrading.md');
+if (!upgrading.includes('The confidence alert suspends certification while it is on') || !/so it gets no drift protection until it is certified again/.test(upgrading)) throw new Error('TeachIt: docs/upgrading.md at the pinned release no longer says certification pauses on a confidence alert, or that a task certified earlier must be certified again');
+const paused = 'From decisio 0.16.0, certification pauses on its own when traffic shifts away from the examples, and a task certified on an earlier version needs certifying again to get it.';
 const proof = d.proof;
 ---
 <section class="section teach" id="teach" aria-labelledby="teach-h" data-launch="teach">
@@ -98,9 +105,9 @@ const proof = d.proof;
 				</li>
 			))}
 		</ol>
-		<p class="teach__honest">{honest}</p>
+		<p class="teach__honest">{honest} {paused}</p>
 		<p class="teach__proof" data-launch="teach-proof">Intent accuracy on the {proof.base}. {proof.rows.map((r) => `${r}. `)}{proof.scope}</p>
-		<div class="actions teach__cta"><a class="button button--primary" href="/docs/tasks/">Teach your first task</a></div>
+		<div class="actions teach__cta"><a class="button button--primary" href="/docs/tasks/">Teach your first task</a><a class="button" href="/demos/teach-and-certify/">See it on real tasks</a></div>
 	</div>
 </section>
 <script>
