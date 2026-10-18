@@ -547,3 +547,61 @@
 .disc__body > * + * {
 	margin-top: 12px;
 }
+
+/* The demos page's featured card: the teach-and-certify demo, its line, one measured number and its link. */
+.demo-feature {
+	display: grid;
+	grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+	grid-template-areas: 'text n' 'cta n';
+	gap: 14px 32px;
+	align-items: start;
+}
+
+.demo-feature__text {
+	grid-area: text;
+}
+
+.home .demo-feature__title {
+	margin: 4px 0 0;
+	font-size: var(--d-step-3);
+	letter-spacing: -0.02em;
+}
+
+.demo-feature__line {
+	max-width: 60ch;
+	margin: 10px 0 0;
+	color: var(--h-dim);
+}
+
+.demo-feature__n {
+	grid-area: n;
+	align-self: center;
+	margin: 0;
+	padding: 18px 20px;
+	border: 1px solid var(--d-line-strong);
+	border-radius: 12px;
+	background: color-mix(in srgb, var(--d-accent-fill) 8%, transparent);
+	color: var(--h-dim);
+	font-size: 14px;
+}
+
+.demo-feature__n b {
+	display: block;
+	font-size: clamp(32px, 4vw, 46px);
+	font-weight: 700;
+	letter-spacing: -0.03em;
+	color: var(--h-ink);
+	font-variant-numeric: tabular-nums;
+}
+
+.demo-feature__cta {
+	grid-area: cta;
+	margin: 0;
+}
+
+@media (max-width: 52rem) {
+	.demo-feature {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-areas: 'text' 'n' 'cta';
+	}
+}

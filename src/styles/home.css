@@ -1264,6 +1264,26 @@ body.home {
 		display: block;
 		padding-bottom: var(--d-space-2);
 	}
+
+	/* The open menu: two even columns of full-height links, so no row is left ragged and no label breaks. */
+	.js .home .site-header.is-open .nav {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 2px 16px;
+	}
+
+	.js .home .site-header.is-open .nav a {
+		display: flex;
+		align-items: center;
+		min-height: 44px;
+		white-space: nowrap;
+	}
+
+	.js .home .site-header.is-open .nav li:last-child a {
+		justify-content: center;
+		width: max-content;
+		min-height: 40px;
+	}
 }
 
 /* Round 3. */

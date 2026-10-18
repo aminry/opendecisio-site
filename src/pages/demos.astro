@@ -12,8 +12,12 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import { demoCards, intro, sectionParts, watchNote } from '../lib/demos.mjs';
 import { breadcrumbs } from '../lib/jsonld.mjs';
 import { pin } from '../lib/upstream.mjs';
+import { baseName, data as teachCertify, datasetName } from '../lib/teach-certify.mjs';
 
 const cards = demoCards();
+// The featured card: the teach-and-certify demo, with one measured number from its page (the support inbox at 5%).
+const tc = teachCertify().inbox;
+const tcShare = `${((100 * tc.targets['0.05'].covered) / tc.test_n).toFixed(1)}%`;
 const hostedClips = `${site.repository}/blob/${pin.tag}/docs/demos/README.md#watch-it-play`;
 const examples = `${site.repository}/tree/${pin.tag}/examples/demos`;
 const baseOf = (player: string) => baseOfName(player.replace(/ base$/, ''));
@@ -29,12 +33,26 @@ const counted = (d: (typeof cards)[number]) => {
 	return { n: t.rows.length, noun: plain(t.head[0]).toLowerCase(), detail: /\(([^)]*)\)/.exec(d.results.heading)?.[1] ?? '' };
 };
 ---
-<SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Demos', path: '/demos/' }])} title={`Demos: ${site.name}`} description="Pong, a driving simulator, a browser agent and ticket triage on each base, every decision checked against an oracle.">
+<SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Demos', path: '/demos/' }])} title={`Demos: ${site.name}`} description="Certified answers on real tasks, then Pong, a driving simulator, a browser agent and ticket triage on each base, every decision checked.">
 	<PageHero
 		label="Demos"
-		lede="Decisio played Pong, drove a simulator, ran a browser agent and triaged support tickets on each of its three bases. An oracle checked every decision it made."
-		links={[{ href: '/docs/demos/', text: 'The full write-up' }, { href: '/demos/teach-and-certify/', text: 'Teach and certify' }, { href: hostedClips, text: "The hosted players' clips" }, { href: examples, text: 'Run them yourself' }]}
-	>Four demos, <em class="hl">every decision judged</em></PageHero>
+		lede="Taught from labelled examples, Decisio certified which answers could go out with no one checking them. It also played Pong, drove a simulator, ran a browser agent and triaged support tickets on each of its three bases, and an oracle checked every decision."
+		links={[{ href: '/docs/demos/', text: 'The full write-up' }, { href: hostedClips, text: "The hosted players' clips" }, { href: examples, text: 'Run them yourself' }]}
+	>Certified answers and recorded runs, <em class="hl">every decision judged</em></PageHero>
+
+	<section class="section psec" aria-labelledby="certified">
+		<div class="wrap">
+			<article class="pcard tile demo-feature" data-reveal>
+				<div class="demo-feature__text">
+					<p class="kicker">Certified answers</p>
+					<h2 class="demo-feature__title" id="certified">Teach and certify</h2>
+					<p class="demo-feature__line">Taught from labelled examples, Decisio marks which answers can go out with no one checking them, at the error rate you pick.</p>
+				</div>
+				<p class="demo-feature__n"><b>{tcShare}</b><span>of a support inbox answered on its own at a 5% error target ({baseName(tc.model)}, {datasetName(tc.dataset)})</span></p>
+				<div class="actions demo-feature__cta"><a class="button button--primary" href="/demos/teach-and-certify/">See certified answers on real tasks</a></div>
+			</article>
+		</div>
+	</section>
 
 	<section class="section psec" aria-labelledby="watch">
 		<div class="wrap">

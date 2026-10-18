@@ -35,6 +35,7 @@ Export it with `GET /v1/tasks?full=1`, and start each server with `--tasks-file`
 
 ## What next
 
+- [Certified answers on real tasks](/demos/teach-and-certify/): the live demo, with a support inbox, a drift alarm and a coding-agent gatekeeper.
 - [Use the probability](/docs/guides/probability/): where to set the line once the probabilities are honest.
 - [Long documents and many options](/docs/guides/long-and-wide/): the heads, on lists of 77 and 150 options.
 - [The HTTP API](/docs/api/): the task routes, field by field.
