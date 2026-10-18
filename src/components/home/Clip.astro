@@ -2,7 +2,8 @@
 // A demo clip from the pinned release: sized, with its poster as a lazily
 // loaded image over it (a video's poster attribute loads with the page), its
 // source attached only when it nears the viewport, played only when the reader
-// has not asked for reduced motion, and always pausable.
+// has not asked for reduced motion, and always pausable. The video is not a Tab stop (Firefox makes one of a video
+// without controls): its control is the Pause button beside it.
 import media from '../../data/media.json';
 interface Props { name: string; caption: string; base?: string; }
 const { name, caption, base } = Astro.props;
@@ -20,6 +21,7 @@ if (!size) throw new Error(`Clip: ${name} is not in src/data/media.json; run npm
 			muted
 			loop
 			playsinline
+			tabindex="-1"
 			aria-describedby={`clip-${name}`}
 		></video>
 		<img class="clip__poster" src={`/posters/${name}.webp`} width={size.width} height={size.height} loading="lazy" decoding="async" alt="" />
