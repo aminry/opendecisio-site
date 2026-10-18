@@ -10,7 +10,8 @@
 // - every focusable element reachable with the keyboard (desktop, light);
 // - every image loaded, every clip a sized video with a lazily loaded, sized poster;
 // - every line in a figure painted (no gradient stroke on a line with an empty bounding box);
-// - the page no wider than the screen; and, once per engine, that search works.
+// - the page no wider than the screen; and, once per engine, that search works and that the home page's Teach it
+//   tiles never state a count ahead of their share (stepped through on Playwright's clock).
 // It saves a full-page screenshot of every page and variant to .browser/<engine>/.
 //   ENGINES=chromium,webkit,firefox node scripts/checks/browser.mjs
 import { spawn } from 'node:child_process';
@@ -101,6 +102,54 @@ function movedScore() {
 // cleanly (the CSP that allows it is checked by scripts/checks/analytics.mjs).
 async function stubBeacon(context) {
 	await context.route(/https:\/\/(static\.)?cloudflareinsights\.com\//, (route) => (/beacon\.min\.js/.test(route.request().url()) ? route.fulfill({ status: 200, contentType: 'application/javascript', body: '/* the analytics beacon is not run in the checks */' }) : route.fulfill({ status: 204, body: '' })));
+}
+
+// The home page's Teach it tiles, stepped through their story on Playwright's clock rather than in real time: at every
+// step the certified count is at most the shown share of its answers, and the story ends on the tile's final values
+// (the ones the page is built with and shows without scripts, today 84.5% and 169 of 200) with the errors tile shown.
+async function teachTiles(engineName, browser) {
+	const context = await browser.newContext({ viewport: widths.desktop, ignoreHTTPSErrors: true });
+	await stubBeacon(context);
+	const page = await context.newPage();
+	await page.clock.install();
+	const errors = [];
+	page.on('pageerror', (e) => errors.push(e.message));
+	page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+	await page.goto(`${base}/`, { waitUntil: 'load' });
+	const fail = (message) => report(engineName, '/', 'teach tiles', message);
+	// The final values as built, read before the story starts and resets them.
+	const final = await page.evaluate(() => {
+		const hot = document.querySelector('.teach__c--hot');
+		const b = hot?.querySelector('[data-teach-count]');
+		const of = hot?.querySelector('[data-teach-of]');
+		return b && of ? { share: Number(b.dataset.teachCount), count: Number(of.dataset.teachOf), n: Number(of.dataset.n), text: `${b.textContent} ${of.textContent}` } : null;
+	});
+	if (!final) { fail('the certified tile has no counted share or answers'); await context.close(); return; }
+	if (final.text !== `${final.share.toFixed(1)}% ${final.count} of ${final.n} answers`) fail(`the tile shows "${final.text}" without scripts, not its final values`);
+	const read = () => page.evaluate(() => {
+		const [hot, wrong] = [...document.querySelectorAll('.teach__c')].filter((c) => c.matches('.teach__c--hot') || c.hasAttribute('data-teach-wait'));
+		const [count, n] = (/^(\d+) of (\d+) answers$/.exec(hot.querySelector('[data-teach-of]').textContent) ?? []).slice(1).map(Number);
+		return { share: Number(hot.querySelector('[data-teach-count]').textContent.replace('%', '')), count, n, dim: wrong.classList.contains('teach__c--wait') };
+	});
+	// The story starts when the stage is well in view; it resets the tiles to zero on its first frame.
+	await page.locator('[data-teach]').scrollIntoViewIfNeeded();
+	let started = false;
+	for (let i = 0; i < 40 && !started; i++) {
+		await page.clock.runFor(50);
+		started = (await read()).share === 0;
+	}
+	if (!started) fail('the story did not start when the stage came into view');
+	const ahead = [];
+	let last;
+	for (let t = 0; t <= 16000; t += 100) {
+		await page.clock.runFor(100);
+		last = await read();
+		if (!(last.count <= (last.share / 100) * last.n + 1e-9)) ahead.push(`${last.count} of ${last.n} at ${last.share}% (${t} ms)`);
+	}
+	if (ahead.length) fail(`the certified count runs ahead of its share: ${ahead.slice(0, 3).join('; ')}`);
+	if (last.share !== final.share || last.count !== final.count || last.n !== final.n || last.dim) fail(`the story ends on ${last.share}% with ${last.count} of ${last.n}${last.dim ? ', the errors tile still dimmed' : ''}, not ${final.share}% with ${final.count} of ${final.n} and the errors tile shown`);
+	for (const e of errors) fail(`console error: ${e}`);
+	await context.close();
 }
 
 // A layout shift seen once is measured again in a fresh window: a shift the
@@ -322,6 +371,9 @@ try {
 			process.stdout.write('.');
 		}
 
+		// The Teach it tiles, in the shard that has the home page.
+		if (routes.includes('/')) await teachTiles(engineName, browser);
+
 		// Search runs under the CSP (Pagefind is WebAssembly).
 		await browser.close();
 		browser = await engines[engineName].launch();
@@ -349,4 +401,4 @@ if (problems.length) {
 	console.error(`browser: ${problems.length} problems`);
 	process.exit(1);
 }
-console.log(`browser: ${routes.length} pages${process.env.SHARD ? ` (shard ${process.env.SHARD})` : ''} in ${variants.length} variants pass in ${chosen.join(', ')}, keyboard reach and search included`);
+console.log(`browser: ${routes.length} pages${process.env.SHARD ? ` (shard ${process.env.SHARD})` : ''} in ${variants.length} variants pass in ${chosen.join(', ')}, keyboard reach, search and the Teach it tiles included`);
