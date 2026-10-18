@@ -68,7 +68,7 @@ function basesCompare() {
 	const cached = row('1,000-token state, cached');
 	const mmlu = row('MMLU-Pro, accuracy');
 	const gpqa = row('GPQA Diamond, accuracy');
-	const mem = must(readme, /\| `gemma-4-31b` \(default\) \|[^|]*30\.6 GiB in memory[^|]*\|[\s\S]*?\| `qwen3\.6-35b-a3b` \|[^|]*(\d+\.\d) GiB in memory[^|]*\|[\s\S]*?\| `gemma-4-12b` \|[^|]*, (\d+\.\d) GiB in memory/, 'the three bases\' memory');
+	const mem = must(readme, /\| `gemma-4-31b` \(default\) \|[^|]*30\.6 GiB in memory[^|]*\|[\s\S]*?\| `qwen3\.6-35b-a3b` \|[^|]*?\b(\d+\.\d) GiB in memory[^|]*\|[\s\S]*?\| `gemma-4-12b` \|[^|]*?, (\d+\.\d) GiB in memory/, 'the three bases\' memory');
 	has(readme, 'JevBench\'s published items 213 correct against 200 each', 'that the 31B got 213 of JevBench\'s published items right against 200 each');
 	const bases = [
 		{ id: 'g31', name: 'Gemma 4 31B', tag: 'the default, for accuracy', i: 2, mem: '30.6 GiB (FP8)', need: 'a 96 GB card, or a 64 GB Mac (48 GB at 4 bits)', jev: '213 correct' },

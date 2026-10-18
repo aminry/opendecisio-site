@@ -342,7 +342,7 @@ z
    <text style="fill: #c3c2b7; font: 10.5px 'Helvetica', 'Arial', 'DejaVu Sans'; text-anchor: start" x="12.96" y="34.272" transform="rotate(-0 12.96 34.272)">Gemma 4 31B, confidence threshold from 0.5 to 0.95 (the threshold is on each point)</text>
   </g>
   <g id="text_27">
-   <text style="fill: #8a8984; font: 8px 'Helvetica', 'Arial', 'DejaVu Sans'" transform="translate(12.96 386.0341)">Example 5, Escalate only when unsure (decisio-examples), session A, 2026-10-08: decisio 0.9.0 on Gemma 4 31B, one RTX PRO 6000 at 600 W.</text>
+   <text style="fill: #8a8984; font: 8px 'Helvetica', 'Arial', 'DejaVu Sans'" transform="translate(12.96 386.0341)">Example 5, Escalate only when unsure (decisio-examples), 2026-10-08: decisio 0.9.0 on Gemma 4 31B, one RTX PRO 6000 at 600 W.</text>
    <text style="fill: #8a8984; font: 8px 'Helvetica', 'Arial', 'DejaVu Sans'" transform="translate(12.96 396.5916)">ARC-Challenge test split, 1,172 questions, one request each; a public benchmark the model may have seen.</text>
   </g>
  </g>

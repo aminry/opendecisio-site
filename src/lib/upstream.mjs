@@ -1,6 +1,7 @@
 // The decisio release the site is built from, as pinned in upstream.json.
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { redact } from '../config/upstream-redactions.mjs';
 
 // Builds run from the repository root; page modules are bundled, so their own
 // location says nothing about where the repository is.
@@ -24,6 +25,7 @@ export function upstreamHas(file) {
 	return existsSync(join(upstreamRoot, file));
 }
 
+/** decisio's file at the pinned commit, as the site shows it: with the internal labels edited out (src/config/upstream-redactions.mjs). */
 export function readUpstream(file) {
-	return readFileSync(upstreamPath(file), 'utf8');
+	return redact(file, readFileSync(upstreamPath(file), 'utf8'));
 }
