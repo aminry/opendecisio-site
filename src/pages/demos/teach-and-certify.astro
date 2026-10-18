@@ -226,7 +226,7 @@ const ds = d.datasets;
 			{r16 && (
 				<div class="pcard tile tc-fix tc-016" data-reveal>
 					<h3 class="tc-h3">From decisio {r16.version}: the alarm suspends certification</h3>
-					<p class="tc-read">From {r16.version} the confidence alarm suspends certification by default: answers keep coming, but none is marked certified until the traffic looks like the examples again. Measured on {r16.measured_on}, {r16.model}.</p>
+					<p class="tc-read">From {r16.version} the confidence alarm suspends certification by default for a task certified on {r16.version}: answers keep coming, but none is marked certified until the traffic looks like the examples again. A task certified on an earlier version has no such alarm until it is certified again. Measured on {r16.measured_on}, {r16.model}.</p>
 					<ul class="tc-promise" data-table-notes>
 						<li>On a stream whose traffic jumps at message {n(r16.jump.jump_at)}, the first suspended answer came {r16.jump.first_suspended - r16.jump.jump_at} messages after the jump, with {r16.jump.wrong_before} wrong answers certified before it. Certification resumed {r16.jump.resumed_after} messages after the traffic returned to normal.</li>
 						<li>On the {datasetName('clinc150')} stream above, the first suspension came at message {n(r16.clinc.first_suspended)}, with {r16.clinc.wrong_before} wrong answers certified before it, against {n(r16.clinc.wrong_before_014)} under {d.decisio}.</li>
@@ -325,7 +325,7 @@ const ds = d.datasets;
 					<details class="disc">
 						<summary>Found and fixed in decisio {r16.version}</summary>
 						<div class="disc__body">
-							<p>In {d.decisio}, registration and serving scored a certificate's examples by different paths, so on the card a few confidences moved between the two. {r16.version} certifies on the served path.</p>
+							<p>In {d.decisio}, registration and serving scored a certificate's examples by different paths, so on the card a few confidences moved between the two. {r16.version} certifies on the served path; a certificate made on an earlier version keeps the gap until it is made again.</p>
 							<p>Re-read through the served path at registration, {r16.served_path.n} of {r16.served_path.n} held-out examples gave the same confidence: the largest shift was {r16.served_path.max_shift.toFixed(1)}.</p>
 						</div>
 					</details>
