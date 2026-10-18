@@ -135,7 +135,7 @@ function chooseMachine() {
 	const rows = [
 		{ have: 'Linux, one NVIDIA card', mem: '96 GB, as measured', path: 'GPU server', href: '/docs/quickstart/gpu-server/', note: 'The default base, Gemma 4 31B.' },
 		{ have: 'Linux, one NVIDIA card, Docker', mem: '96 GB, as measured', path: 'Docker', href: '/docs/quickstart/docker/', note: 'The same server in a container.' },
-		{ have: 'A Mac with Apple silicon', mem: 'each base has its own, in Run it', path: 'Mac with MLX', href: '/docs/quickstart/mac-mlx/', note: 'The bases run from their MLX conversions.' },
+		{ have: 'A Mac with Apple silicon', mem: 'each base has its own, in the How-to guides', path: 'Mac with MLX', href: '/docs/quickstart/mac-mlx/', note: 'The bases run from their MLX conversions.' },
 		{ have: 'A laptop with Ollama', mem: '8.6 GB for the Gemma base\'s smallest tag', path: 'Ollama', href: '/docs/quickstart/ollama/', note: 'A 16 GB laptop fits it; Ollama applies no calibration.' },
 		{ have: 'Any machine, for development', mem: 'a small Hugging Face model on the CPU', path: 'CPU stand-in', href: '/docs/quickstart/cpu-stand-in/', note: 'Serves the routes; not the measured system.' },
 	];

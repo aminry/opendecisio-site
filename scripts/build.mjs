@@ -25,6 +25,7 @@ for (const [cmd, args] of [
 	['node', ['scripts/llms.mjs']],
 	['node', ['scripts/inline-styles.mjs']],
 	['node', ['scripts/headers.mjs']],
+	['node', ['scripts/redirects.mjs']],
 ]) {
 	const { code, errors } = await run(cmd, args);
 	if (code !== 0 || errors) {

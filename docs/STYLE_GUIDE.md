@@ -41,7 +41,9 @@ Internals (the readout, the probabilities, repeatability) live on one page: How 
 
 - **Short sentences.** One idea per paragraph, at most about three lines.
 - **Bullets and tables over prose.** A list of settings is a table; steps are a numbered list.
-- **Plain words.** "Confidence you can trust", not "calibration"; "the text", not "the state"; "the answers it can stand behind", not "coverage".
+- **Plain words.** "Probabilities you can trust", not "calibration"; "the text", not "the state"; "the answers it can stand behind", not "coverage".
+- **"Probability", never "confidence".** The API has a `confidence` field that is a different number (System One's rescaled score); it appears only on the HTTP API page, in code, with one line saying what it is and that thresholds use the top probability (Amin, 2026-10-18).
+- **The certificate's bound is written one way:** "nine times in ten".
 - **A small glossary** for the words that must stay (below), linked on first use on a page.
 - **Second person, present tense.** "You send a request", not "a request is sent".
 - **Code a reader can paste.** Every command and request runs as shown, and CI checks it (verify-examples).
@@ -51,15 +53,19 @@ Internals (the readout, the probabilities, repeatability) live on one page: How 
 
 | Word | Plain meaning |
 | --- | --- |
+| text | what you ask about (the API's `state` field) |
 | question | what you ask about a text, with its options |
 | option | one possible answer to a question |
-| confidence | the probability decisio gives an option; it means what it says |
+| probability | the number decisio gives each option; a question's probabilities add up to 1 |
+| top probability | the probability of the likeliest option; certificates and thresholds use it |
 | task | a question you ask again and again, taught from your labelled examples |
-| certified answer | an answer decisio stands behind at the error rate you chose |
-| threshold | the confidence above which answers are certified |
+| error target | the share of certified answers you allow to be wrong |
+| certified answer | an answer decisio stands behind at your error target |
+| threshold | the top probability above which answers are certified |
 | drift | traffic moving away from the examples a task was certified on |
 | base | the model decisio serves (Gemma 4 31B by default) |
 | abstain | decisio declines to answer when no option is likely enough |
+| serving setup | the model, the engine, the GPU and the settings a certificate was made on |
 
 ## Numbers
 
@@ -138,7 +144,7 @@ Before:
 > And it is not free: the guarantee is paid for in the share of answers that get certified, and with too few examples that share is zero.
 
 After:
-> Pick an error rate, say 5%. Of the answers decisio certifies, at most 5% are wrong, for traffic like your examples (with 90% confidence).
+> Pick an error target, say 5%. Nine times in ten, at most 5% of the answers decisio certifies are wrong, for traffic like your examples.
 > A stricter rate certifies fewer answers; the rest go to a person.
 
 **5. The first request** (Your first decision).
@@ -148,7 +154,7 @@ Before:
 > You send them in one request; the server reads the text once and answers every question: a probability for every option.
 
 After:
-> Send a text and a question with its options. Get back a confidence for every option, in one call.
+> Send a text and a question with its options. Get back a probability for every option, in one call.
 
 ## How the rules are checked
 

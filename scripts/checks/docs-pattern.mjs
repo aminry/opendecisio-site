@@ -1,4 +1,6 @@
-// The docs' page pattern, checked on the built pages: every page of the sidebar that is not marked `legacy` in
+// The docs' page pattern, checked on the built pages. A page with a `shape` in src/config/docs-groups.mjs follows the
+// rewrite's shapes (docs/STYLE_GUIDE.md): `guide` opens with a paragraph, shows a runnable example or a figure before its
+// first section and ends with "What next"; `reference` opens with a paragraph. Every other page of the sidebar that is not marked `legacy` in
 // src/config/docs-groups.mjs has a figure before its first section, a TL;DR section with a checked code block, a
 // "What next" section with links, its reading time and date, and its foot's source and Markdown links; every
 // figure that moves has its Pause button; and no page, legacy or not, has a paragraph of more than three sentences. The legacy pages are listed, so the list can only shrink.
@@ -32,6 +34,26 @@ for (const g of docsGroups) {
 		const content = doc.querySelector('.sl-markdown-content');
 		if (!content) { problems.push(`${where}: no content`); continue; }
 		const kids = content.childNodes.filter((n) => n.tagName);
+		// The rewrite's shapes (docs/STYLE_GUIDE.md "Page shapes"), for the pages it has moved to them.
+		if (item.shape) {
+			const isH2 = (n) => n.tagName === 'H2' || n.classList?.contains('sl-heading-wrapper');
+			const firstH2 = kids.findIndex(isH2);
+			const head = firstH2 === -1 ? kids : kids.slice(0, firstH2);
+			if (kids[0]?.tagName !== 'P') problems.push(`${where}: does not open with a paragraph saying what you get`);
+			const meta = doc.querySelector('.pt__meta')?.text ?? '';
+			if (!/\d+ min read/.test(meta) || !/updated \d{4}-\d{2}-\d{2}/.test(meta)) problems.push(`${where}: no reading time or last-updated date`);
+			const actions = doc.querySelector('.site-foot__actions')?.text ?? '';
+			if (!/View as Markdown/.test(actions)) problems.push(`${where}: the foot lacks its Markdown link`);
+			if (item.shape === 'guide') {
+				if (!head.some((n) => n.querySelector?.('.expressive-code') || n.classList?.contains('expressive-code') || (n.tagName === 'FIGURE' && n.classList.contains('fig')))) problems.push(`${where}: no runnable example or figure before the first section`);
+				if (content.querySelector('.glossary')) problems.push(`${where}: a page glossary (the shared glossary page is linked instead)`);
+				const nextAt = kids.findIndex((n) => isH2(n) && /^What next/.test(n.text.trim()));
+				const nextLinks = nextAt === -1 ? 0 : kids.slice(nextAt + 1).flatMap((n) => n.querySelectorAll?.('a') ?? []).length;
+				if (nextLinks < 2) problems.push(`${where}: no "What next" with two links or more`);
+			}
+			for (const f of doc.querySelectorAll('.fig[data-live]')) if (!f.querySelector('[data-fig-pause]')) problems.push(`${where}: a moving figure has no Pause button`);
+			continue;
+		}
 		const firstH2 = kids.findIndex((n) => n.tagName === 'H2' || n.classList?.contains('sl-heading-wrapper'));
 		const figure = kids.findIndex((n) => n.tagName === 'FIGURE' && n.classList.contains('fig'));
 		if (figure === -1) problems.push(`${where}: no figure`);
