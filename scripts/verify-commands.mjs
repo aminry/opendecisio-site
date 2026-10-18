@@ -9,6 +9,7 @@ import { existsSync, mkdirSync, openSync, readFileSync, rmSync, statSync, writeF
 import { join } from 'node:path';
 import { collectBlocks } from '../src/lib/blocks.mjs';
 import { pin, siteRoot } from '../src/lib/upstream.mjs';
+import { answers, stopAndWait } from './server-control.mjs';
 import { plan } from '../verification/plan.mjs';
 
 const dry = process.argv.includes('--dry-run');
@@ -81,16 +82,12 @@ function stopServer() {
 }
 process.on('exit', stopServer);
 
-async function healthy() {
-	try {
-		return (await fetch(health, { signal: AbortSignal.timeout(2000) })).ok;
-	} catch {
-		return false;
-	}
-}
+const healthy = () => answers(health);
 
 async function startServer(command) {
-	stopServer();
+	const previous = server;
+	server = undefined;
+	await stopAndWait(previous, { log });
 	for (let i = 0; i < 30 && (await healthy()); i++) await new Promise((r) => setTimeout(r, 1000));
 	if (await healthy()) fail('something else answers on 127.0.0.1:8000; stop it first');
 	const logPath = join(work, `server-${++serverLogs}.log`);
