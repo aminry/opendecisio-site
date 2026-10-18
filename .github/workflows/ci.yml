@@ -5,6 +5,8 @@
 #     pull request, because a pull request opened by GITHUB_TOKEN starts no pull_request run);
 #   - verify-examples also on any pull request or push that changes a code sample, the sources of the examples, the
 #     verification plan or upstream.json (the `changes` job below).
+# A full run on main that fails opens or comments on the issue labelled nightly-failure, and one that passes closes it
+# (the `nightly-report` job at the end).
 name: ci
 
 on:
@@ -69,9 +71,11 @@ jobs:
             last=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?branch=main&status=completed&per_page=30" --jq '[.workflow_runs[]|select(.event=="schedule" or .event=="workflow_dispatch")][0].head_sha // ""')
             if [ "$last" = "$AFTER" ]; then skip=true; verify=false; fi
           fi
-          echo "engines=$engines" >> "$GITHUB_OUTPUT"
-          echo "verify=$verify" >> "$GITHUB_OUTPUT"
-          echo "skip=$skip" >> "$GITHUB_OUTPUT"
+          {
+            echo "engines=$engines"
+            echo "verify=$verify"
+            echo "skip=$skip"
+          } >> "$GITHUB_OUTPUT"
           echo "engines $engines, verify $verify, skip $skip ($EVENT)"
 
   build:
@@ -172,6 +176,14 @@ jobs:
           name: screenshots-${{ matrix.engine }}-${{ strategy.job-index }}
           path: .browser/${{ matrix.engine }}
           retention-days: 7
+      - name: The problems, one to a line, for the nightly report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: problems-${{ matrix.engine }}-${{ strategy.job-index }}
+          path: .browser/problems.txt
+          if-no-files-found: ignore
+          retention-days: 7
 
   lighthouse-and-links:
     needs: build
@@ -235,3 +247,31 @@ jobs:
             verify.log
             verification/commands.json
           retention-days: 14
+
+  # A failing nightly is an issue, not a red mark nobody opens: after a full run on main (the schedule, or on demand on
+  # main), the first failure opens the issue labelled nightly-failure with the failed jobs, what failed by engine and page,
+  # and the run; a later failure comments on it; the first full run that passes closes it (scripts/nightly-report.mjs).
+  # A nightly skipped because its commit was already tested changes nothing.
+  nightly-report:
+    needs: [changes, build, browsers, lighthouse-and-links, verify-examples]
+    if: ${{ always() && needs.changes.result == 'success' && needs.changes.outputs.skip != 'true' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: problems-*
+          path: problems
+      - name: Open, comment on or close the nightly issue
+        run: node scripts/nightly-report.mjs problems
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SHA: ${{ github.sha }}
