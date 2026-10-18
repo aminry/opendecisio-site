@@ -96,9 +96,10 @@ if (stage && !reduce) {
 			const k = c.closest('.teach__c--hot') ? span(t, CERT_FROM, CERT_TO) : span(t, 3400, 5600);
 			c.textContent = `${(from + (to - from) * k).toFixed(1)}%`;
 		});
-		// The certified answers count with their share, and the errors among them wait until the count is done, so no
-		// tile states a number the drawing has not reached yet.
-		ofs.forEach((o) => { o.textContent = `${Math.round(Number(o.dataset.teachOf) * span(t, CERT_FROM, CERT_TO))} of ${o.dataset.n} answers`; });
+		// The certified answers count with their share, rounded down so the count never runs ahead of the share (at the end
+		// of the count the span is exactly 1, so it lands on the whole number), and the errors among them wait until the
+		// count is done, so no tile states a number the drawing has not reached yet.
+		ofs.forEach((o) => { o.textContent = `${Math.floor(Number(o.dataset.teachOf) * span(t, CERT_FROM, CERT_TO))} of ${o.dataset.n} answers`; });
 		waits.forEach((w) => w.classList.toggle('teach__c--wait', t < CERT_TO));
 	}
 
