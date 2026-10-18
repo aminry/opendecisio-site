@@ -47,13 +47,18 @@ const dr0 = driftFor('g31');
 const driftLabel = (b: string) => (b === 'g31oos' ? `CLINC150 with out of scope taught, ${baseName('g31')}` : `CLINC150, ${baseName(b)}`);
 const driftData = Object.fromEntries(Object.entries(drift).map(([b, x]) => [b, { ...x, label: driftLabel(b) }]));
 const fix = d.fix;
+const gk = d.gatekeeper;
+const range = ([lo, hi]: number[]) => `${pc(lo, 0)} to ${pc(hi, 0)}`;
+// A count that opens a sentence, or stands alone in prose, in words.
+const words = (x: number) => ['no', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'][x] ?? n(x);
+const cap = (t: string) => t[0].toUpperCase() + t.slice(1);
 
 const ds = d.datasets;
 ---
-<SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Demos', path: '/demos/' }, { name: 'Teach and certify', path: '/demos/teach-and-certify/' }])} title={`Teach and certify: ${site.name}`} description="Taught from labelled examples, Decisio certifies which answers can go out on their own at the error rate you pick. A support inbox, the share automated, 200 re-splits and a drift alarm, from the run records.">
+<SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Demos', path: '/demos/' }, { name: 'Teach and certify', path: '/demos/teach-and-certify/' }])} title={`Teach and certify: ${site.name}`} description="Taught from labelled examples, Decisio certifies which answers can go out on their own at the error rate you pick. A support inbox, the share automated, 200 re-splits, a drift alarm and a coding-agent gatekeeper, from the run records.">
 	<PageHero
 		label="Demos"
-		lede="We taught Decisio two public sets of customer intents from a few labelled examples each, then asked it to certify which answers can go out with no one checking them. Every message, answer and certificate on this page comes from those runs."
+		lede={`We taught Decisio two public sets of customer intents${gk ? " and a coding agent's command rules" : ""} from a few labelled examples each, then asked it to certify which answers can go out with no one checking them. Every message, answer and certificate on this page comes from those runs.`}
 		links={[{ href: '/docs/tasks/', text: 'Teach your first task' }, { href: '/docs/tasks/#what-certified-means', text: 'What certified means' }, { href: '#method', text: 'How it was run' }]}
 	>Pick an error rate, <em class="hl">see what it can automate</em></PageHero>
 
@@ -216,6 +221,38 @@ const ds = d.datasets;
 		</div>
 	</section>
 
+	{gk && (
+		<section class="section psec" aria-labelledby="gatekeeper">
+			<div class="wrap">
+				<div class="section__head">
+					<p class="kicker">Gatekeeper</p>
+					<h2 id="gatekeeper">Allow, ask or block, <em class="hl">for a coding agent's commands</em></h2>
+					<p>A coding agent proposes a shell command, and a team has {gk.rules.length} written rules, each saying allow, ask or block. {baseName(gk.model)} was taught the rules from {gk.per_rule} labelled commands per rule and asked which rule covers each command; the action follows from the rule.</p>
+				</div>
+				<div class="pcard tile tc-gk" data-reveal>
+					<ul class="minis tc-gains">
+						<li class="mini"><span class="mini__n">{range(gk.at5.share)}</span><span class="mini__l">of the commands decided on its own at a 5% error target, with the wrong action in {pc(gk.at5.wrong_action[0])} to {pc(gk.at5.wrong_action[1])} of those</span></li>
+						<li class="mini"><span class="mini__n">{range(gk.at10.share)}</span><span class="mini__l">decided on its own at a 10% target</span></li>
+						<li class="mini"><span class="mini__n">{gk.unsafe.unsafe} of {n(gk.unsafe.certified)}</span><span class="mini__l">certified commands let through when the policy says ask or block, across the {words(gk.unsafe.tasks)} taught versions of the task</span></li>
+					</ul>
+					<p class="tc-read">That is about 1 in 100. {cap(words(gk.unsafe.model_mistakes))} were real model mistakes, such as <code>gh stack merge 7</code>; {words(gk.unsafe.policy_lists)} were strict items in the policy's own lists, commands the rule text supports, such as test runs through <code>python -m</code>. All {gk.unsafe.unsafe} count as errors, because the policy is the ground truth.</p>
+					<h3 class="tc-h3">When a new kind of command arrives</h3>
+					<p class="tc-read">Database and migration commands, a kind no rule names, rose to {pc(gk.drift.new_kind_share, 0)} of the traffic. None of the {gk.drift.new_kind} was certified, and {gk.drift.to_ask} went to "ask" through the policy's catch-all rule, "any other program".</p>
+					<p class="tc-lesson">The lesson beside {datasetName('clinc150')}'s: a catch-all option is what keeps certification safe when traffic shifts. {datasetName('clinc150')}'s task had none, so its off-topic messages went out certified as some other intent.</p>
+					<details class="disc">
+						<summary>The {gk.rules.length} rules and their actions</summary>
+						<div class="disc__body">
+							<ul class="tc-rules">
+								{gk.rules.map((r) => <li><code>{r.rule}</code> <span class:list={['tc-act', `tc-act--${r.action}`]}>{r.action}</span></li>)}
+							</ul>
+						</div>
+					</details>
+					<p class="tc-src">{baseName(gk.model)}, the 6-bit MLX conversion <code>{gk.conversion}</code>, decisio {gk.decisio}, {gk.dates.join(' and ')}. Three draws of {gk.per_rule} commands per rule, each read on the same {n(gk.test_n)} test commands; one more version, taught with 10 per rule, was read across two server starts. The sources are under How it was run.</p>
+				</div>
+			</div>
+		</section>
+	)}
+
 	<section class="section psec" aria-labelledby="method">
 		<div class="wrap">
 			<div class="section__head">
@@ -235,13 +272,22 @@ const ds = d.datasets;
 					</div>
 				</details>
 				<details class="disc">
-					<summary>The two intent sets</summary>
+					<summary>{gk ? 'The intent sets and the commands' : 'The two intent sets'}</summary>
 					<div class="disc__body">
 						<ul>
 							<li><a href={ds.banking77.url}>BANKING77</a>: 77 banking intents. {ds.banking77.credit}. {ds.banking77.licence}.</li>
 							<li><a href={ds.clinc150.url}>CLINC150</a>: 150 intents across 10 domains, with off-topic queries. {ds.clinc150.credit}. {ds.clinc150.licence}.</li>
 						</ul>
 						<p>The messages on this page are from their test splits, unchanged.</p>
+						{gk && (
+							<>
+								<p>The gatekeeper's commands:</p>
+								<ul>
+									{gk.sources.map((src) => <li><a href={src.url}>{src.name}</a>: {src.credit}. {src.licence}.</li>)}
+									<li>Templated commands and the database commands of the drift replay, generated for this demo by seeded scripts. CC0.</li>
+								</ul>
+							</>
+						)}
 					</div>
 				</details>
 				<details class="disc">

@@ -38,6 +38,15 @@ export function data() {
 		if (f.certified_share !== 1 || !(f.wrong_rate > 0.05 && f.wrong_rate <= 0.1) || f.held['0.1'] !== true || f.held['0.05'] !== false) fail('the fix\'s promise is not the one the page states (held at 10%, missed at 5%, everything certified)');
 		if (f.cert_oos !== Math.round(f.cert_oos_share * f.cert_examples)) fail('the fix\'s off-topic share of its certifying examples does not follow from its counts');
 	}
+	// The gatekeeper, when its run is in: its ranges are ordered, its unsafe answers split into the policy's lists and the
+	// model's mistakes, none of its new kind of command was certified, and the policy has a catch-all rule that asks.
+	const g = d.gatekeeper;
+	if (g) {
+		if (!(g.at5.share[0] <= g.at5.share[1] && g.at10.share[0] <= g.at10.share[1] && g.at5.share[1] < g.at10.share[0])) fail('the gatekeeper\'s certified shares are out of order');
+		if (g.unsafe.policy_lists + g.unsafe.model_mistakes !== g.unsafe.unsafe || g.unsafe.unsafe > g.unsafe.certified) fail('the gatekeeper\'s unsafe answers do not add up');
+		if (g.drift.certified !== 0 || g.drift.to_ask > g.drift.new_kind) fail('the gatekeeper\'s drift replay is not the one the page states');
+		if (g.rules.at(-1)?.rule !== 'other' || g.rules.at(-1)?.action !== 'ask') fail('the gatekeeper\'s policy has no catch-all rule that asks');
+	}
 	const ib = d.inbox;
 	if (ib.messages.length % 8 !== 0) fail(`has ${ib.messages.length} inbox messages, not a multiple of eight`);
 	for (const a of ALPHAS) if (ib.targets[a].threshold === null && ib.targets[a].covered !== 0) fail(`inbox at ${a}: certified answers with no threshold`);

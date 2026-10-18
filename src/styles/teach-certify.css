@@ -572,3 +572,74 @@
 .tc-promise b {
 	color: var(--h-ink);
 }
+
+/* The gatekeeper: its lesson set apart, and the policy's rules with their actions. */
+.tc-lesson {
+	max-width: 70ch;
+	margin: 18px 0 0;
+	padding: 12px 16px;
+	border-left: 3px solid var(--d-base-g12);
+	border-radius: 0 var(--d-radius-control) var(--d-radius-control) 0;
+	background: color-mix(in srgb, var(--d-base-g12) 8%, transparent);
+	color: var(--h-ink);
+	font-size: 15.5px;
+}
+
+.tc-gk .disc {
+	margin-top: 18px;
+}
+
+.tc-rules {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+	gap: 6px 18px;
+	padding: 0;
+	list-style: none;
+}
+
+.tc-rules li {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 10px;
+}
+
+.tc-rules li + li {
+	margin-top: 0;
+}
+
+.tc-act {
+	padding: 0 8px;
+	border: 1px solid var(--h-line-2);
+	border-radius: 99px;
+	font: 500 12px/1.6 var(--h-mono);
+	color: var(--h-dim);
+}
+
+.tc-act--block {
+	border-color: var(--h-ink);
+	color: var(--h-ink);
+}
+
+.tc-act--allow {
+	border-color: color-mix(in srgb, var(--d-base-g12) 60%, var(--h-line-2));
+}
+
+/* The gatekeeper's three tiles sit in a row on a wide screen, one under another on a narrow one. */
+.tc-gk .minis {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tc-gk .mini:last-child:nth-child(odd) {
+	grid-column: auto;
+}
+
+@media (max-width: 44rem) {
+	.tc-gk .minis {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.tc-rules {
+	max-width: 46rem;
+}

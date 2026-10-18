@@ -13,7 +13,7 @@ Every page, its route, and where its content comes from.
 | `/articles/`, `/articles/<slug>/` | Articles | Markdown in `src/content/articles/` (docs/POSTS.md): longer pieces; a piece first published elsewhere points its canonical link at the original and stays out of the sitemap; `/articles/rss.xml` |
 | `/news/`, `/news/<slug>/` | News | Markdown in `src/content/news/` from the template in `docs/templates/news-post.md`; `/news/rss.xml` |
 | `/demos/` | Demos | Upstream docs/demos/README.md "Watch it play" and "Results", the Decisio clips from docs/demos/media at the tag; Jev and the hosted models as aggregates only |
-| `/demos/teach-and-certify/` | Teach and certify (draft, not linked) | src/data/teach-certify/teach_certify.json: the teach-and-certify runs on decisio 0.14.0 (two intent sets, two bases), checked by src/lib/teach-certify.mjs; the inbox, the share automated, the 200 re-splits and the drift replay |
+| `/demos/teach-and-certify/` | Teach and certify (draft, not linked) | src/data/teach-certify/teach_certify.json: the teach-and-certify runs on decisio 0.14.0 (two intent sets, two bases), checked by src/lib/teach-certify.mjs; the inbox, the share automated, the 200 re-splits, the drift replay with its fix, and the coding-agent gatekeeper |
 | `/privacy/` | Privacy | Site: who runs the site (Tachara LLC), what Cloudflare Web Analytics counts, that no personal data is sold or shared, and that the site sets no cookies; linked from every footer |
 | `/docs/` | Documentation start | Site: what Decisio is and where to begin, linking into each section |
 
