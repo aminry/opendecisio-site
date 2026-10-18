@@ -14,13 +14,12 @@
 // Links into the decisio repository are rewritten to the site's page when the
 // site includes the linked file (or the linked section of it), and to the file
 // on GitHub at the pinned tag otherwise.
-import { readFileSync } from 'node:fs';
 import { toString } from 'mdast-util-to-string';
 import remarkGfm from 'remark-gfm';
 import remarkParse from 'remark-parse';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
-import { pin, upstreamPath } from './upstream.mjs';
+import { pin, readUpstream } from './upstream.mjs';
 import { inclusionMap, slugify } from './upstream-map.mjs';
 import { rewriteLinks } from './upstream-links.mjs';
 import { commentsAbove, jevbenchCounts } from './text.mjs';
@@ -37,7 +36,7 @@ const cache = new Map();
 
 function parseFile(file) {
 	if (!cache.has(file)) {
-		const source = readFileSync(upstreamPath(file), 'utf8');
+		const source = readUpstream(file);
 		cache.set(file, parser.parse(source));
 	}
 	return structuredClone(cache.get(file));

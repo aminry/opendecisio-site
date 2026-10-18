@@ -32,6 +32,8 @@ function routes() {
 	const table = /^\| Route \| What it does \|\n\| --- \| --- \|\n((?:\|.*\n)+)/m.exec(api)?.[1] ?? '';
 	const rows = [...table.matchAll(/^\| (`[^|]+`) \| ([^|]+) \|$/gm)].map((m) => ({ routes: [...m[1].matchAll(/`([A-Z]+) ([^`]+)`/g)].map((r) => ({ method: r[1], path: r[2] })), what: m[2].trim() }));
 	if (rows.length < 6) throw new Error('docs-figures: docs/api.md no longer has its table of routes');
+	// The count is of routes, not of the table's rows: a row can hold several (GET and DELETE of one path).
+	const count = rows.reduce((n, r) => n + r.routes.length, 0);
 	const heads = [...api.matchAll(/^## (.+)$/gm)].map((m) => m[1]);
 	const anchor = (first) => {
 		const text = `${first.method} ${first.path}`;
@@ -44,7 +46,7 @@ function routes() {
 		return `<li class="f-pop fd-${Math.min(i, 9)}">${a ? `<a href="${a}">${inner}</a>` : `<div>${inner}</div>`}</li>`;
 	}).join('')}</ul>`;
 	return panel({
-		name: 'routes', label: 'The routes', title: `${rows.length} routes: one asks questions, the rest teach, list and report.`,
+		name: 'routes', label: 'The routes', title: `${count} routes: one asks questions, the rest teach, list and report.`,
 		desc: `The server's routes: ${rows.map((r) => `${r.routes.map((x) => `${x.method} ${x.path}`).join(', ')} ${r.what}`).join('; ')}.`,
 		body, live: 5, interactive: true, legend: 'Each route links to its section of the reference below.', source: 'Source: the table of docs/api.md at the pinned release.',
 	});

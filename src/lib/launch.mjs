@@ -126,7 +126,7 @@ export const fixed = (n, d = 2) => n.toFixed(d);
 const pct = (x, d = 1) => `${(x * 100).toFixed(d)}%`;
 
 /**
- * The routing record of example 5 (session A), as the launch facts (launch_facts.public.json) carries it:
+ * The routing record of example 5, as the launch facts (launch_facts.public.json) carries it:
  * the rows of its table and the words of its caption, every number from the file.
  */
 export function routing() {
