@@ -206,7 +206,7 @@ export const plan = [
 	{
 		page: '/docs/limits/', n: 1, mode: 'python', expect: 'import json\nimport urllib.error',
 		assert(stdout) {
-			if (!/^no questions: 422$/m.test(stdout) || !/^256 options: 400$/m.test(stdout)) throw new Error('the two limits did not answer 422 and 400');
+			if (!/^no questions: 422$/m.test(stdout) || !/^256 options: 422$/m.test(stdout)) throw new Error('the two limits did not both answer 422 (decisio 0.17.0 and later)');
 		},
 	},
 	{
