@@ -36,7 +36,7 @@ const cards = [first && card(first, true), ...rest.map((p) => card(p))].filter(B
 		) : (
 			<ul class="posts">
 				{cards.map((c, i) => (
-					<li class:list={['post-card', 'tile', 'tilt', { 'post-card--lead': c.lead, 'tile--active': c.lead }]} data-i={i}>
+					<li class:list={['post-card', 'tile', { 'post-card--lead': c.lead, 'tile--active': c.lead }]} data-i={i}>
 						<p class="post-card__meta"><time datetime={c.iso}>{c.when}</time>{c.out ? <><span aria-hidden="true">·</span><span>on {c.from}</span></> : <><span aria-hidden="true">·</span><span>{c.minutes} min read</span></>}</p>
 						<h2 class="post-card__title" data-history={c.out ? '' : undefined}><a href={c.href}>{c.title}</a></h2>
 						<p class="post-card__text">{c.text}</p>

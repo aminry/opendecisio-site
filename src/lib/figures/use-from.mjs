@@ -16,7 +16,7 @@ function oneLineChange() {
 	return panel({
 		name: 'one-line-change', label: 'Moving a client', title: 'An existing client changes where it sends, and the model name; nothing else.',
 		desc: `To move a System One client to a decisio server, change its base URL to the server's address and its model to the served name (${SERVED}). The route and the request and answer fields stay.`,
-		body, live: 5, legend: 'The served name is the one GET /v1/models lists for the default base.', source: 'Source: docs/migrating.md of the pinned release.',
+		body, legend: 'The served name is the one GET /v1/models lists for the default base.', source: 'Source: docs/migrating.md of the pinned release.',
 	});
 }
 

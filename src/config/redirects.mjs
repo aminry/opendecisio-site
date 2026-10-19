@@ -22,4 +22,6 @@ export const redirects = [
 	{ from: '/docs/guides/images/', to: '/docs/images/', why: 'Images became Ask about images (docs rewrite, batch 5)' },
 	{ from: '/docs/probability/', to: '/docs/how-it-works/#2-one-decision-and-its-probabilities', why: 'What the probability means merged into How it works (docs rewrite, batch 7)' },
 	{ from: '/docs/repeatability/', to: '/docs/how-it-works/#what-repeats', why: 'Repeatability merged into How it works (docs rewrite, batch 7)' },
+	{ from: '/docs/comparison/', to: '/benchmarks/#compares', why: 'How it compares moved into Benchmarks, beside a hosted service and open entries (docs rewrite, batch 9)' },
+	{ from: '/docs/demos/', to: '/demos/', why: 'The demos write-up folded into Demos (docs rewrite, batch 9)' },
 ];

@@ -215,12 +215,6 @@ export const plan = [
 		},
 	},
 	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
-	{
-		page: '/docs/comparison/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/models',
-		assert(stdout) {
-			json(stdout);
-		},
-	},
 	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 	{ page: '/docs/deploy/development/', n: 1, mode: 'same-as', expect: `git clone --branch ${pin.tag}`, of: ['/docs/', 1] },
 

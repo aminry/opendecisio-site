@@ -2,7 +2,6 @@
 	"_note": "Links from a page to decisio's documentation on GitHub, by page, when the docs rewrite began (2026-10-18). The rewrite brings every guide on-site, so these counts may only fall; a page not listed may have none. Lower a count when a batch removes links; the check fails while a count is higher than the page has.",
 	"pages": {
 		"/docs/api/": 4,
-		"/docs/demos/": 9,
 		"/docs/evaluation-card/": 2,
 		"/docs/faq/": 5,
 		"/docs/flags/": 1
