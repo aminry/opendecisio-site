@@ -64,6 +64,8 @@ async function download() {
 }
 
 if (!/^[0-9a-f]{40}$/.test(pin.commit)) fail('upstream.json: commit must be a full 40-character sha');
+// The release's container image by digest (the Docker guide shows it); the bump workflow reads it from the release notes.
+if (!/^ghcr\.io\/aminry\/decisio@sha256:[0-9a-f]{64}$/.test(pinned.image ?? '')) fail('upstream.json: image must be the release image by digest, ghcr.io/aminry/decisio@sha256:<64 hex>');
 
 if (preview) {
 	console.warn(`fetch-upstream: previewing unreleased decisio commit ${preview.slice(0, 7)}; not for publishing`);
@@ -77,6 +79,13 @@ if (preview) {
 	const resolved = tagCommit();
 	if (!resolved) fail(`tag ${pin.tag} does not exist in ${pin.repository}`);
 	if (resolved !== pin.commit) fail(`tag ${pin.tag} points at ${resolved}, but upstream.json pins ${pin.commit}`);
+	// With a token (CI), the image must be the one the release notes give; the deploy's build has no token, and the
+	// unauthenticated API's rate limit must not fail a deploy, so it trusts the pin CI checked.
+	if (process.env.GH_TOKEN) {
+		const release = await fetch(`https://api.github.com/repos/${pin.repository}/releases/tags/${pin.tag}`, { headers: { Authorization: `Bearer ${process.env.GH_TOKEN}` } });
+		if (!release.ok) fail(`could not read the release notes of ${pin.tag}: ${release.status}`);
+		if (!(await release.json()).body?.includes(pinned.image)) fail(`the release notes of ${pin.tag} do not give the image upstream.json pins (${pinned.image})`);
+	}
 	if (!cached()) {
 		await download();
 		writeFileSync(marker, markerText());

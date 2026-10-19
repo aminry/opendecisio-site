@@ -11,6 +11,9 @@ import { siteRoot, upstreamHas, readUpstream } from './upstream.mjs';
 
 const contentRoot = join(siteRoot, 'src/content/docs');
 const DIRECTIVE = /^:{2,3}upstream(?:-or)?\{([^}]*)\}\s*$/gm;
+// ::covers{links="README.md#gpu-server docs/running.md=1-pick-your-machine"}: a site-written page that replaces those
+// sections of decisio's docs, so links to them land here (at the anchor after "=", if one is given). It renders nothing.
+const COVERS = /^::covers\{links="([^"]*)"\}\s*$/gm;
 const ATTR = /(\w+)="([^"]*)"/g;
 
 export function slugify(text) {
@@ -33,7 +36,17 @@ export function inclusionMap() {
 	if (memo) return memo;
 	const byFile = new Map();
 	const aliases = new Map();
+	const cover = (alias, path) => {
+		const [link, at = ''] = alias.split('=');
+		const [file, anchor] = link.split('#');
+		if (!aliases.has(file)) aliases.set(file, new Map());
+		if (aliases.get(file).has(anchor ?? '')) throw new Error(`upstream-map: ${link} is covered by two pages`);
+		aliases.get(file).set(anchor ?? '', { path, anchor: at });
+	};
 	for (const path of walk(contentRoot)) {
+		for (const match of readFileSync(path, 'utf8').matchAll(COVERS)) {
+			for (const alias of match[1].split(/\s+/).filter(Boolean)) cover(alias, routeOf(path));
+		}
 		for (const match of readFileSync(path, 'utf8').matchAll(DIRECTIVE)) {
 			const attrs = Object.fromEntries([...match[1].matchAll(ATTR)].map((m) => [m[1], m[2]]));
 			if (!attrs.file) continue;
@@ -41,11 +54,7 @@ export function inclusionMap() {
 			const entry = { section: attrs.section, keep: attrs.heading === 'keep', intro: attrs.part === 'intro', path: routeOf(path) };
 			byFile.get(attrs.file).push(entry);
 			// covers="README.md#gpu-server": links to that file and anchor land here too.
-			for (const alias of (attrs.covers ?? '').split(/\s+/).filter(Boolean)) {
-				const [file, anchor] = alias.split('#');
-				if (!aliases.has(file)) aliases.set(file, new Map());
-				aliases.get(file).set(anchor ?? '', { path: entry.path, anchor: '' });
-			}
+			for (const alias of (attrs.covers ?? '').split(/\s+/).filter(Boolean)) cover(alias, entry.path);
 		}
 	}
 	// For each included file, the page and anchor every one of its headings lands on.

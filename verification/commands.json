@@ -4,12 +4,6 @@
 	"date": "2026-10-19",
 	"runner": "linux-x64",
 	"blocks": {
-		"5466c85ed7c16c65": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-19",
-			"note": "the install and the server start; the unit tests passed in decisio's own CI on this commit"
-		},
 		"ee135501cdcafea9": {
 			"status": "cpu",
 			"tag": "v0.17.0",
@@ -148,11 +142,6 @@
 			"tag": "v0.17.0",
 			"date": "2026-10-19"
 		},
-		"71e4822b8241007c": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-19"
-		},
 		"95953c278a640239": {
 			"status": "cpu",
 			"tag": "v0.17.0",
@@ -202,19 +191,57 @@
 			"date": "2026-10-19",
 			"note": "registers the walk-through task again"
 		},
-		"135f2c5258e4a371": {
+		"34a548d175c41da5": {
+			"status": "shown",
+			"why": "it needs Linux with one NVIDIA card, which this check does not have; decisio's README timed the same install, of decisio 0.11.0, on 2026-10-09"
+		},
+		"8c7d9112d29b9a3c": {
+			"status": "shown",
+			"why": "it needs Linux with one NVIDIA card, which this check does not have"
+		},
+		"0be95b275d18fd36": {
 			"status": "verbatim",
 			"needs": "Linux with one NVIDIA card"
 		},
-		"a6cec71672986453": {
-			"status": "verbatim",
-			"needs": "a GPU host with the NVIDIA Container Toolkit",
+		"2fd43be07ee2b468": {
+			"status": "shown",
+			"why": "decisio wrote it for its docs and has not run it; the options are systemd's documented ones"
+		},
+		"12ad6308fee69b89": {
+			"status": "shown",
+			"why": "decisio wrote it for its docs, with the release image in place of its placeholder, and has not run it; the probes read /health as measured"
+		},
+		"75a9081012d1bf6e": {
+			"status": "shown",
+			"why": "it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have"
+		},
+		"096332fcc92a24f2": {
+			"status": "shown",
+			"why": "decisio's compose.yaml, with the release image in place of its local build; the file brought the container up on a card on 2026-10-01",
 			"record": "runs/2026-10-01_docker-first-gpu-start/"
 		},
-		"7fa72c92bcbb4514": {
+		"91b81fa07b6f9f8b": {
+			"status": "shown",
+			"why": "it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have"
+		},
+		"77ee5e08eca5d84e": {
+			"status": "shown",
+			"why": "it needs a Mac with Apple silicon, which this check does not have"
+		},
+		"315a6113ae31f37d": {
 			"status": "verbatim",
 			"needs": "a Mac with Apple silicon",
-			"record": "runs/2026-10-03_mlx-regate/"
+			"record": "runs/2026-10-07_mlx-gemma-31b/"
+		},
+		"85da9a99b88396a8": {
+			"status": "verbatim",
+			"needs": "a Mac with Apple silicon",
+			"record": "runs/2026-10-16_mlx-gemma-31b-4bit/"
+		},
+		"6df7257c85bbe82f": {
+			"status": "verbatim",
+			"needs": "a Mac with Apple silicon",
+			"record": "runs/2026-10-05_mlx-gemma/"
 		},
 		"c27cce5fe57795ee": {
 			"status": "output"
@@ -251,6 +278,10 @@
 			"tag": "v0.17.0",
 			"date": "2026-10-19",
 			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
+		},
+		"135f2c5258e4a371": {
+			"status": "verbatim",
+			"needs": "Linux with one NVIDIA card"
 		}
 	}
 }

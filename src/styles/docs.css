@@ -1768,3 +1768,15 @@ a.fig__card:hover {
 	font-weight: 400;
 	color: var(--sl-color-gray-3);
 }
+
+/* The deploy layouts: a dashed frame around what a supervisor or a container holds, and the arrows' heads. */
+.f-frame {
+	fill: none;
+	stroke: var(--sl-color-gray-4);
+	stroke-width: 1;
+	stroke-dasharray: 5 4;
+}
+
+.f-head {
+	fill: var(--sl-color-accent);
+}

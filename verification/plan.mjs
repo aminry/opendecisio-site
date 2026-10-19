@@ -10,6 +10,7 @@
 //   run               run the block in the clone's root with bash -e
 //   run-then-server   run every line but the last, then start the last as the server
 //   verbatim          not runnable here; shown as taken from the repository's tested docs
+//   shown             not run, and not from tested docs: why says what it needs, or that it was never run
 //   output            a recorded response, not a command
 //   example           a shape to fill in, not a command
 //   same-as           the same text as another planned block
@@ -59,14 +60,7 @@ function recordedAnswers(stdout) {
 }
 
 export const plan = [
-	// Quickstart: the CPU stand-in, the path every machine can take.
-	{
-		page: '/docs/quickstart/cpu-stand-in/', n: 1, mode: 'run-then-server', expect: 'uv sync --extra dev --frozen',
-		skip: ['uv run pytest'], ci: 'lint, unit tests, build',
-		note: "the install and the server start; the unit tests passed in decisio's own CI on this commit",
-	},
-	{ page: '/docs/quickstart/cpu-stand-in/', n: 2, mode: 'same-as', expect: 'uv sync --extra dev --frozen', of: ['/docs/quickstart/cpu-stand-in/', 1] },
-	// Get started, on the stand-in: the recorded support ticket (src/lib/site-blocks.mjs).
+	// Get started, on the stand-in, the path every machine can take: the recorded support ticket (src/lib/site-blocks.mjs).
 	{
 		page: '/docs/', n: 1, mode: 'run-then-server', expect: `git clone --branch ${pin.tag} https://github.com/${pin.repository}`,
 		skip: [`git clone --branch ${pin.tag} https://github.com/${pin.repository}`, 'cd decisio'],
@@ -199,12 +193,9 @@ export const plan = [
 			json(stdout);
 		},
 	},
-	{
-		page: '/docs/limits/', n: 1, mode: 'python', expect: 'import json\nimport urllib.error',
-		assert(stdout) {
-			if (!/^no questions: 422$/m.test(stdout) || !/^256 options: 422$/m.test(stdout)) throw new Error('the two limits did not both answer 422 (decisio 0.17.0 and later)');
-		},
-	},
+	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
+	{ page: '/docs/deploy/development/', n: 1, mode: 'same-as', expect: `git clone --branch ${pin.tag}`, of: ['/docs/', 1] },
+
 	{
 		page: '/docs/releases/', n: 1, mode: 'run', expect: 'uv run python -c "from importlib.metadata import version',
 		assert(stdout) {
@@ -256,19 +247,27 @@ export const plan = [
 	},
 
 	// Paths that need hardware this check does not have.
-	{ page: '/docs/quickstart/gpu-server/', n: 1, mode: 'verbatim', expect: 'git clone https://github.com/aminry/decisio', needs: 'Linux with one NVIDIA card' },
-	{ page: '/docs/quickstart/gpu-server/', n: 2, mode: 'same-as', expect: 'git clone https://github.com/aminry/decisio', of: ['/docs/quickstart/gpu-server/', 1] },
-	{ page: '/docs/quickstart/docker/', n: 1, mode: 'verbatim', expect: 'uv build --wheel', needs: 'a GPU host with the NVIDIA Container Toolkit', record: 'runs/2026-10-01_docker-first-gpu-start/' },
-	{ page: '/docs/quickstart/docker/', n: 2, mode: 'same-as', expect: 'uv build --wheel', of: ['/docs/quickstart/docker/', 1] },
-	{ page: '/docs/quickstart/mac-mlx/', n: 1, mode: 'verbatim', expect: 'uv sync --extra mlx', needs: 'a Mac with Apple silicon', record: 'runs/2026-10-03_mlx-regate/' },
-	{ page: '/docs/quickstart/mac-mlx/', n: 2, mode: 'same-as', expect: 'uv sync --extra mlx', of: ['/docs/quickstart/mac-mlx/', 1] },
-	{ page: '/docs/quickstart/mac-mlx/', n: 3, mode: 'output', expect: 'decisio: the gemma-4-12b base needs about 16.6 GiB under MLX' },
-	// The pulls are decisio's; all three Ollama blocks are run against Ollama by scripts/verify-ollama.mjs
-	// (the requests are site-written: src/lib/site-blocks.mjs).
-	{ page: '/docs/quickstart/ollama/', n: 1, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma', models: ['aminroudaki/decisio-gemma', 'aminroudaki/decisio'], needs: '0.35.1', assert: pulled },
-	{ page: '/docs/quickstart/ollama/', n: 2, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/quickstart/ollama/', 1] },
-	{ page: '/docs/quickstart/ollama/', n: 3, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma'], needs: '0.35.1', assert: ticketAnswers },
-	{ page: '/docs/quickstart/ollama/', n: 4, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio'], needs: '0.35.1', assert: ticketAnswers },
+	// The deploy guides: decisio's commands at the pinned release, from a package, a clone or the release image.
+	{ page: '/docs/deploy/cloud-gpu/', n: 1, mode: 'shown', expect: 'python3.12 -m venv .venv', why: "it needs Linux with one NVIDIA card, which this check does not have; decisio's README timed the same install, of decisio 0.11.0, on 2026-10-09" },
+	{ page: '/docs/deploy/cloud-gpu/', n: 2, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: 'it needs Linux with one NVIDIA card, which this check does not have' },
+	{ page: '/docs/deploy/cloud-gpu/', n: 3, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --base tachara-ai/decisio-gemma-4-31b', needs: 'Linux with one NVIDIA card' },
+	{ page: '/docs/deploy/cloud-gpu/', n: 4, mode: 'shown', expect: '# /etc/systemd/system/decisio.service', why: "decisio wrote it for its docs and has not run it; the options are systemd's documented ones" },
+	{ page: '/docs/deploy/cloud-gpu/', n: 5, mode: 'shown', expect: 'apiVersion: apps/v1', why: "decisio wrote it for its docs, with the release image in place of its placeholder, and has not run it; the probes read /health as measured" },
+	{ page: '/docs/deploy/docker/', n: 1, mode: 'shown', expect: 'docker run -d --gpus all', why: 'it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have' },
+	{
+		page: '/docs/deploy/docker/', n: 2, mode: 'shown', expect: 'name: decisio', record: 'runs/2026-10-01_docker-first-gpu-start/',
+		why: "decisio's compose.yaml, with the release image in place of its local build; the file brought the container up on a card on 2026-10-01",
+	},
+	{ page: '/docs/deploy/docker/', n: 3, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: 'it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have' },
+	{ page: '/docs/deploy/mac/', n: 1, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: 'it needs a Mac with Apple silicon, which this check does not have' },
+	{ page: '/docs/deploy/mac/', n: 2, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --backend mlx --base gemma-4-31b --model mlx-community/gemma-4-31b-it-6bit', needs: 'a Mac with Apple silicon', record: 'runs/2026-10-07_mlx-gemma-31b/' },
+	{ page: '/docs/deploy/mac/', n: 3, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --backend mlx --base gemma-4-31b --model tachara-ai/decisio-gemma-4-31b-mlx-4bit', needs: 'a Mac with Apple silicon', record: 'runs/2026-10-16_mlx-gemma-31b-4bit/' },
+	{ page: '/docs/deploy/mac/', n: 4, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --backend mlx --base gemma-4-12b', needs: 'a Mac with Apple silicon', record: 'runs/2026-10-05_mlx-gemma/' },
+	{ page: '/docs/deploy/mac/', n: 5, mode: 'output', expect: 'decisio: the gemma-4-12b base needs about 16.6 GiB under MLX' },
+	// The pull is decisio's; both Ollama blocks are run against Ollama by scripts/verify-ollama.mjs
+	// (the request is site-written: src/lib/site-blocks.mjs).
+	{ page: '/docs/deploy/mac/', n: 6, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma', models: ['aminroudaki/decisio-gemma', 'aminroudaki/decisio'], needs: '0.35.1', assert: pulled },
+	{ page: '/docs/deploy/mac/', n: 7, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma'], needs: '0.35.1', assert: ticketAnswers },
 	{ page: '/docs/bases/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', needs: 'an NVIDIA card', record: 'runs/2026-10-04_gemma-base/' },
 	{ page: '/docs/bases/', n: 2, mode: 'same-as', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', of: ['/docs/bases/', 1] },
 
@@ -298,6 +297,6 @@ export const plan = [
 	// The home page repeats three of the blocks above.
 	// The home page's pull block has each comment above its command; the commands are the docs page's, run again here.
 	{ page: '/', n: 1, mode: 'ollama', expect: '# the Gemma 4 12B base, for 16 GB laptops', models: ['aminroudaki/decisio-gemma', 'aminroudaki/decisio'], needs: '0.35.1', assert: pulled },
-	{ page: '/', n: 2, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/quickstart/ollama/', 3] },
-	{ page: '/', n: 3, mode: 'same-as', expect: 'git clone https://github.com/aminry/decisio', of: ['/docs/quickstart/gpu-server/', 1] },
+	{ page: '/', n: 2, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 7] },
+	{ page: '/', n: 3, mode: 'verbatim', expect: 'git clone https://github.com/aminry/decisio', needs: 'Linux with one NVIDIA card' },
 ];

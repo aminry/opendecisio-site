@@ -3,17 +3,13 @@
 	"pages": {
 		"/benchmarks/": 4,
 		"/demos/": 1,
-		"/docs/api/": 9,
+		"/docs/api/": 5,
 		"/docs/demos/": 9,
-		"/docs/evaluation-card/": 5,
-		"/docs/faq/": 6,
-		"/docs/flags/": 4,
-		"/docs/health/": 3,
+		"/docs/evaluation-card/": 2,
+		"/docs/faq/": 5,
+		"/docs/flags/": 1,
+		"/docs/health/": 1,
 		"/docs/how-it-works/": 3,
-		"/docs/migrating/": 2,
-		"/docs/quickstart/gpu-server/": 2,
-		"/docs/quickstart/mac-mlx/": 1,
-		"/docs/tasks/": 3,
-		"/docs/upgrading/": 1
+		"/docs/tasks/": 3
 	}
 }

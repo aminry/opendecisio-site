@@ -4,10 +4,10 @@
 // the command, its flags and its comments in their own colours, and the box as wide as its longest line.
 import { install, laptop } from '../../lib/home.mjs';
 const tabs = [
-	{ id: 'ollama', label: 'Ollama', text: laptop().pull, docs: '/docs/quickstart/ollama/' },
-	{ id: 'gpu', label: 'GPU', text: install('GPU server'), docs: '/docs/quickstart/gpu-server/' },
-	{ id: 'docker', label: 'Docker', text: install('Docker'), docs: '/docs/quickstart/docker/' },
-	{ id: 'mlx', label: 'MLX', text: install('Mac with MLX'), docs: '/docs/quickstart/mac-mlx/' },
+	{ id: 'ollama', label: 'Ollama', text: laptop().pull, docs: '/docs/deploy/mac/#on-a-laptop-with-ollama' },
+	{ id: 'gpu', label: 'GPU', text: install('GPU server'), docs: '/docs/deploy/cloud-gpu/' },
+	{ id: 'docker', label: 'Docker', text: install('Docker'), docs: '/docs/deploy/docker/' },
+	{ id: 'mlx', label: 'MLX', text: install('Mac with MLX'), docs: '/docs/deploy/mac/' },
 ];
 for (const t of tabs) if (t.text.split('\n').length > 12) throw new Error(`index: the ${t.label} block is longer than twelve lines`);
 // A line into its parts: the command, then each argument (a flag, a path or a word), then any trailing comment.

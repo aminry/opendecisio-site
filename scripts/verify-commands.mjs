@@ -189,6 +189,12 @@ for (const step of steps) {
 		case 'verbatim':
 			entries[block.hash] = { status: 'verbatim', needs: step.needs, ...(step.record && { record: step.record }) };
 			break;
+		case 'shown':
+			// A block this check cannot run (it needs hardware the runner has not, or decisio wrote it and has not run it):
+			// shown as it is, and its line says why.
+			if (!step.why) fail(`block ${step.n} on ${step.page} is shown, not run, and its step gives no why`);
+			entries[block.hash] = { status: 'shown', why: step.why, ...(step.record && { record: step.record }) };
+			break;
 		case 'output':
 			entries[block.hash] = { status: 'output', ...(step.record && { record: step.record }) };
 			break;

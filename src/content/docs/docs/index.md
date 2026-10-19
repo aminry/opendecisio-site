@@ -5,6 +5,8 @@ description: Run decisio and get your first answer in about five minutes. A text
 
 <!-- Site-written: the start page. The machine table follows decisio's README "Install and run" at the pinned release; the request and its answer are the first recorded decision (launch_facts.public.json, figures.recorded_decisions); every command was run, as the record says. -->
 
+::covers{links="README.md#install-and-run=1-pick-your-machine README.md#quickstart=1-pick-your-machine docs/running.md=1-pick-your-machine"}
+
 Four steps: pick your machine, start a server, ask a question and read the answer.
 
 ::figure{name="request-flow"}
@@ -13,11 +15,11 @@ Four steps: pick your machine, start a server, ask a question and read the answe
 
 | Your machine | Its guide |
 | --- | --- |
-| Linux with an NVIDIA card | [GPU server](/docs/quickstart/gpu-server/) |
-| Linux with an NVIDIA card and Docker | [Docker](/docs/quickstart/docker/) |
-| Mac with Apple silicon | [Mac](/docs/quickstart/mac-mlx/) |
-| Mac, Linux or Windows with Ollama | [Ollama](/docs/quickstart/ollama/) |
-| Any machine, for development | [CPU stand-in](/docs/quickstart/cpu-stand-in/) |
+| Linux with an NVIDIA card | [On a cloud GPU](/docs/deploy/cloud-gpu/) |
+| Linux with an NVIDIA card and Docker | [With Docker](/docs/deploy/docker/) |
+| Mac with Apple silicon | [On a Mac](/docs/deploy/mac/) |
+| Mac, Linux or Windows with Ollama | [With Ollama](/docs/deploy/mac/#on-a-laptop-with-ollama) |
+| Any machine, for development | [For development](/docs/deploy/development/) |
 
 The memory and card each machine needs are on [Requirements and limits](/docs/limits/).
 The steps below use the CPU stand-in, which runs on any machine.
@@ -69,5 +71,5 @@ Good to know:
 ## What next
 
 - [Call it from your code](/docs/use-from/): the same request from Python, JavaScript and TypeScript, and the frameworks.
-- [GPU server](/docs/quickstart/gpu-server/): run the default model, Gemma 4 31B, on your own card.
+- [On a cloud GPU](/docs/deploy/cloud-gpu/): run the default model, Gemma 4 31B, on your own card.
 - [Teach it your question](/docs/tasks/): teach a question you ask again and again, and certify its answers.
