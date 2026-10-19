@@ -1,13 +1,13 @@
 ---
 title: Ask about images
-description: Send up to two images with a request and ask about them as you ask about text, on a server started with an image engine.
+description: Send images with a request and ask about them as you ask about text, on a server started with an image engine.
 ---
 
 <!-- Site-written: the Ask about images guide. Its facts are decisio's docs/api.md, docs/cli.md, docs/running.md, docs/tasks.md and EVAL_CARD.md at the pinned release (src/config/sourced.mjs checks them). -->
 
 ::covers{links="docs/api.md#images=2-send-the-images"}
 
-Ask about images as you ask about text: the same questions, the same answers, with up to two images in the request.
+Ask about images as you ask about text: the same questions, the same answers, with the images in the request.
 This script sends one photo as a data URL, to a server started for images:
 
 ```python
