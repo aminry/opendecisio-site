@@ -97,6 +97,8 @@ jobs:
       - run: npm ci
       - name: Build from the pinned release
         run: npm run build
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Content rules
         run: node scripts/checks/content.mjs
       - name: The JevBench claims are those launch_facts.public.json allows

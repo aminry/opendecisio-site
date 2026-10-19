@@ -1,6 +1,6 @@
 // The figures of "Understand": how a question becomes a probability, the three bases side by side, what the
-// calibration measured, what repeats and what does not, the evaluation card's map, how the headline compares, the
-// limits, the questions and the releases. Each reads the numbers it draws from the pinned release's docs and stops the
+// calibration measured, what repeats and what does not, the evaluation card's map, how the headline compares,
+// the questions and the releases. Each reads the numbers it draws from the pinned release's docs and stops the
 // build when one is no longer there.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -184,39 +184,6 @@ function compareHeadline() {
 	});
 }
 
-// --- Limits ------------------------------------------------------------------------------------------------------------------
-
-function limitsMap() {
-	const card = text('EVAL_CARD.md');
-	const readme = text('README.md');
-	const run = text('docs/running.md');
-	has(card, 'One card per run and one run per configuration.', 'its first limit');
-	has(card, 'so a card at 600 W may read new states faster', 'the power-limit caveat');
-	has(card, '**A request repeats exactly on a freshly started server; on a server that has already answered it, a repeat can differ', 'the repeatability limit');
-	has(card, 'Repeatability across sessions is not promised.', 'that repeatability across sessions is not promised');
-	has(readme, 'It needs a 96 GB card on vLLM', 'the 31B\'s memory');
-	has(run, 'the 31B is measured on, and needs, a 96 GB card', 'the 31B\'s memory limit');
-	has(readme, 'on a 48 GB Mac (derived from the 64 GB measurement)', 'that the 31B\'s 4-bit conversion is for a 48 GB Mac');
-	has(card, 'the image route was not measured', 'that the image route was measured on the Qwen base only');
-	has(card, 'so the suite\'s ECE figures are in-sample', 'that the temperatures were fitted on the suite');
-	const items = [
-		{ t: 'One card, one session', x: 'Every figure is from one card and one run per configuration.', href: '/docs/evaluation-card/#5-limits' },
-		{ t: 'Hardware', x: 'The 31B is measured on, and needs, a 96 GB card (or a 64 GB Mac, or a 48 GB one from its 4-bit conversion, a size not measured); the 12B runs on a 32 GB Mac or a 16 GB laptop.', href: '/docs/#1-pick-your-machine' },
-		{ t: 'The host and the power limit', x: 'Latency depends on the CPU and on the card\'s power limit: a card at 600 W may read new states faster than the 585 W measured.', href: '/docs/guides/latency/' },
-		{ t: 'Repeatability', x: 'A request repeats exactly on a freshly started server; asked again on one that has already answered it, it can differ slightly. Across sessions it is not promised.', href: '/docs/repeatability/' },
-		{ t: 'Images', x: 'The image route was measured with the Qwen base only.', href: '/docs/guides/images/' },
-		{ t: 'What was fitted on what', x: 'The temperatures were fitted on a private suite, so its ECE figures are in-sample.', href: '/docs/probability/' },
-		{ t: 'Size', x: 'A prompt holds the context the server serves, 32,768 tokens or more on a Gemma base, and a question up to 255 options.', href: '/docs/guides/long-and-wide/' },
-		{ t: 'Our own runs, and the board\'s list', x: 'The Decision Index values here are our own runs; decisio\'s rows are listed on the board\'s data file of 2026-10-14.', href: '/benchmarks/#decision-index' },
-	];
-	const body = `<ul class="fig__cards fig__cards--wide">${items.map((it, i) => `<li class="f-pop fd-${Math.min(i, 10)}"><a class="fig__card" href="${it.href}"><b>${esc(it.t)}</b><span>${esc(it.x)}</span></a></li>`).join('')}</ul>`;
-	return panel({
-		name: 'limits-map', label: 'What the numbers do not say', title: 'Eight conditions that belong beside every figure.',
-		desc: `Limits: ${items.map((it) => `${it.t}: ${it.x}`).join(' ')}`,
-		body, live: 6, interactive: true, legend: 'Each card links to the page that says more.', source: 'Source: EVAL_CARD.md sections 4, 5, 6.5, 6.6 and 7.5, the README and docs/running.md at the pinned release.',
-	});
-}
-
 // --- Questions and releases -------------------------------------------------------------------------------------------------
 
 function faqMap() {
@@ -251,7 +218,6 @@ export const understandFigures = {
 	repeatability,
 	'eval-card-map': evalCardMap,
 	'compare-headline': compareHeadline,
-	'limits-map': limitsMap,
 	'faq-map': faqMap,
 	'release-timeline': releaseTimeline,
 };

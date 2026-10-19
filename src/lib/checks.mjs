@@ -48,6 +48,8 @@ export function checkHtml(entry, { moved = false } = {}) {
 			return line(`Run against the CPU stand-in at ${entry.tag} on ${entry.date}${entry.note ? `: ${entry.note}` : ''}.`, ' checked--cpu');
 		case 'verbatim':
 			return line(`Needs ${entry.needs}: taken verbatim from the repository's tested docs${entry.record ? `, ${record(entry.record)}` : ''}.`);
+		case 'shown':
+			return line(`Shown, not run: ${entry.why}${entry.record ? `; ${record(entry.record)}` : ''}.`);
 		case 'output':
 			return line(`Recorded output${entry.record ? `, ${record(entry.record)}` : ''}.`);
 		case 'ollama':

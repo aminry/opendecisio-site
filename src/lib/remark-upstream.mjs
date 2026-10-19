@@ -144,6 +144,12 @@ export default function remarkUpstream(options = {}) {
 			parent.children.splice(index, 1, ...body);
 			return index + body.length;
 		});
+		// ::covers{links="..."}: read by src/lib/upstream-map.mjs; on the page it is nothing.
+		visit(tree, 'leafDirective', (node, index, parent) => {
+			if (node.name !== 'covers') return;
+			parent.children.splice(index, 1);
+			return index;
+		});
 		// ::diagram{name="..."}: a diagram drawn at build time from the facts and the README (diagrams.mjs).
 		visit(tree, 'leafDirective', (node, index, parent) => {
 			if (node.name !== 'diagram') return;

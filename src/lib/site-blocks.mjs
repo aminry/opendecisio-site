@@ -41,7 +41,7 @@ const ollamaRequest = (model) => `curl http://localhost:11434/v1/systemone \\
 }'`;
 
 import { recordedRequest, recordedResponse } from './docs-figures.mjs';
-import { pin } from './upstream.mjs';
+import { pin, readUpstream } from './upstream.mjs';
 
 // The recorded decision of the docs' first pages (the launch facts (launch_facts.public.json), figures.recorded_decisions), as a request
 // to a server on this machine. The body is indented JSON between single quotes, so no value may hold a single quote.
@@ -55,6 +55,48 @@ const standInStart = () => `git clone --branch ${pin.tag} https://github.com/${p
 cd decisio
 uv sync --extra dev --frozen
 uv run python -m decisio.serve.vllm_engine --backend hf --model Qwen/Qwen3-0.6B-Base`;
+
+// The deploy guides: decisio's commands at the pinned release, from a clone or a package of that release.
+const version = () => pin.tag.replace(/^v/, '');
+const clone = () => `git clone --branch ${pin.tag} https://github.com/${pin.repository}\ncd decisio`;
+// The code blocks of one section of a decisio file, in order, so a guide can show a line or a file decisio's docs give.
+const sectionBlocks = (file, heading) => {
+	const text = readUpstream(file);
+	const start = text.indexOf(`\n## ${heading}\n`);
+	if (start < 0) throw new Error(`site-blocks: ${file} has no section "${heading}"`);
+	const end = text.indexOf('\n## ', start + 1);
+	const body = text.slice(start, end < 0 ? undefined : end);
+	return [...body.matchAll(/^```[a-z]*\n([\s\S]*?)^```$/gm)].map((m) => m[1].replace(/\n$/, ''));
+};
+// One line of a block, found by what it contains; the build fails when decisio's block no longer has it.
+const lineOf = (block, has) => {
+	const line = block.split('\n').find((l) => l.includes(has));
+	if (!line) throw new Error(`site-blocks: no line with "${has}" in decisio's block`);
+	return line;
+};
+const macStart = (has) => lineOf(sectionBlocks('docs/running.md', 'Mac with MLX')[0], has).replace(/\s+#.*$/, '');
+const gpuPip = () => `python3.12 -m venv .venv && . .venv/bin/activate
+pip install "decisio[serve]==${version()}"
+python -m decisio.serve.vllm_engine          # serves Gemma 4 31B; the first start downloads about 31 GB
+curl -s http://127.0.0.1:8000/health         # answers once it is ready`;
+const dockerRun = () => `docker run -d --gpus all --shm-size 8g --restart unless-stopped \\
+  -p 127.0.0.1:8000:8000 -v decisio-data:/data \\
+  ${pin.image}
+curl -s http://127.0.0.1:8000/health   # answers once the first start has fetched the weights`;
+// decisio's compose file, run from the release image instead of a local build.
+const dockerCompose = () => {
+	const file = sectionBlocks('docs/operating.md', 'Docker Compose')[0];
+	const built = /    build:\n(?:      .*\n)+    image: decisio:local\n/;
+	if (!built.test(file)) throw new Error("site-blocks: docs/operating.md's compose file no longer builds the image it names decisio:local");
+	return file.replace(built, `    image: ${pin.image}\n`);
+};
+// decisio's Kubernetes Deployment, with the release image in place of its placeholder.
+const kubernetes = () => {
+	const file = sectionBlocks('docs/operating.md', 'Kubernetes')[0];
+	const placeholder = 'ghcr.io/aminry/decisio@sha256:<the digest in the release notes>';
+	if (!file.includes(placeholder)) throw new Error("site-blocks: docs/operating.md's Deployment no longer has the image placeholder");
+	return file.replace(placeholder, pin.image);
+};
 
 // The recorded answers as the comment lines a client prints: one per question, its likeliest option and probability.
 const printed = () => Object.entries(recordedResponse().answers).map(([name, a]) => {
@@ -135,6 +177,17 @@ export const siteBlocks = {
 	get 'python-sdk'() { return { lang: 'python', text: pythonSdk() }; },
 	get 'js-fetch'() { return { lang: 'js', text: jsFetch(false) }; },
 	get 'ts-fetch'() { return { lang: 'ts', text: jsFetch(true) }; },
+	// The deploy guides.
+	get 'gpu-pip'() { return { lang: 'bash', text: gpuPip() }; },
+	get 'gpu-clone'() { return { lang: 'bash', text: `${clone()}\nuv sync --extra serve --frozen\nuv run python -m decisio.serve.vllm_engine` }; },
+	get 'docker-run'() { return { lang: 'bash', text: dockerRun() }; },
+	get 'docker-compose'() { return { lang: 'yaml', text: dockerCompose() }; },
+	get 'docker-build'() { return { lang: 'bash', text: `${clone()}\nuv build --wheel\ndocker compose up --build` }; },
+	get 'kubernetes'() { return { lang: 'yaml', text: kubernetes() }; },
+	get 'mac-install'() { return { lang: 'bash', text: `${clone()}\nuv sync --extra mlx` }; },
+	get 'mac-31b-6bit'() { return { lang: 'bash', text: macStart('gemma-4-31b-it-6bit') }; },
+	get 'mac-31b-4bit'() { return { lang: 'bash', text: macStart('decisio-gemma-4-31b-mlx-4bit') }; },
+	get 'mac-12b'() { return { lang: 'bash', text: macStart('gemma-4-12B-it-6bit') }; },
 	// Get started: the CPU stand-in, from a clone of the pinned release.
 	get 'stand-in-start'() { return { lang: 'bash', text: standInStart() }; },
 	// The first pages: the recorded support ticket as a request, and its recorded answer, abridged and rounded.

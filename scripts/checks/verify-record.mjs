@@ -9,7 +9,7 @@ const [, , committedPath] = process.argv;
 if (!committedPath) throw new Error('verify-record: name the committed record');
 const committed = JSON.parse(readFileSync(committedPath, 'utf8'));
 const fresh = JSON.parse(readFileSync('verification/commands.json', 'utf8'));
-const shape = (e) => JSON.stringify({ status: e.status, tag: e.tag, needs: e.needs, record: e.record, note: e.note, runtime: e.runtime ? e.runtime.replace(/\..*$/, '') : undefined });
+const shape = (e) => JSON.stringify({ status: e.status, tag: e.tag, needs: e.needs, why: e.why, record: e.record, note: e.note, runtime: e.runtime ? e.runtime.replace(/\..*$/, '') : undefined });
 const problems = [];
 if (committed.tag !== fresh.tag || committed.commit !== fresh.commit) problems.push(`the record is for ${committed.tag}, the run was at ${fresh.tag}`);
 for (const [hash, e] of Object.entries(fresh.blocks)) {

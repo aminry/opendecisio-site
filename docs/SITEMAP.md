@@ -23,11 +23,10 @@ Every page, its route, and where its content comes from.
 | --- | --- | --- |
 | `/docs/use-from/` | Call it from your code | Site-written: the recorded request from curl, Python, TypeSafe's SDK, JavaScript and TypeScript (`src/lib/site-blocks.mjs`), errors and timeouts (`src/config/sourced.mjs`), the integrations table (`src/data/integrations.json`) and decisio's programs from docs/integrations.md; the Python, JavaScript and Frameworks pages redirect here |
 | `/docs/how-it-works/` | How it works | Site-written text around four diagrams drawn at build time from launch_facts.public.json and the README (src/lib/diagrams.mjs): the request flow, the cache timeline, the routing threshold and the bases |
-| `/docs/quickstart/gpu-server/` | GPU server | Upstream docs/running.md "GPU server" |
-| `/docs/quickstart/docker/` | Docker | Upstream docs/running.md "Docker" |
-| `/docs/quickstart/mac-mlx/` | Mac with MLX | Upstream docs/running.md "Mac with MLX" |
-| `/docs/quickstart/ollama/` | Ollama | Upstream docs/running.md "Ollama"; plus the site-written request (`src/lib/site-blocks.mjs`) |
-| `/docs/quickstart/cpu-stand-in/` | CPU stand-in for development | Upstream docs/running.md "CPU stand-in for development" |
+| `/docs/deploy/cloud-gpu/` | On a cloud GPU | Site-written: the pinned pip install and clone, decisio's model-repository pin, systemd unit (docs/operating.md) and Kubernetes Deployment with the release image (`src/lib/site-blocks.mjs`); numbers in `src/config/sourced.mjs`; `/docs/quickstart/gpu-server/` redirects here |
+| `/docs/deploy/docker/` | With Docker | Site-written: the release image by digest (`upstream.json`), decisio's compose file run from it, the settings and the build from a clone; `/docs/quickstart/docker/` redirects here |
+| `/docs/deploy/mac/` | On a Mac or a laptop | Site-written: the MLX builds per Mac size, the memory planner, and Ollama with the site-written request; `/docs/quickstart/mac-mlx/` and `/docs/quickstart/ollama/` redirect here |
+| `/docs/deploy/development/` | For development (CPU) | Site-written: the CPU stand-in, with Get started's commands; `/docs/quickstart/cpu-stand-in/` redirects here |
 | `/docs/bases/` | Choosing a base | Upstream README "Choosing a base", with each base's provenance |
 | `/docs/api/` | Asking questions: the HTTP API | Upstream docs/api.md |
 | `/docs/flags/` | Flags and options | Upstream README "Options", then docs/cli.md |
@@ -35,6 +34,7 @@ Every page, its route, and where its content comes from.
 | `/docs/migrating/` | Move from System One | Site-written steps around docs/migrating.md's two blocks; the differences from docs/api.md "Where this route differs from System One" (`src/config/sourced.mjs`) |
 | `/docs/operating/` | Deploying and operating | Upstream docs/running.md "Checking a server" and "When the engine dies" (from the release after v0.7.1), docs/api.md "GET /health", SECURITY.md, and deploy/ when the tag has it |
 | `/docs/upgrading/` | Upgrading | Upstream docs/upgrading.md, whole (what changes for a running deployment from one release to the next; from v0.10.0) |
+| `/docs/limits/` | Requirements and limits | Site-written: the machines, the context length, the production setup steps, what was measured on what, repeatability and what was not tested; every number in `src/config/sourced.mjs` |
 | `/docs/evaluation-card/` | The evaluation card | Upstream EVAL_CARD.md, whole |
 | `/docs/demos/` | Demos, judged decision by decision | Upstream docs/demos/README.md, under `docs/CONTENT_RULES.md` |
 | `/docs/faq/` | Questions | Site-written questions; each answer a pointer or an upstream section (README "How it works", "Teach it your question", "Licence", "Contributing"; docs/cli.md "Determinism"; SECURITY.md) |
@@ -49,6 +49,6 @@ Every page, its route, and where its content comes from.
 
 ## Docs groups
 
-The sidebar, `llms.txt` and `llms-full.txt` share `src/config/docs-groups.mjs`, grouped as the docs rewrite's structure has them: Get started (Get started, Call it from your code, Move from System One); How-to guides (the five machine paths, Teach it your question, the guides, Deploying and operating, Health and monitoring, Upgrading, Troubleshooting); Reference (HTTP API, Flags, Bases, Limits, Glossary, Releases, the evaluation card, How Decisio compares, Questions); How it works (How it works, What the probability means, Repeatability, Demos). Use cases joins when its first page does.
+The sidebar, `llms.txt` and `llms-full.txt` share `src/config/docs-groups.mjs`, grouped as the docs rewrite's structure has them: Get started (Get started, Call it from your code, Move from System One); How-to guides (the four deploy guides, Teach it your question, the guides, Deploying and operating, Health and monitoring, Upgrading, Troubleshooting); Reference (HTTP API, Flags, Bases, Requirements and limits, Glossary, Releases, the evaluation card, How Decisio compares, Questions); How it works (How it works, What the probability means, Repeatability, Demos). Use cases joins when its first page does.
 Reference pages (the API, the flags) render from decisio's own docs folder with `::upstream`, so decisio's changes there reach the site on the next bump; each page's footer links its source file on GitHub.
 `llms.txt` and `llms-full.txt` are written after the build by `scripts/llms.mjs` from the built pages and checked by `scripts/checks/llms.mjs`.
