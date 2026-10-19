@@ -208,8 +208,9 @@ h1#_top {
 	display: block;
 	width: 100%;
 	height: auto;
-	/* The drawings are 720 wide with 14 px text: never shrunk below about 12 px, so a phone scrolls the figure sideways. */
-	min-width: 40rem;
+	/* The drawings are 720 wide with 14 px text: never shrunk below about 11 px (36rem), so a phone scrolls the figure
+	   sideways and a 1280-pixel window, whose docs column leaves a figure 590 pixels, does not. */
+	min-width: 36rem;
 }
 
 .dg-fig:focus-visible {
@@ -493,7 +494,9 @@ h1#_top {
 	display: block;
 	width: 100%;
 	height: auto;
-	min-width: 40rem;
+	/* As .dg: 36rem, so a figure fits the docs column beside the sidebar and the contents on a 1280-pixel window
+	   (590 pixels there) instead of scrolling; a phone scrolls it sideways. */
+	min-width: 36rem;
 }
 
 .fig__legend {
@@ -1779,4 +1782,32 @@ a.fig__card:hover {
 
 .f-head {
 	fill: var(--sl-color-accent);
+}
+
+/* The certify slider (the .th parts): the certified answers that were wrong, at the end of the certified bar. */
+.cs__bad {
+	fill: var(--sl-color-gray-1);
+}
+
+/* The drift replay: the axis, the share of messages with no option, and the two alerts. */
+.f-axis {
+	fill: none;
+	stroke: var(--sl-color-gray-4);
+	stroke-width: 1;
+}
+
+.f-area {
+	fill: var(--sl-color-gray-5);
+}
+
+.f-mark {
+	fill: none;
+	stroke: var(--sl-color-gray-3);
+	stroke-width: 1.5;
+	stroke-dasharray: 4 3;
+}
+
+.f-mark--on {
+	stroke: var(--sl-color-accent);
+	stroke-dasharray: none;
 }

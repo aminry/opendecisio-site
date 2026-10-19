@@ -26,7 +26,7 @@ The request from [Get started](/docs/#3-ask-your-first-question) works as it is;
 
 ## 3. Teach it a task
 
-The walk-through of [Teach it your question](/docs/tasks/) runs on the stand-in, end to end: register a task, ask it, list it and remove it.
+The walk-through of [Teach a task](/docs/tasks/) runs on the stand-in, end to end: register a task, ask it, list it and remove it.
 The site checks every one of its commands this way.
 
 ## What next

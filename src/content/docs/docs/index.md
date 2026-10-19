@@ -72,4 +72,4 @@ Good to know:
 
 - [Call it from your code](/docs/use-from/): the same request from Python, JavaScript and TypeScript, and the frameworks.
 - [On a cloud GPU](/docs/deploy/cloud-gpu/): run the default model, Gemma 4 31B, on your own card.
-- [Teach it your question](/docs/tasks/): teach a question you ask again and again, and certify its answers.
+- [Teach a task](/docs/tasks/): teach a question you ask again and again, and certify its answers.

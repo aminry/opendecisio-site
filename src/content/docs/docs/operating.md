@@ -42,7 +42,7 @@ The new server loads the engine again, so requests sent until it is healthy are 
 ## 2. Keep tasks across restarts
 
 Registered tasks live in the server's memory.
-[Teach it your question](/docs/tasks/#5-list-export-reload-delete) shows how to export them and load them again at start.
+[Teach a task](/docs/tasks/#6-keep-it-across-restarts) shows how to export them and load them again at start.
 
 ## 3. Put a proxy in front
 

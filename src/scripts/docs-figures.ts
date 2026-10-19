@@ -83,17 +83,26 @@ for (const fig of $$('.fig--latency-chart')) {
 	fig.addEventListener('mouseleave', () => { tip.textContent = rest; });
 }
 
-// Using the probability: one stop for each measured threshold.
-for (const th of $$('[data-th]')) {
-	const R = JSON.parse(th.dataset.d ?? 'null');
+// Certifying answers: one stop for each error target the server certified at.
+for (const cs of $$('[data-cs]')) {
+	const R = JSON.parse(cs.dataset.d ?? 'null');
 	if (!R) continue;
-	const input = th.querySelector<HTMLInputElement>('input[type=range]')!;
-	const kept = th.querySelector<SVGRectElement>('[data-th-kept]')!;
-	const out = th.querySelector<HTMLElement>('[data-th-out]')!;
+	const input = cs.querySelector<HTMLInputElement>('input[type=range]')!;
+	const ok = cs.querySelector<SVGRectElement>('[data-cs-ok]')!;
+	const bad = cs.querySelector<SVGRectElement>('[data-cs-bad]')!;
+	const out = cs.querySelector<HTMLElement>('[data-cs-out]')!;
+	const fmt = (n: number) => n.toLocaleString('en-US');
+	const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 	const draw = () => {
-		const x = R.sweep[Number(input.value)];
-		kept.setAttribute('width', String(640 * (1 - x.share)));
-		out.textContent = `Keep answers at or above ${x.at}: ${x.escalated.toLocaleString('en-US')} of ${R.questions.toLocaleString('en-US')} questions escalated (${(x.share * 100).toFixed(1)}%); ${(x.accuracy * 100).toFixed(1)}% right on the rest; ${x.caught} of ${R.wrong} wrong answers escalated; ${x.confident} confidently wrong and kept.`;
+		const s = R.stops[Number(input.value)];
+		const w = (640 * s.certified) / R.n;
+		const b = (640 * s.wrong) / R.n;
+		ok.setAttribute('width', String(w));
+		bad.setAttribute('x', String(w - b));
+		bad.setAttribute('width', String(b));
+		out.textContent = s.threshold === null
+			? `At an error target of ${s.alpha * 100}%, nothing is certified: with ${fmt(R.held)} examples held back, no threshold can promise it. Every answer still comes back, marked not certified.`
+			: `At an error target of ${s.alpha * 100}%, answers with a top probability of at least ${s.threshold.toFixed(3)} are certified: ${fmt(s.certified)} of ${fmt(R.n)} messages (${pct(s.certified / R.n)}), ${s.wrong} of them wrong (${pct(s.wrong / s.certified)}). The rest come back marked not certified.`;
 	};
 	input.addEventListener('input', draw);
 	draw();

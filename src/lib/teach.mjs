@@ -35,6 +35,9 @@ function heads() {
 	});
 }
 
+/** The 31B's intent heads per set (untaught and taught accuracy, draws, test items, registration time), for the docs. */
+export const taskGains = () => heads();
+
 /** The answers, most confident first, with the counts the page states. */
 function certifyFrom(answers, meta) {
 	const sorted = [...answers].sort((a, b) => b.top - a.top);

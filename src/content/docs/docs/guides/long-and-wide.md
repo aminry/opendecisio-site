@@ -68,6 +68,6 @@ A head is also bound to the option order it was fitted on.
 
 ## What next
 
-- [Teach it your question](/docs/tasks/): register the question and its options.
+- [Teach a task](/docs/tasks/): register the question and its options.
 - [Make it fast](/docs/guides/latency/): the first read of a long state, and what changes it.
 - [Many questions about one text](/docs/guides/many-questions/): ask more of the text you have read.

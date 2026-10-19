@@ -123,9 +123,10 @@ import { guidesFigures } from './figures/guides.mjs';
 import { runItFigures } from './figures/run-it.mjs';
 import { understandFigures } from './figures/understand.mjs';
 import { deployFigures } from './figures/deploy.mjs';
+import { tasksFigures } from './figures/tasks.mjs';
 import { useFromFigures } from './figures/use-from.mjs';
 
-export const figures = { 'request-flow': requestFlow, 'first-decision': firstDecision, ...useFromFigures, ...guidesFigures, ...runItFigures, ...understandFigures, ...deployFigures };
+export const figures = { 'request-flow': requestFlow, 'first-decision': firstDecision, ...useFromFigures, ...guidesFigures, ...runItFigures, ...understandFigures, ...deployFigures, ...tasksFigures };
 
 export function docsFigure(name) {
 	const f = figures[name];

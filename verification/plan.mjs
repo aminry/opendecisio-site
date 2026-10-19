@@ -134,12 +134,6 @@ export const plan = [
 	},
 	{ page: '/docs/tasks/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/tasks', of: ['/docs/faq/', 2] },
 	{
-		page: '/docs/guides/probability/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
-		assert(stdout) {
-			if (!/^(keep|escalate)/m.test(stdout)) throw new Error('the script reached no decision');
-		},
-	},
-	{
 		page: '/docs/guides/long-and-wide/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
 		assert(stdout) {
 			if (!/^options answered: 120$/m.test(stdout)) throw new Error('a question with 120 options did not come back with 120 probabilities');
@@ -203,40 +197,40 @@ export const plan = [
 		},
 	},
 
-	// Teaching it a task, end to end on the stand-in.
-	{ page: '/docs/tasks/', n: 2, mode: 'run-then-server', expect: 'uv sync --extra dev --frozen', note: 'the install and the server start' },
-	{ page: '/docs/tasks/', n: 3, mode: 'example', expect: '{\n  "id": "ticket-routing",' },
+	// Teach a task, end to end on the stand-in that is already up.
+	{ page: '/docs/tasks/', n: 2, mode: 'example', expect: '{\n  "id": "ticket-routing",' },
 	{
-		page: '/docs/tasks/', n: 4, mode: 'run', expect: 'uv run python examples/tasks/register.py',
+		page: '/docs/tasks/', n: 3, mode: 'run', expect: 'uv run python examples/tasks/register.py',
 		assert(stdout) {
 			if (!/task 'ticket-routing'/.test(stdout)) throw new Error('register.py did not report the task');
 		},
 	},
 	{
-		page: '/docs/tasks/', n: 5, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/tasks',
-		assert(stdout) {
-			if (json(stdout).id !== 'ticket-routing') throw new Error('the registration did not answer with the task');
-		},
-	},
-	{
-		page: '/docs/tasks/', n: 6, mode: 'run', expect: 'uv run python examples/tasks/ask.py',
+		page: '/docs/tasks/', n: 4, mode: 'run', expect: 'uv run python examples/tasks/ask.py',
 		assert(stdout) {
 			if (!/x-decisio-tasks: ticket-routing/.test(stdout)) throw new Error('the question did not match the registered task');
 		},
 	},
 	{
-		page: '/docs/tasks/', n: 7, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/tasks',
+		page: '/docs/tasks/', n: 5, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/tasks',
 		async assert(stdout, ctx) {
 			const tasks = await (await fetch('http://127.0.0.1:8000/v1/tasks')).json();
 			if (JSON.stringify(tasks).includes('"ticket-routing"')) throw new Error('the task is still registered after the delete');
 			if (!ctx.fileHasContent('tasks.json')) throw new Error('the export wrote no tasks.json');
 		},
 	},
-	// Certified answers (0.12.0): the request's shape, and the certificate and answers of a recorded run on a Mac
+	// Certify answers: the request's shape, and the certificate and answers of a recorded run on a Mac
 	// (runs/2026-10-14_certified-answers/results/mac_mlx/); the CPU stand-in cannot fit and certify 400 tickets here.
-	{ page: '/docs/tasks/', n: 8, mode: 'example', expect: 'POST /v1/tasks\n{"id": "ticket-queue",' },
-	{ page: '/docs/tasks/', n: 9, mode: 'output', expect: '{\n "certificate": {' },
-	{ page: '/docs/tasks/', n: 10, mode: 'output', expect: '[\n {\n  "ticket":' },
+	// Then the threshold picked by hand, on the stand-in.
+	{ page: '/docs/tasks/certify/', n: 1, mode: 'example', expect: 'POST /v1/tasks\n{"id": "ticket-queue",' },
+	{ page: '/docs/tasks/certify/', n: 2, mode: 'output', expect: '{\n "certificate": {' },
+	{ page: '/docs/tasks/certify/', n: 3, mode: 'output', expect: '[\n {\n  "ticket":' },
+	{
+		page: '/docs/tasks/certify/', n: 4, mode: 'python', expect: 'import json\nimport urllib.request',
+		assert(stdout) {
+			if (!/^(keep|escalate)/m.test(stdout)) throw new Error('the script reached no decision');
+		},
+	},
 
 	{
 		page: '/docs/faq/', n: 2, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/tasks',

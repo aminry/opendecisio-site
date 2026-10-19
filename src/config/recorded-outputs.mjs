@@ -14,12 +14,11 @@ export const recordedOutputs = [
 		name: 'the recorded decisions (decisio-examples, support routing and three more)',
 		version: () => facts().figures.recorded_decisions.run.decisio_version,
 		marker: 'I was charged twice for October',
-		pending: { why: 'the re-record at the pinned release, on the next card session', pages: ['/docs/faq/', '/docs/guides/latency/', '/docs/guides/long-and-wide/', '/docs/guides/many-questions/', '/docs/repeatability/', '/docs/use-from/'] },
+		pending: { why: 'the re-record at the pinned release, on the next card session', pages: ['/docs/faq/', '/docs/guides/latency/', '/docs/guides/long-and-wide/', '/docs/guides/many-questions/', '/docs/repeatability/'] },
 	},
 	{
 		name: 'the routing example (decisio-examples example 5)',
 		version: () => facts().figures.routing_example5.record.decisio_version,
 		marker: 'Escalate only when unsure',
-		pending: { why: 'the re-record at the pinned release, on the next card session', pages: ['/docs/guides/probability/'] },
 	},
 ];
