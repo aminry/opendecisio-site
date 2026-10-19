@@ -5,7 +5,7 @@ description: The flags a production server sets first, then every flag with its 
 
 <!-- Site-written: the intro and the first table. The reference below is decisio's docs/cli.md at the pinned release; the first table's facts are that file's and docs/running.md's (src/config/sourced.mjs checks them). -->
 
-::covers{links="README.md#options"}
+::covers{links="README.md#options docs/reference/flags.md=every-flag"}
 
 With no flag, the server serves Gemma 4 31B with the settings it was measured with; most deployments set only `--base`.
 A flag you give overrides the model's value.

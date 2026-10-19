@@ -4,6 +4,9 @@
 		"/docs/api/": 4,
 		"/docs/evaluation-card/": 2,
 		"/docs/faq/": 5,
-		"/docs/flags/": 1
+		"/docs/flags/": 2
+	},
+	"_raised": {
+		"/docs/flags/": "1 to 2 with decisio 0.18.0: docs/cli.md now links running.md's \"LoRA adapters\" section, which no site page covers yet"
 	}
 }

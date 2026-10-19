@@ -31,8 +31,8 @@ for (const file of pages) {
 
 	if (html.includes('\u2014')) report(route, 'contains an em dash');
 	// A value rendered as text by mistake.
-	// ("a NaN" is the word in prose, as decisio's docs use it for a model output that is not a number.)
-	const mainText = (doc.querySelector('main')?.textContent ?? '').replace(/\b[Aa] NaN\b/g, '');
+	// ("a NaN" and "NaN or infinity" are words in prose, as decisio's docs use them for a model output that is not a number.)
+	const mainText = (doc.querySelector('main')?.textContent ?? '').replace(/\b[Aa] NaN\b|\bNaN or infinity\b/g, '');
 	for (const junk of ['[object Object]', 'undefined', 'NaN']) {
 		if (new RegExp(`(^|[^\\w])${junk.replace(/[[\]]/g, '\\$&')}([^\\w]|$)`).test(mainText)) report(route, `shows "${junk}" where a value belongs`);
 	}

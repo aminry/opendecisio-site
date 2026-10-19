@@ -5,7 +5,7 @@ description: Keep a decisio server up, know at a glance when it is not, and secu
 
 <!-- Site-written: the Operate guide, merging Deploying and operating with Health and monitoring. Its facts are decisio's docs/running.md ("When the engine dies"), docs/api.md ("What to watch", the response headers), docs/operating.md and SECURITY.md at the pinned release (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/operating.md docs/running.md#when-the-engine-dies=3-know-what-happens-when-the-engine-dies docs/running.md#checking-a-server=2-watch-it docs/api.md#what-to-watch=2-watch-it SECURITY.md#deployment-notes=5-secure-it"}
+::covers{links="docs/operating.md docs/running.md#when-the-engine-dies=3-know-what-happens-when-the-engine-dies docs/running.md#checking-a-server=2-watch-it docs/api.md#what-to-watch=2-watch-it SECURITY.md#deployment-notes=5-secure-it SECURITY.md#cross-site-requests-from-a-web-page=5-secure-it SECURITY.md=5-secure-it"}
 
 Wait until a server is ready, then read what it serves:
 

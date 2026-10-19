@@ -20,7 +20,7 @@ const hidden = (q: any) => (q.type === 'score' ? [] : ranked(q).slice(3));
 <div class="demo glass" data-demo data-items={JSON.stringify(d.items)}>
 	<div class="demo__head">
 		<span class="demo__live"><i aria-hidden="true"></i> recorded</span>
-		<span class="demo__meta" data-demo-meta>{d.boxLabel}</span>
+		<span class="demo__meta" data-demo-meta>{d.boxLabel}, {d.run.date}</span>
 	</div>
 	<div class="demo__pick" data-demo-pick role="group" aria-label="Recorded decisions">
 		{Object.entries(groups).map(([kind, idx]) => (
