@@ -50,10 +50,6 @@ const curl = (body) => {
 	return `curl http://127.0.0.1:8000/v1/systemone \\\n  -H 'Content-Type: application/json' \\\n  -d '${json}'`;
 };
 const firstRequest = () => recordedRequest();
-const oneQuestion = () => {
-	const r = firstRequest();
-	return { state: r.state, questions: { queue: r.questions.queue } };
-};
 
 // The recorded answers as the comment lines a client prints: one per question, its likeliest option and probability.
 const printed = () => Object.entries(recordedResponse().answers).map(([name, a]) => {
@@ -137,7 +133,6 @@ export const siteBlocks = {
 	// The first pages: the recorded support ticket as a request, and its recorded answer, abridged and rounded.
 	get 'first-decision-request'() { return { lang: 'sh', text: curl(firstRequest()) }; },
 	get 'first-decision-response'() { return { lang: 'json', text: JSON.stringify(recordedResponse(), null, 2) }; },
-	get 'first-decision-one-question'() { return { lang: 'sh', text: curl(oneQuestion()) }; },
 	// The Qwen listing: the docs page, whose pull (at the pinned release) is this listing's alone.
 	'ollama-request': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio') },
 	// The Gemma listing, the 16 GB laptop's: the home page's.

@@ -8,9 +8,7 @@ export const docsGroups = [
 	{
 		label: 'Get started',
 		items: [
-			{ slug: 'docs', label: 'Overview' },
-			{ slug: 'docs/quickstart', label: 'Choose your machine' },
-			{ slug: 'docs/first-request' },
+			{ slug: 'docs', label: 'Get started', shape: 'guide' },
 			{ slug: 'docs/use-from', label: 'Call it from your code' },
 			{ slug: 'docs/use-from/python', label: 'Python' },
 			{ slug: 'docs/use-from/javascript', label: 'JavaScript and TypeScript' },

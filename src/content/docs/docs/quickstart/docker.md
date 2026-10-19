@@ -31,7 +31,7 @@ To keep the Qwen base set `DECISIO_BASE=qwen3.6-35b-a3b` ([Upgrading](/docs/upgr
 
 ## How the container starts
 
-::upstream{file="docs/running.md" section="Docker"}
+::upstream{file="docs/running.md" section="Docker" covers="README.md#docker"}
 
 ## What next
 

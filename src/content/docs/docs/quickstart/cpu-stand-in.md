@@ -27,10 +27,10 @@ The commands on these pages that the stand-in can serve are run against it.
 
 ## What it is, and is not
 
-::upstream{file="docs/running.md" section="CPU stand-in for development"}
+::upstream{file="docs/running.md" section="CPU stand-in for development" covers="README.md#cpu-stand-in-for-development"}
 
 ## What next
 
 - [Get started](/docs/): send a first question to it.
 - [Teach it your question](/docs/tasks/): the walk-through that runs on a laptop against the stand-in.
-- [Choose your machine](/docs/quickstart/): the paths that run the real bases.
+- [Pick your machine](/docs/#1-pick-your-machine): the paths that run the real bases.

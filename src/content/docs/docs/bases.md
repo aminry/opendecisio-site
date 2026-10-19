@@ -35,6 +35,6 @@ Compare the three on the paired rows, and read the card before quoting a differe
 
 ## What next
 
-- [Choose your machine](/docs/quickstart/): what each base needs to run.
+- [Pick your machine](/docs/#1-pick-your-machine): what each base needs to run.
 - [Flags and options](/docs/flags/): `--base` and everything it sets.
 - [The evaluation card](/docs/evaluation-card/): what was measured, on what, for each base.

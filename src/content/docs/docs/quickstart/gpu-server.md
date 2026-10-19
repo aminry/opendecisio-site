@@ -34,10 +34,10 @@ On a smaller card pick another base with `--base`: [Choosing a base](/docs/bases
 
 ## The requirements and the flags
 
-::upstream{file="docs/running.md" section="GPU server"}
+::upstream{file="docs/running.md" section="GPU server" covers="README.md#gpu-server"}
 
 ## What next
 
-- [Choose your machine](/docs/quickstart/): the other four paths.
+- [Pick your machine](/docs/#1-pick-your-machine): the other four paths.
 - [Flags and options](/docs/flags/): every flag and its default per base.
 - [Health and monitoring](/docs/health/): what `/health` says once it is up.

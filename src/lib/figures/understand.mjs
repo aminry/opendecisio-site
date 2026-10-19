@@ -201,7 +201,7 @@ function limitsMap() {
 	has(card, 'so the suite\'s ECE figures are in-sample', 'that the temperatures were fitted on the suite');
 	const items = [
 		{ t: 'One card, one session', x: 'Every figure is from one card and one run per configuration.', href: '/docs/evaluation-card/#5-limits' },
-		{ t: 'Hardware', x: 'The 31B is measured on, and needs, a 96 GB card (or a 64 GB Mac, or a 48 GB one from its 4-bit conversion, a size not measured); the 12B runs on a 32 GB Mac or a 16 GB laptop.', href: '/docs/quickstart/' },
+		{ t: 'Hardware', x: 'The 31B is measured on, and needs, a 96 GB card (or a 64 GB Mac, or a 48 GB one from its 4-bit conversion, a size not measured); the 12B runs on a 32 GB Mac or a 16 GB laptop.', href: '/docs/#1-pick-your-machine' },
 		{ t: 'The host and the power limit', x: 'Latency depends on the CPU and on the card\'s power limit: a card at 600 W may read new states faster than the 585 W measured.', href: '/docs/guides/latency/' },
 		{ t: 'Repeatability', x: 'A request repeats exactly on a freshly started server; asked again on one that has already answered it, it can differ slightly. Across sessions it is not promised.', href: '/docs/repeatability/' },
 		{ t: 'Images', x: 'The image route was measured with the Qwen base only.', href: '/docs/guides/images/' },

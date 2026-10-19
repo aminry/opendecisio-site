@@ -56,5 +56,5 @@ Keep the server on `127.0.0.1`, or behind a reverse proxy that authenticates.
 ## What next
 
 - [The HTTP API](/docs/api/): every route, request field and response field.
-- [Your first decision](/docs/first-request/): one request and its answer, line by line.
+- [Read the answer](/docs/#4-read-the-answer): one request and its answer, line by line.
 - [Teaching it a task](/docs/tasks/): register a question you ask again and again.

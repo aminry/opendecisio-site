@@ -66,40 +66,24 @@ export const plan = [
 		note: "the install and the server start; the unit tests passed in decisio's own CI on this commit",
 	},
 	{ page: '/docs/quickstart/cpu-stand-in/', n: 2, mode: 'same-as', expect: 'uv sync --extra dev --frozen', of: ['/docs/quickstart/cpu-stand-in/', 1] },
-	// Get started and the first decision, on the stand-in: the recorded support ticket (src/lib/site-blocks.mjs).
+	// Get started, on the stand-in: the recorded support ticket (src/lib/site-blocks.mjs).
 	{
 		page: '/docs/', n: 1, mode: 'run-then-server', expect: 'git clone https://github.com/aminry/decisio',
 		skip: ['git clone https://github.com/aminry/decisio', 'cd decisio'],
 		note: 'the clone is the pinned release, as the check has it; the install and the server start',
 	},
 	{
-		page: '/docs/', n: 2, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone',
-		note: "the answers are the stand-in's, not the measured system's",
-		assert: recordedAnswers,
-	},
-	{ page: '/docs/', n: 3, mode: 'output', expect: '{\n  "answers": {' },
-	{
-		page: '/docs/', n: 4, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health',
+		page: '/docs/', n: 2, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health',
 		assert(stdout) {
 			if (json(stdout).ok !== true) throw new Error('/health did not answer ok');
 		},
 	},
 	{
-		page: '/docs/', n: 5, mode: 'run', expect: 'curl -s -D - -o /dev/null http://127.0.0.1:8000/v1/systemone',
-		assert(stdout) {
-			if (!/^x-decisio-server-ms:/im.test(stdout)) throw new Error('the response carried no x-decisio-server-ms header');
-		},
+		page: '/docs/', n: 3, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone',
+		note: "the answers are the stand-in's, not the measured system's",
+		assert: recordedAnswers,
 	},
-	{ page: '/docs/first-request/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/', 2] },
-	{ page: '/docs/first-request/', n: 2, mode: 'same-as', expect: '{\n  "answers": {', of: ['/docs/', 3] },
-	{
-		page: '/docs/first-request/', n: 3, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone',
-		note: 'the one question alone, as the stand-in answers it',
-		assert(stdout) {
-			const { answers } = json(stdout);
-			if (!Object.keys(answers ?? {}).includes('queue') || Object.keys(answers).length !== 1) throw new Error('a request with one question did not answer that question alone');
-		},
-	},
+	{ page: '/docs/', n: 4, mode: 'output', expect: '{\n  "answers": {' },
 	// Use it from, on the stand-in: the recorded support ticket sent from each language (src/lib/site-blocks.mjs).
 	{
 		page: '/docs/use-from/', n: 1, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone',
@@ -196,7 +180,7 @@ export const plan = [
 			if (!/^distinct answers in 5 sends: 1$/m.test(stdout)) throw new Error('five identical requests did not get one answer');
 		},
 	},
-	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 4] },
+	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 	{
 		page: '/docs/comparison/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/models',
 		assert(stdout) {
@@ -215,7 +199,6 @@ export const plan = [
 			if (stdout.trim() !== pin.tag.replace(/^v/, '')) throw new Error(`the installed release is ${stdout.trim()}, not ${pin.tag}`);
 		},
 	},
-	{ page: '/docs/quickstart/', n: 1, mode: 'same-as', expect: 'uv sync --extra dev --frozen', of: ['/docs/quickstart/cpu-stand-in/', 1] },
 
 	// Teaching it a task, end to end on the stand-in.
 	{ page: '/docs/tasks/', n: 2, mode: 'run-then-server', expect: 'uv sync --extra dev --frozen', note: 'the install and the server start' },

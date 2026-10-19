@@ -35,10 +35,10 @@ The 4-bit conversion starts on a 48 GB Mac by decisio's memory planner, but no 4
 
 ## The details of each base
 
-::upstream{file="docs/running.md" section="Mac with MLX"}
+::upstream{file="docs/running.md" section="Mac with MLX" covers="README.md#mac-with-mlx"}
 
 ## What next
 
-- [Choose your machine](/docs/quickstart/): the other paths.
+- [Pick your machine](/docs/#1-pick-your-machine): the other paths.
 - [Choosing a base](/docs/bases/): what each base is for.
 - [Flags and options](/docs/flags/): the Mac's own flags, `--prefix-cache-mb` and `--tokenizer`.

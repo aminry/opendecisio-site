@@ -64,4 +64,4 @@ print("256 options:", status({"q": {"type": "choice", "instructions": "Which?", 
 
 - [Repeatability](/docs/repeatability/): what repeats and what can move.
 - [The evaluation card](/docs/evaluation-card/): the sections these come from, with every measurement.
-- [Choose your machine](/docs/quickstart/): the hardware each path needs.
+- [Pick your machine](/docs/#1-pick-your-machine): the hardware each path needs.
