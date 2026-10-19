@@ -64,6 +64,7 @@ The server refuses to certify below the fewest held-back examples at which anyth
 
 The server holds back half of what you send, so a 5% certificate needs at least 118 labelled examples.
 That floor is for a task the model always gets right; yours needs more.
+
 With 75 examples, four of five test tasks certified nothing at 5% or 10%.
 Set `certify.min_examples` above the floor to refuse a certificate that thin.
 

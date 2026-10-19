@@ -11,7 +11,7 @@ import { pin, readUpstream } from '../../src/lib/upstream.mjs';
 const flat = (t) => t.replace(/[\u2018\u2019]/g, "'").replace(/[\u201c\u201d]/g, '"').replace(/\s+/g, ' ').trim();
 // A page's main text, each tag a space; its entities decoded by the parser's text of the result.
 // A space a tag left before a comma or a stop, or inside brackets, is dropped, so "`--a`, `--b`" reads "--a, --b".
-const mainText = (html) => parse(parse(html, { blockTextElements: { script: false, style: false } }).querySelector('main')?.innerHTML.replace(/<[^>]+>/g, ' ') ?? '').text
+const mainText = (html) => parse(parse(html, { blockTextElements: { script: false, style: false } }).querySelector('main')?.innerHTML.replace(/<\/?(a|b|i|em|strong|code|span|abbr|sup|sub)\b[^>]*>/g, '').replace(/<[^>]+>/g, ' ') ?? '').text
 	.replace(/\s+([,.;:)])/g, '$1').replace(/\(\s+/g, '(');
 const pages = new Map();
 const pageText = (route) => {

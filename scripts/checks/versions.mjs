@@ -60,7 +60,8 @@ for (const file of walk(root)) {
 		const around = words(`${text.slice(Math.max(0, m.index - 40), m.index)}${m[0]}`).split(' ').slice(-4).join(' ');
 		const after = text.slice(m.index + m[0].length, m.index + m[0].length + 20);
 		const where = `${route}: names decisio ${v}: "...${text.slice(Math.max(0, m.index - 70), m.index + 40).trim()}..."`;
-		const decisioText = around.length > 12 && upstreamText.includes(around);
+		const following = words(`${m[0]}${after}`).split(' ').slice(0, 4).join(' ');
+		const decisioText = (around.length > 12 && upstreamText.includes(around)) || (following.length > 12 && upstreamText.includes(following));
 		const history = HISTORY_BEFORE.test(before) || HISTORY_AFTER.test(after);
 		// A measurement's condition in decisio's own text (its evaluation card, its README's tables) passes; history in
 		// it is listed on the pages Serve is cleaning while the pin is DECISIO_HISTORY_UNTIL; site prose never passes.

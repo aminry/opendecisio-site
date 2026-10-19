@@ -37,9 +37,11 @@ A task taught under another model or rendering is not applied, and the server sa
 
 The decisio version is part of the serving setup a certificate covers, so a certificate made on the old release is suspended on the new one.
 Certify each certified task again on the new server, on labelled examples that share no input with the task's fit, such as the held-out examples it was certified on.
+
 The call keeps the certificate's settings unless the body sets them, the fewest examples it needs included: 59 at the 5% error target the walk-through task was certified at.
 decisio ships 48 held-out tickets for that task, below 59, so the body below asks for a 10% error target, which needs 29, and sets that floor with `min_examples`.
 For your own tasks, keep the error target and send at least as many new examples as the certificate needed.
+
 Build the body from the tickets and send it to the task's `certify` route:
 
 ```bash
