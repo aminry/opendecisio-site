@@ -323,9 +323,9 @@
 			"date": "2026-10-19",
 			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
 		},
-		"135f2c5258e4a371": {
-			"status": "verbatim",
-			"needs": "Linux with one NVIDIA card"
+		"dc453a8e90512004": {
+			"status": "shown",
+			"why": "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model"
 		}
 	}
 }

@@ -43,7 +43,7 @@ const kind = (w: string) => (/^--?[A-Za-z]/.test(w) ? 'fl' : /^(https?:\/\/|[\w.
 				<div class:list={['gs__panel', { on: i === 0 }]} role="tabpanel" id={`gsp-${t.id}`} aria-labelledby={`gs-${t.id}`}>
 					<p class="gs__note">{t.note}</p>
 					{t.blocks.map((text) => (
-						<div class="gs__box" data-copy-text={text}><pre class="gcode" aria-label={`${t.label}: start`}><code>{lines(text).map((l) =>
+						<div class="gs__box" data-copy-text={text}><pre class="gcode" tabindex="0" aria-label={`${t.label}: start`}><code>{lines(text).map((l) =>
 							l.kind === 'comment' ? <span class="gc-line gc-only"><span class="gc-c">{l.text}</span></span>
 							: l.kind === 'more' ? <span class="gc-line gc-more">{l.text}</span>
 							: <span class="gc-line"><span class="gc-p" aria-hidden="true">$ </span><span class="gc-cmd">{l.cmd}</span>{l.args!.map((a) => <> <span class={`gc-${kind(a)}`}>{a}</span></>)}{l.comment && <span class="gc-c">{'  '}{l.comment}</span>}</span>
@@ -57,13 +57,13 @@ const kind = (w: string) => (/^--?[A-Za-z]/.test(w) ? 'fl' : /^(https?:\/\/|[\w.
 		<div class="ask" id="ask">
 			<h3 class="ask__h">Then ask a question</h3>
 			<p>One request with a support ticket and three questions about it, to the server on port 8000:</p>
-			<div class="gs__box" data-copy-text={b.request}><pre class="gcode" aria-label="The first request"><code>{lines(b.request).map((l) =>
+			<div class="gs__box" data-copy-text={b.request}><pre class="gcode" tabindex="0" aria-label="The first request"><code>{lines(b.request).map((l) =>
 				l.kind === 'more' ? <span class="gc-line gc-more">{l.text}</span>
 				: <span class="gc-line"><span class="gc-p" aria-hidden="true">$ </span><span class="gc-cmd">{l.cmd}</span>{l.args!.map((a) => <> <span class={`gc-${kind(a)}`}>{a}</span></>)}</span>
 			)}</code></pre><button type="button" class="install__copy gs__copy" data-copy-box hidden>copy</button></div>
 			<details class="more ask__answer">
 				<summary>Its answer: every question under its name, with a probability for each option</summary>
-				<pre class="gcode" aria-label="Its answer"><code>{b.response.split('\n').map((l) => <span class="gc-line gc-json">{l}</span>)}</code></pre>
+				<pre class="gcode" tabindex="0" aria-label="Its answer"><code>{b.response.split('\n').map((l) => <span class="gc-line gc-json">{l}</span>)}</code></pre>
 			</details>
 			<p class="small">The hero above draws this answer. <a href="/docs/use-from/">Call it from your code</a>: the same request from Python, JavaScript and TypeScript.</p>
 		</div>
