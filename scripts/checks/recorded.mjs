@@ -1,5 +1,6 @@
 // No page shows a recorded output older than the pinned minor release without saying which release recorded it
-// (src/config/recorded-outputs.mjs). A page is found by the output's marker text; it passes if the output is recorded at
+// (src/config/recorded-outputs.mjs). A page is found by the output's marker text (and its alsoShows text, when an
+// output's marker is an input a page may send without showing the output); it passes if the output is recorded at
 // the pinned minor or later, or if its text says "decisio <version>". The pending pages of an output are let through
 // while it is recorded again; a pending page that no longer needs it is reported so the list shrinks. A retired recording,
 // one recorded again since, may appear on no page at all.
@@ -19,7 +20,9 @@ const problems = [];
 const notes = [];
 for (const o of recordedOutputs) {
 	const v = o.version();
-	const shown = pages.filter((p) => p.text.includes(o.marker) && !/^\/(articles|news)\//.test(p.route));
+	// A page shows the output when it has the marker and, if the output names one, what only the output shows.
+	const also = o.alsoShows?.();
+	const shown = pages.filter((p) => p.text.includes(o.marker) && (!also || p.text.includes(also)) && !/^\/(articles|news)\//.test(p.route));
 	const stale = older(minor(v), pinned);
 	const pending = new Set(o.pending?.pages ?? []);
 	for (const p of shown) {

@@ -4,12 +4,18 @@
 // All three were recorded again on decisio 0.17.0 (src/lib/recorded.mjs), so the earlier recordings are retired: their
 // marks must appear on no page.
 import { certificate, session } from '../lib/recorded.mjs';
+import { recordedResponse } from '../lib/figures/core.mjs';
+
+// The first recorded decision's routing answer as pages print it (three places): with its text, it marks a page that shows
+// the recorded answer, not one that only sends the same text as an example (Scale, the FAQ).
+const firstAnswer = () => { const q = Object.values(recordedResponse().answers).find((a) => a.type === 'choice'); return String(q.probabilities[q.choice]); };
 
 export const recordedOutputs = [
 	{
 		name: 'the recorded decisions (decisio-examples, support routing and three more), sent again',
 		version: () => session().decisio,
 		marker: 'I was charged twice for October',
+		alsoShows: firstAnswer,
 	},
 	{
 		name: 'the routing example (decisio-examples example 5)',
