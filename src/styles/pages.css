@@ -74,7 +74,7 @@
 }
 
 .pnav__label {
-	font: 500 12px/1 var(--h-mono);
+	font: 500 12px/1 var(--h-mono, 'Geist Mono Site', monospace);
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
 	color: var(--h-dim);
@@ -99,7 +99,7 @@
 .card3__d {
 	margin-top: auto;
 	padding-top: 8px;
-	font: 400 12px/1.4 var(--h-mono);
+	font: 400 12px/1.4 var(--h-mono, 'Geist Mono Site', monospace);
 	color: var(--h-dim);
 }
 
@@ -130,7 +130,7 @@
 
 .pcard__meta {
 	margin: 0;
-	font: 400 12px/1.4 var(--h-mono);
+	font: 400 12px/1.4 var(--h-mono, 'Geist Mono Site', monospace);
 	color: var(--h-dim);
 }
 
@@ -214,7 +214,7 @@
 }
 
 .disc__n {
-	font: 400 12px/1 var(--h-mono);
+	font: 400 12px/1 var(--h-mono, 'Geist Mono Site', monospace);
 	color: var(--h-dim);
 }
 
@@ -323,7 +323,7 @@
 
 .demo-card__meta {
 	margin: 10px 0 0;
-	font: 400 12px/1.5 var(--h-mono);
+	font: 400 12px/1.5 var(--h-mono, 'Geist Mono Site', monospace);
 	color: var(--h-dim);
 }
 

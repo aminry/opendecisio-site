@@ -3,11 +3,33 @@
    docs through the Starlight mapping at the end. Dark is the root theme, as in
    Starlight; [data-theme='light'] overrides it. */
 
+/* The site's own Geist and Geist Mono faces, from the files astro.config.mjs's fonts are made from: the first fallback
+   of the font variables below. A face is fetched only when text uses it, so with Astro's variables in effect these
+   are never downloaded. */
+@font-face {
+	font-family: 'Geist Site';
+	src: url('../../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Geist Mono Site';
+	src: url('../../node_modules/@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2') format('woff2');
+	font-weight: 100 900;
+	font-style: normal;
+	font-display: swap;
+}
+
 :root {
-	/* Type: Geist for everything, Geist Mono for flags and code (loaded by astro.config.mjs fonts). */
-	--d-font-body: var(--font-geist);
-	--d-font-display: var(--font-geist);
-	--d-font-mono: var(--font-geist-mono);
+	/* Type: Geist for everything, Geist Mono for flags and code, loaded by astro.config.mjs's fonts, whose variables
+	   are defined in a <style> of their own. Each falls back to the same font from the faces above and then to the
+	   system's, so a moment without Astro's variable never leaves the page in the browser's default font (a WebKit
+	   run once computed the body's font as -webkit-standard). */
+	--d-font-body: var(--font-geist, 'Geist Site', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif);
+	--d-font-display: var(--font-geist, 'Geist Site', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif);
+	--d-font-mono: var(--font-geist-mono, 'Geist Mono Site', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
 
 	/* Type scale: a major third on 17px; headings step up fluidly with the viewport. */
 	--d-step--2: 0.75rem;
@@ -82,8 +104,8 @@
 	--d-base-g31: #fba41c;
 
 	/* Starlight, dark. */
-	--sl-font: var(--d-font-body);
-	--sl-font-mono: var(--d-font-mono);
+	--sl-font: var(--d-font-body, 'Geist Site', sans-serif);
+	--sl-font-mono: var(--d-font-mono, 'Geist Mono Site', monospace);
 	--sl-color-white: #ffffff;
 	--sl-color-gray-1: #e6e8ec;
 	--sl-color-gray-2: #c2ccd9;

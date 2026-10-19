@@ -77,7 +77,7 @@
 	padding: 1px 8px;
 	border-radius: 99px;
 	border: 1px solid var(--h-line-2);
-	font: 600 13px/1.5 var(--h-mono);
+	font: 600 13px/1.5 var(--h-mono, 'Geist Mono Site', monospace);
 	text-align: center;
 	color: var(--h-ink);
 }
@@ -165,7 +165,7 @@
 }
 
 .tc-msg__conf {
-	font: 500 12.5px var(--h-mono);
+	font: 500 12.5px var(--h-mono, 'Geist Mono Site', monospace);
 	color: var(--h-dim);
 	font-variant-numeric: tabular-nums;
 }
@@ -221,7 +221,7 @@
 
 .tc-totals dt,
 .tc-counts dt {
-	font: 500 11px/1.4 var(--h-mono);
+	font: 500 11px/1.4 var(--h-mono, 'Geist Mono Site', monospace);
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	color: var(--h-dim);
@@ -311,7 +311,7 @@
 	width: 100%;
 	height: auto;
 	overflow: visible;
-	font-family: var(--d-font-body);
+	font-family: var(--d-font-body, 'Geist Site', sans-serif);
 }
 
 /* One layout of each chart at a time, so its labels keep their size: the wide one on a wide screen. */
@@ -339,7 +339,7 @@
 }
 
 .tc-tick {
-	font: 500 11.5px var(--h-mono);
+	font: 500 11.5px var(--h-mono, 'Geist Mono Site', monospace);
 	fill: var(--h-dim);
 }
 
@@ -379,7 +379,7 @@
 }
 
 .tc-bar__l {
-	font: 500 12.5px var(--h-mono);
+	font: 500 12.5px var(--h-mono, 'Geist Mono Site', monospace);
 	fill: var(--h-ink);
 }
 
@@ -427,7 +427,7 @@
 
 .tc-target__l,
 .tc-alert__l {
-	font: 600 12px var(--h-mono);
+	font: 600 12px var(--h-mono, 'Geist Mono Site', monospace);
 	fill: var(--h-ink);
 }
 
@@ -598,7 +598,7 @@
 	padding: 0 8px;
 	border: 1px solid var(--h-line-2);
 	border-radius: 99px;
-	font: 500 12px/1.6 var(--h-mono);
+	font: 500 12px/1.6 var(--h-mono, 'Geist Mono Site', monospace);
 	color: var(--h-dim);
 }
 
