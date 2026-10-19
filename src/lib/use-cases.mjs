@@ -4,10 +4,12 @@
 // A record that stops saying a number stops the build.
 import { data as tcData, baseName } from './teach-certify.mjs';
 import { readUpstream } from './upstream.mjs';
+import { facts } from './launch.mjs';
 
 const fail = (what) => { throw new Error(`use-cases: ${what}`); };
 const pct = (x, d = 1) => `${(x * 100).toFixed(d)}%`;
 const fmt = (n) => n.toLocaleString('en-US');
+const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 // The coding-agent gatekeeper's policy, as the demo ran it: each rule and its action.
 const policy = () => tcData().gatekeeper.rules;
@@ -107,6 +109,46 @@ function suite31() {
 	return { read };
 }
 
+
+// --- Issue triage: the run on kubernetes/kubernetes, in the launch facts (teaching.issue_triage) --------------------------
+
+/** The 31B's results on the four issue questions: untaught, and the largest change teaching made. */
+export function issueTriage() {
+	const t = facts().teaching?.issue_triage ?? fail('launch_facts.public.json has no teaching.issue_triage');
+	const b = t.by_base?.gemma_4_31b ?? fail('teaching.issue_triage has no gemma_4_31b');
+	const set = (q) => b[q] ?? fail(`teaching.issue_triage.by_base.gemma_4_31b has no ${q}`);
+	const [kind, sig, prio, ni] = ['kind', 'sig', 'priority', 'needs_info'].map(set);
+	if (ni.score_name !== 'balanced_accuracy') fail('needs-information is no longer scored by balanced accuracy');
+	if (sig.options !== 12 || !/owning SIG/.test(sig.question)) fail('the second question is no longer the owning SIG over 12 options');
+	// "Works out of the box": every taught arm within a point of untaught, except the owning SIG at 1,000 examples.
+	for (const x of [kind, sig, prio, ni]) {
+		for (const [n, arm] of Object.entries(x.taught)) {
+			const change = Math.abs(arm.accuracy.value - x.untaught.accuracy.value) * 100;
+			if (!(x === sig && n === 'n1000') && change >= 1) fail(`teaching moved ${x.question} by ${change.toFixed(1)} points at ${n}; the page says under a point`);
+		}
+	}
+	const sig1000 = sig.taught.n1000 ?? fail('the owning SIG has no 1,000-example arm');
+	const niTaught = Object.values(ni.taught);
+	if (!niTaught.every((a) => a.score.value <= ni.untaught.score.value)) fail('teaching no longer lowers needs-information on the 31B');
+	const p = (x) => `${x.printed}%`;
+	return {
+		t, kind, sig, prio, ni, sig1000,
+		values: {
+			'triage-kind': p(kind.untaught.accuracy),
+			'triage-sig': p(sig.untaught.accuracy),
+			'triage-priority': p(prio.untaught.accuracy),
+			'triage-needs-info': p(ni.untaught.score),
+		},
+	};
+}
+
+/** A value a page names in its own words, read from its record (`:value{name="..."}`). */
+export function value(name) {
+	const v = issueTriage().values[name];
+	if (v === undefined) fail(`no value "${name}"`);
+	return v;
+}
+
 const PROOFS = {
 	'support-routing': () => {
 		const d = tcData();
@@ -142,7 +184,17 @@ const PROOFS = {
 			'Those measure the reading, not a whole retrieval pipeline: no end-to-end run of this gate is published.',
 		];
 	},
-	'issue-triage': () => ['A recipe: no run of this question on public issues is published yet.'],
+	'issue-triage': () => {
+		const { t, kind, sig, prio, ni, sig1000 } = issueTriage();
+		const p = (x) => `${x.printed}%`;
+		return [
+			`<b>${p(kind.untaught.accuracy)}</b> right on the kind of an issue (macro-F1 ${p(kind.untaught.score)}) and <b>${p(sig.untaught.accuracy)}</b> on its owning SIG, the ${sig.options} most frequent (macro-F1 ${p(sig.untaught.score)}), by Gemma 4 31B, untaught, on ${fmt(kind.test_items)} real kubernetes/kubernetes issues.`,
+			`It works out of the box: teaching changed accuracy by under a point, except on the owning SIG at ${fmt(sig1000.examples)} examples, ${p(sig.untaught.accuracy)} to ${p(sig1000.accuracy)} (macro-F1 ${p(sig.untaught.score)} to ${p(sig1000.score)}).`,
+			`Priority is ${p(prio.untaught.accuracy)} right, and needs-information has a balanced accuracy of ${p(ni.untaught.score)}, which teaching lowers slightly.`,
+			`These figures are ${t.reporting_sentence}.`,
+			esc(t.licence_line),
+		];
+	},
 	'document-classification': () => ['A recipe: decisio is measured on short texts, such as the intent sets of the support inbox; no run on long documents is published.'],
 };
 

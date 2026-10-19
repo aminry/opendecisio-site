@@ -14,7 +14,7 @@ The routing code is the same in every recipe; this is support routing's:
 | --- | --- | --- |
 | [Support routing](/docs/use-cases/support-routing/) | which queue a ticket goes to | measured |
 | [Coding-agent gatekeeper](/docs/use-cases/gatekeeper/) | allow, ask or block a shell command, by your rules | measured |
-| [Issue triage](/docs/use-cases/issue-triage/) | the kind of a new issue | recipe |
+| [Issue triage](/docs/use-cases/issue-triage/) | the kind of a new issue, and its owning team | measured |
 | [Guardrails](/docs/use-cases/guardrails/) | whether a message breaks a policy | measured for toxicity |
 | [RAG: answer or abstain](/docs/use-cases/rag-gate/) | whether a retrieved passage answers the question | measured as accuracy |
 | [Document classification](/docs/use-cases/document-classification/) | the type of an incoming document | recipe |

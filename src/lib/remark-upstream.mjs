@@ -32,7 +32,7 @@ import { splitParagraph } from './sentences.mjs';
 import { integrationsTable } from './figures/use-from.mjs';
 import { taskGains } from './teach.mjs';
 import { symptomTable } from './figures/run-it.mjs';
-import { proofHtml } from './use-cases.mjs';
+import { proofHtml, value } from './use-cases.mjs';
 
 const parser = unified().use(remarkParse).use(remarkGfm);
 const cache = new Map();
@@ -199,6 +199,12 @@ export default function remarkUpstream(options = {}) {
 		visit(tree, 'leafDirective', (node, index, parent) => {
 			if (node.name !== 'symptoms') return;
 			parent.children.splice(index, 1, { type: 'html', value: symptomTable(node.attributes?.group) });
+			return index + 1;
+		});
+		// :value{name="..."}: a number a page states in its own words, read from its record (src/lib/use-cases.mjs).
+		visit(tree, 'textDirective', (node, index, parent) => {
+			if (node.name !== 'value') return;
+			parent.children.splice(index, 1, { type: 'text', value: value(node.attributes?.name) });
 			return index + 1;
 		});
 		// ::proof{name="..."}: a use case's measured result, read from its record (src/lib/use-cases.mjs).
