@@ -102,7 +102,7 @@
 		"e49d690312902481": {
 			"status": "example"
 		},
-		"bb59203455e01e62": {
+		"6ec5f1e5e3ca22e5": {
 			"status": "shown",
 			"why": "it needs Linux with one NVIDIA card, which this check does not have"
 		},
@@ -170,11 +170,6 @@
 			"date": "2026-10-19"
 		},
 		"0ee8302a99cf1a2f": {
-			"status": "cpu",
-			"tag": "v0.18.0",
-			"date": "2026-10-19"
-		},
-		"ebacf4f532e09ea5": {
 			"status": "cpu",
 			"tag": "v0.18.0",
 			"date": "2026-10-19"
@@ -322,6 +317,11 @@
 			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
+		},
+		"ebacf4f532e09ea5": {
+			"status": "cpu",
+			"tag": "v0.18.0",
+			"date": "2026-10-19"
 		},
 		"4e4a6138dc4a0560": {
 			"status": "shown",
