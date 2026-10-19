@@ -28,6 +28,7 @@ import { checkHtml, checkOf } from './checks.mjs';
 import { siteBlock } from './site-blocks.mjs';
 import { diagram } from './diagrams.mjs';
 import { docsFigure, recordedLabel } from './docs-figures.mjs';
+import { example5Table } from './recorded.mjs';
 import { splitParagraph } from './sentences.mjs';
 import { integrationsTable } from './figures/use-from.mjs';
 import { taskGains } from './teach.mjs';
@@ -193,6 +194,12 @@ export default function remarkUpstream(options = {}) {
 			const rows = m[1].trim().split('\n').map((l) => l.split('|').slice(1, -1).map((c) => c.trim())).map((c) => [c[0], ms(c[1]), ms(c[3]), ms(c[5])]);
 			const html = `<div class="table-wrap"><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 			parent.children.splice(index, 1, { type: 'html', value: html });
+			return index + 1;
+		});
+		// ::escalation-table: decisio-examples example 5's sweep, recorded on the pinned release (src/lib/recorded.mjs).
+		visit(tree, 'leafDirective', (node, index, parent) => {
+			if (node.name !== 'escalation-table') return;
+			parent.children.splice(index, 1, { type: 'html', value: example5Table() });
 			return index + 1;
 		});
 		// ::symptoms{group="..."}: what you see, why and what to do, for one kind of trouble (src/lib/figures/run-it.mjs).

@@ -257,7 +257,7 @@ export const plan = [
 	// (runs/2026-10-14_certified-answers/results/mac_mlx/); the CPU stand-in cannot fit and certify 400 tickets here.
 	// Then the threshold picked by hand, on the stand-in.
 	{ page: '/docs/tasks/certify/', n: 1, mode: 'example', expect: 'POST /v1/tasks\n{"id": "ticket-queue",' },
-	{ page: '/docs/tasks/certify/', n: 2, mode: 'output', expect: '{\n "certificate": {' },
+	{ page: '/docs/tasks/certify/', n: 2, mode: 'output', expect: '{\n "certificate": {\n  "id": "ticket-queue#7151e6bd7fd1"' },
 	{ page: '/docs/tasks/certify/', n: 3, mode: 'output', expect: '[\n {\n  "ticket":' },
 	{
 		page: '/docs/tasks/certify/', n: 4, mode: 'python', expect: 'import json\nimport urllib.request',

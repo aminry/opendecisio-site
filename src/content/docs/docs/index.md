@@ -3,7 +3,7 @@ title: Get started
 description: Run decisio and get your first answer in about five minutes. A text and questions go in; a probability for every option comes out, in one call.
 ---
 
-<!-- Site-written: the start page. The machine table follows decisio's README "Install and run" at the pinned release; the request and its answer are the first recorded decision (launch_facts.public.json, figures.recorded_decisions); every command was run, as the record says. -->
+<!-- Site-written: the start page. The machine table follows decisio's README "Install and run" at the pinned release; the request and its answer are the first recorded decision, as decisio 0.17.0 answered it (src/lib/recorded.mjs); every command was run, as the record says. -->
 
 ::covers{links="README.md#install-and-run=1-pick-your-machine README.md#quickstart=1-pick-your-machine docs/running.md=1-pick-your-machine"}
 

@@ -1,0 +1,201 @@
+{
+ "format": "decisio-task/1",
+ "id": "ticket-queue",
+ "key": "66515d32d568eebf604a67945f813dbabc112f955ddee65fcdfa47915889809d",
+ "type": "choice",
+ "options": [
+  "billing",
+  "shipping",
+  "access"
+ ],
+ "fingerprint": "{\"base\": \"gemma-4-31b\", \"desnake_labels\": true, \"hide_index_keys\": true, \"model\": \"gemma-4-31B-it\", \"pad_to\": \"none\", \"pad_where\": \"front\", \"prompt_format\": {\"slot\": \"template\", \"system_prompt\": true, \"tail\": \"spaced\", \"variants\": \"summed\"}, \"served_name\": \"decisio-gemma-4-31b-it-letters\"}",
+ "calibration": {
+  "format": "decisio-task-prior/1",
+  "task_id": "ticket-queue",
+  "fingerprint": "{\"base\": \"gemma-4-31b\", \"desnake_labels\": true, \"hide_index_keys\": true, \"model\": \"gemma-4-31B-it\", \"pad_to\": \"none\", \"pad_where\": \"front\", \"prompt_format\": {\"slot\": \"template\", \"system_prompt\": true, \"tail\": \"spaced\", \"variants\": \"summed\"}, \"served_name\": \"decisio-gemma-4-31b-it-letters\"}",
+  "K": 3,
+  "n_examples": 200,
+  "bias": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "applied": false,
+  "cv_logloss_plain": 1.31019,
+  "cv_logloss_fitted": 1.30092,
+  "cv_acc_plain": 0.815,
+  "cv_acc_fitted": 0.82,
+  "cv_t": -0.935,
+  "reason": "cross-validation on the labelled examples does not show a clear gain",
+  "inputs_sha256": "f99af8c054244f205a44d137a6dc37a809f17a203d04134c2bbe28b5638025a2"
+ },
+ "head": {
+  "format": "decisio-intent-head/1",
+  "applied": false,
+  "K": 3,
+  "options": [
+   "billing",
+   "shipping",
+   "access"
+  ],
+  "options_sha256": "ed35b5a0562820b4717b3c70c62e06292a06c50834f5038a7b0ee2bdb3e6b68c",
+  "reason": "the head is fitted for questions of at least 10 options (intent sets); this one has 3: calibration only"
+ },
+ "n_examples": 200,
+ "per_option_min": 55,
+ "fit_sha256": "9bf70c66f05c1d85da4b2d760f5a53700a8c27abc0a4ca3bd1fed6772683138e",
+ "certificate": {
+  "procedure": "learn-then-test: fixed sequence and Bonferroni arms, each at delta/2, Clopper-Pearson upper bounds",
+  "alpha": 0.15,
+  "delta": 0.1,
+  "n": 200,
+  "accuracy": 0.875,
+  "threshold": 0.6916931327377187,
+  "certified": true,
+  "empirical_share_at_alpha": 1.0,
+  "certified_share": 0.905,
+  "certified_n": 181,
+  "errors_at_threshold": 18,
+  "error_rate_at_threshold": 0.09944751381215469,
+  "upper_bound_at_threshold": 0.14390058959257024,
+  "format": "decisio-certificate/1",
+  "id": "ticket-queue#7151e6bd7fd1",
+  "min_examples": 19,
+  "split": {
+   "method": "holdout",
+   "holdout": 0.5,
+   "fit_examples": 200,
+   "certify_examples": 200,
+   "disjoint": true,
+   "rule": "examples with the same input go to the same side; groups are ordered by the sha256 of the task id and the input and the first ones, up to the held-out share, certify; the fit sees the rest",
+   "fit_digests": 200
+  },
+  "fit_sha256": "9bf70c66f05c1d85da4b2d760f5a53700a8c27abc0a4ca3bd1fed6772683138e",
+  "stack": {
+   "decisio": "0.17.0",
+   "base": "gemma-4-31b",
+   "repository": {
+    "name": "tachara-ai/decisio-gemma-4-31b",
+    "revision": "eaf1e4fa30a351ab87d07803ca60f1fa5606f882"
+   },
+   "engine": {
+    "vllm": "0.31.0",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "base": "gemma-4-31b",
+    "quantization": "compressed-tensors",
+    "kv_cache_dtype": "auto",
+    "max_model_len": 98304,
+    "attention_backend": "AttentionBackendEnum.TRITON_ATTN",
+    "engine_process": "in",
+    "mode": "separate",
+    "block_size": 16,
+    "match_unit": 16,
+    "cache_hit_unit": 32,
+    "hash_unit": 16,
+    "register_boundary": "before",
+    "pad_unit": null,
+    "pad_where": null,
+    "adapters": []
+   },
+   "prompt": {
+    "probe_sha256": "35a4c26348ba0a77373ef26eceb051d2d394d882463d6b9831deb0f2ec868fee",
+    "format": {
+     "tail": "spaced",
+     "slot": "template",
+     "variants": "summed",
+     "system_prompt": true
+    }
+   },
+   "calibration": {
+    "temperatures": {
+     "global": 5.252,
+     "choice": 4.672
+    },
+    "task_fit": "9bf70c66f05c1d85da4b2d760f5a53700a8c27abc0a4ca3bd1fed6772683138e"
+   },
+   "serving": {
+    "orders": 1,
+    "multi_question": "warm",
+    "pad_policy": "always",
+    "hide_index_keys": true,
+    "desnake_labels": true,
+    "describe_options": true,
+    "noul_rendering": "letters",
+    "noul_commit": false,
+    "abstention": true,
+    "abstain_option": null,
+    "head_engine": true
+   },
+   "task_fingerprint": "{\"base\": \"gemma-4-31b\", \"desnake_labels\": true, \"hide_index_keys\": true, \"model\": \"gemma-4-31B-it\", \"pad_to\": \"none\", \"pad_where\": \"front\", \"prompt_format\": {\"slot\": \"template\", \"system_prompt\": true, \"tail\": \"spaced\", \"variants\": \"summed\"}, \"served_name\": \"decisio-gemma-4-31b-it-letters\"}"
+  },
+  "stack_sha256": "740144e9401de9935fc3ae646a312a98b99d40a9d99cc225b9d5ef0a314b5bf0",
+  "summary": "Answers whose top probability is at least 0.6917 are certified: on the 200 held-out examples that is 90% of the answers, 18 of 181 wrong. With probability at least 90% over the draw of such examples, at most 15% of the certified answers are wrong, for traffic like them and on this serving stack. Warning: This task has no option for a message that fits none of its labels (such as 'other' or 'out of scope'), so such a message gets a wrong answer that can be certified. Add one, or rely on the traffic monitor, which watches the answer mix and the confidences.",
+  "suspend_on_alert": true,
+  "warnings": [
+   {
+    "code": "no_catch_all_option",
+    "text": "This task has no option for a message that fits none of its labels (such as 'other' or 'out of scope'), so such a message gets a wrong answer that can be certified. Add one, or rely on the traffic monitor, which watches the answer mix and the confidences."
+   }
+  ],
+  "served_check": {
+   "n": 20,
+   "task_applied": 20,
+   "max_shift": 0.0,
+   "p99_shift": 0.0,
+   "crossed_threshold": 0,
+   "top_answer_changed": 0,
+   "rule": "every 1/10th held-out example (20 to 200), each as a request of its own, through the serving path"
+  }
+ },
+ "monitor": {
+  "window": 500,
+  "step": 100,
+  "line_quantile": 0.999,
+  "draws": 2000,
+  "seed": "ticket-queue#7151e6bd7fd1",
+  "option_counts": [
+   61,
+   80,
+   59
+  ],
+  "line": 0.1330089999999998,
+  "confidence": {
+   "tail_quantile": 0.05,
+   "tail_threshold": 0.6144189164653436,
+   "tail_share": 0.05,
+   "p_ok": 0.065,
+   "p_bad": 0.125,
+   "limit": 8.768629469807095,
+   "false_alarm": 0.01,
+   "horizon": 5000
+  }
+ },
+ "status": {
+  "state": "ok",
+  "text": "ok",
+  "monitor": {
+   "state": "ok",
+   "window_answers": 0,
+   "answers": 0,
+   "certified_answers": 0,
+   "checked_at": null,
+   "distance": null,
+   "line": 0.1330089999999998,
+   "alerts": 0,
+   "option_counts": [
+    0,
+    0,
+    0
+   ],
+   "signals": [],
+   "first_alert_at": null,
+   "confidence": {
+    "statistic": 0.0,
+    "limit": 8.768629469807095,
+    "tail_threshold": 0.6144189164653436,
+    "tail_share": 0.05,
+    "alerts": 0
+   }
+  }
+ }
+}

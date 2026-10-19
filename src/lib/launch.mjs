@@ -10,6 +10,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { replay, session } from './recorded.mjs';
 import { readUpstream, siteRoot } from './upstream.mjs';
 
 /** The public board's JevBench leaderboard. */
@@ -273,24 +274,43 @@ export function manyQuestions(kind) {
 }
 
 /**
- * The recorded decisions the home page's live demo plays, from launch_facts.public.json's figures.recorded_decisions (from
- * decisio-examples' runs of 2026-10-08): the first records of four runs, taken as they came, each with its request's
- * text, every question's recorded probabilities and the server time the record kept. The build stops if a record is
- * malformed or its probabilities do not add up to one.
+ * The recorded decisions the home page's live demo and the docs play: the twelve records launch_facts.public.json's
+ * figures.recorded_decisions selects (the first records of four decisio-examples runs, taken as they came), each sent again
+ * to decisio 0.17.0 (src/lib/recorded.mjs), so every probability and server time shown is that release's. The build stops
+ * if a replayed request is not the selected record's, a record is malformed, or its probabilities do not add up to one.
  */
 export function recordedExamples() {
 	const r = facts().figures?.recorded_decisions;
-	need2(r?.source?.commit && r.source.files?.length && r.run?.decisio_version && r.box_label?.value && r.items?.length >= 12, 'has no figures.recorded_decisions with its source, run, box label and at least twelve records');
-	for (const f of r.source.files) need2(/^[0-9a-f]{64}$/.test(f.sha256 ?? ''), `has a recorded run (${f.path ?? f.file}) without its sha256`);
-	for (const it of r.items) {
-		need2(it.state && it.serverMs > 0 && it.questions?.length, `has a recorded decision (${it.id}) without its text, time or questions`);
-		for (const q of it.questions) {
-			const total = q.bars.reduce((s, b) => s + b.p, 0);
-			need2(q.type === 'yes/no' ? q.bars.length === 1 && q.bars[0].p >= 0 && q.bars[0].p <= 1 : Math.abs(total - 1) < 1e-6, `has a recorded decision (${it.id}, ${q.name}) whose probabilities do not add up`);
+	need2(r?.source?.commit && r.source.files?.length && r.items?.length >= 12, 'has no figures.recorded_decisions with its source and at least twelve records');
+	const again = replay();
+	const s = session();
+	const js = (x) => Math.floor(x + 0.5);
+	const items = r.items.map((it) => {
+		const now = again.get(it.id);
+		need2(now, `has a recorded decision (${it.id}) the 0.17.0 replay did not send again`);
+		const st = now.request.state;
+		const state = typeof st === 'string' ? st : Object.entries(st).map(([k, v]) => `${k}: ${v}`).join('\n');
+		need2(state === it.state, `has a recorded decision (${it.id}) whose text is not the replayed request's`);
+		const questions = it.questions.map((q) => {
+			const a = now.answers[q.name];
+			need2(a, `has a question (${it.id}, ${q.name}) the replay did not answer`);
+			if (q.type === 'yes/no') return { ...q, bars: [{ ...q.bars[0], p: a.noul, top: a.noul >= 0.5 }] };
+			const bars = q.bars.map((b) => {
+				const p = a.probabilities?.[b.label];
+				need2(typeof p === 'number', `has an option (${it.id}, ${q.name}, ${b.label}) the replay gave no probability`);
+				return { ...b, p, top: q.type === 'choice' ? b.label === a.choice : String(js(a.score)) === b.label };
+			});
+			return { ...q, bars, result: q.type === 'choice' ? a.choice : `level ${a.score.toFixed(1)}` };
+		});
+		for (const q of questions) {
+			const total = q.bars.reduce((sum, b) => sum + b.p, 0);
+			need2(q.type === 'yes/no' ? q.bars[0].p >= 0 && q.bars[0].p <= 1 : Math.abs(total - 1) < 1e-6, `has a replayed decision (${it.id}, ${q.name}) whose probabilities do not add up`);
 		}
 		refuse(it.state);
-	}
-	return { source: r.source, run: { ...r.run, decisio: r.run.decisio_version, powerW: r.run.power_limit_w }, boxLabel: r.box_label.value, items: r.items };
+		return { ...it, questions, serverMs: now.serverMs };
+	});
+	const run = { date: s.date, decisio: s.decisio, decisio_version: s.decisio, vllm: s.vllm, base: s.base, card: s.card, powerW: s.powerW, power_limit_w: s.powerW };
+	return { source: r.source, run, boxLabel: `Gemma 4 31B, decisio ${s.decisio}, RTX PRO 6000 at ${s.powerW} W`, items };
 }
 
 

@@ -1,0 +1,169 @@
+{
+  "questions": 1172,
+  "keep_at": 0.8,
+  "accuracy_all": 0.974,
+  "ece_10_equal_mass": 0.0218,
+  "at_preset": {
+    "keep_at": 0.8,
+    "kept": 1145,
+    "escalated": 27,
+    "coverage": 0.977,
+    "accuracy_kept": 0.985,
+    "accuracy_kept_ci95": [
+      0.976,
+      0.991
+    ],
+    "errors": 31,
+    "errors_escalated": 14
+  },
+  "sweep": [
+    {
+      "keep_at": 0.5,
+      "kept": 1168,
+      "escalated": 4,
+      "coverage": 0.997,
+      "accuracy_kept": 0.976,
+      "accuracy_kept_ci95": [
+        0.966,
+        0.983
+      ],
+      "errors": 31,
+      "errors_escalated": 3
+    },
+    {
+      "keep_at": 0.6,
+      "kept": 1162,
+      "escalated": 10,
+      "coverage": 0.991,
+      "accuracy_kept": 0.978,
+      "accuracy_kept_ci95": [
+        0.968,
+        0.985
+      ],
+      "errors": 31,
+      "errors_escalated": 6
+    },
+    {
+      "keep_at": 0.7,
+      "kept": 1154,
+      "escalated": 18,
+      "coverage": 0.985,
+      "accuracy_kept": 0.982,
+      "accuracy_kept_ci95": [
+        0.972,
+        0.988
+      ],
+      "errors": 31,
+      "errors_escalated": 10
+    },
+    {
+      "keep_at": 0.8,
+      "kept": 1145,
+      "escalated": 27,
+      "coverage": 0.977,
+      "accuracy_kept": 0.985,
+      "accuracy_kept_ci95": [
+        0.976,
+        0.991
+      ],
+      "errors": 31,
+      "errors_escalated": 14
+    },
+    {
+      "keep_at": 0.9,
+      "kept": 1125,
+      "escalated": 47,
+      "coverage": 0.96,
+      "accuracy_kept": 0.988,
+      "accuracy_kept_ci95": [
+        0.98,
+        0.993
+      ],
+      "errors": 31,
+      "errors_escalated": 18
+    },
+    {
+      "keep_at": 0.95,
+      "kept": 1078,
+      "escalated": 94,
+      "coverage": 0.92,
+      "accuracy_kept": 0.992,
+      "accuracy_kept_ci95": [
+        0.984,
+        0.996
+      ],
+      "errors": 31,
+      "errors_escalated": 22
+    },
+    {
+      "keep_at": 0.99,
+      "kept": 5,
+      "escalated": 1167,
+      "coverage": 0.004,
+      "accuracy_kept": 1.0,
+      "accuracy_kept_ci95": [
+        0.566,
+        1.0
+      ],
+      "errors": 31,
+      "errors_escalated": 31
+    }
+  ],
+  "reliability": [
+    {
+      "items": 234,
+      "p_low": 0.406,
+      "p_high": 0.967,
+      "mean_p": 0.909,
+      "accuracy": 0.889
+    },
+    {
+      "items": 234,
+      "p_low": 0.967,
+      "p_high": 0.974,
+      "mean_p": 0.97,
+      "accuracy": 0.996
+    },
+    {
+      "items": 235,
+      "p_low": 0.974,
+      "p_high": 0.98,
+      "mean_p": 0.977,
+      "accuracy": 0.991
+    },
+    {
+      "items": 234,
+      "p_low": 0.98,
+      "p_high": 0.985,
+      "mean_p": 0.982,
+      "accuracy": 0.996
+    },
+    {
+      "items": 235,
+      "p_low": 0.985,
+      "p_high": 0.991,
+      "mean_p": 0.988,
+      "accuracy": 0.996
+    }
+  ],
+  "most_confident_wrong": [
+    {
+      "id": "Mercury_177748",
+      "p": 0.989,
+      "chose": "B",
+      "answer": "D"
+    },
+    {
+      "id": "Mercury_7236513",
+      "p": 0.983,
+      "chose": "B",
+      "answer": "D"
+    },
+    {
+      "id": "Mercury_7015208",
+      "p": 0.979,
+      "chose": "C",
+      "answer": "B"
+    }
+  ]
+}

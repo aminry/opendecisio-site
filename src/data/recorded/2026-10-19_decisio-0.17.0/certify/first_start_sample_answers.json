@@ -1,0 +1,33 @@
+[
+ {
+  "ticket": "Urgent: the refund has not reached my bank account. Can you check today? (ref 70816)",
+  "answer": {
+   "type": "choice",
+   "choice": "billing",
+   "confidence": 0.9654967921901054,
+   "probabilities": {
+    "billing": 0.9769978614600703,
+    "shipping": 0.009623783473615553,
+    "access": 0.013378355066314133
+   },
+   "certified": true,
+   "certificate": "ticket-queue#7151e6bd7fd1"
+  }
+ },
+ {
+  "ticket": "Dear support, can I change the payment method on my plan. Also: the tracking page shows no update for days. (ref 82556)",
+  "answer": {
+   "type": "choice",
+   "choice": "billing",
+   "confidence": 0.35876103231532913,
+   "probabilities": {
+    "billing": 0.5725073548768861,
+    "shipping": 0.3731357107261103,
+    "access": 0.05435693439700373
+   },
+   "certified": false,
+   "certificate": "ticket-queue#7151e6bd7fd1",
+   "certified_reason": "below_threshold"
+  }
+ }
+]

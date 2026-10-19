@@ -1,0 +1,1602 @@
+[
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.974688564138663,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9595793932702364,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "billing",
+  "top": 0.799308968157579,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9826540926145803,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9915764019093074,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9717580100472221,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9836349310261,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "billing",
+  "top": 0.7054089468889858,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "shipping",
+  "top": 0.9008034389814832,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9852308733403079,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9846430913404787,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9758169798851603,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9756558435820172,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.7639376303152527,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9730712377437669,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.6967875764048226,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9752644673642147,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.5725073548768861,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.8095226205896674,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9822840112377357,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9467772529543199,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "billing",
+  "top": 0.8208730049898396,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9844153468935682,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9766169766608437,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9909530657070431,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9857534061970377,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9924383481965742,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.5838270483594297,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9848813543265621,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9442710248804468,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "billing",
+  "top": 0.5959307438727903,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.974131490125115,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "shipping",
+  "top": 0.739087529077591,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9908265827838386,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.971999316740505,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.8958285491520666,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.986412050408413,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.8345333244168973,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "billing",
+  "top": 0.7725188813525009,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.983784953928263,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.945176330427676,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.7261779706143455,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9922780620908869,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9024945990070486,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9896897015919167,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9811896918755575,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.991701616040839,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "access",
+  "top": 0.627810103561366,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9643190183585321,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9039449108265601,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.6427448728370875,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9140142247920662,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "shipping",
+  "top": 0.8273479054579718,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9846031112427193,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9208578480991012,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.7714112380330019,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9727070083447876,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "shipping",
+  "top": 0.5362702795346204,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9919213142591615,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9901730520503333,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "access",
+  "top": 0.8108901331948007,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.5330491822157749,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9927759961730697,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9629592788053525,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9492819530917997,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.8665303217694357,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.7905140407518467,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9721212252846678,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.8148826505114816,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.675157133887809,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.8931726653363768,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.8676680771530404,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "billing",
+  "top": 0.8315762205673849,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9918280245172791,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "billing",
+  "top": 0.7581129704529371,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.5843844843680119,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9728954715592282,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9103731502925552,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9716708236475274,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9735863923516942,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9704688150216287,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.7416860599964794,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9926167549186403,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9835084707043341,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9917242697444952,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "billing",
+  "top": 0.843164799217077,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "shipping",
+  "top": 0.9419807877863192,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9827097953023934,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9017068626806117,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.984516700275808,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9909629698470601,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.5641006929856053,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.984625862120298,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.7938175718945192,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "shipping",
+  "top": 0.493427415337916,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9834546475605502,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9481037231841719,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9840236055297151,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9810630601375023,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.971238245082107,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9732384357368704,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9836693120358455,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "shipping",
+  "top": 0.4822148533582957,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.7065491482033871,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9703316582148069,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9831606013023216,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9899616377821613,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "billing",
+  "top": 0.7193034674582257,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.906378722015224,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9751432177416922,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.8130795491771404,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9180685247660917,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9641071040669955,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.7324502383828317,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9624892734016695,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.7443870030182248,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "access",
+  "top": 0.5340173814968123,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9814926177235278,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "billing",
+  "top": 0.7138699529513426,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "billing",
+  "top": 0.7142761406673136,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9831983272962084,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9752848037938269,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "shipping",
+  "top": 0.9609212181765561,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9776418025980855,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9919129595235242,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "billing",
+  "top": 0.6270016513744903,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9754717243883103,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.679460164749308,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9767842972479318,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.667101695096897,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9843037080689845,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.902706714803874,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9922945567241985,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.955806741061669,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9541224537950995,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "shipping",
+  "top": 0.5966174438320451,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9378177289301564,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.92137827527899,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "access",
+  "top": 0.8397788284191571,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.8213499794408546,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9852873902465045,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.7427813628555247,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.972383359865748,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.8205723075409301,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9734985055752512,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9846571865117074,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9251643574201127,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9844480534601322,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9910664259281657,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9735522697235387,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9699426312387872,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "billing",
+  "top": 0.6671637917490251,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "shipping",
+  "top": 0.754823820163015,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9912145783133859,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9717580411988367,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9828253460294659,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9842394195569327,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.982815901293414,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9438583115260539,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9836354488610191,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.983015913908954,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9734247578699775,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9919941511087788,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9279914000473284,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9413656709965726,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9912553310966833,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.8921068373300326,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9290150456562998,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "billing",
+  "top": 0.5615108952475436,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.7382549468097321,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9920867286909376,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9915970662704943,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.5183036041348874,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9410187762079655,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9923666929855582,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9807053418679385,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9746280630008192,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "billing",
+  "top": 0.6906440576697304,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9589735278315726,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9799955602092533,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9748620990032704,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9726771826435633,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.9855824684864811,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.6919577204806209,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9728043404441518,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9255663137355232,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9321270372355894,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.8984397559959425,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "billing",
+  "top": 0.5796074748739594,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.8612747249122065,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9913732450934619,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9911806319293873,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.6694965296248336,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "shipping",
+  "top": 0.9898254708588693,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "billing",
+  "top": 0.8387398998925663,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9740213275487495,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "shipping",
+  "choice": "billing",
+  "top": 0.6749781600560956,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.5330492605866813,
+  "certified": false,
+  "reason": "below_threshold",
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "access",
+  "choice": "access",
+  "top": 0.8934453590643541,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ },
+ {
+  "gold": "billing",
+  "choice": "billing",
+  "top": 0.9589543018658677,
+  "certified": true,
+  "reason": null,
+  "certificate": "ticket-queue#7151e6bd7fd1"
+ }
+]

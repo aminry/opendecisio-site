@@ -3,7 +3,7 @@ title: Certify answers
 description: Get answers the server stands behind. You choose the error rate; the server certifies only the answers sure enough to keep it, on traffic like your examples.
 ---
 
-<!-- Site-written: the second Teach and trust guide, rewritten from decisio's docs/tasks.md ("Certified answers") at the pinned release, whose worked example it shows (::upstream), with the manual threshold and abstention from the former Use the probability guide and docs/api.md. The slider is the teach-and-certify runs' support inbox (src/lib/figures/tasks.mjs); the facts are docs/tasks.md's (src/config/sourced.mjs checks them). -->
+<!-- Site-written: the second Teach and trust guide, rewritten from decisio's docs/tasks.md ("Certified answers") at the pinned release; its worked example's request is decisio's (::upstream) and the certificate and answers are that example recorded on the pinned release on the 31B, as is example 5's line by hand (src/lib/recorded.mjs), with the manual threshold and abstention from the former Use the probability guide and docs/api.md. The slider is the teach-and-certify runs' support inbox (src/lib/figures/tasks.mjs); the facts are docs/tasks.md's (src/config/sourced.mjs checks them). -->
 
 ::covers{links="docs/tasks.md#certified-answers docs/tasks.md#what-certified-means=1-know-the-promise docs/tasks.md#a-worked-example=2-teach-the-task-with-a-certificate docs/tasks.md#how-many-examples-it-takes=4-have-enough-examples docs/tasks.md#where-it-stops=5-keep-it-valid docs/api.md#abstention=let-the-server-abstain"}
 
@@ -23,22 +23,23 @@ With probability at least 90% by default, at most your error target of the certi
 ## 2. Teach the task with a certificate
 
 Add `certify` to the registration, with your error target as `alpha`.
-decisio's worked example is a three-queue ticket question on the Gemma 4 12B on a Mac, at an error target of 15%:
+decisio's worked example is a three-queue ticket question at an error target of 15%, here on the default model, Gemma 4 31B:
 
 ::upstream{file="docs/tasks.md" section="A worked example" block="1"}
 
 The server holds back half the examples, teaches on the rest, reads the held-back ones as it will serve them, and answers with the certificate:
 
-::upstream{file="docs/tasks.md" section="A worked example" block="2"}
+::site-block{name="certificate-response"}
 
-Here, answers with a top probability of at least 0.9863 are certified: 169 of the 200 held-back tickets, 17 of them wrong.
+Here, :value{name="certify-result"}.
+:value{name="certify-recorded"}
 If no threshold can keep the promise, `threshold` is `null` and the task works as before, with every answer marked not certified.
 
 ## 3. Read each answer
 
 Every answer for the task now says whether it is certified, and why not when it is not:
 
-::upstream{file="docs/tasks.md" section="A worked example" block="3"}
+::site-block{name="certificate-answers"}
 
 Act on the certified answers on their own, and send the rest to a person or a larger model.
 
@@ -71,7 +72,13 @@ A certified question is scored on its own, the way the certificate was made, so 
 ## Pick a line by hand
 
 Without a certificate, you can still keep the answers above a line you choose and escalate the rest.
-Pick the line from the cost of an escalation against the cost of a wrong answer, measured on examples like yours:
+Pick the line from the cost of an escalation against the cost of a wrong answer, measured on examples like yours.
+On :value{name="example5-recorded"}:
+
+::escalation-table
+
+A line on the raw probability promises nothing for new traffic; a certificate does.
+To keep answers above a line of your own:
 
 ```python
 import json

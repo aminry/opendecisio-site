@@ -1,0 +1,192 @@
+{
+ "decisio": "0.17.0",
+ "base": "gemma-4-31b",
+ "items": 12,
+ "same_choices_as_recorded": 12,
+ "rows": [
+  {
+   "id": "01-support-routing#0",
+   "server_ms": "79.1",
+   "top_now": {
+    "urgent": [
+     "noul",
+     0.159
+    ],
+    "queue": [
+     "billing",
+     0.9616
+    ],
+    "impact": [
+     "1",
+     0.6481
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "01-support-routing#1",
+   "server_ms": "75.4",
+   "top_now": {
+    "urgent": [
+     "noul",
+     0.1934
+    ],
+    "queue": [
+     "billing",
+     0.9654
+    ],
+    "impact": [
+     "0",
+     0.913
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "01-support-routing#2",
+   "server_ms": "72.0",
+   "top_now": {
+    "urgent": [
+     "noul",
+     0.9945
+    ],
+    "queue": [
+     "billing",
+     0.9657
+    ],
+    "impact": [
+     "0",
+     0.5107
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "02-moderation-gate#0",
+   "server_ms": "55.9",
+   "top_now": {
+    "jailbreak": [
+     "noul",
+     0.7833
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "02-moderation-gate#1",
+   "server_ms": "56.6",
+   "top_now": {
+    "jailbreak": [
+     "noul",
+     0.02
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "02-moderation-gate#2",
+   "server_ms": "54.7",
+   "top_now": {
+    "jailbreak": [
+     "noul",
+     0.9839
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "03-form-validator#0",
+   "server_ms": "71.7",
+   "top_now": {
+    "job_title": [
+     "noul",
+     0.9959
+    ],
+    "company": [
+     "noul",
+     0.9961
+    ],
+    "message": [
+     "noul",
+     0.9963
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "03-form-validator#1",
+   "server_ms": "72.0",
+   "top_now": {
+    "job_title": [
+     "noul",
+     0.9951
+    ],
+    "company": [
+     "noul",
+     0.9962
+    ],
+    "message": [
+     "noul",
+     0.9955
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "04-tool-decision#0",
+   "server_ms": "56.1",
+   "top_now": {
+    "next": [
+     "answer",
+     0.9557
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "04-tool-decision#1",
+   "server_ms": "55.4",
+   "top_now": {
+    "next": [
+     "answer",
+     0.9563
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "04-tool-decision#2",
+   "server_ms": "62.0",
+   "top_now": {
+    "next": [
+     "answer",
+     0.9555
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  },
+  {
+   "id": "04-tool-decision#3",
+   "server_ms": "55.4",
+   "top_now": {
+    "next": [
+     "answer",
+     0.947
+    ]
+   },
+   "top_recorded": {},
+   "same_choices": true
+  }
+ ]
+}

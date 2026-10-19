@@ -1,8 +1,8 @@
 ---
 // The live demo in the hero: a picker of recorded decisions (the first records of four decisio-examples runs, taken as
-// they came, from figures.recorded_decisions), each played as the flow it is: the text enters, the server reads it once,
+// they came, from figures.recorded_decisions, each sent again to decisio 0.17.0: src/lib/recorded.mjs), each played as the flow it is: the text enters, the server reads it once,
 // and then scores the request's questions together in one batch, as the Gemma 4 31B does by default (`--multi-question
-// warm`, decisio's docs/cli.md), so every bar fills at once. The probabilities and the server time are the record's; the
+// warm`, decisio's docs/cli.md), so every bar fills at once. The probabilities and the server time are the 0.17.0 replay's; the
 // time is shown as one total for the request, read and batch together. The first record is in the page as its final state, so the panel is the same size
 // before and after the script runs (no layout shift) and shows a real decision without it; the picker and the replay
 // buttons appear with the script. Labelled with the base, the version and the box the records came from; "See the request"
