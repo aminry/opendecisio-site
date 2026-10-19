@@ -349,7 +349,7 @@ export const plan = [
 	{ page: '/docs/deploy/mac/', n: 7, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma'], needs: '0.35.1', assert: ticketAnswers },
 	{ page: '/docs/bases/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', needs: 'an NVIDIA card', record: 'runs/2026-10-04_gemma-base/' },
 
-	{ page: '/docs/upgrade-notes/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b', needs: 'an NVIDIA card, and for the container the NVIDIA Container Toolkit' },
+	{ page: '/docs/releases/', n: 2, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b', needs: 'an NVIDIA card, and for the container the NVIDIA Container Toolkit' },
 
 	// Shapes and recorded output.
 	{ page: '/docs/api/', n: 2, mode: 'example', expect: '{"model": "decisio-gemma-4-31b-it-letters",' },
