@@ -115,6 +115,8 @@ jobs:
         run: node scripts/checks/recorded.mjs
       - name: Every moved page redirects to a built page
         run: node scripts/checks/redirects.mjs
+      - name: Every fact the site words itself still stands in decisio's docs
+        run: node scripts/checks/sourced.mjs
       - name: llms.txt and llms-full.txt
         run: node scripts/checks/llms.mjs
       - name: Every docs page follows the page pattern

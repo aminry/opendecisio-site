@@ -24,8 +24,10 @@ h1#_top {
 
 /* A table from the decisio docs fits its column and wraps its cells; nothing is
    clipped or scrolled at any width (checked by scripts/checks/browser.mjs). In a
-   column narrower than 40rem a table of three columns or more, and narrower than 60rem
-   one of six or more, becomes one block per row, each value labelled by its column (src/lib/rehype-tables.mjs). */
+   column narrower than 36rem a table of three columns or more, and narrower than 60rem
+   one of six or more, becomes one block per row, each value labelled by its column (src/lib/rehype-tables.mjs).
+   36rem, not 40rem: the docs column beside the sidebar and the page's contents is about 39.5rem on a 1280-pixel
+   window, and a three-column table reads better as a table there. */
 .sl-markdown-content .table-wrap {
 	container-type: inline-size;
 }
@@ -59,7 +61,7 @@ h1#_top {
 	min-width: 5rem;
 }
 
-/* A table of four columns or fewer (it is a table only from 40rem) keeps each column
+/* A table of four columns or fewer (it is a table only from 36rem) keeps each column
    at least 8rem, so a column of paths is not squeezed to a few characters a line. */
 .sl-markdown-content .table-wrap > table:not(:has(tr > :nth-child(5))) :is(th, td) {
 	min-width: 8rem;
@@ -74,7 +76,7 @@ h1#_top {
 	height: auto;
 }
 
-@container (max-width: 40rem) {
+@container (max-width: 36rem) {
 	.docs-table:has(tr > :nth-child(3)) :is(thead, tbody, tr, td) {
 		display: block;
 	}
@@ -694,31 +696,7 @@ h1#_top {
 	min-height: 3.2em;
 }
 
-/* Choose your machine: what you have, and the path to it. */
-.fig__paths {
-	display: grid;
-	gap: 0.5rem;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.fig__path {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) 2rem minmax(0, 1fr);
-	align-items: center;
-	gap: 0.5rem;
-	padding: 0.6rem 0.75rem;
-	border: 1px solid var(--sl-color-gray-5);
-	border-radius: 10px;
-	background: var(--sl-color-gray-6);
-}
-
-.fig__path:hover {
-	border-color: var(--sl-color-accent);
-}
-
-.fig__have,
+/* A step's destination, in the images figure: a name over its note. */
 .fig__to {
 	display: grid;
 	gap: 0.1rem;
@@ -726,7 +704,6 @@ h1#_top {
 	color: var(--sl-color-gray-3);
 }
 
-.fig__have b,
 .fig__to b {
 	font-size: 0.95rem;
 	color: var(--sl-color-white);
@@ -738,42 +715,6 @@ h1#_top {
 
 .sl-markdown-content .fig__to b {
 	color: var(--sl-color-accent);
-}
-
-.fig__arrow {
-	height: 2px;
-	background: var(--sl-color-accent);
-	position: relative;
-}
-
-.fig__arrow::after {
-	content: '';
-	position: absolute;
-	right: 0;
-	top: -4px;
-	border-left: 7px solid var(--sl-color-accent);
-	border-block: 5px solid transparent;
-}
-
-@media (max-width: 40rem) {
-	.fig__path {
-		grid-template-columns: minmax(0, 1fr);
-	}
-
-	.fig__arrow {
-		width: 2px;
-		height: 1rem;
-	}
-
-	.fig__arrow::after {
-		right: -4px;
-		top: auto;
-		bottom: -1px;
-		border-left: 5px solid transparent;
-		border-right: 5px solid transparent;
-		border-top: 7px solid var(--sl-color-accent);
-		border-bottom: 0;
-	}
 }
 
 /* The sidebar and the page's own table of contents, set like the reference's: small mono group labels, a quiet
@@ -825,19 +766,6 @@ h1#_top {
 	fill: var(--sl-color-gray-1);
 }
 
-.fig__ways {
-	display: grid;
-	grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-	gap: 1rem;
-	align-items: stretch;
-}
-
-@media (max-width: 40rem) {
-	.fig__ways {
-		grid-template-columns: minmax(0, 1fr);
-	}
-}
-
 .fig__list,
 .fig__routes,
 .fig__cards,
@@ -880,40 +808,6 @@ h1#_top {
 .fig__list b {
 	font-size: 0.95rem;
 	color: var(--sl-color-accent);
-}
-
-.fig__sink {
-	display: grid;
-	align-content: center;
-	gap: 0.6rem;
-	padding-left: 1.25rem;
-	border-left: 2px solid var(--sl-color-accent);
-}
-
-.fig__route,
-.fig__server {
-	display: grid;
-	gap: 0.15rem;
-	padding: 0.7rem 0.9rem;
-	border: 1px solid var(--sl-color-gray-5);
-	border-radius: 10px;
-	background: var(--sl-color-gray-6);
-	font-size: 0.8rem;
-	color: var(--sl-color-gray-3);
-}
-
-.fig__route b {
-	font: 600 0.9rem var(--d-font-mono);
-	color: var(--sl-color-accent);
-}
-
-.fig__server {
-	border-color: var(--sl-color-accent);
-}
-
-.fig__server b {
-	font-size: 1rem;
-	color: var(--sl-color-white);
 }
 
 .fig__routes {
@@ -1026,83 +920,6 @@ h1#_top {
 .fig__card b {
 	font-size: 1rem;
 	color: var(--sl-color-white);
-}
-
-.fig__ver {
-	font: 0.72rem/1.4 var(--d-font-mono);
-	overflow-wrap: anywhere;
-}
-
-.fig__checks {
-	display: flex;
-	align-items: center;
-	gap: 0.4rem;
-	color: var(--sl-color-gray-1);
-}
-
-.fig__tickmark {
-	flex: none;
-	width: 0.9rem;
-	height: 0.9rem;
-	border-radius: 50%;
-	background: var(--sl-color-accent);
-	position: relative;
-}
-
-.fig__tickmark::after {
-	content: '';
-	position: absolute;
-	left: 0.28rem;
-	top: 0.12rem;
-	width: 0.22rem;
-	height: 0.4rem;
-	border: solid var(--sl-color-black);
-	border-width: 0 2px 2px 0;
-	transform: rotate(45deg);
-}
-
-.fig__rule code {
-	font-size: 0.75rem;
-}
-
-/* A checked integration's facts, as a definition list. */
-.sl-markdown-content .integ {
-	display: grid;
-	grid-template-columns: minmax(8rem, 12rem) minmax(0, 1fr);
-	margin: 1rem 0;
-	border: 1px solid var(--sl-color-gray-5);
-	border-radius: 12px;
-	overflow: clip;
-}
-
-.sl-markdown-content .integ dt,
-.sl-markdown-content .integ dd {
-	margin: 0;
-	padding: 0.6rem 0.9rem;
-	border-top: 1px solid var(--sl-color-gray-5);
-	font-size: var(--sl-text-sm);
-}
-
-.sl-markdown-content .integ dt:first-of-type,
-.sl-markdown-content .integ dt:first-of-type + dd {
-	border-top: 0;
-}
-
-.sl-markdown-content .integ dt {
-	font-weight: 650;
-	color: var(--sl-color-white);
-	background: var(--sl-color-gray-6);
-}
-
-@media (max-width: 40rem) {
-	.sl-markdown-content .integ {
-		grid-template-columns: minmax(0, 1fr);
-	}
-
-	.sl-markdown-content .integ dd {
-		border-top: 0;
-		padding-top: 0;
-	}
 }
 
 /* ---- Figures of the Guides ---- */
@@ -1936,4 +1753,18 @@ a.fig__card:hover {
 	color: var(--d-on-accent);
 	background: var(--d-accent-fill);
 	box-shadow: 3px 3px 0 var(--d-shadow);
+}
+
+/* The line under a generated table: what it was checked on, and when. */
+.sl-markdown-content .table-note {
+	margin-top: 0.5rem;
+	font-size: var(--sl-text-sm);
+	color: var(--sl-color-gray-3);
+}
+
+/* The integrations table: the version checked under each framework's name, quieter than the name. */
+.sl-markdown-content .integrations__ver {
+	font-size: var(--sl-text-xs);
+	font-weight: 400;
+	color: var(--sl-color-gray-3);
 }

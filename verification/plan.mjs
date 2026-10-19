@@ -68,8 +68,8 @@ export const plan = [
 	{ page: '/docs/quickstart/cpu-stand-in/', n: 2, mode: 'same-as', expect: 'uv sync --extra dev --frozen', of: ['/docs/quickstart/cpu-stand-in/', 1] },
 	// Get started, on the stand-in: the recorded support ticket (src/lib/site-blocks.mjs).
 	{
-		page: '/docs/', n: 1, mode: 'run-then-server', expect: 'git clone https://github.com/aminry/decisio',
-		skip: ['git clone https://github.com/aminry/decisio', 'cd decisio'],
+		page: '/docs/', n: 1, mode: 'run-then-server', expect: `git clone --branch ${pin.tag} https://github.com/${pin.repository}`,
+		skip: [`git clone --branch ${pin.tag} https://github.com/${pin.repository}`, 'cd decisio'],
 		note: 'the clone is the pinned release, as the check has it; the install and the server start',
 	},
 	{
@@ -84,13 +84,6 @@ export const plan = [
 		assert: recordedAnswers,
 	},
 	{ page: '/docs/', n: 4, mode: 'output', expect: '{\n  "answers": {' },
-	// Use it from, on the stand-in: the recorded support ticket sent from each language (src/lib/site-blocks.mjs).
-	{
-		page: '/docs/use-from/', n: 1, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone',
-		assert(stdout) {
-			if (typeof json(stdout).answers?.urgent?.noul !== 'number') throw new Error('the one yes/no question was not answered with a probability');
-		},
-	},
 	{
 		page: '/docs/api/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/models',
 		assert(stdout) {
@@ -98,25 +91,39 @@ export const plan = [
 			if (!stdout.includes('"category"')) throw new Error('the choice question was not answered');
 		},
 	},
-	{ page: '/docs/use-from/python/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the measured system's" },
+	// Call it from your code, on the stand-in: the recorded support ticket sent from each language (src/lib/site-blocks.mjs),
+	// then decisio's programs for the frameworks (docs/integrations.md), the Python ones run with the versions they name.
+	{ page: '/docs/use-from/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/', 3] },
+	{ page: '/docs/use-from/', n: 2, mode: 'python', expect: 'import json\nimport urllib.request', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the measured system's" },
 	{
-		page: '/docs/use-from/python/', n: 2, mode: 'python', expect: 'from typesafe_sdk import TypeSafeClient', with: ['typesafe-sdk==0.7.2'],
+		page: '/docs/use-from/', n: 3, mode: 'python', expect: 'from typesafe_sdk import TypeSafeClient', with: ['typesafe-sdk==0.7.2'],
 		assert: printsThreeAnswers, note: "with TypeSafe's Python SDK 0.7.2, the version the page names",
 	},
+	{ page: '/docs/use-from/', n: 4, mode: 'node', expect: 'const body = {', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the measured system's" },
+	{ page: '/docs/use-from/', n: 5, mode: 'node', ts: true, expect: 'const body: {', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the measured system's" },
 	{
-		page: '/docs/use-from/python/', n: 3, mode: 'python', expect: 'import json\nimport urllib.error',
+		page: '/docs/use-from/', n: 6, mode: 'python', expect: 'import json\nimport urllib.error',
 		assert(stdout) {
 			if (!/^422 True$/m.test(stdout)) throw new Error('a request with no questions was not answered with 422 and a detail');
 		},
 	},
-	{ page: '/docs/use-from/javascript/', n: 1, mode: 'node', expect: 'const body = {', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the measured system's" },
-	{ page: '/docs/use-from/javascript/', n: 2, mode: 'node', ts: true, expect: 'const body: {', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the measured system's" },
-	// The five integrations: shapes of the check's own lines, with the server's address in place of its proxy's.
-	{ page: '/docs/use-from/frameworks/', n: 1, mode: 'example', expect: 'base URL   http://127.0.0.1:8000' },
-	{ page: '/docs/use-from/frameworks/', n: 2, mode: 'example', expect: 'from langchain_typesafe import TypeSafeClassifier' },
-	{ page: '/docs/use-from/frameworks/', n: 3, mode: 'example', expect: 'import { createTypeSafeAi } from "@ai-sdk/typesafe-ai";' },
-	{ page: '/docs/use-from/frameworks/', n: 4, mode: 'example', expect: 'import { createTypesafeDecider } from "@tanstack/ai-typesafe";' },
-	{ page: '/docs/use-from/frameworks/', n: 5, mode: 'example', expect: 'from pipecat.classifiers.jev import JevClient' },
+	{
+		page: '/docs/use-from/', n: 7, mode: 'python', expect: 'from langchain_typesafe import Choice, Noul, NoulCriteria, TypeSafeClassifier', with: ['langchain-typesafe==0.0.1a3'],
+		note: 'with langchain-typesafe 0.0.1a3, the version the page names',
+		assert(stdout) {
+			if (!/^(billing|access) [0-9.e-]+$/m.test(stdout)) throw new Error('the LangChain program did not print a queue and a probability');
+		},
+	},
+	{ page: '/docs/use-from/', n: 8, mode: 'verbatim', expect: 'import { experimental_decide as decide } from "ai";', needs: 'Node 22 with ai 7.0.131 and @ai-sdk/typesafe-ai 3.0.15' },
+	{ page: '/docs/use-from/', n: 9, mode: 'verbatim', expect: '{\n  "name": "decisio: ask a question about a text",', needs: 'n8n 2.35.7' },
+	{ page: '/docs/use-from/', n: 10, mode: 'verbatim', expect: 'import { boolean, choice, decide } from "@tanstack/ai";', needs: 'Node 22 with @tanstack/ai 0.65.1 and @tanstack/ai-typesafe 0.1.8' },
+	{
+		page: '/docs/use-from/', n: 11, mode: 'python', expect: 'import asyncio', with: ['pipecat-ai[jev]==1.12.0'],
+		note: 'with pipecat-ai 1.12.0, the version the page names',
+		assert(stdout) {
+			if (!/choice='(billing|access)'/.test(stdout)) throw new Error('the Pipecat program did not print a choice');
+		},
+	},
 
 	// The guides, on the stand-in.
 	{
@@ -166,8 +173,13 @@ export const plan = [
 		},
 	},
 	// Understand, on the stand-in.
-	{ page: '/docs/how-it-works/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/use-from/', 1] },
-	{ page: '/docs/faq/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/use-from/', 1] },
+	{
+		page: '/docs/how-it-works/', n: 1, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone',
+		assert(stdout) {
+			if (typeof json(stdout).answers?.urgent?.noul !== 'number') throw new Error('the one yes/no question was not answered with a probability');
+		},
+	},
+	{ page: '/docs/faq/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/how-it-works/', 1] },
 	{
 		page: '/docs/probability/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
 		assert(stdout) {
@@ -269,17 +281,19 @@ export const plan = [
 	{ page: '/docs/api/', n: 4, mode: 'example', expect: '{"id": "...",' },
 	{ page: '/docs/flags/', n: 1, mode: 'same-as', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', of: ['/docs/bases/', 1] },
 	{ page: '/docs/flags/', n: 2, mode: 'example', expect: 'uv run python -m decisio.serve.vllm_engine [flags]' },
-	// Until a release carries docs/migrating.md, the page shows the API's response shape.
-	{ page: '/docs/migrating/', n: 1, mode: 'same-as', expect: '{"model": "decisio-gemma-4-31b-it-letters",', of: ['/docs/api/', 2], optional: true },
-	// From the release that carries docs/migrating.md: TypeSafe's SDK against the stand-in.
+	// Move from System One: decisio's docs/migrating.md blocks, TypeSafe's SDK against the stand-in, then the two reads.
+	{ page: '/docs/migrating/', n: 1, mode: 'run', expect: 'export TYPESAFE_BASE_URL=', note: 'sets the variables the SDK reads' },
 	{
-		page: '/docs/migrating/', n: 1, mode: 'python', expect: 'from typesafe_sdk import TypeSafeClient', optional: true,
+		page: '/docs/migrating/', n: 2, mode: 'python', expect: 'from typesafe_sdk import TypeSafeClient',
 		with: ['typesafe-sdk==0.7.2'], note: "with TypeSafe's Python SDK 0.7.2, the version the page names",
 	},
 	{
-		page: '/docs/migrating/', n: 2, mode: 'run', expect: 'export TYPESAFE_BASE_URL=', optional: true,
-		note: 'sets the variables the SDK reads',
+		page: '/docs/migrating/', n: 3, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/models',
+		assert(stdout) {
+			if (typeof json(stdout).models?.[0]?.name !== 'string') throw new Error('/v1/models did not list the served name');
+		},
 	},
+	{ page: '/docs/migrating/', n: 4, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 
 	// The home page repeats three of the blocks above.
 	// The home page's pull block has each comment above its command; the commands are the docs page's, run again here.

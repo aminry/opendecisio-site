@@ -29,12 +29,7 @@ On any other machine, start the server as its guide says and go on from step 3.
 You need Python 3.12, [uv](https://docs.astral.sh/uv/) and `git`.
 The first start downloads a small model from Hugging Face.
 
-```bash
-git clone https://github.com/aminry/decisio
-cd decisio
-uv sync --extra dev --frozen
-uv run python -m decisio.serve.vllm_engine --backend hf --model Qwen/Qwen3-0.6B-Base
-```
+::site-block{name="stand-in-start"}
 
 The server listens on `http://127.0.0.1:8000`.
 It is ready when `/health` answers:

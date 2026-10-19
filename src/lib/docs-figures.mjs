@@ -119,40 +119,12 @@ function firstDecision() {
 	});
 }
 
-// --- Choosing a machine ---------------------------------------------------------------------------------------------
-
-/**
- * Choose your machine: what you have, and the path that fits it, from the README's install table. Each row is a link;
- * the path it leads to is drawn beside it and lights in turn.
- */
-function chooseMachine() {
-	const readme = readUpstream('README.md');
-	const need = (re, what) => { if (!re.test(readme)) throw new Error(`docs-figures: the README no longer says ${what}`); };
-	need(/a 96 GB card, as measured/, 'that the GPU path needs a 96 GB card, as measured');
-	need(/Mac with Apple silicon/, 'a Mac with Apple silicon path');
-	need(/8\.6 GB for the Gemma base's smallest tag, so a 16 GB laptop/, 'that the Gemma base\'s smallest Ollama tag is 8.6 GB, so a 16 GB laptop');
-	need(/a small Hugging Face model on the CPU/, 'that the CPU stand-in uses a small Hugging Face model');
-	const rows = [
-		{ have: 'Linux, one NVIDIA card', mem: '96 GB, as measured', path: 'GPU server', href: '/docs/quickstart/gpu-server/', note: 'The default base, Gemma 4 31B.' },
-		{ have: 'Linux, one NVIDIA card, Docker', mem: '96 GB, as measured', path: 'Docker', href: '/docs/quickstart/docker/', note: 'The same server in a container.' },
-		{ have: 'A Mac with Apple silicon', mem: 'each base has its own, in the How-to guides', path: 'Mac with MLX', href: '/docs/quickstart/mac-mlx/', note: 'The bases run from their MLX conversions.' },
-		{ have: 'A laptop with Ollama', mem: '8.6 GB for the Gemma base\'s smallest tag', path: 'Ollama', href: '/docs/quickstart/ollama/', note: 'A 16 GB laptop fits it; Ollama applies no calibration.' },
-		{ have: 'Any machine, for development', mem: 'a small Hugging Face model on the CPU', path: 'CPU stand-in', href: '/docs/quickstart/cpu-stand-in/', note: 'Serves the routes; not the measured system.' },
-	];
-	const body = `<ul class="fig__paths">${rows.map((r, i) => `<li class="fig__path f-pop fd-${i}"><span class="fig__have"><b>${esc(r.have)}</b><span>${esc(r.mem)}</span></span><span class="fig__arrow" aria-hidden="true"></span><a class="fig__to" href="${r.href}"><b>${esc(r.path)}</b><span>${esc(r.note)}</span></a></li>`).join('')}</ul>`;
-	return panel({
-		name: 'choose-machine', label: 'Your machine', title: 'One server, five ways to run it; start from what you have.',
-		desc: `What you have and the path that fits it: ${rows.map((r) => `${r.have} (${r.mem}) takes ${r.path}`).join('; ')}.`,
-		body, live: 6, interactive: true, legend: 'The memory is what the README states for each path; the sizes of each base are in Choosing a base.', source: 'Source: the README\'s "Install and run" table.',
-	});
-}
-
 import { guidesFigures } from './figures/guides.mjs';
 import { runItFigures } from './figures/run-it.mjs';
 import { understandFigures } from './figures/understand.mjs';
 import { useFromFigures } from './figures/use-from.mjs';
 
-export const figures = { 'request-flow': requestFlow, 'first-decision': firstDecision, 'choose-machine': chooseMachine, ...useFromFigures, ...guidesFigures, ...runItFigures, ...understandFigures };
+export const figures = { 'request-flow': requestFlow, 'first-decision': firstDecision, ...useFromFigures, ...guidesFigures, ...runItFigures, ...understandFigures };
 
 export function docsFigure(name) {
 	const f = figures[name];
