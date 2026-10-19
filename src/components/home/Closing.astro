@@ -1,19 +1,12 @@
 ---
-// The closing band before the footer: one headline, the install line, two buttons.
-import { site } from '../../config/site';
-import { laptop } from '../../lib/home.mjs';
-const cmd = laptop().pull.split('\n').find((l) => l.startsWith('ollama pull'))!;
+// The closing band before the footer: one line and two buttons, into Get started and the use cases.
 ---
 <section class="cta" aria-labelledby="cta-h">
 	<div class="wrap cta__in">
-		<h2 id="cta-h">Ask it something <em class="hl">real.</em></h2>
-		<div class="install install--cta" data-install-static>
-			<code class="install__cmd"><span class="install__p" aria-hidden="true">$</span> <span data-cta-cmd>{cmd}</span></code>
-			<button type="button" class="install__copy" data-copy-cta>copy</button>
-		</div>
+		<h2 id="cta-h">Run it on <em class="hl">your own task.</em></h2>
 		<div class="actions">
-			<a class="button button--primary" href="/docs/#1-pick-your-machine">Read the quickstart</a>
-			<a class="button" href={site.repository}>Star it on GitHub</a>
+			<a class="button button--primary" href="/docs/">Get started</a>
+			<a class="button" href="/docs/use-cases/">Browse use cases</a>
 		</div>
 	</div>
 </section>

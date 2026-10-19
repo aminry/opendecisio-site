@@ -3,7 +3,7 @@ title: Call it from your code
 description: Ask decisio from curl, Python, JavaScript or TypeScript, or the framework you already use. Every way sends the same JSON to one route.
 ---
 
-<!-- Site-written: the merged Ways in, Python, JavaScript and Frameworks pages. The scripts send the first recorded decision (launch_facts.public.json, figures.recorded_decisions); the facts about errors, timeouts and the SDK are decisio's docs/api.md and docs/migrating.md at the pinned release (src/config/sourced.mjs checks them); the frameworks' facts are src/data/integrations.json, and their programs are decisio's docs/integrations.md. -->
+<!-- Site-written: the merged Ways in, Python, JavaScript and Frameworks pages. The scripts send the first recorded decision, as decisio 0.17.0 answered it (src/lib/recorded.mjs); the facts about errors, timeouts and the SDK are decisio's docs/api.md and docs/migrating.md at the pinned release (src/config/sourced.mjs checks them); the frameworks' facts are src/data/integrations.json, and their programs are decisio's docs/integrations.md. -->
 
 Call decisio from any language with one HTTP request, and get a probability for every option back.
 Each script below sends the support ticket from [Get started](/docs/) and prints each question's likeliest option.

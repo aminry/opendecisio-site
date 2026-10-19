@@ -17,6 +17,39 @@ const cli = 'docs/cli.md';
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
 
 export const sourced = [
+	// Benchmarks: one line on each base.
+	...fromPage('/benchmarks/', [
+		['One NVIDIA card of 80 GB or 96 GB, or a 64 GB Mac.', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
+		['One NVIDIA card of 80 GB or 96 GB, or a 64 GB Mac.', readme, 'It needs a 96 GB card on vLLM'],
+		['One NVIDIA card of 80 GB or 96 GB, or a 64 GB Mac.', readme, 'runs from its 6-bit MLX conversion on a 64 GB Mac'],
+		['the smaller Gemma, for a 32 GB Mac, or a laptop with Ollama', readme, 'The Gemma 4 12B base runs from its 6-bit MLX conversion, on a 32 GB Mac'],
+		['the smaller Gemma, for a 32 GB Mac, or a laptop with Ollama', readme, 'ollama pull aminroudaki/decisio-gemma    # the Gemma 4 12B base'],
+	]),
+	...fromPage('/benchmarks/', [
+		['The Decision Index runs 38 public benchmarks', card, 'a Decision Index value needs all 38 of its benchmarks'],
+		['in five areas', card, 'every index benchmark, the five areas'],
+		['scores each system from 0 to 100', 'docs/comparison.md', '**Decision Index 0.2.1** (0 to 100)'],
+		["with JevBench's own measure, over ten equal-width bins of the probability", readme, "over 10 equal-width bins of the probability (JevBench's own measure"],
+	]),
+	...fromPage('/benchmarks/', [
+		['from decisio 0.14.0 a Gemma base serves what the card holds, up to 98,304 on the 31B', 'docs/comparison.md', 'from decisio 0.14.0 the Gemma bases serve the largest context that fits the card'],
+	]),
+	// Home: the Good fit box.
+	...fromPage('/', [
+		['118 or more, at the defaults, for a task you want certified', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
+		['from decisio 0.16.0, certification pauses on its own while the confidence alert is on', upgrading, '| A certified task made on 0.16.0 | The confidence alert suspends certification while it is on |'],
+		['up to 255 per question', readme, 'and 255 options per question'],
+		['at least 32,768 tokens on a Gemma model on a card, and up to 98,304 on the 31B, as the card allows', readme, 'on the Gemma bases, of the largest length the card holds, at least 32,768 and at most 98,304 on the 31B'],
+		['the default model runs on one NVIDIA card of 80 GB or 96 GB, or on a 64 GB Mac', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
+		['the default model runs on one NVIDIA card of 80 GB or 96 GB, or on a 64 GB Mac', readme, 'It needs a 96 GB card on vLLM'],
+		['the default model runs on one NVIDIA card of 80 GB or 96 GB, or on a 64 GB Mac', readme, 'runs from its 6-bit MLX conversion on a 64 GB Mac'],
+		['every answer is a probability for each option', api, 'probabilities'],
+		['below 59 held-out examples it will not certify', readme, 'Below 59 held-out examples (at the defaults) the server refuses to certify at all'],
+		['a certificate covers one task on one serving setup', readme, 'a certificate holds for one task on one serving setup'],
+		['Ollama builds its own prompt and applies no calibration', readme, 'Ollama builds its own prompt and applies no calibration'],
+		['there the 31B is documented for texts up to 16,383 tokens', readme, 'both are documented for states up to 16,383 tokens'],
+		['the other two on decisio v0.11.1 at 600 W', readme, '- decisio v0.11.1 on vLLM 0.30.0 (the 31B and the 12B at their repositories\' pins)'],
+	]),
 	// Call it from your code
 	{ page: '/docs/use-from/', says: 'pip install typesafe-sdk==0.7.2', file: migrating, source: "TypeSafe's Python SDK 0.7.2" },
 	{ page: '/docs/use-from/', says: 'more than 255 options', file: api, source: 'up to 255 options (more is 422)' },
@@ -152,8 +185,7 @@ export const sourced = [
 		['With probability at least 90% by default, at most your error target of the certified answers are wrong', tasksDoc, '**with probability at least 1 - `delta` over the draw of your examples (90% by default), at most `alpha` of the answers marked certified are wrong (5% by default)'],
 		['one certified answer can still be wrong', tasksDoc, 'a single certified answer can still be wrong'],
 		['The server holds back half the examples', tasksDoc, 'It **sets aside some of your labelled examples** (half by default)'],
-		['at least 0.9863 are certified: 169 of the 200 held-back tickets, 17 of them wrong', tasksDoc, 'Answers whose top probability is at least 0.9863 are certified: on the 200 held-out examples that is 84% of the answers, 17 of 169 wrong.'],
-		['a three-queue ticket question on the Gemma 4 12B on a Mac, at an error target of 15%', tasksDoc, 'the Gemma 4 12B (6-bit, MLX) on a Mac, on a three-queue ticket question'],
+		['a three-queue ticket question at an error target of 15%', tasksDoc, 'on a three-queue ticket question'],
 		['threshold is null and the task works as before', tasksDoc, '`certificate.threshold` is `null`, and the task works exactly as before'],
 		['2% 149', tasksDoc, '| 0.02 | 149 | 183 |'],
 		['5% 59', tasksDoc, '| 0.05 | 59 | 72 |'],

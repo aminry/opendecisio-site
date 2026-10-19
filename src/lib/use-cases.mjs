@@ -5,6 +5,7 @@
 import { data as tcData, baseName } from './teach-certify.mjs';
 import { readUpstream } from './upstream.mjs';
 import { facts } from './launch.mjs';
+import { recordedValues } from './recorded.mjs';
 
 const fail = (what) => { throw new Error(`use-cases: ${what}`); };
 const pct = (x, d = 1) => `${(x * 100).toFixed(d)}%`;
@@ -98,7 +99,7 @@ export function teachBody(id) {
 
 const card = () => readUpstream('EVAL_CARD.md');
 // The 31B's row of the 1,400-item suite, as section 7.2 of the evaluation card gives it.
-function suite31() {
+export function suite31() {
 	const rows = [...card().matchAll(/^\| 1,400-item suite, accuracy \/ ECE \| (.*) \|/gm)];
 	if (rows.length !== 3) fail('EVAL_CARD.md no longer has the suite row of each base');
 	const row = rows[2][1];
@@ -147,7 +148,7 @@ export function value(name) {
 	const ib = tcData().inbox;
 	const t5 = ib.targets['0.05'] ?? fail('the inbox has no 5% certificate');
 	const others = { 'inbox-certified-5': pct(t5.covered / ib.test_n) };
-	const v = { ...issueTriage().values, ...others }[name];
+	const v = { ...issueTriage().values, ...others, ...recordedValues() }[name];
 	if (v === undefined) fail(`no value "${name}"`);
 	return v;
 }

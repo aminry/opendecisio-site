@@ -1,7 +1,7 @@
 // What the site says about JevBench, read from the launch facts (launch_facts.public.json)
 // (src/data/launch/launch_facts.public.json: the part of the launch facts that the
 // site reads, schema launch_facts/1). Every number and
-// every claim on the home page's hero and chart and on the benchmarks page's
+// every claim on the home page's hero and board result and on the benchmarks page's
 // JevBench section comes through here:
 // - a claim is made only if its "holds" is true in the file, and only in the
 //   words the file allows; the words the file forbids are refused;
@@ -10,7 +10,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { guidanceFor } from './home.mjs';
+import { replay, session } from './recorded.mjs';
 import { readUpstream, siteRoot } from './upstream.mjs';
 
 /** The public board's JevBench leaderboard. */
@@ -39,12 +39,6 @@ const ROWS = [
 ];
 
 const num = (x) => x.value;
-
-/** The sources' entry for the board's file, whatever the file calls it. */
-export function boardSource() {
-	const s = facts().sources;
-	return s.jevbench_artifact ?? s['jevbench_v1.6.1'];
-}
 
 /**
  * A stable claim (launch_facts.public.json stable_claims): a dated measurement or a fact about Decisio that stands in for
@@ -104,10 +98,6 @@ export function jevbench() {
 	};
 }
 
-function cap(s) {
-	return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
 // Words the site refuses beside the file's own list (decided 2026-10-09): H2O's interval overlaps ours, so
 // nothing may suggest a margin or nearness to first, and the ranking is of open-weights systems, never "open source".
 const EXTRA_FORBIDDEN = ['nearly', 'almost', 'close to first', 'open source'];
@@ -123,48 +113,6 @@ export function refuse(text) {
 
 export const fixed = (n, d = 2) => n.toFixed(d);
 
-const pct = (x, d = 1) => `${(x * 100).toFixed(d)}%`;
-
-/**
- * The routing record of example 5, as the launch facts (launch_facts.public.json) carries it:
- * the rows of its table and the words of its caption, every number from the file.
- */
-export function routing() {
-	const r = facts().figures?.routing_example5;
-	need(r && r.record && r.thresholds && r.questions, 'has no figures.routing_example5');
-	const n = num(r.questions);
-	const t = (k) => {
-		const x = r.thresholds[k];
-		need(x, `has no routing threshold ${k}`);
-		return {
-			threshold: x.threshold,
-			escalated: num(x.escalated),
-			share: num(x.escalated_share),
-			accuracy: num(x.accuracy_on_the_rest),
-			lo: num(x.accuracy_on_the_rest_ci95_low),
-			hi: num(x.accuracy_on_the_rest_ci95_high),
-			confident: num(x.confidently_wrong),
-			wrongEscalated: num(x.wrong_answers_escalated),
-			wrong: num(x.wrong_answers_total),
-		};
-	};
-	const wrong = num(r.wrong_answers_total);
-	const rows = [
-		{ rule: 'No escalation', escalated: '0', share: '0.0%', accuracy: pct(num(r.accuracy_all)), interval: null, confident: `${wrong}`, caught: `0 of ${wrong}` },
-		...['0.8', '0.9'].map((k) => {
-			const x = t(k);
-			return { rule: `Keep at ${x.threshold} or more`, escalated: `${x.escalated}`, share: pct(x.share), accuracy: pct(x.accuracy), interval: `${pct(x.lo)} to ${pct(x.hi)}`, confident: `${x.confident}`, caught: `${x.wrongEscalated} of ${x.wrong}` };
-		}),
-	];
-	const rec = r.record;
-	// One caption, in the record's facts: the data set and its caveat, the release, the base, the card and the date.
-	const split = rec.what.match(/ARC-Challenge test split/)?.[0];
-	const base = rec.what.match(/Gemma 4 31B/)?.[0];
-	need(split && base, 'has a routing record that is no longer of ARC-Challenge on Gemma 4 31B');
-	const caption = `${split}, a public benchmark the model may have seen; decisio ${rec.decisio_version} on ${base}, one ${rec.card.replace(/ Workstation Edition$/, '')} at ${rec.power_limit_w} W, recorded ${rec.date}.`;
-	refuse(caption);
-	return { questions: n, rows, caption, captionText: `Example 5, Escalate only when unsure: ${caption}`, note: r.note, sweep: r.sweep };
-}
 
 export const need2 = (cond, what) => {
 	if (!cond) throw new Error(`launch: launch_facts.public.json ${what}; revisit src/lib/launch.mjs`);
@@ -217,33 +165,6 @@ export function axesFigure() {
 }
 
 /**
- * The five "Why Decisio" lines, from the decisio README's block (decisio's why_decisio.py) but for the third, each made only
- * if launch_facts.public.json says it: the Jev comparisons are head_to_head.jev's own wording, the card quote is the card's.
- */
-export function whyDecisio() {
-	const f = facts();
-	const h = f.head_to_head;
-	const jr = h.jev.rows;
-	// The README's measured line for the default base: its row on several questions in one request.
-	const row = readUpstream('README.md').split('\n').find((l) => l.startsWith('| Several questions in one request |'));
-	const base31 = row?.split('|').slice(1, -1)[3] ?? '';
-	const [, within] = /the same choice as one engine call per question on every item measured, probabilities within ([0-9.]+)/.exec(base31) ?? [];
-	need2(within, 'has a README row on several questions in one request that no longer gives the default base\'s measured agreement');
-	const [, tokens] = /([\d,]+) tokens/.exec(h.ours.stated_longest_state.quote) ?? [];
-	const [, options] = /(\d+) options/.exec(h.ours.stated_option_limit.quote) ?? [];
-	need2(tokens && options, 'has no prompt length or option limit in the card statements');
-	const items = [
-		{ title: 'Intelligence, JevBench v1.6.1', text: `Decisio 31B scored ${jr.intelligence.printed_ours} and Jev 1.13.0 ${jr.intelligence.printed_theirs}.` },
-		{ title: 'The sealed questions', text: `${stable('sealed_v161').text} The sealed set was never published.` },
-		{ title: 'Many questions, one read', text: `Every question in a request is scored from one read of your text: the same choice as one question at a time on every item measured, probabilities within ${within}.` },
-		{ title: 'Long prompts, many options', text: `Prompts up to ${tokens} tokens and ${options} options per question.` },
-		{ title: 'Your hardware, no per-token bill', text: 'It runs on your own GPU, Mac or laptop; the cost is the card, not a bill per token.' },
-	];
-	items.forEach((i) => { refuse(i.title); refuse(i.text); });
-	return items;
-}
-
-/**
  * "Many questions about one document": the same-box speed measurement of 2026-10-11, from
  * launch_facts.public.json's figures.same_box_speed, the primary speed figures. The home page shows the linear chart
  * of the 50-question medians, /benchmarks the log detail chart (1, 10 and 50 questions, this session's five
@@ -276,38 +197,6 @@ export function speedRatios() {
 	return { times: about('3000'), times6000: about('6000'), seconds, date: sp.date };
 }
 
-/**
- * The Gemma 4 31B's measured totals for questions about one 3,000-token document, for the figures that draw how a
- * request's questions are answered: one question on a new document (read included), and fifty in one request (one
- * read, then the questions scored together in one batch, the 31B's default `--multi-question warm`), from the same-box
- * session; and, separately, the range of a later request on a document already read, from the cache, with its own
- * session's conditions. No time per question is given, because none was measured in the batch.
- */
-export function batchTotals() {
-	const f = facts().figures;
-	const sys = f.same_box_speed.systems[0];
-	const one = sys.first_question_ms?.['3000'];
-	const fifty = sys.cells50?.['3000']?.seconds?.value;
-	const alone = f.latency_on_read_document?.the_31b_alone;
-	need2(/31B/.test(sys.system) && one && fifty && alone?.low_ms && alone?.high_ms, 'has no 31B totals at 3,000 tokens or per-question range on a read document');
-	const sp = stable('speed_same_box_2026_10_11');
-	return {
-		one,
-		fiftyMs: Math.round(fifty * 1000),
-		fifty: `${fifty.toFixed(2)} s`,
-		follow: `${Math.round(alone.low_ms)} to ${Math.round(alone.high_ms)} ms`,
-		followHigh: alone.high_ms,
-		date: sp.date,
-		followWhen: (() => {
-			const c = f.latency_on_read_document?.conditions ?? '';
-			const w = /(\d+) W/.exec(c)?.[1];
-			const v = /decisio (\d+\.\d+\.\d+)/.exec(c)?.[1];
-			need2(w && v, 'has no card power or decisio version in latency_on_read_document.conditions');
-			return `decisio ${v}, one RTX PRO 6000 at ${w} W`;
-		})(),
-	};
-}
-
 export const DI_BOARD = 'https://huggingface.co/spaces/multimodalart/jev-decision-index';
 
 /**
@@ -332,28 +221,6 @@ export function decisionIndexBoard() {
 		return { name, url: `https://github.com/${repo}/pull/${n}` };
 	});
 	return { text: c.text, date, version: c.values.label, link: c.link ?? DI_BOARD, prs, rows, ours };
-}
-
-/**
- * The benchmarks page's four tiles, each a measured value with its date and source, from the launch facts' stable claims: the
- * JevBench composite and the sealed questions (the home page's proof cards, beside Jev 1.13.0's), the Decision Index
- * board's row, and the same-box time for 50 questions. No rank.
- */
-export function benchStats() {
-	const p = proofCards();
-	const di = decisionIndexBoard();
-	const sp = speedRatios();
-	const s = sp.seconds['3000'];
-	const sec = (x) => `${x.toFixed(x < 10 ? 2 : 1)} s`;
-	const board = "JevBench's file, October 2026";
-	const tiles = [
-		{ ...p.cards[0], date: board, href: BOARD_URL },
-		{ ...p.cards[2], date: board, href: BOARD_URL },
-		{ n: di.ours.pub, dec: 2, final: di.ours.pub.toFixed(2), suffix: '', text: `public index of decisio 0.6.0 (Gemma 4 31B), listed on the Decision Index board; ${di.ours.v03.toFixed(2)} on the edition 0.3 index`, date: `${di.version}, data file of ${di.date}`, href: di.link },
-		{ n: s.decisio, dec: 2, final: s.decisio.toFixed(2), suffix: ' s', text: `for 50 questions about a 3,000-token document on Decisio 31B; Jeff-1.0-Large ${sec(s.jeff)}, Quyet-1.0-Large ${sec(s.quyet)}`, date: `one box, ${sp.date}`, href: '#many-questions' },
-	];
-	tiles.forEach((t) => refuse(t.text));
-	return tiles;
 }
 
 export function manyQuestions(kind) {
@@ -389,7 +256,8 @@ export function manyQuestions(kind) {
 	// What the sentences rest on, in the file's own words, kept beside them.
 	const conditions = m.allowed_sentences.find((x) => x.id === 'decisio_50_questions_seconds')?.conditions;
 	need2(conditions, 'has no conditions for the same_box_speed sentences');
-	const qualifiers = [`${conditions[0].toUpperCase()}${conditions.slice(1)}.`];
+	// "(the box row)" points at a row of the facts file, which the reader cannot see.
+	const qualifiers = [`${conditions[0].toUpperCase()}${conditions.slice(1).replace(/ \(the box row\)/, '')}.`];
 	// The log chart also carries the earlier box's five systems, as hollow rings: its alt text says so, and so does the caption.
 	if (kind === 'log') {
 		const rings = /Five systems were measured in one session[^.]*hollow rings\./.exec(charts.log.alt)?.[0];
@@ -397,162 +265,54 @@ export function manyQuestions(kind) {
 		qualifiers.push(`This chart: ${rings[0].toLowerCase()}${rings.slice(1)}`);
 	}
 	qualifiers.forEach(refuse);
-	return { sentences, qualifiers, chart: charts[kind], box: m.box.labelled.split(' on ')[0].replace(/^./, (c) => c.toUpperCase()) };
+	// The box, as the site says it ("measured by us"), and the release decisio ran, in the README's own line.
+	need2(/^measured by [^,]+ on one RTX PRO 6000, each system on its own published server, in one session$/.test(m.box.labelled), 'has a same_box_speed box label the site no longer reads');
+	const box = m.box.labelled.replace(/^measured by [^ ]+( [A-Z][\w.]*)* on/, 'Measured by us on');
+	const release = /^- (decisio v[\d.]+ on vLLM [\d.]+) \(the 31B and the 12B at their repositories' pins\)/m.exec(readUpstream('README.md'))?.[1];
+	need2(release, 'is beside a README that no longer names the decisio release of the same-box session');
+	return { sentences, qualifiers, chart: charts[kind], box, release: `The server was ${release}.` };
 }
 
 /**
- * The recorded decisions the home page's live demo plays, from launch_facts.public.json's figures.recorded_decisions (from
- * decisio-examples' runs of 2026-10-08): the first records of four runs, taken as they came, each with its request's
- * text, every question's recorded probabilities and the server time the record kept. The build stops if a record is
- * malformed or its probabilities do not add up to one.
+ * The recorded decisions the home page's live demo and the docs play: the twelve records launch_facts.public.json's
+ * figures.recorded_decisions selects (the first records of four decisio-examples runs, taken as they came), each sent again
+ * to decisio 0.17.0 (src/lib/recorded.mjs), so every probability and server time shown is that release's. The build stops
+ * if a replayed request is not the selected record's, a record is malformed, or its probabilities do not add up to one.
  */
 export function recordedExamples() {
 	const r = facts().figures?.recorded_decisions;
-	need2(r?.source?.commit && r.source.files?.length && r.run?.decisio_version && r.box_label?.value && r.items?.length >= 12, 'has no figures.recorded_decisions with its source, run, box label and at least twelve records');
-	for (const f of r.source.files) need2(/^[0-9a-f]{64}$/.test(f.sha256 ?? ''), `has a recorded run (${f.path ?? f.file}) without its sha256`);
-	for (const it of r.items) {
-		need2(it.state && it.serverMs > 0 && it.questions?.length, `has a recorded decision (${it.id}) without its text, time or questions`);
-		for (const q of it.questions) {
-			const total = q.bars.reduce((s, b) => s + b.p, 0);
-			need2(q.type === 'yes/no' ? q.bars.length === 1 && q.bars[0].p >= 0 && q.bars[0].p <= 1 : Math.abs(total - 1) < 1e-6, `has a recorded decision (${it.id}, ${q.name}) whose probabilities do not add up`);
+	need2(r?.source?.commit && r.source.files?.length && r.items?.length >= 12, 'has no figures.recorded_decisions with its source and at least twelve records');
+	const again = replay();
+	const s = session();
+	const js = (x) => Math.floor(x + 0.5);
+	const items = r.items.map((it) => {
+		const now = again.get(it.id);
+		need2(now, `has a recorded decision (${it.id}) the 0.17.0 replay did not send again`);
+		const st = now.request.state;
+		const state = typeof st === 'string' ? st : Object.entries(st).map(([k, v]) => `${k}: ${v}`).join('\n');
+		need2(state === it.state, `has a recorded decision (${it.id}) whose text is not the replayed request's`);
+		const questions = it.questions.map((q) => {
+			const a = now.answers[q.name];
+			need2(a, `has a question (${it.id}, ${q.name}) the replay did not answer`);
+			if (q.type === 'yes/no') return { ...q, bars: [{ ...q.bars[0], p: a.noul, top: a.noul >= 0.5 }] };
+			const bars = q.bars.map((b) => {
+				const p = a.probabilities?.[b.label];
+				need2(typeof p === 'number', `has an option (${it.id}, ${q.name}, ${b.label}) the replay gave no probability`);
+				return { ...b, p, top: q.type === 'choice' ? b.label === a.choice : String(js(a.score)) === b.label };
+			});
+			return { ...q, bars, result: q.type === 'choice' ? a.choice : `level ${a.score.toFixed(1)}` };
+		});
+		for (const q of questions) {
+			const total = q.bars.reduce((sum, b) => sum + b.p, 0);
+			need2(q.type === 'yes/no' ? q.bars[0].p >= 0 && q.bars[0].p <= 1 : Math.abs(total - 1) < 1e-6, `has a replayed decision (${it.id}, ${q.name}) whose probabilities do not add up`);
 		}
 		refuse(it.state);
-	}
-	return { source: r.source, run: { ...r.run, decisio: r.run.decisio_version, powerW: r.run.power_limit_w }, boxLabel: r.box_label.value, items: r.items };
+		return { ...it, questions, serverMs: now.serverMs };
+	});
+	const run = { date: s.date, decisio: s.decisio, decisio_version: s.decisio, vllm: s.vllm, base: s.base, card: s.card, powerW: s.powerW, power_limit_w: s.powerW };
+	return { source: r.source, run, boxLabel: `Gemma 4 31B, decisio ${s.decisio}, RTX PRO 6000 at ${s.powerW} W`, items };
 }
 
-const short = (n) => n.replace(/ v\d.*$/, '').replace(/^decisio Gemma 4 /, 'Decisio ');
-const noCount = (printed) => printed.replace(/ \(\d+\)$/, '');
-
-/**
- * The numbers the home page's interactive pieces draw, all from launch_facts.public.json and nothing else: the race and the
- * document-length slider (figures.same_box_speed), the routing-threshold slider (figures.routing_example5's sweep),
- * the JevBench grid (figures.axes_table) and the hero's replay (the per-question latency on a document already read).
- * The page puts this in a JSON block; the scripts only move between these values and format them, and scripts/checks/launch.mjs
- * compares the block with the file.
- */
-export function protoData() {
-	const f = facts();
-	const m = f.figures?.same_box_speed;
-	const r = f.figures?.routing_example5;
-	const t = f.figures?.axes_table;
-	const lat = f.figures?.latency_on_read_document;
-	need2(m && r && t && lat, 'has no same_box_speed, routing_example5, axes_table or latency_on_read_document');
-	const lengths = ['3000', '6000', '32000'];
-	const systems = m.systems.map((s) => ({
-		name: short(s.system),
-		cls: s.class,
-		limit: s.limit_tokens.value,
-		limitText: s.limit_text,
-		cells: Object.fromEntries(lengths.map((k) => {
-			const c = s.cells50[k];
-			need2(c, `has no ${k}-token cell for ${s.system}`);
-			return [k, c.seconds && typeof c.seconds.value === 'number' ? { s: c.seconds.value, label: noCount(c.printed) } : null];
-		})),
-	}));
-	const sweep = r.sweep.value.filter((x) => x.keep_at <= 0.95).map((x) => ({ at: x.keep_at, escalated: x.escalated, share: x.escalated_share, accuracy: x.accuracy_kept, caught: x.errors_escalated, confident: x.confidently_wrong }));
-	need2(sweep.length === 6 && r.questions.value && r.wrong_answers_total.value, 'has a routing sweep that is not the six thresholds 0.5 to 0.95');
-	const hero = lat.the_31b_alone;
-	need2(typeof hero?.high_ms === 'number', 'has no 31B latency on a document already read');
-	const ratio = speedRatios();
-	const first = systems[0].cells['3000'];
-	need2(first && systems[0].name === 'Decisio 31B', 'has a first system that is not Decisio 31B with a 3,000-token cell');
-	return {
-		race: { systems, lengths, box: m.box.labelled, questions: 50 },
-		hero: {
-			msPerQuestion: hero.high_ms,
-			wording: lat.wording,
-			stats: {
-				seconds: noCount(m.systems[0].cells50['3000'].printed),
-				single: singleQuestion().ms,
-				longTokens: 32000,
-				// The race cards: the multiples the facts' sentence gives, and the 32,000-token time.
-				times: ratio.times,
-				times6000: ratio.times6000,
-				// Beside each multiple, the times it is made of and the date (the speed claim's values).
-				seconds3000: ratio.seconds['3000'],
-				seconds6000: ratio.seconds['6000'],
-				date: ratio.date,
-				long: noCount(m.systems[0].cells50['32000'].printed),
-			},
-		},
-		demo: (() => { const d = recordedExamples(); return { run: d.run, boxLabel: d.boxLabel, source: { repository: d.source.repository, commit: d.source.commit }, items: d.items }; })(),
-		routing: { questions: r.questions.value, wrong: r.wrong_answers_total.value, sweep, what: r.record.what },
-		grid: gridData(t),
-	};
-}
-
-/** The home page's sortable grid: each cell its printed value and a shade from 0 to 10 by its value in the column. */
-function gridData(t) {
-	const val = (x, c) => Number(String(x.cells[c].printed).replace(/[^\d.-]/g, ''));
-	const range = Object.fromEntries(t.columns.map((c) => { const vs = t.rows.map((x) => val(x, c.id)); return [c.id, [Math.min(...vs), Math.max(...vs)]]; }));
-	const shade = (x, c) => { const [lo, hi] = range[c]; return hi > lo ? Math.round(((val(x, c) - lo) / (hi - lo)) * 10) : 5; };
-	return {
-		title: t.title.replace(/the ten highest open-weights systems/i, 'ten open-weights systems'),
-		columns: t.columns.map((c) => ({ id: c.id, name: c.name, tagline: c.tagline })),
-		rows: t.rows.map((x) => ({ label: x.label, ours: x.is_decisio, jev: /^Jev /.test(x.label), cells: t.columns.map((c) => ({ p: x.cells[c.id].printed, v: val(x, c.id), shade: shade(x, c.id) })) })).sort(byName((x) => x.label, (x) => x.jev)),
-	};
-}
-
-/**
- * The three big cards after the hero, each a measured value beside Jev 1.13.0's: the composite with its interval, the
- * intelligence axis and the sealed-set score, from the launch facts' stable claims. Each label carries the board's revision,
- * since these hold for that file.
- */
-export function proofCards() {
-	const f = facts();
-	const j = jevbench();
-	const rev = j.revision;
-	// Three measured values on the board's file, each beside Jev 1.13.0's, and the composite's sentence under them: no rank.
-	const comp = stable('composite_v161');
-	const ax = stable('axes_v161').values.intelligence;
-	const sealed = stable('sealed_v161').values.sealed;
-	const v = (x) => Number(x.value ?? x);
-	const two = (x) => v(x).toFixed(2);
-	const one = (x) => v(x).toFixed(1);
-	const iv = (lo, hi) => `${lo.toFixed(2)} to ${hi.toFixed(2)}`;
-	const cv = comp.values;
-	need2(cv?.ours && cv?.theirs && cv?.ours_interval && cv?.theirs_interval, 'has no composite values in stable_claims.composite_v161');
-	const cards = [
-		{ n: v(cv.ours), dec: 2, final: two(cv.ours), suffix: '', text: `JevBench ${rev} composite (95% interval ${iv(...cv.ours_interval.value)}); Jev 1.13.0 ${two(cv.theirs)} (${iv(...cv.theirs_interval.value)})` },
-		{ n: v(ax.ours), dec: 1, final: one(ax.ours), suffix: '', text: `intelligence on JevBench ${rev}; Jev 1.13.0 ${one(ax.theirs)}` },
-		{ n: v(sealed.ours), dec: 1, final: one(sealed.ours), suffix: '', text: `on the sealed questions, never published, on JevBench ${rev}; Jev 1.13.0 ${one(sealed.theirs)}` },
-	];
-	cards.forEach((c) => refuse(c.text));
-	const line = comp.text;
-	refuse(line);
-	return { cards, line, claimText: comp.text, revision: rev, sha: j.fileSha256 ?? j.sha256, url: boardSource().url, live: f.stable_claims.rule ? 'https://benchmarkheaven.com/jev-models' : boardSource().url };
-}
-
-/**
- * "Honest limits": one line each, every number and name from the facts or the README the page already draws on.
- */
-export function limits() {
-	const f = facts();
-	const m = f.figures.same_box_speed;
-	const j = jevbench();
-	const docs = m.documents_per_cell;
-	const nums = /(\d+) for decisio and H2O[^;]*; (\d+) for/.exec(docs ?? '');
-	need2(m.box?.card && m.box?.enforced_power_limit_w?.value && nums, 'has no box card, power limit or documents-per-cell for the limits');
-	const recorded = recordedExamples().run;
-	// What the default base needs, in the README's words: the 96 GB card, the 64 GB Mac it runs on, and the 48 GB Mac
-	// its 4-bit conversion is for, a size derived from the 64 GB measurement.
-	const g31 = guidanceFor('gemma-4-31b');
-	const need = [...g31.rest, ...g31.sub].find((l) => /96 GB card/.test(l));
-	need2(need && /64 GB Mac/.test(need), 'has a README that no longer says the default base needs a 96 GB card or runs on a 64 GB Mac');
-	need2(/from its 4-bit conversion `tachara-ai\/decisio-gemma-4-31b-mlx-4bit` on a 48 GB Mac \(derived from the 64 GB measurement\)/.test(readUpstream('README.md')), 'has a README that no longer says the default base\'s 4-bit conversion is for a 48 GB Mac, derived from the 64 GB measurement');
-	const live = (f.claims.v161_scoped_statements?.statements ?? []).some((s) => s.holds_on_live === false);
-	const items = [
-		{ title: 'One box, one session', text: `Every race figure is from ${m.box.card.replace('NVIDIA ', '')}, each system on its own server.` },
-		{ title: 'One question', text: `The one-question figure in the hero is ${singleQuestion().conditions}.` },
-		{ title: 'Time, not accuracy', text: 'The race compares how long fifty questions take, on synthetic support tickets.' },
-		{ title: 'Replayed, not live', text: `The race replays medians of ${nums[2]} or ${nums[1]} documents, and the demo replays decisions recorded on decisio ${recorded.decisio}.` },
-		...(live ? [{ title: 'A snapshot of the board', text: `The values are for JevBench ${j.revision}; the live board has moved since.` }] : []),
-		{ title: 'Hardware', text: 'Gemma 4 31B needs a 96 GB card or a 64 GB Mac; its 4-bit conversion is for a 48 GB Mac, a size not measured.' },
-	];
-	items.forEach((i) => { refuse(i.title); refuse(i.text); });
-	return items;
-}
 
 /**
  * One question about a new 300-token text on Gemma 4 31B, server time: figures.latency_on_new_state_300 . The

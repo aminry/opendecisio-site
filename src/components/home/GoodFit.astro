@@ -1,0 +1,40 @@
+---
+// The one Good fit / Not a good fit box: when decisio is the right tool and when it is not. Each line is a requirement
+// or a measurement at the pinned release; src/config/sourced.mjs holds the sentence of decisio's docs each one rests on.
+const good = [
+	'You ask the same question about many texts, with fixed options: route a ticket, flag a message, approve a command.',
+	'You have labelled examples: 118 or more, at the defaults, for a task you want certified.',
+	'You want the answers it is sure of automated, and the rest sent to a person.',
+	'You want to know when traffic drifts: from decisio 0.16.0, certification pauses on its own while the confidence alert is on.',
+	'Your options run into the hundreds: up to 255 per question.',
+	'Your documents are long: at least 32,768 tokens on a Gemma model on a card, and up to 98,304 on the 31B, as the card allows.',
+	'Your data must stay on your machines: the default model runs on one NVIDIA card of 80 GB or 96 GB, or on a 64 GB Mac.',
+];
+const bad = [
+	'You need written text back, such as a summary or a reply: every answer is a probability for each option.',
+	'You have no labelled examples but need answers it stands behind: below 59 held-out examples it will not certify.',
+	'You need almost no errors from a few examples per option: at most 2% wrong, the support inbox above certified nothing.',
+	'Your labels or your serving setup change every week: a certificate covers one task on one serving setup, so certify again after changing either, and after upgrading decisio.',
+	'You want these numbers on a laptop with Ollama: Ollama builds its own prompt and applies no calibration.',
+	'You have long documents on a Mac: there the 31B is documented for texts up to 16,383 tokens.',
+];
+---
+<section class="section band" id="fit" aria-labelledby="fit-h">
+	<div class="wrap">
+		<div class="section__head">
+			<p class="kicker">Is it for you</p>
+			<h2 id="fit-h">Good fit, <em class="hl">and not a good fit</em></h2>
+		</div>
+		<div class="fitbox tile">
+			<div class="fitbox__col">
+				<h3 class="fitbox__h fitbox__h--good">Good fit</h3>
+				<ul class="fitbox__list">{good.map((l) => <li>{l}</li>)}</ul>
+			</div>
+			<div class="fitbox__col">
+				<h3 class="fitbox__h fitbox__h--bad">Not a good fit</h3>
+				<ul class="fitbox__list">{bad.map((l) => <li>{l}</li>)}</ul>
+			</div>
+		</div>
+		<p class="fitbox__more">Hardware, context lengths and what was measured on what: <a href="/docs/limits/">Requirements and limits</a>.</p>
+	</div>
+</section>

@@ -1,44 +1,27 @@
 ---
-// "JevBench, axis by axis": ten open-weights systems from the board's file and Jev on the composite and five axes,
-// the board's axes picture (redrawn in alphabetical order, plain values), the measured values in the facts' stable wording, and
-// every number in a table that starts closed (axesFigure in src/lib/launch.mjs, from launch_facts.public.json's
-// figures.axes_table). No rank (decided 2026-10-15): the home page's grid is shaded by value, not by rank.
-import LaunchImage from './LaunchImage.astro';
+// "Axis by axis" on the benchmarks page: the board's axes for ten open-weights systems from its file and Jev, in
+// alphabetical order (axesFigure in src/lib/launch.mjs, from launch_facts.public.json's figures.axes_table). The measured
+// values in the facts' stable wording, the open and sealed items as a chart, and every number in a table that starts
+// closed, with a line on what each axis measures. No rank (decided 2026-10-15).
+import SealedOpenChart from './SealedOpenChart.astro';
 import { axesFigure } from '../lib/launch.mjs';
 
-interface Props { level?: 2 | 3; interactive?: boolean; }
-const { level = 2, interactive = false } = Astro.props;
-const Heading = `h${level}` as 'h2' | 'h3';
 const a = axesFigure();
 ---
-<div class:list={['axes', { 'pcard tile': !interactive }]} data-launch="axes">
-	{interactive ? (
-		<div class="section__head">
-			<p class="kicker">The board, column by column</p>
-			<Heading id="axis-by-axis">JevBench, <em class="hl">axis by axis</em></Heading>
-			<p>Ten open-weights systems from the board's file in alphabetical order, and Jev 1.13.0 as a reference row; each cell is shaded by its value in the column. Higher is better on every axis.</p>
-		</div>
-	) : (
-		<div class="pcard__head">
-			<Heading class="pcard__title" id="axis-by-axis">Axis by axis</Heading>
-			<p class="pcard__meta">ten open-weights systems in alphabetical order and Jev 1.13.0; higher is better on every axis</p>
-		</div>
-	)}
-	{interactive && (
-		<div class="grid__wrap">
-			<label class="grid__sort" hidden>Sort by <select data-grid-sort></select></label>
-			<div class="grid glass" data-grid data-reveal hidden></div>
-		</div>
-	)}
-	<figure class="lc-fig" data-launch="jevbench-axes" data-grid-fallback={interactive ? '' : undefined}>
-		<LaunchImage name="jevbench-axes" width={1512} height={960} alt={a.alt} />
-	</figure>
-	<ul class="axes__bullets mt-4" data-table-notes>
+<div class="axes pcard tile" data-launch="axes">
+	<div class="pcard__head">
+		<h3 class="pcard__title" id="axis-by-axis">Axis by axis</h3>
+		<p class="pcard__meta">ten open-weights systems in alphabetical order and Jev 1.13.0; higher is better on every axis</p>
+	</div>
+	<ul class="axes__bullets" data-table-notes>
 		{a.bullets.map((b) => <li>{b}</li>)}
 	</ul>
-	{!interactive && <p class="axes__note">On the composite, decisio's 95% interval overlaps each of the other three compared on this site. {a.note} The board's rows for decisio are v0.8.0.</p>}
+	<div data-table-notes><SealedOpenChart /></div>
 	<details class="axes__all disc">
-		<summary>Every number</summary>
+		<summary>Every number, and what each axis measures</summary>
+		<ul class="axes__meaning" data-table-notes>
+			{a.columns.map((c) => <li><b>{c.name}</b>: {c.tagline}</li>)}
+		</ul>
 		<div class="table-scroll">
 			<table class="data-table data-table--stack">
 				<caption class="sr-only">JevBench: ten open-weights systems and Jev 1.13.0 on the composite, the four axes and the sealed questions, with each value in its column</caption>
@@ -58,6 +41,6 @@ const a = axesFigure();
 				</tbody>
 			</table>
 		</div>
-		<p class="mt-3 small muted" data-table-notes>Source: the board's file for revision v1.6.1.</p>
+		<p class="mt-3 small muted" data-table-notes>The axes have no published intervals; the composite's is in the chart above. Source: the board's file for revision v1.6.1; its rows for decisio are v0.8.0.</p>
 	</details>
 </div>

@@ -1,68 +1,21 @@
 ---
-// "Many questions about one document": the same-box speed chart, light and dark, and the sentences
-// launch_facts.public.json's figures.same_box_speed allows (manyQuestions in src/lib/launch.mjs). The home page
-// shows the linear chart of the 50-question medians; /benchmarks shows the log detail chart. What the
-// sentences rest on stays beside them.
+// "Many questions about one document" on the benchmarks page: the same-session chart (five systems on one box, light
+// and dark) and the sentences launch_facts.public.json's figures.same_box_speed allows (manyQuestions in
+// src/lib/launch.mjs), with what they rest on beside them and the one line a reader sizing a server needs.
 import LaunchImage from './LaunchImage.astro';
-import { manyQuestions, protoData } from '../lib/launch.mjs';
+import { manyQuestions } from '../lib/launch.mjs';
 
-interface Props { chart: 'linear' | 'log'; level?: 2 | 3; race?: boolean; }
-const { chart, level = 2, race = false } = Astro.props;
-const Heading = `h${level}` as 'h2' | 'h3';
-const q = manyQuestions(chart);
-const hero = race ? protoData().hero.stats : null;
-const stats = hero;
-// Seconds as the speed claim prints them: three significant figures (1.08 s, 47.1 s, 114.6 s).
-const sec = (x: number) => `${x >= 100 ? x.toFixed(1) : x >= 10 ? x.toFixed(1) : x.toFixed(2)} s`;
-const size = chart === 'linear' ? { width: 1240, height: 1120 } : { width: 1240, height: 1102 };
+const q = manyQuestions('linear');
 ---
-<div class="mq" data-launch="many-questions" data-chart={chart}>
-	<div class="section__head" class:list={{ 'mt-6': level === 3 }}>
-		{race && <p class="kicker">Speed, measured on one box</p>}
-		<Heading id="many-questions">Many questions about {race ? <em class="hl">one document</em> : 'one document'}</Heading>
-		{race ? <p>Fifty questions about one document, on one box.</p> : q.sentences.map((t) => <p data-fact>{t}</p>)}
+<div class="mq" data-launch="many-questions" data-chart="linear">
+	<div class="section__head">
+		<p class="kicker">Speed</p>
+		<h2 id="many-questions">Many questions about one document</h2>
+		{q.sentences.map((t) => <p data-fact>{t}</p>)}
 	</div>
-	{race && (
-		<ul class="cards3" data-launch="stat-cards" data-reveal>
-			<li class="card3 tile tilt tile--active"><span class="card3__n">about <span class="count" data-to={stats.times} data-final={String(stats.times)}>{stats.times}</span> times</span><span class="card3__l">as long for Jeff-1.0-Large ({sec(stats.seconds3000.jeff)}) and Quyet-1.0-Large ({sec(stats.seconds3000.quyet)}) as for Decisio 31B ({sec(stats.seconds3000.decisio)}): 50 questions about a 3,000-token document, one box, {stats.date}</span></li>
-			<li class="card3 tile tilt"><span class="card3__n">about <span class="count" data-to={stats.times6000} data-final={String(stats.times6000)}>{stats.times6000}</span> times</span><span class="card3__l">as long at 6,000 tokens: {sec(stats.seconds6000.jeff)} and {sec(stats.seconds6000.quyet)} against {sec(stats.seconds6000.decisio)}, same box, {stats.date}</span></li>
-			<li class="card3 tile tilt"><span class="card3__n"><span class="count" data-to={parseFloat(stats.long)} data-dec="1" data-final={stats.long.replace(' s', '')}>{stats.long.replace(' s', '')}</span> s</span><span class="card3__l">for Decisio 31B to answer 50 questions about a 32,000-token document, which neither Jeff nor Quyet accepts</span></li>
-		</ul>
-	)}
-	{race && (
-		<div class="race glass" data-race data-reveal hidden>
-			<div class="race__ctl">
-				<div class="race__grp" role="group" aria-label="Document length"><span class="race__lg">Document</span>
-					<button type="button" class="chip" data-race-len="3000" aria-pressed="true">3,000 tokens</button>
-					<button type="button" class="chip" data-race-len="6000" aria-pressed="false">6,000 tokens</button>
-					<button type="button" class="chip" data-race-len="32000" aria-pressed="false">32,000 tokens</button>
-				</div>
-				<div class="race__grp" role="group" aria-label="Speed"><span class="race__lg">Speed</span>
-					<button type="button" class="chip" data-race-speed="1" aria-pressed="false">Real time</button>
-					<button type="button" class="chip" data-race-speed="8" aria-pressed="true">8 times faster</button>
-				</div>
-				<button type="button" class="button" data-race-replay>Replay the race</button>
-				<p class="race__clock" aria-hidden="true">Elapsed <span data-race-clock>0.00 s</span></p>
-			</div>
-			<div class="race__rows" data-race-rows role="img" aria-label="Bars racing: each system's median time to answer 50 questions about one document"></div>
-		</div>
-	)}
-	<figure class="lc-fig" data-race-fallback={race ? '' : undefined}>
-		<LaunchImage name={q.chart.name} width={size.width} height={size.height} alt={q.chart.alt} />
+	<figure class="lc-fig">
+		<LaunchImage name={q.chart.name} width={1240} height={1120} alt={q.chart.alt} />
 	</figure>
-	{race && (
-		<div class="len glass" data-length data-reveal hidden>
-			<h3 class="len__title">Which systems accept your document</h3>
-			<label class="len__ctl">Length <input type="range" min="1000" max="33000" step="500" value="6000" list="len-marks" aria-label="Document length in tokens" /> <output data-length-out></output></label>
-			<datalist id="len-marks"><option value="3000"></option><option value="6000"></option><option value="32000"></option></datalist>
-			<ul class="len__rows" data-length-rows></ul>
-		</div>
-	)}
-	{race && (
-		<details class="more mq__facts">
-			<summary>The exact wording, from the facts</summary>
-			{q.sentences.map((t) => <p data-fact>{t}</p>)}
-		</details>
-	)}
-	{!race && <p class="axes__note">{q.box}. {q.qualifiers.join(' ')}</p>}
+	<p class="axes__note">Measured by us. {q.qualifiers.join(" ")} {q.release}</p>
+	<p class="axes__note">Each time is one request at a time; <a href="/docs/scale/">Scale</a> says how many a card serves at once.</p>
 </div>

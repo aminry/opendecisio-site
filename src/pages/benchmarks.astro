@@ -1,65 +1,52 @@
 ---
-// The benchmarks page, in round 6's system: four dated tiles from the launch facts' stable claims, then the public boards
-// (JevBench's charts, alphabetical and dated, and the rows the Decision Index board lists), each base's own measurements,
-// server time, the paired bases, many questions about one document, how it compares, and the limits. Every figure
-// is from launch_facts.public.json or the pinned decisio release with its record; tables sit in cards and method text in
-// disclosures; no paragraph runs past three sentences and nothing ranks (decided 2026-10-15).
+// The benchmarks page: what decisio does, measured and dated, in six short sections. Four static tiles; many questions
+// about one document (the same-session chart); choosing a base (the README's table, one line per base, the paired
+// bases in a disclosure); confidence (the calibration error per base); the public boards (JevBench and the Decision
+// Index); and beside a hosted service and open entries (the comparison of 2026-10-05, the recorded demos' players),
+// then what next. Every figure is from launch_facts.public.json or the pinned decisio release with its record and its
+// date; this is the one page that sets decisio beside other systems, with no rank (decided 2026-10-15).
 import BenchmarkTable from '../components/BenchmarkTable.astro';
+import ConfidenceChart from '../components/ConfidenceChart.astro';
 import HowItCompares from '../components/HowItCompares.astro';
 import JevbenchSection from '../components/JevbenchSection.astro';
 import ManyQuestions from '../components/ManyQuestions.astro';
 import PageHero from '../components/PageHero.astro';
 import Source from '../components/Source.astro';
-import SpeedCharts from '../components/SpeedCharts.astro';
 import UpstreamTable from '../components/UpstreamTable.astro';
+import { colourOf } from '../config/bases.mjs';
 import { site } from '../config/site';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { withoutRepeats } from '../lib/figures.mjs';
-import { benchmarks } from '../lib/home.mjs';
+import { baseLines, benchTiles, demoPlayers, tableNotes } from '../lib/bench-page.mjs';
 import { breadcrumbs } from '../lib/jsonld.mjs';
-import { BOARD_URL, benchStats, decisionIndexBoard } from '../lib/launch.mjs';
-import { findHeading, listItemParts, listItems, paragraphStarting, sectionBlocks, table } from '../lib/upstream-content.mjs';
+import { BOARD_URL, decisionIndexBoard } from '../lib/launch.mjs';
+import { paragraphStarting, table } from '../lib/upstream-content.mjs';
 
-const b = benchmarks();
-const tiles = benchStats();
+const { tiles } = benchTiles();
 const di = decisionIndexBoard();
 const paired = table('README.md', 'Choosing a base', 2);
 // The paired table's own opening sentence; the README's next sentences repeat figures the page already shows.
 const pairedIntro = paragraphStarting('README.md', 'Choosing a base', 'What drives the choice').split('\n')[0];
-const thirdBase = paragraphStarting('README.md', 'Choosing a base', 'Gemma 4 31B was measured in its own session').split('\n')[1];
-const limits = listItems('EVAL_CARD.md', '5. Limits');
-// The README's server-time rows (the pinned release may carry none; its times are then rows of the accuracy table)
-// and its note on where they were measured, less what the limits below already state.
-const latency = withoutRepeats(b.latency, limits);
-// The release's own runs of the Decision Index's whole suite (EVAL_CARD section 8), before the board took them in.
-const selfRunHeading = findHeading('EVAL_CARD.md', /Decision Index's whole suite, self-run/);
-const selfRunTables = selfRunHeading ? sectionBlocks('EVAL_CARD.md', selfRunHeading).filter((x) => x.kind === 'table') : [];
-const anchor = (h: string) => h.toLowerCase().replace(/[^a-z0-9 -]/g, '').trim().replace(/ /g, '-');
-// A limit is a bold title and its sentences; as a tile, the title is its heading and the sentences at most three to a
-// paragraph.
-const limitTiles = listItemParts('EVAL_CARD.md', '5. Limits').map(([first, ...rest]) => {
-	const m = /^<strong>([^<]+?)\.?<\/strong>\s*(.*)$/s.exec(first);
-	return m ? { title: m[1], body: [m[2], ...rest].filter(Boolean) } : { title: '', body: [first, ...rest] };
-});
+const lines = baseLines();
+const notes = tableNotes();
+const players = demoPlayers();
+const KEY: Record<string, string> = { g31: 'gemma-4-31b', g12: 'gemma-4-12b', qwen: 'qwen3.6-35b-a3b' };
 const sections = [
+	['many-questions', 'Many questions'],
+	['bases', 'Choosing a base'],
+	['confidence', 'Confidence'],
 	['jevbench', 'JevBench'],
 	['decision-index', 'Decision Index'],
-	['bases', 'Each base'],
-	...(b.speed.length > 0 ? [['speed', 'Server time']] : []),
-	['paired', 'Paired bases'],
-	['many-questions', 'Many questions'],
-	['compares', 'How it compares'],
-	['limits', 'Limits'],
+	['compares', 'Beside other systems'],
 ];
 const title = `Benchmarks: ${site.name}`;
-const description = 'What each base measured on the public harnesses and on two public boards, every figure dated and linked to its record, beside Jev and three open entries with their intervals.';
+const description = 'What decisio does, measured and dated: many questions about one document, each base, the calibration error, two public boards, and decisio beside a hosted service and open entries.';
 ---
 <SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Benchmarks', path: '/benchmarks/' }])} title={title} description={description}>
 	<PageHero
 		label="Benchmarks"
-		lede="Each base measured on the public harnesses and read by two public boards. Every figure carries its date and links to its record."
-		links={[{ href: BOARD_URL, text: 'JevBench live board' }, { href: di.link, text: 'Decision Index board' }, { href: '/docs/evaluation-card/', text: 'Evaluation card' }]}
-	>What was <em class="hl">measured</em>, and when</PageHero>
+		lede="Ask 50 questions about one document and get every answer in about a second, on one card you own. Every number below is a measurement, with its date and its source."
+		links={[{ href: '/docs/evaluation-card/', text: 'Evaluation card' }, { href: BOARD_URL, text: 'JevBench live board' }, { href: di.link, text: 'Decision Index board' }]}
+	>What it does, <em class="hl">measured and dated</em></PageHero>
 
 	<section class="section psec bench-top" aria-label="At a glance">
 		<div class="wrap">
@@ -67,15 +54,66 @@ const description = 'What each base measured on the public harnesses and on two 
 				<li class="pnav__label" aria-hidden="true">On this page</li>
 				{sections.map(([id, name]) => <li><a class="chip" href={`#${id}`}>{name}</a></li>)}
 			</ul>
-			<ul class="cards3 bench-tiles mt-6" data-launch="bench-tiles" data-table-keys data-reveal>
+			<ul class="cards3 bench-tiles mt-6" data-launch="bench-tiles" data-table-keys>
 				{tiles.map((t, i) => (
-					<li class:list={['card3', 'tile', 'tilt', { 'tile--active': i === 0 }]}>
-						<span class="card3__n"><span class="count" data-to={t.n} data-dec={t.dec} data-final={t.final}>{t.final}</span>{t.suffix}</span>
+					<li class:list={['card3', 'tile', { 'tile--active': i === 0 }]}>
+						<span class="card3__n">{t.n}</span>
 						<span class="card3__l">{t.text}</span>
-						<span class="card3__d"><a href={t.href}>{t.date.replace(/\d{4}-\d{2}-\d{2}$/, '')}<span class="nowrap">{/\d{4}-\d{2}-\d{2}$/.exec(t.date)?.[0]}</span></a></span>
+						<span class="card3__d"><a href={t.href}>{t.date}</a></span>
 					</li>
 				))}
 			</ul>
+		</div>
+	</section>
+
+	<section class="section psec" aria-labelledby="many-questions">
+		<div class="wrap">
+			<div class="pcard tile mq-card">
+				<ManyQuestions />
+			</div>
+		</div>
+	</section>
+
+	<section class="section psec" aria-labelledby="bases">
+		<div class="wrap">
+			<div class="section__head">
+				<p class="kicker">Each base</p>
+				<h2 id="bases">Choosing a <em class="hl">base</em></h2>
+				<p>Three models serve the same API. <a href="/docs/bases/">Choosing a model</a> says how to pick and start each one.</p>
+			</div>
+			<ul class="bases">
+				{lines.map((l) => <li class:list={['bases__i', colourOf(KEY[l.base])]}><span class="dot" aria-hidden="true"></span><b>{l.name}</b>: {l.text}</li>)}
+			</ul>
+			<div class="pcard tile">
+				<div class="pcard__head">
+					<h3 class="pcard__title">Accuracy and time, each base</h3>
+					<p class="pcard__meta">each base with its own defaults on one RTX PRO 6000; higher is better, but for the times; each column links to its record</p>
+				</div>
+				<BenchmarkTable />
+				<div class="pcard__foot" data-table-notes>{notes.map((n) => <p>{n}</p>)}</div>
+				<details class="disc">
+					<summary>Gemma 4 12B and Qwen3.6-35B-A3B on the same items</summary>
+					<div class="disc__body">
+						<p set:html={pairedIntro} />
+						<UpstreamTable head={paired.head} rows={paired.rows} caption="Gemma 4 12B against Qwen3.6-35B-A3B on the same items" />
+						<p class="small"><Source record="runs/2026-10-04_gemma-base/" /></p>
+					</div>
+				</details>
+			</div>
+		</div>
+	</section>
+
+	<section class="section psec" aria-labelledby="confidence">
+		<div class="wrap">
+			<div class="section__head">
+				<p class="kicker">Confidence</p>
+				<h2 id="confidence">Probabilities that <em class="hl">mean what they say</em></h2>
+				<p>The calibration error is the average gap between the probability an answer states and how often answers like it were right: lower is better, and zero would be exact. Here it is on JevBench's published items, on its standard and hard tiers.</p>
+			</div>
+			<div class="pcard tile">
+				<ConfidenceChart />
+				<p class="pcard__foot">Measured by us with JevBench's own measure, over ten equal-width bins of the probability; <a href="/docs/evaluation-card/#3-numbers">the evaluation card, section 3</a>, has every calibration table and what was fitted on what.</p>
+			</div>
 		</div>
 	</section>
 
@@ -84,11 +122,11 @@ const description = 'What each base measured on the public harnesses and on two 
 	<section class="section psec" aria-labelledby="decision-index">
 		<div class="wrap">
 			<div class="section__head">
-				<p class="kicker">Decision Index</p>
+				<p class="kicker">Public boards</p>
 				<h2 id="decision-index">The Decision Index <em class="hl">board</em></h2>
-				<p data-table-notes>{di.text} The rows come from our submissions, {di.prs.map((p, i) => <>{i > 0 && ' and '}<a href={p.url}>{p.name}</a></>)}: both are closed and not merged on GitHub, and the maintainer took the rows into <a href={di.link}>the board's data file</a>.</p>
+				<p>The Decision Index runs 38 public benchmarks in five areas and scores each system from 0 to 100. Its board lists decisio's rows from our submissions, in <a href={di.link}>its data file of {di.date}</a>.</p>
 			</div>
-			<div class="pcard tile" data-reveal>
+			<div class="pcard tile">
 				<div class="pcard__head">
 					<h3 class="pcard__title">decisio's rows on the board</h3>
 					<p class="pcard__meta"><a href={di.link}>{di.version}, the board's data file of {di.date}</a></p>
@@ -110,85 +148,7 @@ const description = 'What each base measured on the public harnesses and on two 
 						</tbody>
 					</table>
 				</div>
-				{selfRunTables.length > 0 && (
-					<details class="disc">
-						<summary>The release's own runs, Decision Index 0.2.1</summary>
-						<div class="disc__body">
-							<p>Our own runs of the whole suite, self-run, as the evaluation card records them.</p>
-							{selfRunTables.map((t) => {
-								// The card's prose states how many requests were scored, so that column would repeat it.
-								const keep = t.head.map((h) => !/Scored requests answered/.test(h));
-								return <UpstreamTable head={t.head.filter((_, i) => keep[i])} rows={t.rows.map((r) => r.filter((_, i) => keep[i]))} caption="The Decision Index 0.2.1, whole suite, self-run per base" />;
-							})}
-							<p><Source record="EVAL_CARD.md" label="Source" anchor={anchor(selfRunHeading!)} /></p>
-						</div>
-					</details>
-				)}
-			</div>
-		</div>
-	</section>
-
-	<section class="section psec" aria-labelledby="bases">
-		<div class="wrap">
-			<div class="section__head">
-				<p class="kicker">Public harnesses</p>
-				<h2 id="bases">Each base, <em class="hl">measured by us</em></h2>
-				<p>{b.source.map((s) => <span set:html={`${s} `} />)}</p>
-			</div>
-			<div class="pcard tile" data-reveal>
-				<div class="pcard__head">
-					<h3 class="pcard__title">Accuracy and macro-F1</h3>
-					<p class="pcard__meta">higher is better; each column links to its record</p>
-				</div>
-				<BenchmarkTable />
-				<p class="pcard__foot" set:html={thirdBase} />
-				<p class="pcard__foot">Calibration for each base is in the capabilities table below, under "Probabilities I can trust?". <span set:html={b.standing.card} /></p>
-			</div>
-		</div>
-	</section>
-
-	{b.speed.length > 0 && (
-		<section class="section psec" aria-labelledby="speed">
-			<div class="wrap">
-				<div class="section__head">
-					<p class="kicker">Server time</p>
-					<h2 id="speed">How long <em class="hl">an answer takes</em></h2>
-					<p>The README's server-time rows, every base on a shared scale from zero.</p>
-				</div>
-				<div class="pcard tile" data-reveal>
-					<SpeedCharts />
-					{latency.length > 0 && (
-						<details class="disc">
-							<summary>Where these were measured</summary>
-							<div class="disc__body" data-table-notes>{latency.map((l) => <p set:html={l} />)}</div>
-						</details>
-					)}
-				</div>
-			</div>
-		</section>
-	)}
-
-	<section class="section psec" aria-labelledby="paired">
-		<div class="wrap">
-			<div class="section__head">
-				<p class="kicker">Choosing a base</p>
-				<h2 id="paired">Gemma 4 12B and Qwen3.6-35B-A3B, <em class="hl">paired</em></h2>
-				<p set:html={pairedIntro} />
-			</div>
-			<div class="pcard tile" data-reveal>
-				<div class="pcard__head">
-					<h3 class="pcard__title">The same items, both bases</h3>
-					<p class="pcard__meta"><Source record="runs/2026-10-04_gemma-base/" /></p>
-				</div>
-				<UpstreamTable head={paired.head} rows={paired.rows} caption="Gemma 4 12B against Qwen3.6-35B-A3B on the same items" />
-			</div>
-		</div>
-	</section>
-
-	<section class="section psec" aria-labelledby="many-questions">
-		<div class="wrap">
-			<div class="pcard tile mq-card" data-reveal>
-				<ManyQuestions chart="log" />
+				<p class="pcard__foot"><a href="/docs/evaluation-card/#8-the-decision-indexs-whole-suite-self-run">The evaluation card, section 8</a>, has our own runs of the whole suite.</p>
 			</div>
 		</div>
 	</section>
@@ -196,35 +156,47 @@ const description = 'What each base measured on the public harnesses and on two 
 	<section class="section psec" aria-labelledby="compares">
 		<div class="wrap">
 			<div class="section__head">
-				<p class="kicker">How it compares</p>
-				<h2 id="compares">Beside Jev and <em class="hl">three open entries</em></h2>
-				<p>decisio's three bases beside TypeSafe's Jev 1.13 and three open-weights entries from the Decision Index's public board, as of 2026-10-05. Jev's and the other entries' values come only from the public boards.</p>
-				<p>Our Decision Index values here are our own runs on the Decision Index 0.2.1, and the JevBench counts are this repository's records, not board entries. Decisio's rows as the board lists them, in its data file of {di.date}, are under <a href="#decision-index">the Decision Index board</a>, above.</p>
+				<p class="kicker">Beside other systems</p>
+				<h2 id="compares">Beside a hosted service <em class="hl">and open entries</em></h2>
+				<p>decisio's three bases beside TypeSafe's Jev 1.13 and three open-weights entries from the Decision Index's public board, as of 2026-10-05. Jev's and the other entries' values come only from the public boards and TypeSafe's public documentation; decisio's are our own runs on the Decision Index 0.2.1.</p>
 			</div>
 			<HowItCompares />
+
+			<div class="pcard tile">
+				<div class="pcard__head">
+					<h3 class="pcard__title" id="compares-demos">The recorded demos, every player</h3>
+					<p class="pcard__meta">the same games, seeds and checks for every player, on {players.dates.join(' and ')}</p>
+				</div>
+				<p class="pcard__foot">The <a href="/demos/">Demos</a> page shows decisio's own runs; here are the other players beside them.</p>
+				<details class="disc">
+					<summary>The players <span class="disc__n">{players.rows.length} rows</span></summary>
+					<div class="disc__body"><UpstreamTable head={players.head} rows={players.rows} numeric={false} caption="The players of the recorded demos, with their models, dates and routes" /></div>
+				</details>
+				{players.games.map((g) => (
+					<details class="disc">
+						<summary>{g.name} <span class="disc__n">{g.table.rows.length} rows</span></summary>
+						<div class="disc__body"><UpstreamTable head={g.table.head} rows={g.table.rows} caption={g.name} /></div>
+					</details>
+				))}
+			</div>
 		</div>
 	</section>
 
-	<section class="section psec" aria-labelledby="limits">
+	<section class="section psec" aria-labelledby="next">
 		<div class="wrap">
 			<div class="section__head">
-				<p class="kicker">Limits</p>
-				<h2 id="limits">What these numbers <em class="hl">do not show</em></h2>
-				<p><Source record="EVAL_CARD.md" label="The evaluation card, section 5" anchor="5-limits" /> has each limit as it was written.</p>
+				<p class="kicker">What next</p>
+				<h2 id="next">Before you rely on <em class="hl">a number</em></h2>
 			</div>
-			<ul class="ptiles" data-reveal>
-				{limitTiles.map((l) => (
-					<li class="ptile tile">
-						{l.title && <h3>{l.title}</h3>}
-						{l.body.map((html) => <p set:html={html} />)}
-					</li>
-				))}
+			<ul class="plain-list bench-next">
+				<li>Each figure is one card, one run: your card, host and load will move the times.</li>
+				<li>Every time on this page is server time, one request at a time; <a href="/docs/scale/">Scale</a> covers a busy server.</li>
+				<li>Several figures were measured on earlier releases of the same models; each says which.</li>
 			</ul>
-			<p class="page-hero__links"><a class="chip" href="/docs/evaluation-card/">Every table, in the evaluation card</a><a class="chip" href="/docs/comparison/">How it compares, in the docs</a></p>
+			<p class="page-hero__links"><a class="chip" href="/docs/evaluation-card/">The evaluation card</a><a class="chip" href="/docs/limits/">Requirements and limits</a><a class="chip" href="/docs/bases/">Choosing a model</a></p>
 		</div>
 	</section>
 </SiteLayout>
 <script>
-	import '../scripts/reveal.ts';
 	import '../scripts/disclose.ts';
 </script>

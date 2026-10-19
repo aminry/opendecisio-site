@@ -1,0 +1,35 @@
+---
+// The calibration error of each base on JevBench's standard and hard tiers (calibration() in src/lib/bench-page.mjs,
+// from the README), as bars on one scale from zero, each base in its colour. Static; its title and description carry
+// every value.
+import { calibration } from '../lib/bench-page.mjs';
+const rows = calibration();
+const max = Math.ceil(Math.max(...rows.flatMap((r) => [r.standard, r.hard])) * 20) / 20;
+const W = 720;
+const X0 = 190;
+const X1 = 660;
+const x = (v: number) => X0 + (v / max) * (X1 - X0);
+const ticks = Array.from({ length: Math.round(max / 0.05) + 1 }, (_, i) => +(i * 0.05).toFixed(2));
+const ROW = 64;
+const H = 24 + rows.length * ROW + 34;
+const desc = rows.map((r) => `${r.name}: ${r.standard.toFixed(3)} on the standard tier, ${r.hard.toFixed(3)} on the hard tier`).join('; ');
+---
+<figure class="cc">
+	<svg class="cc__svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="cc-t cc-d" xmlns="http://www.w3.org/2000/svg">
+		<title id="cc-t">Calibration error on JevBench, per base and tier; lower is better</title>
+		<desc id="cc-d">{desc}.</desc>
+		<g class="cc-grid">{ticks.map((t) => <g><line x1={x(t)} x2={x(t)} y1="14" y2={H - 30} /><text x={x(t)} y={H - 10} text-anchor="middle">{t.toFixed(2)}</text></g>)}</g>
+		{rows.map((r, i) => {
+			const y = 24 + i * ROW;
+			return (
+				<g class={`cc-row base-${r.base}`}>
+					<text class="cc-l" x="0" y={y + 22}>{r.name}</text>
+					<rect class="cc-bar" x={X0} y={y + 6} width={x(r.standard) - X0} height="18" rx="3" />
+					<text class="cc-v" x={x(r.standard) + 8} y={y + 20}>{r.standard.toFixed(3)} standard</text>
+					<rect class="cc-bar cc-bar--hard" x={X0} y={y + 30} width={x(r.hard) - X0} height="18" rx="3" />
+					<text class="cc-v" x={x(r.hard) + 8} y={y + 44}>{r.hard.toFixed(3)} hard</text>
+				</g>
+			);
+		})}
+	</svg>
+</figure>

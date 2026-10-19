@@ -1,11 +1,12 @@
 ---
 // The live demo in the hero: a picker of recorded decisions (the first records of four decisio-examples runs, taken as
-// they came, from figures.recorded_decisions), each played as the flow it is: the text enters, the server reads it once,
+// they came, from figures.recorded_decisions, each sent again to decisio 0.17.0: src/lib/recorded.mjs), each played as the flow it is: the text enters, the server reads it once,
 // and then scores the request's questions together in one batch, as the Gemma 4 31B does by default (`--multi-question
-// warm`, decisio's docs/cli.md), so every bar fills at once. The probabilities and the server time are the record's; the
+// warm`, decisio's docs/cli.md), so every bar fills at once. The probabilities and the server time are the 0.17.0 replay's; the
 // time is shown as one total for the request, read and batch together. The first record is in the page as its final state, so the panel is the same size
 // before and after the script runs (no layout shift) and shows a real decision without it; the picker and the replay
-// buttons appear with the script. Labelled with the base, the version and the box the records came from.
+// buttons appear with the script. Labelled with the base, the version and the box the records came from; "See the request"
+// goes to the request and its answer under Get started.
 import { recordedExamples } from '../../lib/launch.mjs';
 const d = recordedExamples();
 const first = d.items[0];
@@ -16,7 +17,7 @@ const ranked = (q: any) => [...q.bars].sort((x: any, y: any) => y.p - x.p);
 const shown = (q: any) => (q.type === 'score' ? q.bars : ranked(q).slice(0, 3));
 const hidden = (q: any) => (q.type === 'score' ? [] : ranked(q).slice(3));
 ---
-<div class="demo glass" data-demo>
+<div class="demo glass" data-demo data-items={JSON.stringify(d.items)}>
 	<div class="demo__head">
 		<span class="demo__live"><i aria-hidden="true"></i> recorded</span>
 		<span class="demo__meta" data-demo-meta>{d.boxLabel}</span>
@@ -43,6 +44,7 @@ const hidden = (q: any) => (q.type === 'score' ? [] : ranked(q).slice(3));
 		<div class="demo__foot">
 			<p class="demo__count" data-demo-count aria-live="polite">{first.questions.length} answers in one batch · {first.serverMs.toFixed(1)} ms server time</p>
 			<p class="demo__ctl"><button type="button" class="chip" data-demo-play="1">Replay at recorded speed</button> <button type="button" class="chip" data-demo-play="30">Slowed down</button></p>
+			<p class="demo__req"><a href="#ask">See the request and its answer</a></p>
 		</div>
 	</div>
 </div>

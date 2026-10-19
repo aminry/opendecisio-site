@@ -1,0 +1,4 @@
+decisio==0.17.0
+torch==2.13.0
+transformers==5.17.0
+vllm==0.31.0

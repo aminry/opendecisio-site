@@ -6,6 +6,10 @@ import { splitParagraph } from './sentences.mjs';
 import { inlineHtml, inlineParts, sectionNodes, table, tree } from './upstream-content.mjs';
 
 const FILE = 'docs/demos/README.md';
+// A column or row of one of decisio's three bases, as the README names them.
+const OUR_PLAYER = /^(Decisio, )?(Qwen3\.6-35B-A3B|Gemma 4 12B|Gemma 4 31B)( base)?$/;
+// A sentence about another player: the demos page shows decisio's own runs, and the other players are on Benchmarks.
+const OTHER = /Cygnet|Jev\b|Gemini|Luna|Haiku|GPT|OpenRouter|hosted/i;
 const clipOf = (html) => html.match(/\/media\/upstream\/([^"]+)\.mp4/)?.[1];
 
 /** The opening paragraphs, under the page's title, each as paragraphs of at most three sentences. */
@@ -38,9 +42,11 @@ export function clipGroups() {
 			const seen = new Set();
 			const clips = row.slice(1).flatMap((cell, i) => {
 				const name = clipOf(cell);
-				if (!name || seen.has(name) || !servable(name)) return [];
+				const player = t.head[i + 1].replace(/<[^>]+>/g, '');
+				// Decisio's own bases only: a clip of another player, or of one beside another, is not shown (decided 2026-10-18).
+				if (!name || seen.has(name) || !servable(name) || !OUR_PLAYER.test(player)) return [];
 				seen.add(name);
-				return [{ name, player: t.head[i + 1].replace(/<[^>]+>/g, '') }];
+				return [{ name, player }];
 			});
 			if (clips.length) groups.push({ demo: row[0], clips });
 		}
@@ -141,11 +147,32 @@ export function demoCards() {
 			version,
 			scenes: scenes.map((g) => ({ caption: g.demo, label: sceneLabel(d.title, g.demo), clips: g.clips })),
 			minis: minisOf(d.key, t, res),
-			results: { heading: res.heading, blocks: res.blocks },
+			results: { heading: res.heading, blocks: ours(res.blocks) },
 			errors: errorRows.length ? { head: errorTable.head, rows: errorRows.flatMap((g) => g.rows), notes: d.key === 'browser' ? errorNotes : [] } : null,
 			oracle: { head: judged.head, row: oracle },
 			renderings: d.renderings ? { head: rendered.head, rows: rendered.rows.filter((r) => d.renderings.test(plainText(r[0]))), notes: renderNotes.filter((h) => new RegExp(`^The ${d.key === 'browser' ? 'browser agent' : d.title}\\b`, 'i').test(plainText(h))) } : null,
 		};
+	});
+}
+
+// A Results subsection as the demos page shows it: each table's rows for decisio's three bases, and each paragraph and
+// list less its sentences about other players. The browser agent's steps sentence names Cygnet last; that clause goes.
+function ours(blocks) {
+	const keep = (html) => html
+		.replace(/, (\d+ \(\d+%\) for Gemma 4 31B) and \d+ \(\d+%\) for Cygnet\./, ' and $1.')
+		.split(/(?<=\.)\s+(?=[A-Z])/).filter((x) => !OTHER.test(plainText(x))).join(' ');
+	return blocks.flatMap((b) => {
+		if (b.kind === 'table') {
+			const rows = b.rows.filter((r) => OUR_PLAYER.test(plainText(r[0])));
+			if (!rows.length) throw new Error('demos: a results table has no row for decisio\'s bases');
+			return [{ ...b, rows }];
+		}
+		if (b.kind === 'p') {
+			const parts = b.parts.map(keep).filter(Boolean);
+			return parts.length ? [{ ...b, parts }] : [];
+		}
+		const items = b.items.filter((i) => !OTHER.test(plainText(i)));
+		return items.length ? [{ ...b, items }] : [];
 	});
 }
 
@@ -198,15 +225,25 @@ function minisOf(key, t, res) {
 			ms(cell(t, 'latency p50'), 'per decision'),
 		];
 	}
+	// The plain question is the result; teaching moved it by an interval that includes zero, so the gain is not the lead.
 	const after = valued(cell(t, 'after registering'));
 	const before = valued(cell(t, 'plain question'));
-	const f1 = cell(t, 'macro-F1').split('/').map((x) => x.trim());
+	const diff = /^([+-][\d.]+ points) \[([+-][\d.]+), ([+-][\d.]+)\]/.exec(cell(t, 'paired difference'));
+	const size = /\((\d+) held-out tickets over (\d+) queues\)/.exec(res.heading);
 	const took = /took ([\d.]+) s, ([\d.]+) s and ([\d.]+) s/.exec(text);
 	const i = t.rows.findIndex((r) => OURS.test(plainText(r[0])));
-	if (!took || i < 0 || i > 2) throw new Error('demos: triage no longer states the registration times in the table\'s order');
+	if (!took || !diff || !size || i < 0 || i > 2) throw new Error('demos: triage no longer states its size, the paired difference or the registration times as the tiles read them');
 	return [
-		{ n: after.v, l: `right after teaching it 200 labelled tickets (${after.ci}); ${before.v} before` },
-		{ n: f1[1], l: `macro-F1 after teaching; ${f1[0]} before` },
+		{ n: before.v, l: `of ${size[1]} tickets routed right over ${size[2]} queues, with no teaching (${before.ci})` },
+		{ n: after.v, l: `after teaching it 200 labelled tickets: ${diff[1]} (95% interval ${diff[2]} to ${diff[3]})` },
 		{ n: `${took[i + 1]} s`, l: 'to teach it the 200 tickets' },
 	];
+}
+
+/** The one line of setup the demos page states: the release, the card and the date of decisio's runs, from the README's intro. */
+export function setupLine() {
+	const text = intro().flat().map(plainText).join(' ');
+	const m = /Each base ran from tag (v[\d.]+) \([0-9a-f]+\) as .*? in sequence in one session on one (NVIDIA RTX PRO 6000 Blackwell Workstation Edition \(600 W\)) on (\d{4}-\d{2}-\d{2}), with the demo client on the same machine and the same seeds, oracles and renderings for each\./.exec(text);
+	if (!m) throw new Error('demos: the README\'s intro no longer states the release, card and date of the runs');
+	return { version: m[1], card: m[2], date: m[3] };
 }

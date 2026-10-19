@@ -257,7 +257,7 @@ export const plan = [
 	// (runs/2026-10-14_certified-answers/results/mac_mlx/); the CPU stand-in cannot fit and certify 400 tickets here.
 	// Then the threshold picked by hand, on the stand-in.
 	{ page: '/docs/tasks/certify/', n: 1, mode: 'example', expect: 'POST /v1/tasks\n{"id": "ticket-queue",' },
-	{ page: '/docs/tasks/certify/', n: 2, mode: 'output', expect: '{\n "certificate": {' },
+	{ page: '/docs/tasks/certify/', n: 2, mode: 'output', expect: '{\n "certificate": {\n  "id": "ticket-queue#7151e6bd7fd1"' },
 	{ page: '/docs/tasks/certify/', n: 3, mode: 'output', expect: '[\n {\n  "ticket":' },
 	{
 		page: '/docs/tasks/certify/', n: 4, mode: 'python', expect: 'import json\nimport urllib.request',
@@ -333,9 +333,12 @@ export const plan = [
 	},
 	{ page: '/docs/migrating/', n: 4, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 
-	// The home page repeats three of the blocks above.
-	// The home page's pull block has each comment above its command; the commands are the docs page's, run again here.
-	{ page: '/', n: 1, mode: 'ollama', expect: '# the Gemma 4 12B base, for 16 GB laptops', models: ['aminroudaki/decisio-gemma', 'aminroudaki/decisio'], needs: '0.35.1', assert: pulled },
-	{ page: '/', n: 2, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 7] },
-	{ page: '/', n: 3, mode: 'verbatim', expect: 'git clone https://github.com/aminry/decisio', needs: 'Linux with one NVIDIA card' },
+	// The home page's Get started: each tab's block is a deploy guide's own, and the request and its answer are Get started's.
+	{ page: '/', n: 1, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/deploy/cloud-gpu/', 1] },
+	{ page: '/', n: 2, mode: 'same-as', expect: 'docker run -d --gpus all', of: ['/docs/deploy/docker/', 1] },
+	{ page: '/', n: 3, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model" },
+	{ page: '/', n: 4, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/deploy/mac/', 6] },
+	{ page: '/', n: 5, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 7] },
+	{ page: '/', n: 6, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/', 3] },
+	{ page: '/', n: 7, mode: 'same-as', expect: '{\n  "answers": {', of: ['/docs/', 4] },
 ];

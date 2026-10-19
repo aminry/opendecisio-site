@@ -1,0 +1,55 @@
+{
+ "backend": "vllm",
+ "model": null,
+ "base": null,
+ "alpha": 0.15,
+ "delta": 0.1,
+ "examples": 400,
+ "questions": 200,
+ "mixed": 0.5,
+ "decisio_commit": "3db918310830edce4c32cec7f209c7a1e63d2a93",
+ "src_modified_since": false,
+ "certificate_of_the_first_start": {
+  "id": "ticket-queue#7151e6bd7fd1",
+  "alpha": 0.15,
+  "delta": 0.1,
+  "n": 200,
+  "threshold": 0.6916931327377187,
+  "certified_share": 0.905,
+  "certified_n": 181,
+  "errors_at_threshold": 18,
+  "stack_sha256": "740144e9401de9935fc3ae646a312a98b99d40a9d99cc225b9d5ef0a314b5bf0"
+ },
+ "certified_share_of_the_questions": 0.875,
+ "errors_among_certified_questions": 19,
+ "accuracy_of_the_questions": 0.84,
+ "A_register_again_vs_the_first_start": [],
+ "B_import_the_first_export_vs_the_first_start": [
+  {
+   "certified_flags_that_differ": 0,
+   "flag_flips_within_noise": 0,
+   "flag_flips_beyond_noise": 0,
+   "choices_that_differ": 0,
+   "certified_choices_that_differ": 0,
+   "largest_top_probability_difference": 0.0,
+   "threshold_equal": true,
+   "certificate_id_equal": true,
+   "stack_digest_equal": true
+  }
+ ],
+ "states_after_import": [
+  "ok"
+ ],
+ "seconds": {
+  "A": [
+   [
+    170.1,
+    22.3
+   ]
+  ],
+  "B": [
+   170.1
+  ]
+ },
+ "answers_sha256": "bd1cf91432a67201f537a3c914fc56168cbb848d5fef88654875a06a2f240b64"
+}

@@ -1,24 +1,31 @@
 // Outputs the site shows as recorded from a decisio server, with the release that recorded them (docs/STYLE_GUIDE.md,
 // "Numbers"; Amin, 2026-10-18). scripts/checks/recorded.mjs finds every page that shows one (by its marker text) and fails
 // a page showing an output older than the pinned minor release unless the page says which release recorded it.
-// `pending` names the pages that do not say so yet, while the re-record at the pinned release is under way; the list may
-// only shrink, and it goes once the outputs are recorded again.
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { siteRoot } from '../lib/upstream.mjs';
-
-const facts = () => JSON.parse(readFileSync(join(siteRoot, 'src/data/launch/launch_facts.public.json'), 'utf8'));
+// All three were recorded again on decisio 0.17.0 (src/lib/recorded.mjs), so the earlier recordings are retired: their
+// marks must appear on no page.
+import { certificate, session } from '../lib/recorded.mjs';
 
 export const recordedOutputs = [
 	{
-		name: 'the recorded decisions (decisio-examples, support routing and three more)',
-		version: () => facts().figures.recorded_decisions.run.decisio_version,
+		name: 'the recorded decisions (decisio-examples, support routing and three more), sent again',
+		version: () => session().decisio,
 		marker: 'I was charged twice for October',
-		pending: { why: 'the re-record at the pinned release, on the next card session', pages: ['/docs/faq/', '/docs/scale/'] },
 	},
 	{
 		name: 'the routing example (decisio-examples example 5)',
-		version: () => facts().figures.routing_example5.record.decisio_version,
+		version: () => session().decisio,
 		marker: 'Escalate only when unsure',
 	},
+	{
+		name: "docs/tasks.md's worked certificate, on the 31B",
+		version: () => session().decisio,
+		marker: certificate().certificate.id,
+	},
+];
+
+// The recordings these replaced: decisio 0.9.0's box label for the twelve decisions and example 5, and the certificate of
+// decisio's own worked example on a Mac, made before 0.16.0.
+export const retired = [
+	{ name: "the recorded decisions' decisio 0.9.0 box", marker: 'Gemma 4 31B, decisio 0.9.0' },
+	{ name: "docs/tasks.md's worked certificate on a Mac", marker: 'ticket-queue#c2e4cc6e431b' },
 ];

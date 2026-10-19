@@ -605,3 +605,154 @@
 		grid-template-areas: 'text' 'n' 'cta';
 	}
 }
+
+/* Benchmarks (batch 8): one line on each base, the calibration chart, the axis meanings and the closing lines. */
+.bases {
+	display: grid;
+	gap: 10px;
+	margin: 0 0 var(--d-space-5);
+	padding: 0;
+	list-style: none;
+	font-size: 15px;
+	color: var(--h-dim);
+}
+
+.bases__i b {
+	color: var(--h-ink);
+}
+
+.bases__i .dot {
+	display: inline-block;
+	width: 9px;
+	height: 9px;
+	margin-right: 8px;
+	border-radius: 50%;
+	background: var(--base);
+	vertical-align: 1px;
+}
+
+.cc {
+	margin: 0;
+}
+
+.cc__svg {
+	display: block;
+	width: 100%;
+	max-width: 760px;
+	height: auto;
+	font-family: var(--d-font-body, 'Geist Site', sans-serif);
+}
+
+.cc-grid line {
+	stroke: var(--h-line);
+}
+
+.cc-grid text,
+.cc-v {
+	font-size: 13px;
+	fill: var(--h-dim);
+	font-variant-numeric: tabular-nums;
+}
+
+.cc-l {
+	font-size: 15px;
+	font-weight: 600;
+	fill: var(--h-ink);
+}
+
+.cc-bar {
+	fill: var(--base);
+}
+
+.cc-bar--hard {
+	fill: color-mix(in srgb, var(--base) 50%, transparent);
+}
+
+.axes__meaning {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	gap: 4px 20px;
+	margin: 12px 0;
+	padding: 0;
+	list-style: none;
+	font-size: 14px;
+	color: var(--h-dim);
+}
+
+.axes__meaning b {
+	color: var(--h-ink);
+	font-weight: 600;
+}
+
+.bench-next {
+	display: grid;
+	gap: 8px;
+	max-width: 70ch;
+	margin: 0 0 var(--d-space-5);
+	font-size: 15px;
+}
+
+/* Demos (batch 8): the four certified-answers results. */
+.cert4 {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 16px;
+	margin: 0 0 var(--d-space-5);
+	padding: 0;
+	list-style: none;
+}
+
+@media (max-width: 64rem) {
+	.cert4 {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 36rem) {
+	.cert4 {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.cert4__i {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 20px 22px;
+}
+
+.cert4__n {
+	font-size: clamp(26px, 2.8vw, 36px);
+	font-weight: 700;
+	letter-spacing: -0.03em;
+	line-height: 1.05;
+	color: var(--h-ink);
+	font-variant-numeric: tabular-nums;
+}
+
+.cert4__i:first-child .cert4__n {
+	color: var(--d-accent);
+}
+
+.cert4__l {
+	color: var(--h-dim);
+	font-size: 14.5px;
+}
+
+.cert4__m {
+	margin-top: auto;
+	padding-top: 10px;
+	border-top: 1px solid var(--h-line);
+	font-size: 13px;
+}
+
+.judged__list {
+	display: grid;
+	gap: 8px;
+	margin: 8px 0 0;
+	font-size: 15px;
+}
+
+.pcard .judged__h {
+	margin: 28px 0 0;
+}

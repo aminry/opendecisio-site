@@ -1,0 +1,8 @@
+{
+ "what": "The site's recorded outputs, recorded again on decisio 0.17.0 in one session on one card: the twelve recorded decisions replayed (replay/), decisio-examples example 5, Escalate only when unsure, run again (example5/), and docs/tasks.md's worked certificate on the Gemma 4 31B (certify/). Every file but this one and files.json is copied unchanged from the session's records; files.json holds their sha256.",
+ "date": "2026-10-19",
+ "power_limit_w": 600,
+ "replay": {"of": "the twelve recorded decisions of decisio-examples at 3436915 (launch_facts.public.json figures.recorded_decisions), each request sent again"},
+ "example5": {"repository": "aminry/decisio-examples", "commit": "343691565ad7", "example": "05-escalate-when-unsure", "run": "2026-10-19_gemma-4-31b"},
+ "certify": {"of": "docs/tasks.md's worked example (a three-queue ticket question, 400 labelled tickets, alpha 0.15, delta 0.1), on the Gemma 4 31B in place of the 12B on a Mac"}
+}

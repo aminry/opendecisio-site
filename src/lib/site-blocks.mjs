@@ -43,6 +43,7 @@ const ollamaRequest = (model) => `curl http://localhost:11434/v1/systemone \\
 import { recordedRequest, recordedResponse } from './docs-figures.mjs';
 import { pin, readUpstream } from './upstream.mjs';
 import { recipeIds, routeScript, teachBody } from './use-cases.mjs';
+import { certificate } from './recorded.mjs';
 
 // The recorded decision of the docs' first pages (the launch facts (launch_facts.public.json), figures.recorded_decisions), as a request
 // to a server on this machine. The body is indented JSON between single quotes, so no value may hold a single quote.
@@ -107,6 +108,20 @@ const printed = () => Object.entries(recordedResponse().answers).map(([name, a])
 });
 const comments = (prefix) => printed().map((l) => `${prefix} ${l}`).join('\n');
 const SERVED = 'decisio-gemma-4-31b-it-letters';
+
+// docs/tasks.md's worked certificate, recorded on the pinned release on the 31B (src/lib/recorded.mjs): the registration's
+// certificate, abridged to the fields decisio's own example shows (and its warnings), and two answers after it.
+const certificateResponse = () => {
+	const { certificate: c, status } = certificate();
+	const r4 = (x) => Number(x.toFixed(4));
+	const { method, holdout, fit_examples, certify_examples, disjoint } = c.split;
+	return JSON.stringify({ certificate: { id: c.id, alpha: c.alpha, delta: c.delta, n: c.n, accuracy: c.accuracy, threshold: r4(c.threshold), certified: c.certified, certified_share: c.certified_share, certified_n: c.certified_n, errors_at_threshold: c.errors_at_threshold, split: { method, holdout, fit_examples, certify_examples, disjoint }, warnings: c.warnings, summary: c.summary }, status }, null, 1);
+};
+const certificateAnswers = () => JSON.stringify(certificate().samples.map((x) => {
+	const a = x.answer;
+	const r3 = (p) => Number(p.toFixed(3));
+	return { ticket: x.ticket, choice: a.choice, probabilities: Object.fromEntries(Object.entries(a.probabilities).map(([k, p]) => [k, r3(p)])), certified: a.certified, certificate: a.certificate, ...(a.certified_reason ? { certified_reason: a.certified_reason } : {}) };
+}), null, 1);
 
 // The same loop in each language: the likeliest option of each answer, and its probability.
 const pythonBody = () => JSON.stringify(recordedRequest(), null, 4).replace(/\n/g, '\n');
@@ -195,6 +210,9 @@ export const siteBlocks = {
 	// The first pages: the recorded support ticket as a request, and its recorded answer, abridged and rounded.
 	get 'first-decision-request'() { return { lang: 'sh', text: curl(firstRequest()) }; },
 	get 'first-decision-response'() { return { lang: 'json', text: JSON.stringify(recordedResponse(), null, 2) }; },
+	// Certify answers: the worked certificate on the pinned release, and two answers after it.
+	get 'certificate-response'() { return { lang: 'json', text: certificateResponse() }; },
+	get 'certificate-answers'() { return { lang: 'json', text: certificateAnswers() }; },
 	// The Qwen listing: the docs page, whose pull (at the pinned release) is this listing's alone.
 	'ollama-request': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio') },
 	// The Gemma listing, the 16 GB laptop's: the home page's.

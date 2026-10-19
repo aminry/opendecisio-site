@@ -14,10 +14,16 @@ const LAYOUTS = {
 	narrow: { w: 400, h: 1166, chips: { x: 12, y: 40, dy: 26, n: 6 }, box: { x: 12, y: 200, w: 376, h: 92 }, dist: { x: 12, y: 340, w: 376, h: 92, label: 'An answer, before and after' }, acc: { x: 12, y: 500, w: 376 }, grid: { x: 29, y: 744, cols: 20, gap: 18, r: 6 }, trays: { x: 12, y: 956, w: 376, auto: 108, person: 52, cols: 30, gap: 12, r: 4 }, legend: { x: 12, y: 626, more: false } },
 };
 
+// A story with a few dozen answers (the inbox's sample) draws them larger, a dozen to a row.
+const FEW = {
+	wide: { grid: { x: 300, y: 262, cols: 12, gap: 30, r: 10 }, trays: { x: 760, y: 252, w: 318, auto: 84, person: 104, cols: 13, gap: 22, r: 7 }, h: 480 },
+	narrow: { grid: { x: 35, y: 744, cols: 12, gap: 30, r: 10 }, trays: { x: 12, y: 900, w: 376, auto: 84, person: 104, cols: 15, gap: 22, r: 7 }, h: 1120 },
+};
+
 export function scene(d, kind) {
-	const L = LAYOUTS[kind];
 	const c = d.certify;
 	const n = c.answers.length;
+	const L = n <= 60 ? { ...LAYOUTS[kind], ...FEW[kind] } : LAYOUTS[kind];
 	const pct = (x) => `${(x * 100).toFixed(1)}%`;
 	const gridPos = (i) => ({ x: L.grid.x + (i % L.grid.cols) * L.grid.gap, y: L.grid.y + Math.floor(i / L.grid.cols) * L.grid.gap });
 	const T = L.trays;
@@ -25,7 +31,8 @@ export function scene(d, kind) {
 	let p = 0;
 	const trayPos = c.answers.map((ans) => {
 		const k = ans.certified ? a++ : p++;
-		const y0 = ans.certified ? T.y + 30 : T.y + T.auto + 26 + 30;
+		const pad = Math.round(24 + T.r * 1.6);
+		const y0 = ans.certified ? T.y + pad : T.y + T.auto + 26 + pad;
 		return { x: T.x + 14 + (k % T.cols) * T.gap, y: y0 + Math.floor(k / T.cols) * T.gap };
 	});
 	// The threshold: a staircase after the k-th most confident answer.
@@ -74,7 +81,7 @@ ${chips}
 <text class="tc-k" x="${A.x}" y="${A.y - 30}">Accuracy, ${esc(d.learn.task)}</text>
 <text class="tc-t tc-dim tc-small" x="${A.x}" y="${A.y - 8}">before</text><rect class="tc-rail" x="${A.x}" y="${A.y}" width="${A.w}" height="12" rx="6"/><rect class="tc-bar tc-bar--before" x="${A.x}" y="${A.y}" width="${accW(d.learn.before).toFixed(1)}" height="12" rx="6"/><text class="tc-t tc-mono tc-small" x="${A.x + A.w}" y="${A.y - 8}" text-anchor="end">${pct(d.learn.before)}</text>
 <text class="tc-t tc-dim tc-small" x="${A.x}" y="${A.y + 42}">after teaching</text><rect class="tc-rail" x="${A.x}" y="${A.y + 50}" width="${A.w}" height="12" rx="6"/><rect class="tc-bar tc-bar--after" data-w0="${accW(d.learn.before).toFixed(1)}" data-w1="${accW(d.learn.after).toFixed(1)}" x="${A.x}" y="${A.y + 50}" width="${accW(d.learn.after).toFixed(1)}" height="12" rx="6"/><text class="tc-t tc-mono tc-small tc-accent" x="${A.x + A.w}" y="${A.y + 42}" text-anchor="end" data-count-to="${(d.learn.after * 100).toFixed(1)}" data-count-from="${(d.learn.before * 100).toFixed(1)}">${pct(d.learn.after)}</text>
-<text class="tc-t tc-dim tc-small" x="${A.x}" y="${A.y + 90}">${d.learn.examples.toLocaleString('en-US')} examples${d.learn.perLabel ? ` (${d.learn.perLabel} per label)` : ''}, taught in ${d.learn.seconds} s</text>
+<text class="tc-t tc-dim tc-small" x="${A.x}" y="${A.y + 90}">${d.learn.examples.toLocaleString('en-US')} examples${d.learn.perLabel ? ` (${d.learn.perLabel} per label)` : ''}${d.learn.seconds ? `, taught in ${d.learn.seconds} s` : ''}</text>
 <path class="tc-flow" d="M${B.x - 14} ${B.y + B.h / 2}H${B.x}" />
 <text class="tc-k" x="${L.legend.x}" y="${L.legend.y}">2  ${n} answers</text><text class="tc-t tc-dim tc-small" x="${L.legend.x}" y="${L.legend.y + 22}">most confident first</text>${L.legend.more ? `<text class="tc-t tc-dim tc-small" x="${L.legend.x}" y="${L.legend.y + 120}">${esc(c.task)},</text><text class="tc-t tc-dim tc-small" x="${L.legend.x}" y="${L.legend.y + 138}">${esc(c.base)}.</text>` : `<text class="tc-t tc-dim tc-small" x="${L.legend.x}" y="${L.legend.y + 70}">${esc(c.task)}, ${esc(c.base)}.</text>`}
 ${L.legend.more ? `<circle class="tc-dot tc-dot--c" r="6" cx="${L.legend.x + 6}" cy="${L.legend.y + 60}"/><text class="tc-t tc-small" x="${L.legend.x + 20}" y="${L.legend.y + 65}">a right answer</text><circle class="tc-dot tc-dot--c tc-dot--x" r="6" cx="${L.legend.x + 6}" cy="${L.legend.y + 86}"/><text class="tc-t tc-small" x="${L.legend.x + 20}" y="${L.legend.y + 91}">a wrong one</text>` : `<circle class="tc-dot tc-dot--c" r="5" cx="${L.legend.x + 5}" cy="${L.legend.y + 42}"/><text class="tc-t tc-small" x="${L.legend.x + 16}" y="${L.legend.y + 46}">right</text><circle class="tc-dot tc-dot--c tc-dot--x" r="5" cx="${L.legend.x + 70}" cy="${L.legend.y + 42}"/><text class="tc-t tc-small" x="${L.legend.x + 81}" y="${L.legend.y + 46}">wrong</text>`}

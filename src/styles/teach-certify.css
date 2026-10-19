@@ -629,3 +629,89 @@
 .tc-rules {
 	max-width: 46rem;
 }
+
+/* Batch 8: the gatekeeper's flow, the one box of what to keep in mind, and the 0.14.0 replay folded away. */
+.gkflow {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 0;
+	margin: 0 0 20px;
+	padding: 0;
+	list-style: none;
+	counter-reset: none;
+}
+
+@media (max-width: 48rem) {
+	.gkflow {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 10px;
+	}
+}
+
+.gkflow__s {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	margin-right: 22px;
+	padding: 14px 16px;
+	border: 1px solid var(--h-line-2);
+	border-radius: 10px;
+	background: var(--d-surface-2);
+	font-size: 14px;
+	color: var(--h-dim);
+}
+
+.gkflow__s b {
+	color: var(--h-ink);
+	font-size: 15px;
+}
+
+.gkflow__s:not(.gkflow__s--end)::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: -17px;
+	width: 10px;
+	height: 10px;
+	border-top: 2px solid var(--d-accent-line);
+	border-right: 2px solid var(--d-accent-line);
+	transform: translateY(-50%) rotate(45deg);
+}
+
+@media (max-width: 48rem) {
+	.gkflow__s {
+		margin-right: 0;
+	}
+
+	.gkflow__s:not(.gkflow__s--end)::after {
+		display: none;
+	}
+}
+
+.gkflow__s--end {
+	margin-right: 0;
+	border-color: var(--d-accent-line);
+}
+
+.tc-keep {
+	display: grid;
+	gap: 12px;
+	margin: 0 0 18px;
+	padding: 0 0 0 18px;
+	font-size: 15px;
+	line-height: 1.55;
+}
+
+.tc-keep b {
+	color: var(--h-ink);
+}
+
+.tc-drift-history > summary {
+	cursor: pointer;
+	font-weight: 600;
+}
+
+.tc-drift-history[open] > summary {
+	margin-bottom: 14px;
+}

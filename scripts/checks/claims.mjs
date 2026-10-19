@@ -46,6 +46,11 @@ const fromUpstream = (sentence) => {
 	return s.length >= 10 && upstream.includes(s);
 };
 
+// Every comparison with another system is on the benchmarks page, dated (decided 2026-10-18): the home page names one, the
+// board's composite in its #board section, and the demos pages name none.
+const OTHER_SYSTEM = /\b(Jev|H2O-Lightning|Quyet|Jeff-1|Cygnet|deck-31B|Gemini|GPT|Haiku|Luna|Surogate|OpenRouter)\b/i;
+const OWN_RESULTS_ONLY = new Set(['/', '/demos/', '/demos/teach-and-certify/']);
+
 const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : e.name === 'index.html' ? [join(d, e.name)] : []));
 const problems = [];
 let pages = 0;
@@ -63,6 +68,13 @@ for (const file of walk('dist')) {
 		for (const n of main.querySelectorAll('svg title, svg desc')) texts.push(n.text);
 		// Each block's own text: a card, a cell, a paragraph or a list item, so a multiple is read with what stands beside it.
 		for (const b of main.querySelectorAll('p, li, td, th, h1, h2, h3, h4, dt, dd, figcaption, summary, caption, svg text, .card3')) texts.push(b.structuredText);
+	}
+	if (main && OWN_RESULTS_ONLY.has(route)) {
+		const own = parse(main.toString());
+		own.querySelectorAll('#board').forEach((n) => n.remove());
+		const seen = [own.structuredText, ...own.querySelectorAll('img[alt]').map((i) => i.getAttribute('alt')), ...own.querySelectorAll('svg title, svg desc').map((n) => n.text)].join(' ');
+		const m = OTHER_SYSTEM.exec(seen);
+		if (m) problems.push(`${route}: names another system ("${m[0]}") outside the benchmarks page: "${seen.slice(Math.max(0, m.index - 60), m.index + 60).replace(/\s+/g, ' ')}"`);
 	}
 	for (const block of texts) {
 		const text = block.replace(/\s+/g, ' ').trim();

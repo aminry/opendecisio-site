@@ -1,0 +1,25 @@
+---
+// The use cases: one card per recipe page, each with what it decides and, where a run is published, its one number
+// (useCaseCards() in src/lib/home-page.mjs); a recipe with no run says so.
+import { useCaseCards } from '../../lib/home-page.mjs';
+const cards = useCaseCards();
+---
+<section class="section" id="use-cases" aria-labelledby="use-cases-h">
+	<div class="wrap">
+		<div class="section__head">
+			<p class="kicker">Use cases</p>
+			<h2 id="use-cases-h">One question, <em class="hl">asked of every item.</em></h2>
+			<p>Each recipe is the question, the code that routes on its certificate, and what it did when measured.</p>
+		</div>
+		<ul class="uc">
+			{cards.map((c) => (
+				<li class="uc__card tile">
+					<h3 class="uc__t"><a href={c.href}>{c.title}</a></h3>
+					<p class="uc__l">{c.line}</p>
+					<p class:list={['uc__p', { 'uc__p--recipe': !c.measured }]}>{c.proof}</p>
+				</li>
+			))}
+		</ul>
+		<p class="uc__more"><a href="/docs/use-cases/">Every use case</a>, and the <a href="/demos/">recorded demos</a>: Pong, a driving simulator, a browser agent and ticket triage.</p>
+	</div>
+</section>

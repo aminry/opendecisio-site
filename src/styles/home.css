@@ -239,7 +239,8 @@ body.home {
 	font-size: 13.5px;
 	color: var(--h-dim);
 	border: 1px solid var(--h-line-2);
-	border-radius: 99px;
+	/* Round on one line, and still a box when a narrow screen wraps it to two. */
+	border-radius: 16px;
 	padding: 6px 14px;
 	background: color-mix(in srgb, var(--h-bg) 70%, transparent);
 }
@@ -2496,24 +2497,19 @@ html:not(.js) .demo__ctl {
 	fill: var(--d-accent);
 }
 
-/* The counters: four figures under the drawing, the certified one in the accent. */
+/* The counters: two figures under the drawing. */
 .teach__counters {
 	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	max-width: 44rem;
 	gap: 16px;
 	margin: 14px 0 0;
 	padding: 16px 0 0;
 	border-top: 1px solid var(--h-line);
 }
 
-@media (max-width: 60rem) {
-	.teach__counters {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-}
-
 .teach__c dt {
-	/* Room for two lines, so the four numbers sit on one line when a label wraps. */
+	/* Room for two lines, so the two numbers sit on one line when a label wraps. */
 	min-height: 2.8em;
 	font: 500 11px/1.4 var(--h-mono, 'Geist Mono Site', monospace);
 	letter-spacing: 0.08em;
@@ -2542,19 +2538,6 @@ html:not(.js) .demo__ctl {
 	margin-top: 2px;
 }
 
-.teach__c--hot dd b {
-	color: var(--d-accent);
-}
-
-/* A counter whose number the story has not reached yet (src/scripts/teach.ts) waits, dimmed. */
-.teach__c dd {
-	transition: opacity 400ms;
-}
-
-.teach__c--wait dd {
-	opacity: 0.25;
-}
-
 .teach__before {
 	font-size: 18px;
 	font-weight: 600;
@@ -2567,101 +2550,7 @@ html:not(.js) .demo__ctl {
 	max-width: 90ch;
 }
 
-/* The slider. */
-.teach__slider {
-	margin-top: 24px;
-	padding: 18px 20px;
-}
-
-.teach__sl-head {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 10px 16px;
-	font-size: 15px;
-	font-weight: 600;
-}
-
-.teach__sl-head input {
-	flex: 1 1 14rem;
-	accent-color: var(--d-accent-fill);
-}
-
-.teach__sl-head output {
-	font: 500 14px var(--h-mono, 'Geist Mono Site', monospace);
-	color: var(--d-accent);
-	min-width: 9ch;
-}
-
-.teach__rows {
-	display: grid;
-	gap: 12px;
-	margin: 16px 0 0;
-	padding: 0;
-	list-style: none;
-}
-
-.teach__row {
-	display: grid;
-	grid-template-columns: 12rem minmax(0, 1fr) 13rem;
-	align-items: center;
-	gap: 12px;
-	font-size: 14px;
-}
-
-@media (max-width: 42rem) {
-	.teach__row {
-		grid-template-columns: minmax(0, 1fr) auto;
-	}
-
-	.teach__track {
-		grid-column: 1 / -1;
-		order: 3;
-	}
-}
-
-.teach__track {
-	position: relative;
-	height: 12px;
-	border-radius: 99px;
-	background: var(--d-rail);
-	overflow: hidden;
-}
-
-.teach__ghost,
-.teach__fill {
-	position: absolute;
-	inset: 0 auto 0 0;
-	width: var(--w, 0%);
-	border-radius: inherit;
-}
-
-.teach__ghost {
-	background: color-mix(in srgb, var(--d-other) 55%, transparent);
-}
-
-.teach__fill {
-	background: linear-gradient(90deg, color-mix(in srgb, var(--d-accent-line) 45%, transparent), var(--d-accent-line));
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	.teach__fill {
-		transition: width var(--t-slow) var(--e-out);
-	}
-}
-
-.teach__rv {
-	font: 13px var(--h-mono, 'Geist Mono Site', monospace);
-	color: var(--h-dim);
-}
-
-.teach__sl-note {
-	margin: 12px 0 0;
-	color: var(--h-dim);
-	font-size: 13px;
-}
-
-/* The three steps, the honest line, the proof line and the button. */
+/* The three steps and the buttons. */
 .teach__how {
 	display: grid;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2704,19 +2593,375 @@ html:not(.js) .demo__ctl {
 	font-size: 15px;
 }
 
-.teach__honest {
-	margin: 20px 0 0;
-	font-size: 15px;
-	color: var(--h-ink);
+.teach__cta {
+	margin-top: 24px;
 }
 
-.teach__proof {
-	margin: 8px 0 0;
-	max-width: 80ch;
+/* Batch 8: the hero's conditions line, the threshold line, the use cases, the Good fit box, the board's one result
+   and the request under Get started. */
+.hero__cond {
+	max-width: 62ch;
+	margin: -10px 0 22px;
+	color: var(--h-dim);
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.demo__req {
+	margin: 0;
+	font-size: 13px;
+}
+
+.cert {
+	padding: 22px 24px;
+}
+
+.cert__ctl {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+.cert__l {
+	margin-right: 6px;
+	font: 500 11px/1.4 var(--h-mono, 'Geist Mono Site', monospace);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--h-dim);
+}
+
+html:not(.js) .cert__ctl .chip {
+	pointer-events: none;
+}
+
+.cert__track {
+	position: relative;
+	height: 14px;
+	margin: 20px 0 0;
+	border-radius: 99px;
+	background: var(--d-rail);
+	overflow: hidden;
+}
+
+.cert__auto {
+	position: absolute;
+	inset: 0 auto 0 0;
+	border-radius: inherit;
+	background: var(--d-accent-line);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.cert__auto {
+		transition: width var(--t-slow) var(--e-out);
+	}
+}
+
+.cert__out {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 16px;
+	margin: 18px 0 0;
+}
+
+@media (max-width: 40rem) {
+	.cert__out {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.cert__o dt {
+	font: 500 11px/1.4 var(--h-mono, 'Geist Mono Site', monospace);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--h-dim);
+}
+
+.cert__o dd {
+	margin: 6px 0 0;
+	color: var(--h-dim);
+	font-size: 14px;
+}
+
+.cert__o dd b {
+	display: block;
+	font-size: clamp(24px, 2.6vw, 34px);
+	font-weight: 700;
+	letter-spacing: -0.03em;
+	color: var(--h-ink);
+	font-variant-numeric: tabular-nums;
+}
+
+.cert__o--auto dd b {
+	color: var(--d-accent);
+}
+
+.cert__next,
+.uc__more,
+.fitbox__more {
+	margin: 18px 0 0;
+	color: var(--h-dim);
+	font-size: 15px;
+}
+
+.uc {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 16px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (max-width: 60rem) {
+	.uc {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 36rem) {
+	.uc {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.uc__card {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 20px 22px;
+}
+
+.home .uc__t {
+	margin: 0;
+	font-size: 18px;
+}
+
+.uc__t a {
+	color: var(--h-ink);
+	text-decoration: none;
+}
+
+.uc__t a:hover {
+	color: var(--d-accent);
+}
+
+/* The whole card is the link's target. */
+.uc__card {
+	position: relative;
+}
+
+.uc__t a::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+}
+
+.uc__l {
+	margin: 0;
+	color: var(--h-dim);
+	font-size: 15px;
+}
+
+.uc__p {
+	margin: auto 0 0;
+	padding-top: 10px;
+	border-top: 1px solid var(--h-line);
+	color: var(--h-ink);
+	font-size: 13.5px;
+}
+
+.uc__p--recipe {
+	color: var(--h-dim);
+}
+
+.fitbox {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0;
+	padding: 0;
+}
+
+@media (max-width: 48rem) {
+	.fitbox {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.fitbox__col {
+	padding: 22px 26px;
+}
+
+.fitbox__col + .fitbox__col {
+	border-left: 1px solid var(--h-line);
+}
+
+@media (max-width: 48rem) {
+	.fitbox__col + .fitbox__col {
+		border-left: 0;
+		border-top: 1px solid var(--h-line);
+	}
+}
+
+.home .fitbox__h {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 0 0 14px;
+	font-size: 18px;
+}
+
+.fitbox__h::before {
+	content: '';
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background: var(--d-accent-line);
+}
+
+.fitbox__h--bad::before {
+	background: none;
+	border: 2px solid var(--d-other);
+}
+
+.fitbox__list {
+	display: grid;
+	gap: 12px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-size: 15px;
+	line-height: 1.5;
+}
+
+.fitbox__list li {
+	padding-left: 20px;
+	position: relative;
+}
+
+.fitbox__list li::before {
+	content: '';
+	position: absolute;
+	left: 2px;
+	top: 0.62em;
+	width: 8px;
+	height: 2px;
+	background: var(--h-dim);
+}
+
+.proof {
+	display: grid;
+	grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+	align-items: center;
+	gap: 28px;
+	padding: 24px 26px;
+}
+
+@media (max-width: 52rem) {
+	.proof {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.proof__fig {
+	margin: 0;
+}
+
+.pr {
+	display: block;
+	width: 100%;
+	height: auto;
+	font-family: var(--d-font-body, 'Geist Site', sans-serif);
+}
+
+.pr-grid line {
+	stroke: var(--h-line);
+}
+
+.pr-grid text {
+	font-size: 13px;
+	fill: var(--h-dim);
+	font-variant-numeric: tabular-nums;
+}
+
+.pr-l {
+	font-size: 15px;
+	font-weight: 600;
+	fill: var(--h-ink);
+}
+
+.pr-ci {
+	stroke-width: 6;
+	stroke-linecap: round;
+	opacity: 0.45;
+}
+
+.pr-ours .pr-ci,
+.pr-ours .pr-dot {
+	stroke: var(--d-accent-line);
+	fill: var(--d-accent-line);
+}
+
+.pr-jev .pr-ci,
+.pr-jev .pr-dot {
+	stroke: var(--d-jev);
+	fill: var(--d-jev);
+}
+
+.proof .board__claim {
+	margin: 0;
+}
+
+.proof__src {
+	margin: 12px 0 0;
 	color: var(--h-dim);
 	font-size: 13.5px;
 }
 
-.teach__cta {
-	margin-top: 24px;
+.gs__note {
+	margin: 0 0 12px;
+	color: var(--h-dim);
+	font-size: 15px;
+}
+
+.gs__box + .gs__box {
+	margin-top: 12px;
+}
+
+/* A line that continues a command sits under the command's first word, past the prompt. */
+.gc-more {
+	padding-left: 2ch;
+}
+
+.ask {
+	margin-top: var(--d-space-7);
+	max-width: 52rem;
+}
+
+.home .ask__h {
+	margin: 0 0 8px;
+	font-size: 20px;
+}
+
+.ask p {
+	color: var(--h-dim);
+	font-size: 15px;
+}
+
+.ask .gs__box {
+	margin: 10px 0 16px;
+}
+
+.ask__answer .gcode {
+	margin-top: 12px;
+}
+
+.ask .ask__answer {
+	margin: 0 0 16px;
+}
+
+.ask .ask__answer summary {
+	color: var(--d-accent);
+	font-size: 15px;
+	font-weight: 600;
 }
