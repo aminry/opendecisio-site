@@ -53,7 +53,7 @@ export function data() {
 	if (r) {
 		if (typeof r.released !== 'boolean' || r.version !== '0.16.0') fail(`release016 is for ${r.version}, released ${r.released}`);
 		if (r.jump.first_suspended - r.jump.jump_at <= 0 || r.clinc.wrong_before >= r.clinc.wrong_before_014 || r.false_suspensions !== 0 || r.served_path.max_shift !== 0) fail('release016 is not the result the page states');
-		if (r.clinc.wrong_before_014 !== d.drift.g31.wrong_before) fail('release016 compares with a 0.14.0 count the page does not show');
+		if (r.clinc.wrong_before_014 !== d.drift.g31.wrong_before) fail('release016 compares with another 0.14.0 count than the drift record');
 	}
 	const ib = d.inbox;
 	if (ib.messages.length % 8 !== 0) fail(`has ${ib.messages.length} inbox messages, not a multiple of eight`);

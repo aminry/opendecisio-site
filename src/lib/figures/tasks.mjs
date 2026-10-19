@@ -77,17 +77,15 @@ function certifySlider() {
 
 // --- The drift replay ---------------------------------------------------------------------------------------------------
 
-/** The CLINC150 drift stream on the card, as the teach-and-certify page shows it: under decisio 0.14.0, where only
- * the answer mix alerted and certification stayed on, and on the 0.16.0 release candidate, where the confidence alarm
- * suspended it. Both from src/data/teach-certify/ (src/lib/teach-certify.mjs checks that the two compare one stream). */
+/** The CLINC150 drift stream on the card, as the teach-and-certify page shows it, and where the confidence alarm
+ * suspended certification (measured on the 0.16.0 release candidate; src/data/teach-certify/). */
 export function driftStream() {
 	const d = tcData();
 	const g = d.drift.g31;
 	const r = d.release016;
 	if (!r?.released) throw new Error('drift chart: the 0.16.0 measurement is not marked released in teach_certify.json');
 	return {
-		messages: g.messages, start: g.start, full: g.top, share: g.top_share, old: d.decisio,
-		mix: { at: g.first_alert_after, wrong: g.wrong_before },
+		messages: g.messages, start: g.start, full: g.top, share: g.top_share,
 		suspended: { at: r.clinc.first_suspended, wrong: r.clinc.wrong_before, version: r.version, on: r.measured_on, model: r.model },
 		base: baseName('g31'), machine: d.models.g31.machine, dates: d.dates,
 	};
@@ -97,26 +95,22 @@ function drift() {
 	const R = driftStream();
 	const x = (n) => 24 + (600 * n) / R.messages;
 	const y = (s) => 186 - (s / R.share) * 100;
-	// The suspension's label sits above the shaded area, right of its line; the old alert's inside the area, left of
-	// its line, so the two never meet.
+	// The suspension's label sits above the shaded area, right of its line.
 	const body = `<svg class="fig__svg" viewBox="0 0 720 222" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 <path class="f-area" d="M${x(0)} 186L${x(R.start).toFixed(1)} 186L${x(R.full).toFixed(1)} ${y(R.share).toFixed(1)}L${x(R.messages).toFixed(1)} ${y(R.share).toFixed(1)}L${x(R.messages).toFixed(1)} 186Z"/>
 <path class="f-axis" d="M24 186L${x(R.messages)} 186"/>
 <path class="f-mark f-mark--on" d="M${x(R.suspended.at).toFixed(1)} 20L${x(R.suspended.at).toFixed(1)} 186"/>
-<text class="ft ft-b" x="${(x(R.suspended.at) + 8).toFixed(1)}" y="34">decisio ${R.suspended.version}: certification suspended</text>
+<text class="ft ft-b" x="${(x(R.suspended.at) + 8).toFixed(1)}" y="34">certification suspended</text>
 <text class="ft ft-d" x="${(x(R.suspended.at) + 8).toFixed(1)}" y="52">message ${fmt(R.suspended.at)}, after ${R.suspended.wrong} wrong certified answers</text>
-<path class="f-mark" d="M${x(R.mix.at).toFixed(1)} 20L${x(R.mix.at).toFixed(1)} 186"/>
-<text class="ft ft-b" x="${(x(R.mix.at) - 8).toFixed(1)}" y="${(y(R.share) + 40).toFixed(1)}" text-anchor="end">decisio ${R.old}: only the answer mix alerts</text>
-<text class="ft ft-d" x="${(x(R.mix.at) - 8).toFixed(1)}" y="${(y(R.share) + 58).toFixed(1)}" text-anchor="end">message ${fmt(R.mix.at)}, after ${fmt(R.mix.wrong)} wrong; still certifying</text>
 <text class="ft ft-d" x="24" y="208">message 0</text><text class="ft ft-d" x="${x(R.messages)}" y="208" text-anchor="end">${fmt(R.messages)}</text>
 <text class="ft ft-d" x="${(x(R.messages) + 8).toFixed(1)}" y="${(y(R.share) + 4).toFixed(1)}">${R.share * 100}%</text>
 <text class="ft ft-d" x="${(x(R.messages) + 8).toFixed(1)}" y="190">0%</text>
 </svg>`;
 	return panel({
-		name: 'drift-replay', label: 'Watching for drift', title: `From decisio ${R.suspended.version}, the alarm suspends certification early; before it, only the answer mix alerted, late.`,
-		desc: `A certified CLINC150 task on ${R.base}, sent ${fmt(R.messages)} messages, with messages that fit none of its options rising from message ${fmt(R.start)} to ${R.share * 100}% at message ${fmt(R.full)}. On decisio ${R.suspended.version}, certification was first suspended at message ${fmt(R.suspended.at)}, after ${R.suspended.wrong} wrong certified answers. Under decisio ${R.old}, only the answer mix alerted, after message ${fmt(R.mix.at)}, by when ${fmt(R.mix.wrong)} wrong answers had been certified, and certification stayed on.`,
+		name: 'drift-replay', label: 'Watching for drift', title: 'The alarm suspends certification soon after the traffic shifts.',
+		desc: `A certified CLINC150 task on ${R.base}, sent ${fmt(R.messages)} messages, with messages that fit none of its options rising from message ${fmt(R.start)} to ${R.share * 100}% at message ${fmt(R.full)}. Certification was first suspended at message ${fmt(R.suspended.at)}, after ${R.suspended.wrong} wrong certified answers.`,
 		body, legend: 'The shaded area is the share of messages the task has no option for, from 0% to its peak; each of them is a wrong answer. While certification is suspended, answers keep coming, none marked certified.',
-		source: `Source: the teach-and-certify runs, ${R.suspended.model}: decisio ${R.old} on ${R.machine}, ${R.dates[0]}; and a build of decisio ${R.suspended.version} before its release.`,
+		source: `Source: the teach-and-certify drift stream, ${R.suspended.model} on ${R.machine.replace(/ \(.*\)$/, '')}, measured on the decisio ${R.suspended.version} release candidate.`,
 	});
 }
 
