@@ -6,7 +6,8 @@
 // decisio's own text, included as it is, is held to the same rule (Amin, 2026-10-19), with one allowance: the evaluation
 // card names each measurement's release as its condition ("on decisio 0.8.1", "at v0.6.0, 2026-10-05"), which passes there;
 // history in it ("the default since 0.8.0", "before 0.12.0") does not. decisio's docs drop their history in the release
-// after DECISIO_HISTORY_UNTIL, so until the pin moves past it, a mention in decisio's own text is listed, not failed.
+// after the pin a list names; at that pin, the named phrases in decisio's own text are listed, not failed, and every
+// other mention fails as usual. The list ends with its pin: a phrase still there at the next pin fails.
 //   node scripts/checks/versions.mjs [built-site folder, default dist]
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -32,8 +33,15 @@ const mdFiles = (d) => readdirSync(d).flatMap((e) => { const p = join(d, e); ret
 const words = (t) => t.toLowerCase().replace(/[^a-z0-9.]+/g, ' ').replace(/\s+/g, ' ').trim();
 const upstreamText = words(mdFiles(upstreamRoot).map((p) => plain(readFileSync(p, 'utf8'))).join('\n'));
 const decisios = [];
-const DECISIO_HISTORY_UNTIL = 'v0.18.0';
-const pending = pin.tag === DECISIO_HISTORY_UNTIL;
+// decisio's history text the site knows of, by the pin it is allowed at: at v0.18.0 all of it (decisio 0.18.1's docs
+// dropped most); at v0.18.1 the eight phrases 0.18.1 still has, which its next release drops.
+const DECISIO_HISTORY = {
+	'v0.18.0': null,
+	'v0.18.1': ['before 0.12.0 a NaN', 'the default since 0.8.0', 'From decisio 0.14.0 the Gemma', 'In 0.8.1 a single question', 'default from 0.9.0 to 0.11.0', "keeps 0.8.1's order", "0.8.0's default", 'started again from v0.6.0'],
+};
+const pending = pin.tag in DECISIO_HISTORY;
+const allowed = DECISIO_HISTORY[pin.tag];
+const named = (context) => allowed === null || (allowed ?? []).some((p) => context.replace(/[\u2018\u2019]/g, "'").includes(p));
 const PENDING_PAGES = ['/docs/api/', '/docs/flags/', '/docs/evaluation-card/'];
 // History words just before a release ("since 0.10.0", "before 0.12.0 it", "default from 0.9.0"), or "X to Y" after it.
 const HISTORY_BEFORE = /\b(since|before|until|from|after|earlier|later|default|defaults|in|up to|as of|prior to)\s+(decisio\s+)?v?$/i;
@@ -68,9 +76,9 @@ for (const file of walk(root)) {
 			|| (PENDING_PAGES.includes(route) && near.some((w) => w.includes(' ') && upstreamText.includes(w)));
 		const history = HISTORY_BEFORE.test(before) || HISTORY_AFTER.test(after);
 		// A measurement's condition in decisio's own text (its evaluation card, its README's tables) passes; history in
-		// it is listed on the pages Serve is cleaning while the pin is DECISIO_HISTORY_UNTIL; site prose never passes.
+		// it is listed on the pages Serve is cleaning while the pin's list names it; site prose never passes.
 		if ((route === '/docs/evaluation-card/' || decisioText) && !history) continue;
-		if (pending && decisioText && PENDING_PAGES.includes(route)) decisios.push(where);
+		if (pending && decisioText && PENDING_PAGES.includes(route) && named(text.slice(Math.max(0, m.index - 60), m.index + 40))) decisios.push(where);
 		else problems.push(where);
 	}
 }

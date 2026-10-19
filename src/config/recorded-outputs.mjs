@@ -16,10 +16,11 @@ const firstAnswer = () => { const q = Object.values(recordedResponse().answers).
 // The card as the labels name it, and the reviews of the releases since the recording, from their notes.
 const card = () => session().card.replace(/^NVIDIA /, '').replace(/ Blackwell.*$/, '');
 const textRoute018 = "0.18.0's changes are adapters (their temperatures and fingerprint), generated reference docs, the image count and the image engines' shares, and W4A16 checkpoints' engine stream; it has no upgrade notes, and none of these touches a text request to the FP8 31B with no adapter";
+const recertify0181 = "0.18.1 changes how a re-certification derives its minimum examples, and help text and docs; a text request, an escalation sweep, a first certification and the monitor are as 0.18.0 had them";
 const reviews = {
-	decisions: { 'v0.18.0': { changed: false, why: textRoute018 } },
-	example5: { 'v0.18.0': { changed: false, why: textRoute018 } },
-	certificate: { 'v0.18.0': { changed: false, why: `${textRoute018}; a server with no adapter keeps its certificates as before (docs/running.md), though any release change suspends a certificate until it is made again` } },
+	decisions: { 'v0.18.0': { changed: false, why: textRoute018 }, 'v0.18.1': { changed: false, why: recertify0181 } },
+	example5: { 'v0.18.0': { changed: false, why: textRoute018 }, 'v0.18.1': { changed: false, why: recertify0181 } },
+	certificate: { 'v0.18.0': { changed: false, why: `${textRoute018}; a server with no adapter keeps its certificates as before (docs/running.md), though any release change suspends a certificate until it is made again` }, 'v0.18.1': { changed: false, why: `${recertify0181}; the worked certificate is a first certification, not a re-certification` } },
 };
 
 export const recordedOutputs = [
@@ -54,7 +55,7 @@ export const recordedOutputs = [
 		marker: 'Out of scope taught',
 		card,
 		date: () => oosReplay().date,
-		reviews: {},
+		reviews: { 'v0.18.1': { changed: false, why: `${recertify0181}; the monitor (monitor.py) is unchanged since 0.18.0` } },
 	},
 ];
 

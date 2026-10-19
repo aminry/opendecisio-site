@@ -7,7 +7,7 @@
 export const edits = [
 	{
 		file: 'docs/api.md',
-		find: 'The earlier `x-rlcd-route` and `x-rlcd-debug` headers are still honoured.\n',
+		find: 'The `x-rlcd-route` and `x-rlcd-debug` headers are honoured as aliases.\n',
 		replace: '',
 		why: 'legacy header names carrying the private repository name; clients use the x-decisio-* headers',
 	},
