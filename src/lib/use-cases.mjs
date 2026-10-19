@@ -98,7 +98,7 @@ export function teachBody(id) {
 
 const card = () => readUpstream('EVAL_CARD.md');
 // The 31B's row of the 1,400-item suite, as section 7.2 of the evaluation card gives it.
-function suite31() {
+export function suite31() {
 	const rows = [...card().matchAll(/^\| 1,400-item suite, accuracy \/ ECE \| (.*) \|/gm)];
 	if (rows.length !== 3) fail('EVAL_CARD.md no longer has the suite row of each base');
 	const row = rows[2][1];

@@ -10,8 +10,7 @@ import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 import remarkUpstream from './remark-upstream.mjs';
 import { blockHash } from './checks.mjs';
-import { install, laptop } from './home.mjs';
-import { siteBlock } from './site-blocks.mjs';
+import { homeBlockTexts } from './home-page.mjs';
 import { siteRoot } from './upstream.mjs';
 
 const contentRoot = join(siteRoot, 'src/content/docs');
@@ -29,7 +28,6 @@ export function collectBlocks() {
 			out.push({ page, n, hash: blockHash(node.value), lang: node.lang, text: node.value });
 		});
 	}
-	const home = [laptop().pull, siteBlock('ollama-request-gemma').text, install('GPU server')];
-	home.forEach((text, i) => out.push({ page: '/', n: i + 1, hash: blockHash(text), lang: 'sh', text }));
+	homeBlockTexts().forEach((text, i) => out.push({ page: '/', n: i + 1, hash: blockHash(text), lang: 'sh', text }));
 	return out;
 }

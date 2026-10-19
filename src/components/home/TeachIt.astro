@@ -1,45 +1,30 @@
 ---
-// "Teach it your task", right after the hero: the benefits of fine-tuning, without fine-tuning. A story of about 15
-// seconds (examples taught, the answer sharpening, a threshold drawn, certified answers automated and the rest sent to
-// a person), the counters beside it, a slider over the measured amounts of teaching, and how it works in four steps.
-// Every number is teachData()'s (src/lib/teach.mjs): launch_facts.public.json's teaching block (decisio's own records, as the
-// launch facts carry them), checked against the pinned release.
-import { teachData } from '../../lib/teach.mjs';
+// "Teach it", right after the hero: one task end to end, the support inbox (BANKING77 on the Gemma 4 31B). A story of
+// about 15 seconds (the examples taught, the answer sharpening, the threshold drawn, the certified answers automated
+// and the rest sent to a person), two counters beside it, and the three steps. Every number is inboxStory()'s
+// (src/lib/home-page.mjs), read from the teach-and-certify run records; the certified shares are the threshold line's,
+// in the next section, so they are stated once.
+import { inboxStory } from '../../lib/home-page.mjs';
 import { scene } from '../../lib/teach-scene.mjs';
-import { readUpstream } from '../../lib/upstream.mjs';
-const d = teachData();
-const c = d.certify;
+const d = inboxStory();
 const pct = (x: number, k = 1) => `${(x * 100).toFixed(k)}%`;
 const wide = scene(d, 'wide');
 const narrow = scene(d, 'narrow');
-const minutes = Math.round(d.learn.seconds / 60);
-const certShare = c.certified / c.n;
-const wrongShare = c.wrong / c.certified;
-const slider = d.stops.map((s) => ({ label: s.label, rows: s.rows, seconds: s.seconds, examples: s.examples ?? null }));
-// The three lines and the honest line are the section's final copy of 2026-10-15; the sentence on 0.16.0 follows the
-// honest line (2026-10-18).
 const steps = [
 	{ t: 'Teach.', x: 'Send labelled examples of your question. It takes minutes, and the weights stay as they are.' },
-	{ t: 'Certify.', x: 'The server holds half back and finds the confidence above which your wrong answers stay under a rate you pick.' },
-	{ t: 'Act.', x: 'Every answer says certified or not. Automate the certified ones and send the rest to a person.' },
+	{ t: 'Certify.', x: 'The server holds some of your examples back and finds the confidence above which wrong answers stay under the rate you pick.' },
+	{ t: 'Act.', x: 'Every answer says whether it is certified. Automate the certified ones and send the rest to a person.' },
 ];
-const honest = 'It needs labelled examples, and a certificate holds for one task on one serving setup.';
-// From 0.16.0, in the release's own words (docs/upgrading.md at the pinned release): a task certified on 0.16.0 stops
-// certifying while the confidence alert is on, and one certified earlier needs certifying again to get it.
-const upgrading = readUpstream('docs/upgrading.md');
-if (!upgrading.includes('The confidence alert suspends certification while it is on') || !/so it gets no drift protection until it is certified again/.test(upgrading)) throw new Error('TeachIt: docs/upgrading.md at the pinned release no longer says certification pauses on a confidence alert, or that a task certified earlier must be certified again');
-const paused = 'From decisio 0.16.0, certification pauses on its own when traffic shifts away from the examples, and a task certified on an earlier version needs certifying again to get it.';
-const proof = d.proof;
 ---
 <section class="section teach" id="teach" aria-labelledby="teach-h" data-launch="teach">
 	<div class="wrap">
 		<div class="section__head">
 			<p class="kicker">Teach it</p>
 			<h2 id="teach-h">Teach it your labels. <em class="hl">It tells you which answers to trust.</em></h2>
-			<p>Show the server a few hundred of your own labelled examples. It learns what your labels mean, then marks every answer it is sure of. The model's weights never change.</p>
+			<p>A support inbox with {d.learn.labels} kinds of request: the server learns what each label means from a few examples, then marks every answer it is sure of. The model's weights never change.</p>
 		</div>
 
-		<div class="teach__stage tile" data-teach data-reveal>
+		<div class="teach__stage tile" data-teach>
 			<div class="teach__bar">
 				<ol class="teach__acts" aria-label="The story">
 					<li data-act="0"><b>1</b> Learn your labels</li>
@@ -54,60 +39,27 @@ const proof = d.proof;
 			</div>
 			<dl class="teach__counters">
 				<div class="teach__c">
-					<dt>Accuracy, {d.learn.task} ({d.learn.labels} labels)</dt>
+					<dt>Right answers, untaught and taught</dt>
 					<dd><span class="teach__before">{pct(d.learn.before)}</span> to <b data-teach-count={(d.learn.after * 100).toFixed(1)} data-from={(d.learn.before * 100).toFixed(1)}>{pct(d.learn.after)}</b></dd>
 				</div>
 				<div class="teach__c">
-					<dt>Teach time</dt>
-					<dd><b>{minutes} min</b> <span>for {d.learn.examples.toLocaleString('en-US')} examples ({d.learn.seconds} s)</span></dd>
-				</div>
-				<div class="teach__c teach__c--hot">
-					<dt>Certified, at most {pct(c.alpha, 0)} wrong ({pct(1 - c.delta, 0)} confidence)</dt>
-					<dd><b data-teach-count={(certShare * 100).toFixed(1)} data-from="0">{pct(certShare)}</b> <span data-teach-of={c.certified} data-n={c.n}>{c.certified} of {c.n} answers</span></dd>
-				</div>
-				<div class="teach__c" data-teach-wait>
-					<dt>Wrong among the certified</dt>
-					<dd><b>{pct(wrongShare)}</b> <span>{c.wrong} of {c.certified}; the other {c.n - c.certified} went to a person</span></dd>
+					<dt>Taught with</dt>
+					<dd><b>{d.learn.examples.toLocaleString('en-US')} examples</b> <span>{d.learn.perLabel} for each label</span></dd>
 				</div>
 			</dl>
-			<p class="teach__src">
-				Two measured tasks. Learning: {d.learn.task} on the {d.learn.base}, after {d.learn.perLabel} labelled examples per intent, mean of {d.learn.draws} draws, {d.learn.items} test items. Certifying: {c.task.toLowerCase()} on the {c.base}, {c.taught} labelled examples, half held back; the dots are its {c.n} answers on further tickets, one draw. {d.source}
-			</p>
+			<p class="teach__src">{d.source}. The dots are {d.certify.n} of its answers, a seeded random sample, split by the certificate at most {pct(d.certify.alpha, 0)} wrong.</p>
 		</div>
 
-		<div class="teach__slider tile" data-teach-slider data-d={JSON.stringify(slider)} data-reveal>
-			<div class="teach__sl-head">
-				<label for="teach-n">Examples taught</label>
-				<input id="teach-n" type="range" min="0" max={slider.length - 1} step="1" value={slider.length - 1} list="teach-n-stops" aria-describedby="teach-n-out" />
-				<datalist id="teach-n-stops">{slider.map((s, i) => <option value={i} label={s.label} />)}</datalist>
-				<output id="teach-n-out" data-teach-n>{slider.at(-1)!.label}</output>
-			</div>
-			<ul class="teach__rows">
-				{slider.at(-1)!.rows.map((r, i) => (
-					<li class="teach__row">
-						<span class="teach__rn">{r.name}</span>
-						<span class="teach__track"><span class="teach__ghost" data-ghost={i}></span><span class="teach__fill" data-fill={i}></span></span>
-						<span class="teach__rv" data-val={i}>{pct(r.acc)}</span>
-					</li>
-				))}
-			</ul>
-			<p class="teach__sl-note" data-teach-note>
-				Accuracy on the {d.learn.base}, untaught and taught. Only measured amounts are shown: none, and {d.learn.perLabel} labelled examples per intent.
-			</p>
-		</div>
-
-		<ol class="teach__how" aria-label="How it works" data-reveal>
+		<ol class="teach__how" aria-label="How it works">
 			{steps.map((s, i) => (
-				<li class="teach__step tile tilt">
+				<li class="teach__step tile">
 					<span class="teach__n" aria-hidden="true">{i + 1}</span>
 					<h3>{s.t}</h3>
 					<p>{s.x}</p>
 				</li>
 			))}
 		</ol>
-		<p class="teach__honest">{honest} {paused}</p>
-		<p class="teach__proof" data-launch="teach-proof">Intent accuracy on the {proof.base}. {proof.rows.map((r) => `${r}. `)}{proof.scope}</p>
-		<div class="actions teach__cta"><a class="button button--primary" href="/docs/tasks/">Teach your first task</a><a class="button button--primary" href="/demos/teach-and-certify/">See certified answers on real tasks</a></div>
+		<div class="actions teach__cta"><a class="button button--primary" href="/docs/tasks/">Teach a task</a><a class="button" href="/docs/use-cases/support-routing/">The support-routing recipe</a></div>
 	</div>
 </section>
 <script>

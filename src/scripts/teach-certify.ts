@@ -49,8 +49,8 @@ if (inbox) {
 		total('share').textContent = `${pc(t.covered / testN)} of the inbox`;
 		total('errors').textContent = n(t.errors);
 		total('rate').textContent = t.covered ? `${pc(t.errors / t.covered)} of them` : 'nothing was sent';
-		total('threshold').textContent = t.threshold === null ? 'none' : t.threshold.toFixed(4);
-		total('why').textContent = t.threshold === null ? 'no threshold keeps the held-out mistakes under the target' : 'certified at or above it';
+		total('threshold').textContent = t.threshold === null ? 'none' : t.threshold.toFixed(2);
+		total('why').textContent = t.threshold === null ? 'no threshold keeps the held-out mistakes under the rate' : 'certified at or above it';
 	};
 	alphas.forEach((b) => b.addEventListener('click', () => { alpha = b.dataset.alpha!; press(alphas, b); place(true); }));
 	next.hidden = false;

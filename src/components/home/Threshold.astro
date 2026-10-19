@@ -1,0 +1,34 @@
+---
+// The threshold line, after the teaching story and on the same task: pick an error rate and see the share of the inbox
+// answered on its own, how many of those were wrong, and how many went to a person (thresholdLine() in
+// src/lib/home-page.mjs, from the teach-and-certify run records). The 5% stop is built in; src/scripts/home.ts moves
+// between the measured stops, and without scripts the 5% stop stays.
+import { thresholdLine } from '../../lib/home-page.mjs';
+const t = thresholdLine();
+const pc = (x: number, d = 1) => `${(x * 100).toFixed(d)}%`;
+const n = (x: number) => x.toLocaleString('en-US');
+const at = t.stops.find((s) => s.alpha === t.start)!;
+if (Math.round(1 / t.delta) !== 10) throw new Error('Threshold: the certificates are no longer made at 90% confidence; the page says nine times in ten');
+---
+<section class="section band" id="certify" aria-labelledby="certify-h">
+	<div class="wrap">
+		<div class="section__head">
+			<p class="kicker">Certify</p>
+			<h2 id="certify-h">Pick an error rate. <em class="hl">See what it answers on its own.</em></h2>
+			<p>The certificate promises, nine times in ten, that at most the rate you pick of its certified answers are wrong. A stricter rate sends more of the inbox to a person.</p>
+		</div>
+		<div class="cert tile" data-cert={JSON.stringify(t.stops)}>
+			<div class="cert__ctl" role="group" aria-label="Error rate">
+				<span class="cert__l">At most wrong</span>
+				{t.stops.map((s) => <button type="button" class="chip" aria-pressed={String(s.alpha === t.start)} data-alpha={s.alpha}>{pc(s.alpha, 0)}</button>)}
+			</div>
+			<div class="cert__track" aria-hidden="true"><span class="cert__auto" data-cert-bar style={`width: ${(100 * at.covered / at.n).toFixed(2)}%`}></span></div>
+			<dl class="cert__out" aria-live="polite">
+				<div class="cert__o cert__o--auto"><dt>Answered on its own</dt><dd><b data-cert="share">{pc(at.covered / at.n)}</b> <span data-cert="covered">{n(at.covered)} of {n(at.n)} messages</span></dd></div>
+				<div class="cert__o"><dt>Wrong among those</dt><dd><b data-cert="wrong">{at.covered ? pc(at.errors / at.covered) : 'none'}</b> <span data-cert="errors">{at.covered ? `${n(at.errors)} messages` : 'nothing certified'}</span></dd></div>
+				<div class="cert__o"><dt>Sent to a person</dt><dd><b data-cert="person">{n(at.n - at.covered)}</b> <span>messages</span></dd></div>
+			</dl>
+		</div>
+		<p class="cert__next"><a href="/docs/tasks/certify/">Certify answers</a>: the promise, and how to make a certificate for your task.</p>
+	</div>
+</section>

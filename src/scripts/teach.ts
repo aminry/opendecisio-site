@@ -1,5 +1,5 @@
 // The teaching section (src/components/home/TeachIt.astro): the story played once when it comes into view, pausable
-// and replayable, and the "examples taught" slider. The stage is drawn in its final state at build time; this script
+// and replayable. The stage is drawn in its final state at build time; this script
 // sets every element from one timeline t (milliseconds), so pausing freezes it where it is. Under reduced motion the
 // final state stays and nothing moves. Only attributes and custom properties are set, as the CSP requires.
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -8,17 +8,12 @@ const clamp = (x: number) => Math.min(1, Math.max(0, x));
 const ease = (x: number) => 1 - Math.pow(1 - clamp(x), 3);
 const span = (t: number, a: number, b: number) => ease((t - a) / (b - a));
 const END = 15000;
-// The certified share counts up over these milliseconds of the timeline.
-const CERT_FROM = 7300;
-const CERT_TO = 10300;
 
 const stage = document.querySelector<HTMLElement>('[data-teach]');
 if (stage && !reduce) {
 	const play = stage.querySelector<HTMLButtonElement>('[data-teach-play]')!;
 	const acts = $$<HTMLElement>('[data-act]', stage);
 	const counts = $$<HTMLElement>('[data-teach-count]', stage);
-	const ofs = $$<HTMLElement>('[data-teach-of]', stage);
-	const waits = $$<HTMLElement>('[data-teach-wait]', stage);
 	const svgs = $$<SVGSVGElement>('.tc-svg', stage).map((svg) => {
 		const grid = JSON.parse(svg.dataset.tcGrid!);
 		const box = svg.querySelector<SVGRectElement>('.tc-node')!;
@@ -90,17 +85,12 @@ if (stage && !reduce) {
 				d.el.classList.toggle('tc-dot--lit', i < k);
 			});
 		}
+		// The taught accuracy counts up with the drawing's bar.
 		counts.forEach((c) => {
 			const to = Number(c.dataset.teachCount);
 			const from = Number(c.dataset.from);
-			const k = c.closest('.teach__c--hot') ? span(t, CERT_FROM, CERT_TO) : span(t, 3400, 5600);
-			c.textContent = `${(from + (to - from) * k).toFixed(1)}%`;
+			c.textContent = `${(from + (to - from) * span(t, 3400, 5600)).toFixed(1)}%`;
 		});
-		// The certified answers count with their share, rounded down so the count never runs ahead of the share (at the end
-		// of the count the span is exactly 1, so it lands on the whole number), and the errors among them wait until the
-		// count is done, so no tile states a number the drawing has not reached yet.
-		ofs.forEach((o) => { o.textContent = `${Math.floor(Number(o.dataset.teachOf) * span(t, CERT_FROM, CERT_TO))} of ${o.dataset.n} answers`; });
-		waits.forEach((w) => w.classList.toggle('teach__c--wait', t < CERT_TO));
 	}
 
 	let t = 0;
@@ -131,25 +121,4 @@ if (stage && !reduce) {
 	}), { threshold: 0.35 });
 	io.observe(stage);
 	document.addEventListener('visibilitychange', () => { if (document.hidden && running) stop(); });
-}
-
-// The slider: one stop for each measured amount of teaching; the bars, values and note follow it.
-const box = document.querySelector<HTMLElement>('[data-teach-slider]');
-if (box) {
-	const stops = JSON.parse(box.dataset.d!) as { label: string; rows: { name: string; acc: number }[]; seconds: number | null; examples: number[] | null }[];
-	const input = box.querySelector<HTMLInputElement>('input')!;
-	const out = box.querySelector<HTMLOutputElement>('[data-teach-n]')!;
-	const w = (acc: number) => `${Math.max(2, ((acc - 0.5) / 0.5) * 100).toFixed(1)}%`;
-	const set = () => {
-		const s = stops[Number(input.value)];
-		out.textContent = s.label;
-		s.rows.forEach((r, i) => {
-			box.querySelector<HTMLElement>(`[data-fill="${i}"]`)?.style.setProperty('--w', w(r.acc));
-			box.querySelector<HTMLElement>(`[data-ghost="${i}"]`)?.style.setProperty('--w', w(stops[0].rows[i].acc));
-			const v = box.querySelector<HTMLElement>(`[data-val="${i}"]`);
-			if (v) v.textContent = `${(r.acc * 100).toFixed(1)}%${s.examples ? `, ${s.examples[i].toLocaleString('en-US')} examples` : ''}`;
-		});
-	};
-	input.addEventListener('input', set);
-	set();
 }

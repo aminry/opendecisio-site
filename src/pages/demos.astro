@@ -1,70 +1,83 @@
 ---
-// The demos page, in round 6's system: a short intro, then each demo as a card with its clip (chips for each scene
-// and base, the default base first), one line on how its decisions are judged, three key numbers of the default base
-// as tiles, and every player's results, Decisio's errors and the method in disclosures. Everything is read from
-// docs/demos/README.md at the pinned release (src/lib/demos.mjs); the hosted players' own clips stay on GitHub.
+// The demos page: certified answers first, as four results from the teach-and-certify runs, each linked to its part of
+// that page; then the four recorded demos on decisio's own three bases (the default base first), each a card with its
+// clip, three numbers, every base's results and decisio's errors; then how the demos were judged, and what next. The
+// other players of the recorded demos are on Benchmarks, dated (decided 2026-10-18). Everything is read from
+// docs/demos/README.md at the pinned release (src/lib/demos.mjs) and the teach-and-certify run records.
 import Clip from '../components/home/Clip.astro';
 import PageHero from '../components/PageHero.astro';
 import UpstreamTable from '../components/UpstreamTable.astro';
 import { baseOfName, colourOf } from '../config/bases.mjs';
 import { site } from '../config/site';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { demoCards, intro, sectionParts, watchNote } from '../lib/demos.mjs';
+import { demoCards, sectionParts, setupLine } from '../lib/demos.mjs';
 import { breadcrumbs } from '../lib/jsonld.mjs';
 import { pin } from '../lib/upstream.mjs';
 import { baseName, data as teachCertify, datasetName } from '../lib/teach-certify.mjs';
 
 const cards = demoCards();
-// The featured card: the teach-and-certify demo, with one measured number from its page (the support inbox at 5%).
-const tc = teachCertify().inbox;
-const tcShare = `${((100 * tc.targets['0.05'].covered) / tc.test_n).toFixed(1)}%`;
-const hostedClips = `${site.repository}/blob/${pin.tag}/docs/demos/README.md#watch-it-play`;
+const setup = setupLine();
 const examples = `${site.repository}/tree/${pin.tag}/examples/demos`;
-const baseOf = (player: string) => baseOfName(player.replace(/ base$/, ''));
+const baseOf = (player: string) => baseOfName(player.replace(/^Decisio, /, '').replace(/ base$/, ''));
 const DEFAULT = 'gemma-4-31b';
-const [, ...setup] = intro();
-const classed = sectionParts('How each decision is judged').filter((b) => b.kind !== 'table');
-const teaching = sectionParts('Teaching');
-const reproducing = sectionParts('Reproducing');
+const classed = sectionParts('How each decision is judged');
+const judged = classed.find((b: any) => b.kind === 'table') as { head: string[]; rows: string[][] };
 const plain = (html: string) => html.replace(/<[^>]+>/g, '');
-// What a demo's table counts ("8 players", "3 bases") and the detail its heading gives in brackets.
-const counted = (d: (typeof cards)[number]) => {
-	const t = d.results.blocks.find((b: any) => b.kind === 'table') as { head: string[]; rows: string[][] };
-	return { n: t.rows.length, noun: plain(t.head[0]).toLowerCase(), detail: /\(([^)]*)\)/.exec(d.results.heading)?.[1] ?? '' };
-};
+const lockstep = 'Lockstep waits for every answer; in realtime the car keeps moving while it waits.';
+
+// The four certified-answers results, each from the run records the teach-and-certify page draws.
+const tc = teachCertify();
+const pc = (x: number, d = 1) => `${(x * 100).toFixed(d)}%`;
+const ib = tc.inbox;
+const at5 = ib.targets['0.05'];
+const gk = tc.gatekeeper;
+const r16 = tc.release016;
+const fix = tc.fix;
+if (!r16?.released || !fix || !gk) throw new Error('demos: the teach-and-certify records lack the gatekeeper, the 0.16.0 alarm or the out-of-scope fix');
+const results = [
+	{ n: pc(at5.covered / ib.test_n), l: `of a support inbox answered on its own at most 5% wrong; ${pc(at5.errors / at5.covered)} of those were wrong`, meta: `${datasetName(ib.dataset)}, ${baseName(ib.model)}, decisio ${tc.decisio}`, href: '/demos/teach-and-certify/#inbox' },
+	{ n: `${pc(gk.at5.share[0], 0)} to ${pc(gk.at5.share[1], 0)}`, l: "of a coding agent's shell commands decided on their own at most 5% wrong", meta: `${gk.rules.length} rules, ${baseName(gk.model)} on a Mac, decisio ${gk.decisio}`, href: '/demos/teach-and-certify/#gatekeeper' },
+	{ n: String(r16.clinc.wrong_before), l: `wrong answers certified before certification paused on drifting traffic, against ${r16.clinc.wrong_before_014.toLocaleString('en-US')} with no pause`, meta: `${datasetName('clinc150')}, ${baseName('g31')}, decisio ${r16.version}`, href: '/demos/teach-and-certify/#drift' },
+	{ n: `${pc(fix.wrong_rate_before)} to ${pc(fix.wrong_rate)}`, l: 'wrong among the certified answers, once the task was taught to say none of these', meta: `${datasetName('clinc150')} with off-topic traffic, decisio ${tc.decisio}`, href: '/demos/teach-and-certify/#fix' },
+];
 ---
-<SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Demos', path: '/demos/' }])} title={`Demos: ${site.name}`} description="Certified answers on real tasks, then Pong, a driving simulator, a browser agent and ticket triage on each base, every decision checked.">
+<SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Demos', path: '/demos/' }])} title={`Demos: ${site.name}`} description="Certified answers on real tasks, then Pong, a driving simulator, a browser agent and ticket triage on each of decisio's three models, every decision checked where it can be.">
 	<PageHero
 		label="Demos"
-		lede="Taught from labelled examples, Decisio certified which answers could go out with no one checking them. It also played Pong, drove a simulator, ran a browser agent and triaged support tickets on each of its three bases, and an oracle checked every decision."
-		links={[{ href: '/docs/demos/', text: 'The full write-up' }, { href: hostedClips, text: "The hosted players' clips" }, { href: examples, text: 'Run them yourself' }]}
-	>Certified answers and recorded runs, <em class="hl">every decision judged</em></PageHero>
+		lede="Taught from a few labelled examples, decisio certified which answers could go out with no one checking them. Here are four of those results, then four recorded demos on each of its three models, every decision checked where there was something to check."
+		links={[{ href: '/demos/teach-and-certify/', text: 'Certified answers on real tasks' }, { href: '#judged', text: 'How the demos were judged' }, { href: examples, text: 'Run them yourself' }]}
+	>Answers it can stand behind, <em class="hl">measured on real tasks</em></PageHero>
 
 	<section class="section psec" aria-labelledby="certified">
 		<div class="wrap">
-			<article class="pcard tile demo-feature" data-reveal>
-				<div class="demo-feature__text">
-					<p class="kicker">Certified answers</p>
-					<h2 class="demo-feature__title" id="certified">Teach and certify</h2>
-					<p class="demo-feature__line">Taught from labelled examples, Decisio marks which answers can go out with no one checking them, at the error rate you pick.</p>
-				</div>
-				<p class="demo-feature__n"><b>{tcShare}</b><span>of a support inbox answered on its own at a 5% error target ({baseName(tc.model)}, {datasetName(tc.dataset)})</span></p>
-				<div class="actions demo-feature__cta"><a class="button button--primary" href="/demos/teach-and-certify/">See certified answers on real tasks</a></div>
-			</article>
+			<div class="section__head">
+				<p class="kicker">Certified answers</p>
+				<h2 id="certified">Teach it, certify it, <em class="hl">automate the sure answers</em></h2>
+				<p>Four results from the teach-and-certify runs, each on public data and each with its own page section.</p>
+			</div>
+			<ul class="cert4">
+				{results.map((r) => (
+					<li class="cert4__i tile">
+						<span class="cert4__n">{r.n}</span>
+						<span class="cert4__l">{r.l}</span>
+						<a class="cert4__m" href={r.href}>{r.meta}</a>
+					</li>
+				))}
+			</ul>
+			<div class="actions"><a class="button button--primary" href="/demos/teach-and-certify/">See certified answers on real tasks</a></div>
 		</div>
 	</section>
 
 	<section class="section psec" aria-labelledby="watch">
 		<div class="wrap">
 			<div class="section__head">
-				<p class="kicker">Watch it play</p>
-				<h2 id="watch">Recorded runs, <em class="hl">replayed</em></h2>
-				<p set:html={watchNote('Every clip is rendered')} />
-				<p>Each card opens on the default base, Gemma 4 31B, and its numbers are that base's. Cygnet and four hosted models played the same seeds; their results are in each card's table.</p>
+				<p class="kicker">Recorded runs</p>
+				<h2 id="watch">Four demos, <em class="hl">recorded on decisio {setup.version}</em></h2>
+				<p>Each clip is a recorded run, played at the speed it happened. Every base ran in one session on one {setup.card} on {setup.date}; each card opens on the default base, Gemma 4 31B, and its numbers are that base's.</p>
 			</div>
 
-			{cards.map((card) => ({ ...card, counted: counted(card) })).map((d) => (
-				<article class="demo-card tile" id={d.key} aria-labelledby={`${d.key}-h`} data-demo data-reveal>
+			{cards.map((d) => (
+				<article class="demo-card tile" id={d.key} aria-labelledby={`${d.key}-h`} data-demo>
 					<div class="demo-card__media">
 						{d.scenes.length > 1 && (
 							<div class="demo-card__takes" role="group" aria-label={`${d.title}: scene`} data-takes="scene" hidden>
@@ -88,7 +101,7 @@ const counted = (d: (typeof cards)[number]) => {
 					</div>
 					<div class="demo-card__text">
 						<h2 class="demo-card__title" id={`${d.key}-h`}>{d.title}</h2>
-						<p class="demo-card__line">{d.line}</p>
+						<p class="demo-card__line">{d.line}{d.key === 'driving' && ` ${lockstep}`}</p>
 						<ul class="minis" data-table-keys>
 							{d.minis.map((m) => <li class="mini"><span class="mini__n">{m.n}</span><span class="mini__l">{m.l}</span></li>)}
 						</ul>
@@ -96,7 +109,7 @@ const counted = (d: (typeof cards)[number]) => {
 					</div>
 
 					<details class="disc">
-						<summary>Every {d.counted.noun} <span class="disc__n">{d.counted.n} {d.counted.noun}s{d.counted.detail ? `, ${d.counted.detail}` : ''}</span></summary>
+						<summary>Every base <span class="disc__n">3 bases</span></summary>
 						<div class="disc__body">
 							{d.results.blocks.map((b: any) =>
 								b.kind === 'table' ? (
@@ -111,65 +124,44 @@ const counted = (d: (typeof cards)[number]) => {
 					</details>
 					{d.errors && (
 						<details class="disc">
-							<summary>Where Decisio was wrong</summary>
+							<summary>Where it was wrong</summary>
 							<div class="disc__body">
-								<UpstreamTable head={d.errors.head} rows={d.errors.rows} numeric={false} caption={`${d.title}: Decisio's errors, by kind`} />
+								<UpstreamTable head={d.errors.head} rows={d.errors.rows} numeric={false} caption={`${d.title}: decisio's errors, by kind`} />
 								{d.errors.notes.length > 0 && <div data-table-notes>{d.errors.notes.map((h) => <p set:html={h} />)}</div>}
 							</div>
 						</details>
 					)}
-					<details class="disc">
-						<summary>How it was judged</summary>
-						<div class="disc__body">
-							<dl class="demo-card__oracle">
-								<dt>{plain(d.oracle.head[1]).replace(/^the /, 'The ')}</dt>
-								<dd set:html={d.oracle.row[1]} />
-								<dt>{plain(d.oracle.head[2]).replace(/^what/, 'What')}</dt>
-								<dd set:html={d.oracle.row[2]} />
-							</dl>
-							{d.renderings && d.renderings.rows.length > 0 && (
-								<>
-									<h3>Renderings tested on held-out data</h3>
-									<UpstreamTable head={d.renderings.head} rows={d.renderings.rows} numeric={false} caption={`${d.title}: renderings tested on held-out data`} />
-									<div data-table-notes>{d.renderings.notes.map((h) => <p set:html={h} />)}</div>
-								</>
-							)}
-							{d.key === 'pong' && <p><a href="/docs/demos/#pongs-limit">Pong's limit</a>, in the full write-up, is what the default question asks of the model and why the larger base answers it better.</p>}
-							{d.key === 'triage' && (<><h3>Teaching</h3><div data-table-notes>{teaching.map((b) => b.kind === 'p' && <p set:html={b.html} />)}</div></>)}
-						</div>
-					</details>
 				</article>
 			))}
 		</div>
 	</section>
 
-	<section class="section psec" aria-labelledby="method">
+	<section class="section psec" aria-labelledby="judged">
 		<div class="wrap">
 			<div class="section__head">
 				<p class="kicker">Method</p>
-				<h2 id="method">How the demos <em class="hl">were run</em></h2>
-				<p>The same seeds, oracles and renderings for every base, in one session on one card. <a href="/docs/demos/">The full write-up</a> has every table as it was written.</p>
+				<h2 id="judged">How the demos <em class="hl">were judged</em></h2>
+				<p>Every decision was checked against an oracle, a judge that knows the right answer, with the same seeds, oracles and renderings for every base.</p>
 			</div>
-			<div class="pcard tile" data-reveal>
-				<details class="disc">
-					<summary>The setup</summary>
-					<div class="disc__body">{setup.flat().map((h) => <p set:html={h} />)}</div>
-				</details>
-				<details class="disc">
-					<summary>How a disagreement is classed</summary>
-					<div class="disc__body">
-						{classed.map((b: any) => (b.kind === 'p' ? <p set:html={b.html} /> : b.kind === 'ol' ? <ol>{b.items.map((i: string) => <li set:html={i} />)}</ol> : <ul>{b.items.map((i: string) => <li set:html={i} />)}</ul>))}
-					</div>
-				</details>
-				<details class="disc">
-					<summary>Reproducing</summary>
-					<div class="disc__body">{reproducing.map((b: any) => b.kind === 'p' && <p set:html={b.html} />)}</div>
-				</details>
+			<div class="pcard tile">
+				<UpstreamTable head={judged.head} rows={judged.rows} numeric={false} caption="How each demo's decisions are judged" />
+				<h3 class="pcard__title judged__h">How a miss is classed, in this order</h3>
+				{classed.map((b: any) => (b.kind === 'ol' ? <ol class="judged__list">{b.items.map((i: string) => <li set:html={i} />)}</ol> : null))}
+				<p class="pcard__foot">Run them yourself: <a href={examples}>the demos in decisio's examples</a>, at {pin.tag}.</p>
 			</div>
+		</div>
+	</section>
+
+	<section class="section psec" aria-labelledby="next">
+		<div class="wrap">
+			<div class="section__head">
+				<p class="kicker">What next</p>
+				<h2 id="next">Put it on <em class="hl">your own task</em></h2>
+			</div>
+			<p class="page-hero__links"><a class="chip" href="/docs/use-cases/">Use cases</a><a class="chip" href="/docs/tasks/certify/">Certify answers</a><a class="chip" href="/benchmarks/#compares-demos">Every player of the demos, on Benchmarks</a></p>
 		</div>
 	</section>
 </SiteLayout>
 <script>
-	import '../scripts/reveal.ts';
 	import '../scripts/demos.ts';
 </script>

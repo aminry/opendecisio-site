@@ -1,44 +1,71 @@
 ---
-// One tabbed code block for every way in: Ollama, a GPU server, Docker and a Mac with MLX, each at most twelve lines
-// and each the README's own block (home.mjs), set like the hero's install line: 14 px mono, a "$" prompt on each command,
-// the command, its flags and its comments in their own colours, and the box as wide as its longest line.
-import { install, laptop } from '../../lib/home.mjs';
-const tabs = [
-	{ id: 'ollama', label: 'Ollama', text: laptop().pull, docs: '/docs/deploy/mac/#on-a-laptop-with-ollama' },
-	{ id: 'gpu', label: 'GPU', text: install('GPU server'), docs: '/docs/deploy/cloud-gpu/' },
-	{ id: 'docker', label: 'Docker', text: install('Docker'), docs: '/docs/deploy/docker/' },
-	{ id: 'mlx', label: 'MLX', text: install('Mac with MLX'), docs: '/docs/deploy/mac/' },
-];
-for (const t of tabs) if (t.text.split('\n').length > 12) throw new Error(`index: the ${t.label} block is longer than twelve lines`);
-// A line into its parts: the command, then each argument (a flag, a path or a word), then any trailing comment.
-const parse = (line: string) => {
-	if (line.trim().startsWith('#')) return { comment: line.trim(), only: true, cmd: '', args: [] as string[] };
-	const m = /^(.*?)(\s+#.*)?$/.exec(line)!;
-	const words = m[1].trim().split(/\s+/).filter(Boolean);
-	return { comment: m[2]?.trim(), only: m[1].trim() === '' && !!m[2], cmd: words[0], args: words.slice(1) };
+// Get started: one tab for each way to run it (a cloud GPU, Docker, a Mac, Ollama), each a block that runs from a clean
+// machine of its kind, and under the tabs the one request and its recorded answer (homeBlocks() in
+// src/lib/home-page.mjs; verification/plan.mjs checks every block as the guides' own). A command line carries a "$"
+// prompt; the lines that continue it (after a backslash, or inside its quotes) and comment lines do not.
+import { homeBlocks } from '../../lib/home-page.mjs';
+const b = homeBlocks();
+// A tab's start is short enough to read at a glance; a request after it may be longer.
+for (const t of b.tabs) if (t.blocks[0].split('\n').length > 12) throw new Error(`GetStarted: the ${t.label} start is longer than twelve lines`);
+
+type Line = { kind: 'cmd' | 'more' | 'comment'; cmd?: string; args?: string[]; text?: string; comment?: string };
+// A block into its lines: a command, a line that continues one, or a comment on its own.
+const lines = (text: string): Line[] => {
+	let quoted = false;
+	let continues = false;
+	return text.split('\n').map((line) => {
+		const more = continues;
+		if ((line.match(/'/g) ?? []).length % 2 === 1) quoted = !quoted;
+		continues = quoted || /\\$/.test(line);
+		if (more) return { kind: 'more', text: line } as Line;
+		if (line.trim().startsWith('#')) return { kind: 'comment', text: line.trim() } as Line;
+		const m = /^(.*?)(\s+#.*)?$/.exec(line)!;
+		const words = m[1].trim().split(/\s+/).filter(Boolean);
+		return { kind: 'cmd', cmd: words[0], args: words.slice(1), comment: m[2]?.trim() } as Line;
+	});
 };
 const kind = (w: string) => (/^--?[A-Za-z]/.test(w) ? 'fl' : /^(https?:\/\/|[\w.-]+\/[\w./-]+$)/.test(w) ? 'pa' : 'ar');
 ---
 <section class="section" id="try" aria-labelledby="try-h">
 	<div class="wrap">
-		<div class="section__head"><p class="kicker">Get started</p><h2 id="try-h">Four ways in, <em class="hl">one command each.</em></h2></div>
-		<div class="gs" data-tabs data-reveal>
+		<div class="section__head">
+			<p class="kicker">Get started</p>
+			<h2 id="try-h">Run it, <em class="hl">then ask it a question.</em></h2>
+			<p>Pick where it runs, paste its block, then send the request below. <a href="/docs/">Get started</a> walks through each step.</p>
+		</div>
+		<div class="gs" data-tabs>
 			<div class="gs__bar">
 				<div class="gs__tabs" role="tablist" aria-label="Where to run it">
-					{tabs.map((t, i) => <button type="button" role="tab" id={`gs-${t.id}`} aria-controls={`gsp-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'}>{t.label}</button>)}
+					{b.tabs.map((t, i) => <button type="button" role="tab" id={`gs-${t.id}`} aria-controls={`gsp-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'}>{t.label}</button>)}
 				</div>
 			</div>
-			{tabs.map((t, i) => (
+			{b.tabs.map((t, i) => (
 				<div class:list={['gs__panel', { on: i === 0 }]} role="tabpanel" id={`gsp-${t.id}`} aria-labelledby={`gs-${t.id}`}>
-					<div class="gs__box"><pre class="gcode" aria-label={`${t.label}: start`}><code>{t.text.split('\n').map((line) => {
-						const p = parse(line);
-						return p.only
-							? <span class="gc-line gc-only"><span class="gc-c">{p.comment}</span></span>
-							: <span class="gc-line" data-cmd={`${[p.cmd, ...p.args].join(' ')}`}><span class="gc-p" aria-hidden="true">$ </span><span class="gc-cmd">{p.cmd}</span>{p.args.map((a) => <> <span class={`gc-${kind(a)}`}>{a}</span></>)}{p.comment && <span class="gc-c">{'  '}{p.comment}</span>}</span>;
-					})}</code></pre><button type="button" class="install__copy gs__copy" data-copy-panel hidden>copy</button></div>
-					<p class="small"><a href={t.docs}>The {t.label} guide</a>, and <a href="/docs/#1-pick-your-machine">every path</a>.</p>
+					<p class="gs__note">{t.note}</p>
+					{t.blocks.map((text) => (
+						<div class="gs__box" data-copy-text={text}><pre class="gcode" aria-label={`${t.label}: start`}><code>{lines(text).map((l) =>
+							l.kind === 'comment' ? <span class="gc-line gc-only"><span class="gc-c">{l.text}</span></span>
+							: l.kind === 'more' ? <span class="gc-line gc-more">{l.text}</span>
+							: <span class="gc-line"><span class="gc-p" aria-hidden="true">$ </span><span class="gc-cmd">{l.cmd}</span>{l.args!.map((a) => <> <span class={`gc-${kind(a)}`}>{a}</span></>)}{l.comment && <span class="gc-c">{'  '}{l.comment}</span>}</span>
+						)}</code></pre><button type="button" class="install__copy gs__copy" data-copy-box hidden>copy</button></div>
+					))}
+					<p class="small"><a href={t.href}>{t.guide}</a>: the whole guide, and what to check before production.</p>
 				</div>
 			))}
+		</div>
+
+		<div class="ask" id="ask">
+			<h3 class="ask__h">Then ask a question</h3>
+			<p>One request with a support ticket and three questions about it, to the server on port 8000:</p>
+			<div class="gs__box" data-copy-text={b.request}><pre class="gcode" aria-label="The first request"><code>{lines(b.request).map((l) =>
+				l.kind === 'more' ? <span class="gc-line gc-more">{l.text}</span>
+				: <span class="gc-line"><span class="gc-p" aria-hidden="true">$ </span><span class="gc-cmd">{l.cmd}</span>{l.args!.map((a) => <> <span class={`gc-${kind(a)}`}>{a}</span></>)}</span>
+			)}</code></pre><button type="button" class="install__copy gs__copy" data-copy-box hidden>copy</button></div>
+			<details class="more ask__answer">
+				<summary>Its answer: every question under its name, with a probability for each option</summary>
+				<pre class="gcode" aria-label="Its answer"><code>{b.response.split('\n').map((l) => <span class="gc-line gc-json">{l}</span>)}</code></pre>
+			</details>
+			<p class="small">The hero above draws this answer. <a href="/docs/use-from/">Call it from your code</a>: the same request from Python, JavaScript and TypeScript.</p>
 		</div>
 	</div>
 </section>

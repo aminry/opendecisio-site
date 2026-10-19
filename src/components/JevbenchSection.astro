@@ -1,37 +1,33 @@
 ---
 // The benchmarks page's JevBench section: the public board's reading of decisio, from launch_facts.public.json
-// (src/lib/launch.mjs), in the facts' stable wording with the file's date and no rank (decided 2026-10-15). Cards: the
-// composite with its intervals for the ten open-weights systems and Jev, in alphabetical order (the home page's own
-// chart, which draws in when it scrolls into view); the open and sealed items; axis by axis (the board's redrawn picture);
-// and every row for decisio in a disclosure.
+// (src/lib/launch.mjs), in the facts' stable wording with the file's date and no rank (decided 2026-10-15). What the
+// board measures, the composite claim and the overlap said once, the composite chart with every row in a disclosure,
+// then the axes card (the sealed items, the axes and every number).
 import AxisByAxis from './AxisByAxis.astro';
-import SealedOpenChart from './SealedOpenChart.astro';
 import JevbenchChart from './home/JevbenchChart.astro';
 import { BOARD_URL, fixed, jevbench, refuse, stable } from '../lib/launch.mjs';
 
 const j = jevbench();
 const prose = (names: string[]) => names.join(', ').replace(/, ([^,]*)$/, ' and $1');
-// The board's numbers as the launch facts' stable claims state them (dated, with intervals), no rank (decided 2026-10-15).
-const claims: string[] = [
-	stable('composite_v161').text,
-	`Decisio's 95% interval on the composite overlaps those of ${prose(j.overlaps)}.`,
-	`${stable('sealed_v161').text} The sealed set was never published.`,
-];
+const composite = stable('composite_v161');
+const read = /^(\d{4}-\d{2}-\d{2})/.exec(composite.date)?.[1];
+if (!read) throw new Error('JevbenchSection: stable_claims.composite_v161 has no date');
+const claims: string[] = [composite.text, `Decisio's 95% interval on the composite overlaps those of ${prose(j.overlaps)}, so these scores cannot be separated.`];
 claims.forEach(refuse);
-const file = `JevBench ${j.revision}, the board's file of October 2026, read 2026-10-09`;
+const file = `JevBench ${j.revision}, the board's file, read ${read}`;
 ---
 <section class="section psec" aria-labelledby="jevbench" data-launch="section">
 	<div class="wrap">
 		<div class="section__head">
-			<p class="kicker">JevBench {j.revision}</p>
+			<p class="kicker">Public boards</p>
 			<h2 id="jevbench">The JevBench <em class="hl">board</em></h2>
-			<p>The board's reading of decisio in its headline view: the 31B row is decisio v0.8.0 on Gemma 4 31B. Systems are in alphabetical order, and <a href={BOARD_URL}>the live board</a> has today's standings.</p>
+			<p>JevBench is an outside board that sends decision questions to each system and scores its answers on intelligence (right answers, on open questions and on sealed ones it never published), calibration, speed and cost, and on a composite of them. Its 31B row is decisio v0.8.0 on Gemma 4 31B, an earlier release of the same model; systems are in alphabetical order, and <a href={BOARD_URL}>the live board</a> has today's standings.</p>
 		</div>
 		<ul class="plain-list jb__claims" data-claims data-table-notes>
 			{claims.map((t) => <li>{t}</li>)}
 		</ul>
 
-		<div class="pcard tile pchart" data-reveal>
+		<div class="pcard tile pchart">
 			<div class="pcard__head">
 				<h3 class="pcard__title">The composite, with its 95% interval</h3>
 				<p class="pcard__meta">{file}</p>
@@ -42,7 +38,7 @@ const file = `JevBench ${j.revision}, the board's file of October 2026, read 202
 				<div class="disc__body">
 					<div class="table-scroll">
 						<table class="data-table data-table--stack">
-							<caption class="sr-only">JevBench view A: decisio, Jev and the rows beside them in the board's file, in alphabetical order</caption>
+							<caption class="sr-only">JevBench: decisio, Jev and the rows beside them in the board's file, in alphabetical order</caption>
 							<thead>
 								<tr>
 									<th scope="col">System</th>
@@ -64,21 +60,12 @@ const file = `JevBench ${j.revision}, the board's file of October 2026, read 202
 						</table>
 					</div>
 					<div data-table-notes>
-						<p>Scores this close cannot be separated: decisio's interval overlaps {prose(j.overlaps)}. The 12B rows' intervals are wide on the low side.</p>
-						<p>Our temperatures were not fitted on JevBench, but we have read its published items (<a href="/docs/evaluation-card/">the evaluation card</a>, section 7.4).</p>
+						<p>The 12B rows' intervals are wide on the low side. Our temperatures were not fitted on JevBench, but we have read its published items (<a href="/docs/evaluation-card/#74-what-was-fitted-on-what">the evaluation card</a>, section 7.4).</p>
 					</div>
 				</div>
 			</details>
 		</div>
 
-		<div class="pcard tile" data-reveal>
-			<div class="pcard__head">
-				<h3 class="pcard__title">Open items and sealed items</h3>
-				<p class="pcard__meta">{file}</p>
-			</div>
-			<SealedOpenChart />
-		</div>
-
-		<div data-reveal><AxisByAxis level={3} /></div>
+		<AxisByAxis />
 	</div>
 </section>

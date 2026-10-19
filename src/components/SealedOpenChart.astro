@@ -23,7 +23,7 @@ const ticks = [50, 55, 60, 65, 70, 75];
 					<span class="jb__dot jb__dot--ring" style={`--l:${at(r.iOpen)}`}></span>
 					<span class="jb__dot" style={`--l:${at(r.iSealed)}`}></span>
 				</span>
-				<span class="jb__val"><strong>{fixed(r.iSealed)}</strong><small>{fixed(r.iOpen)} open</small></span>
+				<span class="jb__val"><strong>{fixed(r.iSealed, 1)} sealed</strong><small>{fixed(r.iOpen, 1)} open</small></span>
 			</li>
 		))}
 	</ol>

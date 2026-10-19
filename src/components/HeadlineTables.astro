@@ -20,7 +20,8 @@ const used = new Set([
 	...h.numbers.rows.flatMap((r) => r.cells.flatMap((c) => c.letters)),
 	...(systems ? h.systems.rows.flatMap((r) => r.cells.flatMap((c) => ('letters' in c ? c.letters! : [...plain(c.html!).matchAll(/\(([a-z])\)/g)].map((m) => m[1])))) : []),
 ]);
-const notes = h.notes.filter((n) => used.has(plain(n).match(/^\(([a-z])\)/)?.[1] ?? ''));
+// A note's field path in the board's file ("(`jev.results[].usd`)") names data the reader cannot see, and is left out.
+const notes = h.notes.filter((n) => used.has(plain(n).match(/^\(([a-z])\)/)?.[1] ?? '')).map((n) => n.replace(/\s*\(<code>jev\.[^<]*<\/code>\)/g, ''));
 const added = h.added.filter((a) => used.has(a.letter));
 ---
 <div class="table-scroll" tabindex="0" role="region" aria-label="The headline: scores">

@@ -42,19 +42,21 @@ for (const [page, file] of [['/', 'dist/index.html'], ['/benchmarks/', 'dist/ben
 	}
 	const stableText = (id) => (facts.stable_claims?.claims ?? []).find((c) => c.id === id)?.text;
 	if (page === '/') {
-		// The board, behind "See the board": the composite as the stable claim states it.
+		// The board's one dated result on the home page: the composite as the stable claim states it.
 		const lead = doc.querySelector('[data-launch="lead"]')?.structuredText.replace(/\s+/g, ' ').trim() ?? '';
 		if (!lead.startsWith(stableText('composite_v161') ?? '\u0000')) bad(`/: the board's claim is not stable_claims.composite_v161 as the file states it: "${lead.slice(0, 120)}"`);
 	}
 	const listed = doc.querySelector('[data-claims]')?.structuredText.replace(/\s+/g, ' ') ?? '';
 	if (page === '/benchmarks/') {
-		for (const id of ['composite_v161', 'sealed_v161']) if (!listed.includes(stableText(id) ?? '\u0000')) bad(`/benchmarks/: the JevBench section does not list stable_claims.${id} as the file states it`);
+		// The sealed set's claim is the axis card's (below); the claims list carries the composite.
+		if (!listed.includes(stableText('composite_v161') ?? '\u0000')) bad('/benchmarks/: the JevBench section does not list stable_claims.composite_v161 as the file states it');
 	}
 }
-// "JevBench, axis by axis": the table's cells are the values figures.axes_table prints, row by row, and no others; it starts closed.
+// "Axis by axis", on the benchmarks page only: the table's cells are the values figures.axes_table prints, row by row, and no
+// others; it starts closed. Every comparison but the board's composite left the home page (decided 2026-10-18).
 {
 	const t = facts.figures.axes_table;
-	for (const [page, file] of [['/', 'dist/index.html'], ['/benchmarks/', 'dist/benchmarks/index.html']]) {
+	for (const [page, file] of [['/benchmarks/', 'dist/benchmarks/index.html']]) {
 		const doc = parse(readFileSync(file, 'utf8'));
 		const table = doc.querySelector('[data-launch="axes"] table');
 		if (!table) { bad(`${page}: no axis-by-axis table`); continue; }
@@ -66,10 +68,9 @@ for (const [page, file] of [['/', 'dist/index.html'], ['/benchmarks/', 'dist/ben
 		}
 		for (const label of seen.keys()) if (!wanted.has(label)) bad(`${page}: the axis table has a ${label} row that is not in the file`);
 		if (doc.querySelector('[data-launch="axes"] details')?.hasAttribute('open')) bad(`${page}: the axis table starts open`);
-		// The picture's alt text is the file's: the redrawn picture's (figures.axes_table.public, no rank order).
-		const alt = t.public?.alt_text ?? t.alt_text;
-		if (!doc.querySelector('[data-launch="jevbench-axes"] img')?.getAttribute('alt')?.startsWith(alt.slice(0, 60))) bad(`${page}: the axes picture's alt text is not the file's`);
 	}
+	const home = parse(readFileSync('dist/index.html', 'utf8'));
+	for (const sel of ['[data-launch="axes"]', '[data-launch="many-questions"]', '[data-launch="chart"]']) if (home.querySelector(sel)) bad(`/: carries ${sel}, a comparison that belongs on the benchmarks page`);
 	// The hero's heading is the file's tagline, once the file's tagline is one Amin's rule allows (no "Jev-level": a
 	// comparison); until the facts change it, the heading is the choice of 2026-10-15 and says no comparison.
 	const h1 = parse(readFileSync('dist/index.html', 'utf8')).querySelector('h1')?.structuredText.replace(/\s+/g, ' ').trim();
@@ -77,14 +78,14 @@ for (const [page, file] of [['/', 'dist/index.html'], ['/benchmarks/', 'dist/ben
 	if (/Jev-level/i.test(h1 ?? '')) bad(`/: the hero's heading "${h1}" makes a comparison ("Jev-level")`);
 	if (claims.tagline?.holds && !/Jev-level/i.test(tagline) && h1 !== tagline.replace(/\.$/, '') && h1 !== tagline) bad(`/: the hero's heading "${h1}" is not claims.tagline`);
 }
-// "Many questions about one document": the page carries the file's four sentences (figures.same_box_speed), the chart
-// for the page (linear on /, log on /benchmarks) with the file's alt text, and the chart files are the recorded ones.
+// "Many questions about one document", on the benchmarks page: the file's sentences (figures.same_box_speed), the
+// same-session linear chart with the file's alt text, and the chart files are the recorded ones.
 {
 	const m = facts.figures.same_box_speed;
 	// The sentences the library makes from the file (the speed claim, its ratio and the first question).
 	const sentences = manyQuestions('linear').sentences;
-	const charts = { '/': ['linear', 'speed_50q_light.svg'], '/benchmarks/': ['log', 'grid_report/many_questions_light.svg'] };
-	for (const [page, file] of [['/', 'dist/index.html'], ['/benchmarks/', 'dist/benchmarks/index.html']]) {
+	const charts = { '/benchmarks/': ['linear', 'speed_50q_light.svg'] };
+	for (const [page, file] of [['/benchmarks/', 'dist/benchmarks/index.html']]) {
 		const doc = parse(readFileSync(file, 'utf8'));
 		const el = doc.querySelector('[data-launch="many-questions"]');
 		if (!el) { bad(`${page}: no many-questions section`); continue; }
@@ -132,7 +133,7 @@ for (const f of readdirSync('public/launch').filter((x) => x.endsWith('.svg'))) 
 		}
 	}
 	// The axis bullets are the stable claims for the file's axes and sealed set, each starting with its version.
-	for (const [page, file] of [['/', 'dist/index.html'], ['/benchmarks/', 'dist/benchmarks/index.html']]) {
+	for (const [page, file] of [['/benchmarks/', 'dist/benchmarks/index.html']]) {
 		const items = [...parse(readFileSync(file, 'utf8')).querySelectorAll('[data-launch="axes"] .axes__bullets li')].map((li) => li.structuredText.trim());
 		for (const id of ['sealed_v161', 'axes_v161']) {
 			const want = (facts.stable_claims?.claims ?? []).find((c) => c.id === id)?.text;
