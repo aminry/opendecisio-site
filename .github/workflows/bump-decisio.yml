@@ -20,7 +20,7 @@ concurrency:
 jobs:
   bump:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -87,6 +87,20 @@ jobs:
           path: verify.log
           retention-days: 30
 
+      - name: Run the integration checks on the CPU stand-in
+        id: integrations
+        if: always() && steps.release.outputs.skip == 'false' && steps.verify.outcome != 'cancelled'
+        continue-on-error: true
+        shell: bash
+        run: node scripts/verify-integrations.mjs 2>&1 | tee integrations.log
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always() && steps.release.outputs.skip == 'false'
+        with:
+          name: integrations-log
+          path: integrations.log
+          retention-days: 30
+
       - name: Commit through the API (signed by GitHub) and open the pull request
         if: always() && steps.release.outputs.skip == 'false' && steps.verify.outcome != 'cancelled'
         run: node scripts/open-bump-pr.mjs
@@ -94,6 +108,7 @@ jobs:
           BUMP_TAG: ${{ steps.release.outputs.tag }}
           BUMP_BRANCH: ${{ steps.release.outputs.branch }}
           VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          INTEGRATIONS_OUTCOME: ${{ steps.integrations.outcome }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
       - name: Start the checks on the pull request
