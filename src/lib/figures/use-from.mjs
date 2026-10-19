@@ -3,36 +3,9 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { readUpstream, siteRoot } from '../upstream.mjs';
-import { slugify } from '../upstream-map.mjs';
 import { esc, panel } from './core.mjs';
 
 const SERVED = 'decisio-gemma-4-31b-it-letters';
-
-/** The routes of the HTTP API, read from the table of docs/api.md at the pinned release, each linked to its section. */
-function routes() {
-	const api = readUpstream('docs/api.md');
-	const table = /^\| Route \| What it does \|\n\| --- \| --- \|\n((?:\|.*\n)+)/m.exec(api)?.[1] ?? '';
-	const rows = [...table.matchAll(/^\| (`[^|]+`) \| ([^|]+) \|$/gm)].map((m) => ({ routes: [...m[1].matchAll(/`([A-Z]+) ([^`]+)`/g)].map((r) => ({ method: r[1], path: r[2] })), what: m[2].trim() }));
-	if (rows.length < 6) throw new Error('docs-figures: docs/api.md no longer has its table of routes');
-	// The count is of routes, not of the table's rows: a row can hold several (GET and DELETE of one path).
-	const count = rows.reduce((n, r) => n + r.routes.length, 0);
-	const heads = [...api.matchAll(/^## (.+)$/gm)].map((m) => m[1]);
-	const anchor = (first) => {
-		const text = `${first.method} ${first.path}`;
-		const h = heads.find((x) => x.replace(/`/g, '') === text) ?? heads.find((x) => x.replace(/`/g, '') === (/\/v1\/tasks/.test(text) ? 'Tasks' : /abstention/.test(text) ? 'Abstention' : '\u0000'));
-		return h ? `#${slugify(h)}` : undefined;
-	};
-	const body = `<ul class="fig__routes">${rows.map((r, i) => {
-		const a = anchor(r.routes[0]);
-		const inner = `<span class="fig__verbs">${r.routes.map((x) => `<code><b>${esc(x.method)}</b> ${esc(x.path)}</code>`).join('')}</span><span class="fig__what">${esc(r.what)}</span>`;
-		return `<li class="f-pop fd-${Math.min(i, 9)}">${a ? `<a href="${a}">${inner}</a>` : `<div>${inner}</div>`}</li>`;
-	}).join('')}</ul>`;
-	return panel({
-		name: 'routes', label: 'The routes', title: `${count} routes: one asks questions, the rest teach, list and report.`,
-		desc: `The server's routes: ${rows.map((r) => `${r.routes.map((x) => `${x.method} ${x.path}`).join(', ')} ${r.what}`).join('; ')}.`,
-		body, live: 5, interactive: true, legend: 'Each route links to its section of the reference below.', source: 'Source: the table of docs/api.md at the pinned release.',
-	});
-}
 
 /** The one change that moves a System One client: its address, and the name of the served model. */
 function oneLineChange() {
@@ -64,7 +37,6 @@ export function integrations() {
 }
 
 export const useFromFigures = {
-	routes,
 	'one-line-change': oneLineChange,
 };
 

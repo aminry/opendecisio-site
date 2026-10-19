@@ -22,15 +22,15 @@ Every page, its route, and where its content comes from.
 | Route | Section | Content |
 | --- | --- | --- |
 | `/docs/use-from/` | Call it from your code | Site-written: the recorded request from curl, Python, TypeSafe's SDK, JavaScript and TypeScript (`src/lib/site-blocks.mjs`), errors and timeouts (`src/config/sourced.mjs`), the integrations table (`src/data/integrations.json`) and decisio's programs from docs/integrations.md; the Python, JavaScript and Frameworks pages redirect here |
-| `/docs/how-it-works/` | How it works | Site-written text around four diagrams drawn at build time from launch_facts.public.json and the README (src/lib/diagrams.mjs): the request flow, the cache timeline, the routing threshold and the bases |
+| `/docs/how-it-works/` | How it works | Site-written: the recorded request and its answer, the request-flow diagram, the one-pass figure, the teach-and-certify diagram, the where-it-runs panels, what repeats and under the hood; `/docs/probability/` and `/docs/repeatability/` redirect here |
 | `/docs/use-cases/` and six recipes | Use cases | Site-written recipes (support routing, coding-agent gatekeeper, issue triage, guardrails, RAG: answer or abstain, document classification): each one's question, routing script and registration from `src/lib/use-cases.mjs`, and its measured result read from the teach-and-certify runs, EVAL_CARD.md and docs/demos/README.md; issue triage and document classification are labelled recipes |
 | `/docs/deploy/cloud-gpu/` | On a cloud GPU | Site-written: the pinned pip install and clone, decisio's model-repository pin, systemd unit (docs/operating.md) and Kubernetes Deployment with the release image (`src/lib/site-blocks.mjs`); numbers in `src/config/sourced.mjs`; `/docs/quickstart/gpu-server/` redirects here |
 | `/docs/deploy/docker/` | With Docker | Site-written: the release image by digest (`upstream.json`), decisio's compose file run from it, the settings and the build from a clone; `/docs/quickstart/docker/` redirects here |
 | `/docs/deploy/mac/` | On a Mac or a laptop | Site-written: the MLX builds per Mac size, the memory planner, and Ollama with the site-written request; `/docs/quickstart/mac-mlx/` and `/docs/quickstart/ollama/` redirect here |
 | `/docs/deploy/development/` | For development (CPU) | Site-written: the CPU stand-in, with Get started's commands; `/docs/quickstart/cpu-stand-in/` redirects here |
-| `/docs/bases/` | Choosing a base | Upstream README "Choosing a base", with each base's provenance |
-| `/docs/api/` | Asking questions: the HTTP API | Upstream docs/api.md |
-| `/docs/flags/` | Flags and options | Upstream README "Options", then docs/cli.md |
+| `/docs/bases/` | Choosing a model | Site-written: which model for which machine, what `--base` sets and where the weights come from; the README's start commands |
+| `/docs/api/` | HTTP API | A short site intro, then upstream docs/api.md |
+| `/docs/flags/` | Server flags | A short site intro and the flags to set first, then upstream docs/cli.md |
 | `/docs/tasks/` | Teach a task | Site-written steps around docs/tasks.md's walk-through blocks; what teaching did on the 31B from EVAL_CARD.md section 7.2 (`src/lib/teach.mjs`) |
 | `/docs/tasks/certify/` | Certify answers | Site-written: the certify slider on the support inbox (`src/data/teach-certify/`), docs/tasks.md's worked example, the floor table, the setup steps, the threshold picked by hand and abstention; `/docs/guides/probability/` redirects here |
 | `/docs/tasks/drift/` | Watch for drift | Site-written: the three checks, the status and the metrics, from docs/tasks.md "The monitor"; the drift replay chart from runs/2026-10-17_drift-monitor/ |
@@ -42,7 +42,7 @@ Every page, its route, and where its content comes from.
 | `/docs/troubleshooting/` | Troubleshoot | Site-written tables of symptoms by situation, each row guarded by the sentence of decisio's docs it rests on (`src/lib/figures/run-it.mjs`) |
 | `/docs/images/` | Ask about images | Site-written: the image server's start, the limits table, what an image costs, what it does not do; `/docs/guides/images/` redirects here |
 | `/docs/limits/` | Requirements and limits | Site-written: the machines, the context length, the production setup steps, what was measured on what, repeatability and what was not tested; every number in `src/config/sourced.mjs` |
-| `/docs/evaluation-card/` | The evaluation card | Upstream EVAL_CARD.md, whole |
+| `/docs/evaluation-card/` | Evaluation card | A site intro and a section table by question, then upstream EVAL_CARD.md, whole |
 | `/docs/demos/` | Demos, judged decision by decision | Upstream docs/demos/README.md, under `docs/CONTENT_RULES.md` |
 | `/docs/faq/` | Questions | Site-written questions; each answer a pointer or an upstream section (README "How it works", "Teach it your question", "Licence", "Contributing"; docs/cli.md "Determinism"; SECURITY.md) |
 | `/docs/glossary/` | Glossary | Site-written: the style guide's glossary, linked from pages on a word's first use |
@@ -56,6 +56,6 @@ Every page, its route, and where its content comes from.
 
 ## Docs groups
 
-The sidebar, `llms.txt` and `llms-full.txt` share `src/config/docs-groups.mjs`, grouped as the docs rewrite's structure has them: Get started (Get started, Call it from your code, Move from System One); Use cases (the index and six recipes); How-to guides (the four deploy guides, Teach a task, Certify answers, Watch for drift, Scale, Operate, Upgrade, Troubleshoot, Ask about images); Reference (HTTP API, Flags, Bases, Requirements and limits, Glossary, Releases, Upgrade notes, the evaluation card, How Decisio compares, Questions); How it works (How it works, What the probability means, Repeatability, Demos).
+The sidebar, `llms.txt` and `llms-full.txt` share `src/config/docs-groups.mjs`, grouped as the docs rewrite's structure has them: Get started (Get started, Call it from your code, Move from System One); Use cases (the index and six recipes); How-to guides (the four deploy guides, Teach a task, Certify answers, Watch for drift, Scale, Operate, Upgrade, Troubleshoot, Ask about images); Reference (HTTP API, Flags, Bases, Requirements and limits, Glossary, Releases, Upgrade notes, the evaluation card, How Decisio compares, Questions); How it works (How it works, Demos).
 Reference pages (the API, the flags) render from decisio's own docs folder with `::upstream`, so decisio's changes there reach the site on the next bump; each page's footer links its source file on GitHub.
 `llms.txt` and `llms-full.txt` are written after the build by `scripts/llms.mjs` from the built pages and checked by `scripts/checks/llms.mjs`.

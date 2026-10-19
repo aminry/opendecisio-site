@@ -1,39 +1,33 @@
 ---
-title: Flags and options
-description: The behaviour flags, then every flag with its default per base.
+title: Server flags
+description: The flags a production server sets first, then every flag with its value for each model, from decisio's own reference.
 ---
 
-<!-- Site-written: the figure, the TL;DR, the glossary and the links. The behaviour flags are the README's "Options" and the reference is decisio's docs/cli.md, at the pinned release. -->
+<!-- Site-written: the intro and the first table. The reference below is decisio's docs/cli.md at the pinned release; the first table's facts are that file's and docs/running.md's (src/config/sourced.mjs checks them). -->
 
-The served defaults need no flags: every default is what was measured, base by base.
-A flag is for the few times you want something else, and an explicit flag overrides the base's value.
+::covers{links="README.md#options"}
 
-::figure{name="flag-map"}
+With no flag, the server serves Gemma 4 31B with the settings it was measured with; most deployments set only `--base`.
+A flag you give overrides the model's value.
+In the container, `DECISIO_BASE` and `DECISIO_PORT` do the same as `--base` and `--port`.
 
-## TL;DR
+## Flags to set first
 
-The base is the one flag most deployments set; with none, the server serves Gemma 4 31B:
-
-::upstream{file="README.md" section="Choosing a base" block="1"}
-
-:::glossary
-
-| Word | Meaning |
+| Flag | Why |
 | --- | --- |
-| base | the model the server serves, chosen with `--base`, which brings its checkpoint and every setting marked "the base's" |
-| served default | the value a flag has when you give none, measured as one configuration per base |
-| backend | `vllm` (the default), `mlx` for Apple silicon, `hf` for the CPU stand-in |
+| `--base` | picks the model, its checkpoint at a pinned revision, and its measured settings |
+| `--model`, `--revision` | serve a specific checkpoint, at a revision you pin |
+| `--host`, `--port` | the server listens on `127.0.0.1:8000`; put a proxy in front |
+| `--max-model-len` | pins one text length; without it the Gemma models take what the card holds, so cards that differ serve different lengths |
+| `--gpu-memory-utilization` | the model's share of the card; it changes how long a text the card holds, a lot |
+| `--tasks-file` | loads exported tasks at start, so a restart keeps them |
+| `--served-name` | the name `GET /v1/models` lists, kept stable across a change of model |
+| `--kv-cache-dtype` | `fp8` holds a longer text, but suspends a certificate made without it |
+| `--engine-process` | matters only with a second engine (`--image-model`, `--head-engine`, `--one-engine`) |
+| `--backend mlx` | serves on a Mac, from an MLX build |
+| `--debug-readout` | leave it off in production |
 
-:::
-
-:::caution[Common mistake]
-`--multi-question warm`, `--pad-policy row` and `--register-boundary after` trade something for speed (an answer that depends on the batch, a little repeatability, throughput).
-Each has its cost in the reference below; turn one on knowing it, and measure on your own questions.
-:::
-
-## The behaviour flags
-
-::upstream{file="README.md" section="Options" covers="README.md#options"}
+The text length and the cache type are part of what a certificate covers: change either, and certify your tasks again.
 
 ## Every flag
 
@@ -41,6 +35,6 @@ Each has its cost in the reference below; turn one on knowing it, and measure on
 
 ## What next
 
-- [Scale](/docs/scale/#5-set-the-flags-that-move-server-time): which of these flags change server time, and by how much.
-- [Choosing a base](/docs/bases/): what `--base` picks.
-- [Operate](/docs/operating/): running a server with its flags.
+- [Choosing a model](/docs/bases/): what `--base` picks.
+- [Scale](/docs/scale/#5-set-the-flags-that-move-server-time): the flags that move server time, and what each costs.
+- [Operate](/docs/operating/): running a server in production.

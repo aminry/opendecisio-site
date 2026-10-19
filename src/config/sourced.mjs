@@ -248,4 +248,38 @@ export const sourced = [
 		['A request with images carries no certificate.', tasksDoc, 'an image request, carries no certification fields'],
 		["an abstention threshold's examples may carry images", api, 'the examples of `POST /v1/abstention/tasks` may carry them'],
 	]),
+	// How it works
+	...fromPage('/docs/how-it-works/', [
+		['20 labelled examples each lowered the calibration error from 0.058 to 0.037', tasksDoc, 'pooled ECE 0.058 | pooled ECE **0.037**'],
+		['it never changes which option is likeliest', tasksDoc, 'It does not change which option is the top one'],
+		['exactly, on a freshly started server; on one that has already answered, 5 of 200 moved, by at most 0.031, with no top answer changed', card, 'A request repeats exactly on a freshly started server; on a server that has already answered it, a repeat can differ (5 of 200 items, up to 0.031, no top answer changed'],
+		['the same choice on every item measured; probabilities within 0.0073', readme, 'the same choice as one engine call per question on every item measured, probabilities within 0.0073'],
+		['a first read and a cached read can differ, by up to 0.113', running, 'On Gemma 4 12B a fresh read and a cached read of the same question can differ, by up to 0.113'],
+		['the same choice; probabilities within 0.035', readme, 'the same choice as each question sent alone, probabilities within 0.035'],
+		['the same probabilities every time', cli, 'a question returns the same probabilities every time, alone or among other questions'],
+		['an earlier record matched in most starts measured', cli, 'single-question answers have matched an earlier record on the whole suite in most starts measured'],
+		['decisio runs on stock vLLM 0.31.0: a plugin registers its model classes, and no patch is needed.', running, 'so vLLM 0.31.0 loads them without any patch'],
+		['no training, no fine-tuning, no adapter', readme, 'No training: every base is an official checkpoint, frozen, with no fine-tuning and no adapter.'],
+		['the MLX engine answers each question on its own from one shared read of the text', running, 'It scores each question as its own continuation of the shared prefix'],
+	]),
+	// Choosing a model
+	...fromPage('/docs/bases/', [
+		['30.6 GiB, FP8', readme, '30.6 GiB in memory'],
+		['33.3 GiB, FP8', readme, '33.3 GiB in memory'],
+		['22.8 GiB, bf16', readme, 'bf16, 22.8 GiB in memory'],
+		['or an 80 GB H100', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
+		['a 64 GB Mac, or a 48 GB one from its 4-bit build', running, 'is for Macs with 48 GB of memory'],
+		['speed on long new texts, and answers that repeat across sessions', readme, 'Qwen3.6-35B-A3B for speed on long new states, for answers that repeat across sessions'],
+		['a 32 GB Mac; a 16 GB laptop with Ollama', readme, 'It runs on a 32 GB Mac from its MLX conversion'],
+		['A flag you give explicitly overrides the model\'s value.', readme, 'a flag given explicitly overrides the base\'s value'],
+		['A checkpoint named with --model and no --base brings the model its config.json declares.', readme, 'A checkpoint named with `--model` and no `--base` brings the base its `config.json` declares'],
+		['Each is an official checkpoint at a pinned revision, with no training or fine-tuning by us.', readme, 'Official checkpoint from Google, at a pinned revision'],
+	]),
+	// Server flags
+	...fromPage('/docs/flags/', [
+		['the server listens on 127.0.0.1:8000', running, 'It listens on `127.0.0.1:8000` (`--host`, `--port`)'],
+		['fp8 holds a longer text, but suspends a certificate made without it', running, "a certificate made under the model's own cache dtype is suspended under fp8"],
+		['matters only with a second engine (--image-model, --head-engine, --one-engine)', cli, 'when a second engine is configured (`--image-model`, `--head-engine`, `--one-engine`)'],
+		['leave it off in production', security, 'leave it off in production'],
+	]),
 ];

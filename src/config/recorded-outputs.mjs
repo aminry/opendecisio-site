@@ -14,7 +14,7 @@ export const recordedOutputs = [
 		name: 'the recorded decisions (decisio-examples, support routing and three more)',
 		version: () => facts().figures.recorded_decisions.run.decisio_version,
 		marker: 'I was charged twice for October',
-		pending: { why: 'the re-record at the pinned release, on the next card session', pages: ['/docs/faq/', '/docs/repeatability/', '/docs/scale/'] },
+		pending: { why: 'the re-record at the pinned release, on the next card session', pages: ['/docs/faq/', '/docs/scale/'] },
 	},
 	{
 		name: 'the routing example (decisio-examples example 5)',

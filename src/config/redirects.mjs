@@ -20,4 +20,6 @@ export const redirects = [
 	{ from: '/docs/guides/long-and-wide/', to: '/docs/scale/#3-plan-for-long-texts', why: 'Long documents and many options merged into Scale (docs rewrite, batch 5)' },
 	{ from: '/docs/health/', to: '/docs/operating/#2-watch-it', why: 'Health and monitoring merged into Operate (docs rewrite, batch 5)' },
 	{ from: '/docs/guides/images/', to: '/docs/images/', why: 'Images became Ask about images (docs rewrite, batch 5)' },
+	{ from: '/docs/probability/', to: '/docs/how-it-works/#2-one-decision-and-its-probabilities', why: 'What the probability means merged into How it works (docs rewrite, batch 7)' },
+	{ from: '/docs/repeatability/', to: '/docs/how-it-works/#what-repeats', why: 'Repeatability merged into How it works (docs rewrite, batch 7)' },
 ];

@@ -1,7 +1,6 @@
 // The figures and tables of running a server: the flag groups, what happens when the engine dies, and the troubleshooting
 // symptoms (the deploy guides' figures are in deploy.mjs). Each reads what it draws from the pinned release's docs and
 // stops the build when one no longer says it.
-import { slugify } from '../upstream-map.mjs';
 import { readUpstream } from '../upstream.mjs';
 import { esc, panel } from './core.mjs';
 
@@ -15,29 +14,6 @@ const must = (source, re, what) => {
 /** Steps in a row: each { title, note }, the last one lit. */
 function steps(list) {
 	return `<ol class="fig__steps">${list.map((s, i) => `<li class="fig__step${i === list.length - 1 && !s.plain ? ' fig__step--on' : ''} f-pop fd-${Math.min(10, i * 2)}"><b>${esc(s.title)}</b><span>${s.note}</span></li>`).join('')}</ol>`;
-}
-
-// --- Flags -------------------------------------------------------------------------------------------------------------
-
-function flagMap() {
-	const cli = text('docs/cli.md');
-	const start = cli.indexOf('## Every flag');
-	const end = cli.indexOf('## What the behaviour flags do');
-	if (start < 0 || end < 0) throw new Error('docs-figures: docs/cli.md no longer has its flag tables');
-	const groups = [...cli.slice(start, end).split(/^### /m).slice(1)].map((g) => {
-		const [title, ...rest] = g.split('\n');
-		const flags = [...rest.join('\n').matchAll(/^\| (`--[^|]+`)(?: \||,)/gm)].flatMap((m) => [...m[1].matchAll(/`(--[a-z0-9-]+)/g)].map((x) => x[1]));
-		return { title: title.trim().replace(/`/g, ''), flags: [...new Set(flags)], href: `#${slugify(title.trim())}` };
-	});
-	if (groups.length < 7 || groups.some((g) => !g.flags.length)) throw new Error('docs-figures: docs/cli.md\'s flag groups changed shape');
-	const total = groups.reduce((n, g) => n + g.flags.length, 0);
-	const body = `<ul class="fig__groups">${groups.map((g, i) => `<li class="f-pop fd-${Math.min(i, 10)}"><a href="${g.href}"><b>${esc(g.title)}</b><span class="fig__n">${g.flags.length} flags</span><span class="fig__chips">${g.flags.slice(0, 5).map((f) => `<code>${esc(f)}</code>`).join('')}${g.flags.length > 5 ? `<code>+${g.flags.length - 5}</code>` : ''}</span></a></li>`).join('')}</ul>`;
-	return panel({
-		name: 'flag-map', label: 'The flags', title: `${total} flags in ${groups.length} groups; the defaults are what was measured, so most need none.`,
-		desc: `The server's flags by group: ${groups.map((g) => `${g.title}, ${g.flags.length}`).join('; ')}.`,
-		body, live: 5, interactive: true, legend: 'Each group links to its table in the reference below; a flag given explicitly overrides the base\'s value.',
-		source: 'Source: the tables of docs/cli.md at the pinned release.',
-	});
 }
 
 // --- Operating ---------------------------------------------------------------------------------------------------------
@@ -98,6 +74,5 @@ export function symptomTable(group) {
 }
 
 export const runItFigures = {
-	'flag-map': flagMap,
 	'serve-lifecycle': serveLifecycle,
 };
