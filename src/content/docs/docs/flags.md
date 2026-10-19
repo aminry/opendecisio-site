@@ -41,6 +41,6 @@ Each has its cost in the reference below; turn one on knowing it, and measure on
 
 ## What next
 
-- [Make it fast](/docs/guides/latency/): which of these flags change latency, and by how much.
+- [Scale](/docs/scale/#5-set-the-flags-that-move-server-time): which of these flags change server time, and by how much.
 - [Choosing a base](/docs/bases/): what `--base` picks.
-- [Deploying and operating](/docs/operating/): running a server with its flags.
+- [Operate](/docs/operating/): running a server with its flags.

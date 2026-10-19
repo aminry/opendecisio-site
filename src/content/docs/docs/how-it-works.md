@@ -71,4 +71,4 @@ The routes and the calibration are the same for each.
 
 - [Choosing a base](/docs/bases/): which model to serve, and why.
 - [What the probability means](/docs/probability/): temperatures, calibration, and what was measured.
-- [Many questions about one text](/docs/guides/many-questions/): one read, then every question.
+- [Scale](/docs/scale/): one read, then every question.

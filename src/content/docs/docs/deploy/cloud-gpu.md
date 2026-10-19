@@ -49,7 +49,7 @@ Name the model repository at a commit, so a later change to it cannot change you
 
 - The server checks the repository's settings against its own and refuses to start on a difference, naming what differs.
 - Give `--max-model-len` the same value on every card. The length served is part of what a certificate covers; `--max-model-len 32768` serves only what was measured.
-- After upgrading decisio, certify your tasks again ([Upgrading](/docs/upgrading/)).
+- After upgrading decisio, certify your tasks again ([Upgrade](/docs/upgrading/)).
 
 ## 4. Put it behind a proxy
 
@@ -74,4 +74,4 @@ On Kubernetes, one GPU, the weights on a volume, and `/health` as the startup an
 
 - [With Docker](/docs/deploy/docker/): the same server from the release image, with Compose.
 - [Requirements and limits](/docs/limits/): every machine, the context length and what was measured on what.
-- [Deploying and operating](/docs/operating/): health, monitoring and what to watch in production.
+- [Operate](/docs/operating/): health, monitoring and what to watch in production.

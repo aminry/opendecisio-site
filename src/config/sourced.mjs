@@ -10,6 +10,8 @@ const readme = 'README.md';
 const card = 'EVAL_CARD.md';
 const upgrading = 'docs/upgrading.md';
 const tasksDoc = 'docs/tasks.md';
+const security = 'SECURITY.md';
+const cli = 'docs/cli.md';
 
 // Facts of one page, as [says, file, source] rows.
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
@@ -183,5 +185,67 @@ export const sourced = [
 		['label a sample of it and certify again', tasksDoc, 'The only direct check that the promise holds on live traffic is to label some of it and certify again.'],
 		['"suspend_on_alert": false', tasksDoc, 'A certify block with `"suspend_on_alert": false` only reports.'],
 		['A task certified before decisio 0.16.0 has no confidence check until it is certified again', upgrading, 'A task certified before 0.16.0 has no confidence statistic, so it gets no drift protection until it is certified again.'],
+	]),
+	// Operate
+	...fromPage('/docs/operating/', [
+		['the server exits with code 70 and leaves the restart to whatever runs it', running, 'so the server ends itself and leaves the restart to whatever runs it'],
+		['allow 45 minutes, as the image\'s own health check does', operating, 'the image\'s own health check allows 45 minutes'],
+		['Requests sent while the new server loads are refused', running, 'requests sent until it is healthy are refused'],
+		['anything but 200: alert; 503 means the engine has died', api, 'Alert on anything but 200.'],
+		['a growing wait is requests queueing behind the one engine', api, 'A `wait` that grows is requests queueing behind the engine.'],
+		['concurrent requests queue behind it and are answered in turn, with no queue limit', api, 'so concurrent requests queue behind it and are answered in turn; there is no queue limit'],
+		['There are no engine metrics and no structured log', api, 'the server exposes no Prometheus metrics for the engine'],
+		['{"ok": false, "engine": "dead", "reason": "...", "exit_code": 70}', running, '`/health` answers 503 with `{"ok": false, "engine": "dead", "reason": "...", "exit_code": 70}`'],
+		['about 7 seconds after the failing request', running, 'The in-process arrangement therefore exits about 7 seconds after the failing request'],
+		['A death between requests turns /health to 503 within a second', running, 'a death between requests turns `/health` to 503 within a second'],
+		['such as a 422, is answered and does not touch the engine', running, 'is answered with a 4xx and the engine is not probed'],
+		['The server listens on 127.0.0.1 by default; do not expose it to the internet', security, 'The server binds to `127.0.0.1` by default; do not expose it directly to the internet.'],
+		['Put authentication, rate limits and request-size limits in the proxy.', security, 'Put authentication, rate limiting and request-size limits in the proxy.'],
+		['POST /v1/tasks, POST /v1/tasks/import, DELETE /v1/tasks/{id} and the abstention routes', security, '`POST /v1/tasks`, `POST /v1/tasks/import`, `DELETE /v1/tasks/{id}` and the abstention routes change server state.'],
+		['Do not configure CORS on the proxy', security, 'so do not configure CORS on it for this server'],
+		['Run one server per trust boundary.', security, 'Run one server per trust boundary.'],
+		['Leave --debug-readout off.', security, '`--debug-readout` exposes raw model readouts; leave it off in production.'],
+		['it is the one that receives security fixes', security, 'The latest release on `main` receives security fixes.'],
+		['an acknowledgement comes within 5 working days, an assessment within 15', security, 'You will get an acknowledgement within 5 working days and an assessment within 15.'],
+	]),
+	// Scale
+	...fromPage('/docs/scale/', [
+		['the same choice on every item measured; probabilities within 0.0073', readme, 'the same choice as one engine call per question on every item measured, probabilities within 0.0073'],
+		['the same choice; probabilities within 0.035', readme, 'the same choice as each question sent alone, probabilities within 0.035'],
+		['Qwen3.6-35B-A3B one at a time, from the one read the same probabilities', readme, 'the same probabilities as each question sent alone, bit for bit'],
+		['median of 10 new texts per length, on one RTX PRO 6000 Blackwell at 600 W, decisio 0.11.1 on vLLM 0.30.0', running, 'median of 10 new documents per length, on one RTX PRO 6000 Blackwell Workstation Edition at 600 W'],
+		['decisio 0.11.1 on vLLM 0.30.0', running, 'decisio 0.11.1 on vLLM 0.30.0'],
+		['under 165 ms at every length, on every model', running, 'The second question stays under 165 ms on every length and base.'],
+		['--max-model-len 32768 serves only what was measured', running, 'to serve only what was measured, give `--max-model-len 32768`'],
+		['the 31B served 98,304 tokens at 0.90 and 49,152 at 0.85, and did not start at 0.70', running, '| 0.70 | 18.54 GiB | 22,064 | does not start |'],
+		['A prompt longer than the length gets 422, and the server stays up.', api, 'the server stays up'],
+		['A choice can have up to 255 options; more gets 422.', api, 'up to 255 options (more is 422)'],
+		["+21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens (one card at 585 W)", running, 'and +21, +34 and +34 ms on Gemma 4 31B'],
+		['the 31B kept 0.61 and 0.74 of it at 32 and 64 clients', running, 'but the 31B kept only 0.61 and 0.74'],
+		['a second copy of the weights on the card, and no image engine', tasksDoc, 'holds a second copy of the model\'s weights, leaves no room for the image engine on the card'],
+		['nvidia-smi -q -d POWER', running, '(`nvidia-smi -q -d POWER`)'],
+	]),
+	// Upgrade
+	...fromPage('/docs/upgrading/', [
+		['so a certificate made on the old release is suspended on the new one', tasksDoc, 'the decisio version, the base and checkpoint revision'],
+		['such as the held-out examples it was certified on', upgrading, 'such as the held-out examples it was certified on'],
+		['The fit is kept; the call answers with the new certificate.', upgrading, 'The fit is kept; the call returns the new certificate'],
+		['Only the latest release receives security fixes', security, 'The latest release on `main` receives security fixes.'],
+	]),
+	// Ask about images
+	...fromPage('/docs/images/', [
+		['Use the Qwen base: the image route was measured with it only.', cli, 'measured with the Qwen base only'],
+		['--image-gpu-memory-utilization, 0.5 by default', cli, '| `--image-gpu-memory-utilization` | 0.5 | 0.5 | 0.5 |'],
+		['--one-engine loads only the image engine and serves text on it too, for a card that cannot hold both', cli, 'load only the image engine and serve text requests on it too, for a card that cannot hold both'],
+		['With an image engine, the longest text stays at 32,768 tokens.', running, 'The default stays 32,768 with `--image-model`'],
+		['A Mac does not serve images.', running, 'It refuses the image route'],
+		['up to 2; a third is refused with 422', api, 'a third image is refused with 422 as well'],
+		['PNG, JPEG or WebP', api, 'Images: up to 2 per request, PNG, JPEG or WebP, up to 20 MB each.'],
+		['up to 20 MB and 20 megapixels each; a larger one is refused with 422', api, 'An image over 20 MiB, or over 20 megapixels (width times height), or in another format, is refused with 422'],
+		['without one it is refused with 415', api, 'and is refused with 415 without one'],
+		['between 64 and 16,384 tokens', api, '64 tokens at the least, 16,384 at the most'],
+		['A 1,024 by 768 image costs 768 tokens, and a 1,920 by 1,080 one 2,040.', api, '(1,024 by 768: 768 tokens; 1,920 by 1,080, read as 1,920 by 1,088: 2,040'],
+		['A request with images carries no certificate.', tasksDoc, 'an image request, carries no certification fields'],
+		["an abstention threshold's examples may carry images", api, 'the examples of `POST /v1/abstention/tasks` may carry them'],
 	]),
 ];

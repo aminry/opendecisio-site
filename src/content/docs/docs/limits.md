@@ -113,4 +113,4 @@ Across restarts and machines, answers are not promised to repeat.
 
 - [The evaluation card](/docs/evaluation-card/): every measurement, with its record.
 - [Certify answers](/docs/tasks/certify/): certify a task, and what its certificate covers.
-- [Upgrading](/docs/upgrading/): what changes from one release to the next.
+- [Upgrade](/docs/upgrading/): move to a new release, and certify your tasks again.

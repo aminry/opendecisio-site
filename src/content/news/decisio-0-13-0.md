@@ -36,4 +36,4 @@ On vLLM 0.30.0 it may need it, or a larger memory share, beyond about 57,000 tok
 
 To try the 31B at its ceiling: `uv run python -m decisio.serve.vllm_engine --base gemma-4-31b --max-model-len 98304`.
 Check your own documents before you rely on it.
-The [docs page for 0.13.0](/docs/guides/long-and-wide/#2-the-context-length) has the memory figures and what is not measured.
+The [docs page for 0.13.0](/docs/limits/#2-how-long-a-text-and-how-many-options) has the memory figures and what is not measured.
