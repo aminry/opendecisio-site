@@ -39,7 +39,7 @@ Use the Qwen base: the image route was measured with it only.
 
 ::site-block{name="images-start"}
 
-- The image engine takes its own share of the card: `--image-gpu-memory-utilization`, 0.5 by default.
+- On one card, set both shares, as above: the text engine's default share and the image engine's do not fit together. 0.47 and 0.49 is the split decisio measured.
 - `--one-engine` loads only the image engine and serves text on it too, for a card that cannot hold both.
 - With an image engine, the longest text stays at 32,768 tokens.
 - A Mac does not serve images.

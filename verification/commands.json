@@ -102,10 +102,6 @@
 		"e49d690312902481": {
 			"status": "example"
 		},
-		"ce033c53d29be54b": {
-			"status": "shown",
-			"why": "it needs Linux with one NVIDIA card, which this check does not have"
-		},
 		"f6db6123f6c620a4": {
 			"status": "cpu",
 			"tag": "v0.17.0",
@@ -288,6 +284,10 @@
 		"135f2c5258e4a371": {
 			"status": "verbatim",
 			"needs": "Linux with one NVIDIA card"
+		},
+		"32f84b92380f1087": {
+			"status": "shown",
+			"why": "it needs Linux with one NVIDIA card, which this check does not have"
 		}
 	}
 }

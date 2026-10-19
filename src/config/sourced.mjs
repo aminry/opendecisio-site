@@ -235,7 +235,7 @@ export const sourced = [
 	// Ask about images
 	...fromPage('/docs/images/', [
 		['Use the Qwen base: the image route was measured with it only.', cli, 'measured with the Qwen base only'],
-		['--image-gpu-memory-utilization, 0.5 by default', cli, '| `--image-gpu-memory-utilization` | 0.5 | 0.5 | 0.5 |'],
+		['0.47 and 0.49 is the split decisio measured', card, '(0.49 of the card beside the text engine at 0.47)'],
 		['--one-engine loads only the image engine and serves text on it too, for a card that cannot hold both', cli, 'load only the image engine and serve text requests on it too, for a card that cannot hold both'],
 		['With an image engine, the longest text stays at 32,768 tokens.', running, 'The default stays 32,768 with `--image-model`'],
 		['A Mac does not serve images.', running, 'It refuses the image route'],
