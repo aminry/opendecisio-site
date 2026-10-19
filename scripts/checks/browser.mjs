@@ -160,9 +160,12 @@ async function teachTiles(engineName, browser) {
 	if (final.text !== `${final.to.toFixed(1)}%`) fail(`the counter shows "${final.text}" without scripts, not its final value`);
 	const read = () => page.evaluate(() => Number(document.querySelector('[data-teach-count]').textContent.replace('%', '')));
 	await page.locator('[data-teach]').scrollIntoViewIfNeeded();
+	// The story starts from an IntersectionObserver, which runs on the browser's real frames, not on the installed clock:
+	// each step gives the browser real time as well (a slow Firefox runner once delivered it after the steps had ended).
 	let started = false;
-	for (let i = 0; i < 40 && !started; i++) {
+	for (let i = 0; i < 80 && !started; i++) {
 		await page.clock.runFor(50);
+		await new Promise((resolve) => setTimeout(resolve, 50));
 		started = (await read()) === final.from;
 	}
 	if (!started) fail('the story did not start when the stage came into view');
