@@ -94,11 +94,6 @@
 			"tag": "v0.17.0",
 			"date": "2026-10-19"
 		},
-		"de70ee7442d32029": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-19"
-		},
 		"72182c644904351a": {
 			"status": "cpu",
 			"tag": "v0.17.0",
@@ -147,21 +142,10 @@
 			"tag": "v0.17.0",
 			"date": "2026-10-19"
 		},
-		"b6bb95d7ceb2a509": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-19",
-			"note": "the install and the server start"
-		},
 		"b1b57b2e75a2a8d6": {
 			"status": "example"
 		},
 		"8c2a5b518155ccb3": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-19"
-		},
-		"c3457e7a7bf24b69": {
 			"status": "cpu",
 			"tag": "v0.17.0",
 			"date": "2026-10-19"
@@ -184,6 +168,11 @@
 		},
 		"dee21fda8607d769": {
 			"status": "output"
+		},
+		"ef2912eee837d05a": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
 		},
 		"f88514bde0c31e5b": {
 			"status": "cpu",
