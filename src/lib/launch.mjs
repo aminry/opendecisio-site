@@ -120,13 +120,17 @@ export const need2 = (cond, what) => {
 	if (!cond) throw new Error(`launch: launch_facts.public.json ${what}; revisit src/lib/launch.mjs`);
 };
 
+/** Our rows as the site names them: the board's label without the release, which the source note gives
+ * ("decisio v0.8.0, Gemma 4 31B (ours)" is "Decisio, Gemma 4 31B (ours)"; "Decisio 31B v0.8.0 (ours)" is "Decisio 31B (ours)"). */
+export const ourLabel = (label) => label.replace(/^decisio v\d+\.\d+\.\d+, /i, 'Decisio, ').replace(/\s+v\d+\.\d+\.\d+\b/, '');
+
 /** The ten open-weights systems the home chart draws, in alphabetical order, then Jev as a reference row. */
 export function openRows() {
 	const w = facts().figures?.open_weights_rows;
 	need2(w && Array.isArray(w.rows), 'has no figures.open_weights_rows');
 	return w.rows.map((r) => ({
 		key: r.key,
-		label: r.label,
+		label: r.is_ours ? ourLabel(r.label) : r.label,
 		ours: r.is_ours,
 		jev: r.is_jev,
 		score: r.score_A.value,
@@ -159,7 +163,7 @@ export function axesFigure() {
 		// The redrawn picture's alt text (alphabetical, plain values), else the earlier one.
 		alt: t.public?.alt_text ?? t.alt_text,
 		columns: t.columns.map((c) => ({ id: c.id, name: c.name, tagline: c.tagline })),
-		rows: t.rows.map((r) => ({ key: r.key, label: r.label.replace(/\s+v\d+\.\d+\.\d+\b/, ''), ours: r.is_decisio, jev: r === jev, cells: t.columns.map((c) => ({ text: printed(r, c.id) })) })).sort(byName((r) => r.label, (r) => r.jev)),
+		rows: t.rows.map((r) => ({ key: r.key, label: r.is_decisio ? ourLabel(r.label) : r.label, ours: r.is_decisio, jev: r === jev, cells: t.columns.map((c) => ({ text: printed(r, c.id) })) })).sort(byName((r) => r.label, (r) => r.jev)),
 		bullets,
 		note: t.no_intervals_note,
 		versionNote: t.version_note,

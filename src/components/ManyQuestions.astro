@@ -16,6 +16,7 @@ const q = manyQuestions('linear');
 	<figure class="lc-fig">
 		<LaunchImage name={q.chart.name} width={1240} height={1120} alt={q.chart.alt} />
 	</figure>
-	<p class="axes__note">Measured by us. {q.qualifiers.join(" ")} {q.release}</p>
+	<p class="axes__note">Measured by us. {q.qualifiers.join(" ")}</p>
+	<p class="axes__note src-note">{q.release}</p>
 	<p class="axes__note">Each time is one request at a time; <a href="/docs/scale/">Scale</a> says how many a card serves at once.</p>
 </div>

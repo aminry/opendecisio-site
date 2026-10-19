@@ -139,6 +139,7 @@ export function issueTriage() {
 		t, kind, sig, prio, ni, sig1000, run,
 		values: {
 			'triage-run': `Gemma 4 31B, ${run.label}`,
+			'triage-run-note': `All four come from one run: Gemma 4 31B, ${run.label}; What it did, below, gives its full conditions.`,
 			'triage-kind': p(kind.untaught.accuracy),
 			'triage-sig': p(sig.untaught.accuracy),
 			'triage-priority': p(prio.untaught.accuracy),

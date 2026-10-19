@@ -28,10 +28,13 @@ const OTHER = /(vllm|ollama|sdk|python|node|n8n|typesafe|langchain|pipecat|tanst
 // decisio's Markdown at the pin, as plain text: what a page shows of it once its links, code marks and emphasis are gone.
 const plain = (t) => t.replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[`*_]/g, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 const mdFiles = (d) => readdirSync(d).flatMap((e) => { const p = join(d, e); return statSync(p).isDirectory() ? (e === 'runs' ? [] : mdFiles(p)) : /\.md$/.test(e) ? [p] : []; });
-const upstreamText = mdFiles(upstreamRoot).map((p) => plain(readFileSync(p, 'utf8'))).join('\n');
+// Words and numbers only, so a page's text matches decisio's whatever punctuation and code it lost on the way.
+const words = (t) => t.toLowerCase().replace(/[^a-z0-9.]+/g, ' ').replace(/\s+/g, ' ').trim();
+const upstreamText = words(mdFiles(upstreamRoot).map((p) => plain(readFileSync(p, 'utf8'))).join('\n'));
 const decisios = [];
 const DECISIO_HISTORY_UNTIL = 'v0.18.0';
 const pending = pin.tag === DECISIO_HISTORY_UNTIL;
+const PENDING_PAGES = ['/docs/api/', '/docs/flags/', '/docs/evaluation-card/'];
 // History words just before a release ("since 0.10.0", "before 0.12.0 it", "default from 0.9.0"), or "X to Y" after it.
 const HISTORY_BEFORE = /\b(since|before|until|from|after|earlier|later|default|defaults|in|up to|as of|prior to)\s+(decisio\s+)?v?$/i;
 const HISTORY_AFTER = /^(\s+to\s+v?\d+\.\d+\.\d+|\s+(it|the server|such|there)\b|'s (default|order))/i;
@@ -53,12 +56,16 @@ for (const file of walk(root)) {
 		if (v === pinned || !releases.has(v)) continue;
 		const before = text.slice(Math.max(0, m.index - 40), m.index);
 		if (OTHER.test(before) && !/decisio\s*$/i.test(before)) continue;
-		const around = `${text.slice(Math.max(0, m.index - 30), m.index)}${m[0]}`.replace(/^\S*\s/, '');
+		// The three words before the release, and the release: decisio's text when its own files have them.
+		const around = words(`${text.slice(Math.max(0, m.index - 40), m.index)}${m[0]}`).split(' ').slice(-4).join(' ');
 		const after = text.slice(m.index + m[0].length, m.index + m[0].length + 20);
 		const where = `${route}: names decisio ${v}: "...${text.slice(Math.max(0, m.index - 70), m.index + 40).trim()}..."`;
-		const condition = route === '/docs/evaluation-card/' && !HISTORY_BEFORE.test(before) && !HISTORY_AFTER.test(after);
-		if (condition) continue;
-		if (pending && around.length > 12 && upstreamText.includes(around)) decisios.push(where);
+		const decisioText = around.length > 12 && upstreamText.includes(around);
+		const history = HISTORY_BEFORE.test(before) || HISTORY_AFTER.test(after);
+		// A measurement's condition in decisio's own text (its evaluation card, its README's tables) passes; history in
+		// it is listed on the pages Serve is cleaning while the pin is DECISIO_HISTORY_UNTIL; site prose never passes.
+		if ((route === '/docs/evaluation-card/' || decisioText) && !history) continue;
+		if (pending && decisioText && PENDING_PAGES.includes(route)) decisios.push(where);
 		else problems.push(where);
 	}
 }

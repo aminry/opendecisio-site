@@ -9,7 +9,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { recolour, sameButColour } from '../charts.mjs';
-import { manyQuestions } from '../../src/lib/launch.mjs';
+import { manyQuestions, ourLabel } from '../../src/lib/launch.mjs';
 import { parse } from 'node-html-parser';
 
 const facts = JSON.parse(readFileSync('src/data/launch/launch_facts.public.json', 'utf8'));
@@ -60,7 +60,7 @@ for (const [page, file] of [['/', 'dist/index.html'], ['/benchmarks/', 'dist/ben
 		const doc = parse(readFileSync(file, 'utf8'));
 		const table = doc.querySelector('[data-launch="axes"] table');
 		if (!table) { bad(`${page}: no axis-by-axis table`); continue; }
-		const wanted = new Map(t.rows.map((r) => [r.label, t.columns.map((c) => r.cells[c.id].printed)]));
+		const wanted = new Map(t.rows.map((r) => [r.is_decisio ? ourLabel(r.label) : r.label, t.columns.map((c) => r.cells[c.id].printed)]));
 		const seen = new Map();
 		for (const tr of table.querySelectorAll('tbody tr')) seen.set(tr.querySelector('th')?.structuredText.trim(), [...tr.querySelectorAll('td')].map((td) => td.structuredText.trim()));
 		for (const [label, values] of wanted) {

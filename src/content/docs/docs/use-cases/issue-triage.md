@@ -19,7 +19,7 @@ Until the task is certified (step 2), every answer goes to a person, as on the s
 * Whether an issue needs more information from its reporter: a balanced accuracy of :value{name="triage-needs-info"}, and teaching lowers it slightly.
 :::
 
-All four come from one run: :value{name="triage-run"} ([What it did](#what-it-did) gives its full conditions).
+::source{value="triage-run-note"}
 
 ## 1. Write the questions
 
