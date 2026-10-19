@@ -102,6 +102,58 @@
 		"e49d690312902481": {
 			"status": "example"
 		},
+		"32f84b92380f1087": {
+			"status": "shown",
+			"why": "it needs Linux with one NVIDIA card, which this check does not have"
+		},
+		"53daf25f6439f92e": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
+		},
+		"456d66b4ed824438": {
+			"status": "example"
+		},
+		"4ab4885308afc452": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
+		},
+		"5818fe97adbbfda2": {
+			"status": "example"
+		},
+		"d605aed6a046cf59": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
+		},
+		"472d2eb00b5c343b": {
+			"status": "example"
+		},
+		"745149404c69bd19": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
+		},
+		"e609951c8277eeb0": {
+			"status": "example"
+		},
+		"78f3e7d3a4062286": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
+		},
+		"47887eca2bd75ad6": {
+			"status": "example"
+		},
+		"fb58b89fe0fb1a2c": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
+		},
+		"2a7e7264ad96f0a6": {
+			"status": "example"
+		},
 		"f6db6123f6c620a4": {
 			"status": "cpu",
 			"tag": "v0.17.0",
@@ -284,10 +336,6 @@
 		"135f2c5258e4a371": {
 			"status": "verbatim",
 			"needs": "Linux with one NVIDIA card"
-		},
-		"32f84b92380f1087": {
-			"status": "shown",
-			"why": "it needs Linux with one NVIDIA card, which this check does not have"
 		}
 	}
 }
