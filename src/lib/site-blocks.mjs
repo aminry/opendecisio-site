@@ -100,6 +100,25 @@ const kubernetes = () => {
 	return file.replace(placeholder, pin.image);
 };
 
+// Serve your own adapter: decisio's adapter file with choice bands (docs/running.md, "LoRA adapters"), written and checked
+// by decisio's own tool; the start, a question with the adapter, the /health fields and the fit, as that section gives them.
+const ADAPTER = 'my-adapter';
+const adapterBlocks = () => sectionBlocks('docs/running.md', 'LoRA adapters');
+const adapterFile = () => {
+	const file = adapterBlocks().find((b) => b.includes('"choice_bands"')) ?? (() => { throw new Error("site-blocks: docs/running.md's LoRA adapters section has no adapter file with choice_bands"); })();
+	JSON.parse(file);
+	return file;
+};
+const adapterCheck = () => `cat > decisio_adapter.json <<'EOF'\n${adapterFile()}\nEOF\nuv run python -m decisio.serve.adapter_temperatures check decisio_adapter.json`;
+const adapterStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --adapter ${ADAPTER}=/models/${ADAPTER} \\\n  --adapter-temperatures ${ADAPTER}=decisio_adapter.json`;
+const adapterAsk = () => `curl -s http://127.0.0.1:8000/v1/systemone -H 'Content-Type: application/json' -d '{
+  "state": "I was charged twice for the same order.",
+  "adapter": "${ADAPTER}",
+  "questions": {"refund": {"type": "noul", "instructions": "Is the customer asking for money back?"}}
+}' -D - -o answer.json | grep -i '^x-decisio-adapter'`;
+const adapterHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; h = json.load(sys.stdin); print(json.dumps({k: h.get(k) for k in ("adapter_temperatures", "adapter_identity")}, indent=1))'`;
+const adapterFit = () => lineOf(adapterBlocks().find((b) => b.includes(' fit --reads')) ?? '', ' fit --reads');
+
 // The recorded answers as the comment lines a client prints: one per question, its likeliest option and probability.
 const printed = () => Object.entries(recordedResponse().answers).map(([name, a]) => {
 	if (a.type === 'noul') return `${name} ${a.noul}`;
@@ -200,6 +219,11 @@ export const siteBlocks = {
 	get 'docker-compose'() { return { lang: 'yaml', text: dockerCompose() }; },
 	get 'docker-build'() { return { lang: 'bash', text: `${clone()}\nuv build --wheel\ndocker compose up --build` }; },
 	get 'kubernetes'() { return { lang: 'yaml', text: kubernetes() }; },
+	get 'adapter-check'() { return { lang: 'bash', text: adapterCheck() }; },
+	get 'adapter-start'() { return { lang: 'bash', text: adapterStart() }; },
+	get 'adapter-ask'() { return { lang: 'bash', text: adapterAsk() }; },
+	get 'adapter-health'() { return { lang: 'bash', text: adapterHealth() }; },
+	get 'adapter-fit'() { return { lang: 'bash', text: adapterFit() }; },
 	get 'images-start'() { return { lang: 'bash', text: `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b --image-model Qwen/Qwen3.6-35B-A3B-FP8` }; },
 	get 'mac-install'() { return { lang: 'bash', text: `${clone()}\nuv sync --extra mlx` }; },
 	get 'mac-31b-6bit'() { return { lang: 'bash', text: macStart('gemma-4-31b-it-6bit') }; },

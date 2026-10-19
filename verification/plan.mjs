@@ -225,6 +225,19 @@ export const plan = [
 	{ page: '/docs/how-it-works/', n: 2, mode: 'output', expect: '{\n  "answers": {' },
 	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
+	// Serve your own adapter: decisio's adapter file checked by decisio's own tool on the CPU (what it printed is shown); the
+	// start, a question with the adapter and the /health read need a card, and the fit needs an adapter's readouts.
+	{
+		page: '/docs/deploy/adapter/', n: 1, mode: 'run', expect: "cat > decisio_adapter.json <<'EOF'", show: asPrinted,
+		assert(stdout) {
+			const f = json(stdout);
+			if (!f.temperatures?.choice || !f.choice_bands?.['2-10']) throw new Error('the check did not print the temperatures and the choice bands');
+		},
+	},
+	{ page: '/docs/deploy/adapter/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card and a LoRA adapter, which this check does not have' },
+	{ page: '/docs/deploy/adapter/', n: 3, mode: 'shown', expect: 'python -m decisio.serve.adapter_temperatures fit --reads', why: "it needs your adapter's readouts on your labelled items" },
+	{ page: '/docs/deploy/adapter/', n: 4, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/systemone', why: 'it needs a server with an adapter loaded, on one NVIDIA card' },
+	{ page: '/docs/deploy/adapter/', n: 5, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/health \\', why: 'it needs a server with an adapter loaded, on one NVIDIA card' },
 	{ page: '/docs/deploy/development/', n: 1, mode: 'same-as', expect: `git clone --branch ${pin.tag}`, of: ['/docs/', 1] },
 	{ page: '/docs/deploy/development/', n: 2, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 

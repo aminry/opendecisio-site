@@ -17,6 +17,32 @@ const cli = 'docs/cli.md';
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
 
 export const sourced = [
+	// Serve your own adapter
+	...fromPage('/docs/deploy/adapter/', [
+		['An adapter changes the scale of the model\'s readout', running, 'an adapter changes the scale of the readout'],
+		['one per question type, and for choice questions one per band of option count', running, 'The file can therefore carry a choice temperature per band of option count, beside the flat one'],
+		['Start the server with --adapter name=path, once per adapter', cli, '`name=path` of a vLLM-format LoRA adapter; repeatable'],
+		['The adapter is a vLLM-format LoRA adapter, served unmerged, on the text route, in separate mode.', running, 'The adapter is served unmerged, on the text route, in separate mode'],
+		['A Mac does not serve adapters.', running, 'the MLX backend refuses adapters'],
+		['A request uses the adapter only when it names it', cli, 'A request uses it only when its body names it'],
+		['Put the file beside the adapter\'s weights as decisio_adapter.json, or give it with --adapter-temperatures name=file when the adapter\'s folder is not yours to change.', running, 'in a file `decisio_adapter.json` beside its weights, or in a file given with `--adapter-temperatures name=file` for an adapter whose folder is not yours to change'],
+		['A type the file does not list keeps the base\'s temperature.', running, "A type the file does not list keeps the base's temperature."],
+		['within 2 to 255 and not overlapping', running, 'The keys are `lo-hi`, within 2 to 255 (the most options a choice can have) and not overlapping.'],
+		['a count in no band is served at temperatures.choice, then at the base\'s', running, "A count in no band is served at `temperatures.choice`, then at the base's."],
+		['Yes/no and score questions are not banded.', running, 'Yes/no and score questions are not banded'],
+		['An adapter with no file is served at the base\'s temperatures, and the server says so when it starts.', running, "An adapter with no file is served at the base's, and the server says so when it starts."],
+		['The file is checked before the engine is built, and an unusable one stops the start.', cli, 'An unusable file, or a name `--adapter` did not load, is refused before the engine is built.'],
+		['one row per item', running, 'One row per item, `{"type": "choice" | "noul" | "score", "probs": [...], "gold": <index>}`'],
+		['Fit on items that are not a benchmark\'s: a temperature holds for the kind of items it was fitted on.', running, "Use items that are not a benchmark's; a temperature is a statement about the items it was fitted on"],
+		['The answer carries "adapter" and the x-decisio-adapter header when the adapter answered.', api, 'The response carries `"adapter": "<name>"` (and the header `x-decisio-adapter`) when an adapter answered.'],
+		['An unknown name is answered 404, with the adapters that are loaded.', api, 'An unknown name is answered 404 with the name and the adapters that are loaded'],
+		['/health shows each adapter\'s temperatures in adapter_temperatures', running, '`/health` shows them in `adapter_temperatures`'],
+		['the hash of its weights and configuration in adapter_identity', running, "The server hashes each adapter's weights file and configuration when it starts, and `/health` reports them in `adapter_identity`."],
+		['A certificate covers one serving setup', readme, 'a certificate holds for one task on one serving setup'],
+		['holds each loaded adapter\'s name, weights hash and temperatures, so a different adapter, a retrained one or a changed temperature is a different setup', running, "holds each loaded adapter's name, weights hash and temperatures, so a different adapter, a retrained one or a changed temperature is a different stack"],
+		['A request that names an adapter is never certified', running, 'A request that names an adapter is never certified'],
+		['a question that a registered task matches is refused with an adapter', api, 'so a question that one of them matches is answered 400 with the task named'],
+	]),
 	// Benchmarks: one line on each base.
 	...fromPage('/benchmarks/', [
 		['One NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or a 64 GB Mac.', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
