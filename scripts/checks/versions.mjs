@@ -2,8 +2,11 @@
 // A version may appear in a source note (the "measured on" or "recorded on" line of a number, a figure's source, a
 // checked block's line), in code (install commands, requests, files), and on Release notes, where the history lives.
 // A version is a decisio release when the pinned CHANGELOG has it; one written after another product's name (vLLM 0.31.0,
-// Ollama 0.35.1, typesafe-sdk==0.7.2) is that product's. A mention inside decisio's own text, included as it is at the
-// pinned release (the API, the flags, the evaluation card), is decisio's to trim: it is listed, and does not fail.
+// Ollama 0.35.1, typesafe-sdk==0.7.2) is that product's.
+// decisio's own text, included as it is, is held to the same rule (Amin, 2026-10-19), with one allowance: the evaluation
+// card names each measurement's release as its condition ("on decisio 0.8.1", "at v0.6.0, 2026-10-05"), which passes there;
+// history in it ("the default since 0.8.0", "before 0.12.0") does not. decisio's docs drop their history in the release
+// after DECISIO_HISTORY_UNTIL, so until the pin moves past it, a mention in decisio's own text is listed, not failed.
 //   node scripts/checks/versions.mjs [built-site folder, default dist]
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -27,6 +30,11 @@ const plain = (t) => t.replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1').replace(/[`*_]/
 const mdFiles = (d) => readdirSync(d).flatMap((e) => { const p = join(d, e); return statSync(p).isDirectory() ? (e === 'runs' ? [] : mdFiles(p)) : /\.md$/.test(e) ? [p] : []; });
 const upstreamText = mdFiles(upstreamRoot).map((p) => plain(readFileSync(p, 'utf8'))).join('\n');
 const decisios = [];
+const DECISIO_HISTORY_UNTIL = 'v0.18.0';
+const pending = pin.tag === DECISIO_HISTORY_UNTIL;
+// History words just before a release ("since 0.10.0", "before 0.12.0 it", "default from 0.9.0"), or "X to Y" after it.
+const HISTORY_BEFORE = /\b(since|before|until|from|after|earlier|later|default|defaults|in|up to|as of|prior to)\s+(decisio\s+)?v?$/i;
+const HISTORY_AFTER = /^(\s+to\s+v?\d+\.\d+\.\d+|\s+(it|the server|such|there)\b|'s (default|order))/i;
 
 const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : e.name === 'index.html' ? [join(d, e.name)] : []));
 const problems = [];
@@ -46,15 +54,18 @@ for (const file of walk(root)) {
 		const before = text.slice(Math.max(0, m.index - 40), m.index);
 		if (OTHER.test(before) && !/decisio\s*$/i.test(before)) continue;
 		const around = `${text.slice(Math.max(0, m.index - 30), m.index)}${m[0]}`.replace(/^\S*\s/, '');
+		const after = text.slice(m.index + m[0].length, m.index + m[0].length + 20);
 		const where = `${route}: names decisio ${v}: "...${text.slice(Math.max(0, m.index - 70), m.index + 40).trim()}..."`;
-		if (around.length > 12 && upstreamText.includes(around)) decisios.push(where);
+		const condition = route === '/docs/evaluation-card/' && !HISTORY_BEFORE.test(before) && !HISTORY_AFTER.test(after);
+		if (condition) continue;
+		if (pending && around.length > 12 && upstreamText.includes(around)) decisios.push(where);
 		else problems.push(where);
 	}
 }
 if (decisios.length) {
 	const by = Object.entries(decisios.reduce((a, w) => ({ ...a, [w.split(':')[0]]: (a[w.split(':')[0]] ?? 0) + 1 }), {}));
-	console.log(`versions: ${decisios.length} mentions in decisio's own text, as included (${by.map(([r, n]) => `${r} ${n}`).join(', ')}); decisio's docs would drop them`);
-	if (process.env.VERSIONS_LIST) for (const w of decisios) console.log(`  ${w}`);
+	console.log(`versions: ${decisios.length} mentions in decisio's own text at ${pin.tag}, pending its docs' cleanup in the next release (${by.map(([r, n]) => `${r} ${n}`).join(', ')}); they fail once the pin moves:`);
+	for (const w of decisios) console.log(`  ${w}`);
 }
 if (problems.length) {
 	console.error(`versions: ${problems.length} mentions of other decisio releases than ${pin.tag}, outside source notes, code and Release notes\n  ${problems.join('\n  ')}`);
