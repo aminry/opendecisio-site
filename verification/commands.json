@@ -1,23 +1,23 @@
 {
-	"tag": "v0.17.0",
-	"commit": "3db918310830edce4c32cec7f209c7a1e63d2a93",
+	"tag": "v0.18.0",
+	"commit": "ae8f7dba16250386c83d8aa4d660d0c2f65c0b4e",
 	"date": "2026-10-19",
 	"runner": "linux-x64",
 	"blocks": {
-		"ee135501cdcafea9": {
+		"8ca6ed1fb3ba9d52": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"note": "the clone is the pinned release, as the check has it; the install and the server start"
 		},
 		"8f11af2eabc6bbfe": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"25a39b2b77f85c16": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
@@ -26,43 +26,43 @@
 		},
 		"557f6a5c8e48778a": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"b8e39aa5af896e09": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
 		"e52a4af57e3dc356": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
 		},
 		"f6cbcd5a9fc3dc60": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"runtime": "node v22.23.3",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
 		"d04086a256fe44c4": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"runtime": "node v22.23.3",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
 		"4a4acf27add92e82": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"b8b87bd11208dbf6": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"note": "with langchain-typesafe 0.0.1a3, the version the page names"
 		},
@@ -80,35 +80,35 @@
 		},
 		"4d1a31105a234994": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"note": "with pipecat-ai 1.12.0, the version the page names"
 		},
 		"3c0166dc27189fc1": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"72182c644904351a": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"020e37d4612cef85": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"e49d690312902481": {
 			"status": "example"
 		},
-		"32f84b92380f1087": {
+		"bb59203455e01e62": {
 			"status": "shown",
 			"why": "it needs Linux with one NVIDIA card, which this check does not have"
 		},
 		"53daf25f6439f92e": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"456d66b4ed824438": {
@@ -116,7 +116,7 @@
 		},
 		"4ab4885308afc452": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"5818fe97adbbfda2": {
@@ -124,7 +124,7 @@
 		},
 		"d605aed6a046cf59": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"472d2eb00b5c343b": {
@@ -132,7 +132,7 @@
 		},
 		"745149404c69bd19": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"e609951c8277eeb0": {
@@ -140,7 +140,7 @@
 		},
 		"78f3e7d3a4062286": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"47887eca2bd75ad6": {
@@ -148,7 +148,7 @@
 		},
 		"fb58b89fe0fb1a2c": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"2a7e7264ad96f0a6": {
@@ -156,32 +156,32 @@
 		},
 		"f6db6123f6c620a4": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"886fa7f7cc2d6a6c": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"f1f8b3bc6973f111": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"0ee8302a99cf1a2f": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"ebacf4f532e09ea5": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"8d3fec404adc4b9c": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"b1b57b2e75a2a8d6": {
@@ -189,17 +189,17 @@
 		},
 		"8c2a5b518155ccb3": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"065093b062639c13": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"3ef7d4649178b987": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"e23a9d899b93f3fe": {
@@ -213,18 +213,18 @@
 		},
 		"ef2912eee837d05a": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"f88514bde0c31e5b": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"note": "registers the walk-through task again"
 		},
 		"c8ce725f58ac4f6f": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
 		"42b3893f6c447a0a": {
@@ -232,14 +232,14 @@
 		},
 		"19ca27e30a6dc573": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19"
 		},
-		"34a548d175c41da5": {
+		"c62c3830aba08394": {
 			"status": "shown",
 			"why": "it needs Linux with one NVIDIA card, which this check does not have; decisio's README timed the same install, of decisio 0.11.0, on 2026-10-09"
 		},
-		"8c7d9112d29b9a3c": {
+		"51cbedf2ea8f851e": {
 			"status": "shown",
 			"why": "it needs Linux with one NVIDIA card, which this check does not have"
 		},
@@ -251,24 +251,24 @@
 			"status": "shown",
 			"why": "decisio wrote it for its docs and has not run it; the options are systemd's documented ones"
 		},
-		"12ad6308fee69b89": {
+		"18f12360adbc3363": {
 			"status": "shown",
 			"why": "decisio wrote it for its docs, with the release image in place of its placeholder, and has not run it; the probes read /health as measured"
 		},
-		"75a9081012d1bf6e": {
+		"d41cb3acbdaf81c0": {
 			"status": "shown",
 			"why": "it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have"
 		},
-		"096332fcc92a24f2": {
+		"bb502c721a821f77": {
 			"status": "shown",
 			"why": "decisio's compose.yaml, with the release image in place of its local build; the file brought the container up on a card on 2026-10-01",
 			"record": "runs/2026-10-01_docker-first-gpu-start/"
 		},
-		"91b81fa07b6f9f8b": {
+		"edc8b1020b677f73": {
 			"status": "shown",
 			"why": "it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have"
 		},
-		"77ee5e08eca5d84e": {
+		"ca3b3505d86432d0": {
 			"status": "shown",
 			"why": "it needs a Mac with Apple silicon, which this check does not have"
 		},
@@ -313,17 +313,17 @@
 		},
 		"fe30a8fa5922e73e": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"note": "sets the variables the SDK reads"
 		},
 		"b548306327cee4fa": {
 			"status": "cpu",
-			"tag": "v0.17.0",
+			"tag": "v0.18.0",
 			"date": "2026-10-19",
 			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
 		},
-		"dc453a8e90512004": {
+		"4e4a6138dc4a0560": {
 			"status": "shown",
 			"why": "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model"
 		}
