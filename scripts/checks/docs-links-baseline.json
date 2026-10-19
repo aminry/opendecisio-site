@@ -3,12 +3,11 @@
 	"pages": {
 		"/benchmarks/": 4,
 		"/demos/": 1,
-		"/docs/api/": 5,
+		"/docs/api/": 4,
 		"/docs/demos/": 9,
 		"/docs/evaluation-card/": 2,
 		"/docs/faq/": 5,
 		"/docs/flags/": 1,
-		"/docs/health/": 1,
 		"/docs/how-it-works/": 3
 	}
 }

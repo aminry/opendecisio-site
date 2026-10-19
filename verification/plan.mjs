@@ -119,28 +119,29 @@ export const plan = [
 		},
 	},
 
-	// The guides, on the stand-in.
+	// Scale and Ask about images, on the stand-in.
 	{
-		page: '/docs/guides/many-questions/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
+		page: '/docs/scale/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
 		assert(stdout) {
 			if (!/^answers: 50$/m.test(stdout) || !/^server ms: \d/m.test(stdout)) throw new Error('the fifty questions were not all answered, or no server time came back');
 		},
 	},
 	{
-		page: '/docs/guides/latency/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
+		page: '/docs/scale/', n: 2, mode: 'python', expect: 'import json\nimport urllib.request',
+		assert(stdout) {
+			if (!/^options answered: 120$/m.test(stdout)) throw new Error('a question with 120 options did not come back with 120 probabilities');
+		},
+	},
+	{
+		page: '/docs/scale/', n: 3, mode: 'python', expect: 'import json\nimport urllib.request',
 		assert(stdout) {
 			if (!/^first question: \d/m.test(stdout) || !/^a different question about the same text: \d/m.test(stdout)) throw new Error('no server time came back for both questions');
 		},
 	},
 	{ page: '/docs/tasks/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/tasks', of: ['/docs/faq/', 2] },
-	{
-		page: '/docs/guides/long-and-wide/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
-		assert(stdout) {
-			if (!/^options answered: 120$/m.test(stdout)) throw new Error('a question with 120 options did not come back with 120 probabilities');
-		},
-	},
-	{ page: '/docs/guides/images/', n: 1, mode: 'example', expect: 'import base64' },
-	// Run it, on the stand-in.
+	{ page: '/docs/images/', n: 1, mode: 'example', expect: 'import base64' },
+	{ page: '/docs/images/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
+	// Operate and Troubleshoot, on the stand-in.
 	{
 		page: '/docs/operating/', n: 1, mode: 'run', expect: 'until curl -sf http://127.0.0.1:8000/health',
 		assert(stdout) {
@@ -148,12 +149,11 @@ export const plan = [
 		},
 	},
 	{
-		page: '/docs/health/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health',
+		page: '/docs/operating/', n: 2, mode: 'run', expect: 'curl -s -D - -o /dev/null http://127.0.0.1:8000/v1/systemone',
 		assert(stdout) {
-			if (!/"ok": ?true/.test(stdout) || !/^x-decisio-server-ms:/im.test(stdout)) throw new Error('the health object or the server-time header is missing');
+			if (!/^x-decisio-server-ms:/im.test(stdout)) throw new Error('the server-time header is missing');
 		},
 	},
-	{ page: '/docs/health/', n: 2, mode: 'same-as', expect: '{"model": "decisio-gemma-4-31b-it-letters",', of: ['/docs/api/', 2] },
 	{
 		page: '/docs/troubleshooting/', n: 1, mode: 'run', expect: 'curl -s -o /dev/null -w',
 		assert(stdout) {
@@ -239,6 +239,20 @@ export const plan = [
 			if (json(stdout).id !== 'ticket-routing') throw new Error('the registration did not answer with the task');
 		},
 	},
+	// Upgrade, on the stand-in, with the walk-through task registered again just above.
+	{
+		page: '/docs/upgrading/', n: 1, mode: 'run', expect: "curl -s 'http://127.0.0.1:8000/v1/tasks?full=1' > tasks.json",
+		assert(stdout, ctx) {
+			if (!ctx.fileHasContent('tasks.json')) throw new Error('the export wrote no tasks.json');
+		},
+	},
+	{ page: '/docs/upgrading/', n: 2, mode: 'example', expect: 'POST /v1/tasks/ticket-routing/certify' },
+	{
+		page: '/docs/upgrading/', n: 3, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/tasks/ticket-routing',
+		assert(stdout) {
+			if (json(stdout).id !== 'ticket-routing') throw new Error('the task did not answer with itself');
+		},
+	},
 
 	// Paths that need hardware this check does not have.
 	// The deploy guides: decisio's commands at the pinned release, from a package, a clone or the release image.
@@ -265,8 +279,7 @@ export const plan = [
 	{ page: '/docs/bases/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', needs: 'an NVIDIA card', record: 'runs/2026-10-04_gemma-base/' },
 	{ page: '/docs/bases/', n: 2, mode: 'same-as', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', of: ['/docs/bases/', 1] },
 
-	{ page: '/docs/upgrading/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b', needs: 'an NVIDIA card, and for the container the NVIDIA Container Toolkit' },
-	{ page: '/docs/upgrading/', n: 2, mode: 'same-as', expect: 'uv run python -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b', of: ['/docs/upgrading/', 1] },
+	{ page: '/docs/upgrade-notes/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b', needs: 'an NVIDIA card, and for the container the NVIDIA Container Toolkit' },
 
 	// Shapes and recorded output.
 	{ page: '/docs/api/', n: 2, mode: 'example', expect: '{"model": "decisio-gemma-4-31b-it-letters",' },

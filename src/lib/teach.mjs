@@ -11,12 +11,32 @@
 // The project's own teach-it numbers (teaching.by_base) are not public yet; the slider shows the two
 // measured amounts until they are.
 import { facts } from './launch.mjs';
-import { intentRows } from './figures/guides.mjs';
 import { readUpstream } from './upstream.mjs';
 
 const fail = (what) => { throw new Error(`teach: ${what}`); };
+const must = (source, re, what) => re.exec(source) ?? fail(`the pinned release no longer says ${what}`);
 const v = (x) => (x && typeof x === 'object' && 'value' in x ? x.value : x);
 const same = (a, b, what) => { if (Math.abs(a - b) > 5e-4) fail(`${what}: launch_facts.public.json has ${a}, the release prints ${b}`); };
+
+/** The 31B's intent heads as the release prints them (EVAL_CARD.md section 7.2 and the README's Benchmarks table, which must
+ * agree), and the Qwen base's from docs/tasks.md. */
+export function intentRows() {
+	const card = readUpstream('EVAL_CARD.md');
+	const m = must(card, /Intent heads from 10 labelled examples per intent \| BANKING77 (0\.\d+) \(plain readout (0\.\d+)\), CLINC150 (0\.\d+) \((0\.\d+)\), means of three draws; registration (\d+) s and (\d+) s/, 'the 31B\'s intent heads against its plain readout');
+	const readme = readUpstream('README.md');
+	const r = must(readme, /^\| Intent heads, BANKING77 \/ CLINC150 \| [^|]*\| [^|]*\| (0\.\d+) \/ (0\.\d+) \|$/m, 'the intent-head row of the README\'s Benchmarks table');
+	if (r[1] !== m[1] || r[2] !== m[3]) fail('the README\'s intent-head row and the evaluation card\'s disagree about the 31B');
+	const tasks = readUpstream('docs/tasks.md');
+	const q = [...tasks.matchAll(/\| (BANKING77|CLINC150) intent accuracy \((\d+) options\) \| (0\.\d+) \| \*\*(0\.\d+)\*\*; \+(\d+\.\d) points \[\+(\d+\.\d), \+(\d+\.\d+)\]/g)];
+	if (q.length !== 2) fail('docs/tasks.md no longer has its two intent rows');
+	return {
+		sets: [
+			{ name: 'BANKING77', options: 77, plain: Number(m[2]), head: Number(m[1]), seconds: Number(m[5]) },
+			{ name: 'CLINC150', options: 150, plain: Number(m[4]), head: Number(m[3]), seconds: Number(m[6]) },
+		],
+		qwen: q.map((x) => ({ name: x[1], plain: x[3], head: x[4], gain: x[5], lo: x[6], hi: x[7] })),
+	};
+}
 
 /** The 31B's intent heads, from the facts' teaching block, each set checked against the release's printed figures. */
 function heads() {

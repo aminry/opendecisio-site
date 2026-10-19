@@ -54,5 +54,5 @@ The only direct check that the promise holds on live traffic is to label a sampl
 ## What next
 
 - [Certify answers](/docs/tasks/certify/): the promise these checks protect, and how to certify again.
-- [Deploying and operating](/docs/operating/): health, the exit code and what else to watch in production.
+- [Operate](/docs/operating/): health, the exit code and what else to watch in production.
 - [Certified answers on real tasks](/demos/teach-and-certify/): a drift alarm on real traffic, run on the release it was measured on.

@@ -88,5 +88,5 @@ The server runs where you start it and listens on `127.0.0.1:8000` unless `--hos
 ## What next
 
 - [Get started](/docs/): start a server and ask a first question.
-- [Troubleshooting](/docs/troubleshooting/): what you see, why, and what to do.
+- [Troubleshoot](/docs/troubleshooting/): what you see, why, and what to do.
 - [Limits](/docs/limits/): what the numbers do not say.

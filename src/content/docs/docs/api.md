@@ -59,4 +59,4 @@ Check a field your client relies on against the reference.
 
 - [Read the answer](/docs/#4-read-the-answer): one request and its answer, line by line.
 - [Teaching it a task](/docs/tasks/): register a question you ask again and again.
-- [Deploying and operating](/docs/operating/): health, restarts and security.
+- [Operate](/docs/operating/): health, restarts and security.

@@ -31,6 +31,7 @@ import { docsFigure, recordedLabel } from './docs-figures.mjs';
 import { splitParagraph } from './sentences.mjs';
 import { integrationsTable } from './figures/use-from.mjs';
 import { taskGains } from './teach.mjs';
+import { symptomTable } from './figures/run-it.mjs';
 
 const parser = unified().use(remarkParse).use(remarkGfm);
 const cache = new Map();
@@ -177,6 +178,26 @@ export default function remarkUpstream(options = {}) {
 			const rows = taskGains().map((g) => [`${g.name}, ${g.options} intents`, `${(g.plain * 100).toFixed(1)}%`, `<b>${(g.taught * 100).toFixed(1)}%</b>`, `${g.per} labelled examples per intent; ${g.items} test messages; mean of ${g.draws} draws; taught in ${g.seconds} s`]);
 			const html = `<div class="table-wrap"><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 			parent.children.splice(index, 1, { type: 'html', value: html });
+			return index + 1;
+		});
+		// ::latency-table: the first question's server time by text length, per model, as docs/running.md's table at the
+		// pinned release gives it (a later question about the same text is a line of the page, from the same table).
+		visit(tree, 'leafDirective', (node, index, parent) => {
+			if (node.name !== 'latency-table') return;
+			const run = readUpstream('docs/running.md');
+			const m = /^\| State, tokens \| 31B first[^|]*\| 31B second \| 12B first[^|]*\| 12B second \| Qwen first \| Qwen second \|\n\| [-: |]+\|\n((?:\|.*\|\n)+)/m.exec(run);
+			if (!m) throw new Error('latency-table: docs/running.md no longer has its first-question table');
+			const ms = (v) => (/^[\d,.]+$/.test(v) ? `${v} ms` : v);
+			const heads = ['Text, tokens', 'Gemma 4 31B', 'Gemma 4 12B', 'Qwen3.6-35B-A3B'];
+			const rows = m[1].trim().split('\n').map((l) => l.split('|').slice(1, -1).map((c) => c.trim())).map((c) => [c[0], ms(c[1]), ms(c[3]), ms(c[5])]);
+			const html = `<div class="table-wrap"><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+			parent.children.splice(index, 1, { type: 'html', value: html });
+			return index + 1;
+		});
+		// ::symptoms{group="..."}: what you see, why and what to do, for one kind of trouble (src/lib/figures/run-it.mjs).
+		visit(tree, 'leafDirective', (node, index, parent) => {
+			if (node.name !== 'symptoms') return;
+			parent.children.splice(index, 1, { type: 'html', value: symptomTable(node.attributes?.group) });
 			return index + 1;
 		});
 		// ::recorded-label: the line that says which recorded decision, on which box, an answer on the page came from.

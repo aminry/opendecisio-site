@@ -1,17 +1,13 @@
 ---
-title: Troubleshooting
-description: "What you see, why, and what to do: the failures the documentation describes, in one place."
+title: Troubleshoot
+description: What you see, why it happens, and what to do, from a server that will not start to an answer that surprises you.
 ---
 
-<!-- Site-written. Every row is a statement of docs/api.md, docs/running.md, docs/tasks.md, docs/cli.md or docs/migrating.md at the pinned release (src/lib/figures/run-it.mjs checks each one still says it); what the documentation does not say is in docs/UPSTREAM_GAPS.md. -->
+<!-- Site-written: the Troubleshoot guide. Every row is a statement of decisio's docs/troubleshooting.md, docs/api.md, docs/running.md, docs/tasks.md, docs/migrating.md or EVAL_CARD.md at the pinned release (src/lib/figures/run-it.mjs checks each one still says it). -->
 
-Most failures announce themselves with a status code or a line in the server's log.
-This page collects the ones the documentation explains.
+::covers{links="docs/troubleshooting.md docs/troubleshooting.md#the-card-is-too-small=1-it-does-not-start docs/troubleshooting.md#the-driver-does-not-support-cuda-130=1-it-does-not-start docs/troubleshooting.md#port-8000-is-already-in-use=1-it-does-not-start docs/troubleshooting.md#the-checkpoint-download-fails-or-stops=1-it-does-not-start"}
 
-::figure{name="troubleshoot"}
-
-## TL;DR
-
+Find what you see in the tables below, and what to do about it.
 Start with what the server says about itself:
 
 ```bash
@@ -21,41 +17,26 @@ curl -s http://127.0.0.1:8000/v1/tasks
 # the registered tasks, whether tasks are applied, and the server's fingerprint
 ```
 
-:::glossary
+## 1. It does not start
 
-| Word | Meaning |
-| --- | --- |
-| 422 | the request is malformed or the prompt is too long; the `detail` says what |
-| 400 | the engine cannot answer the request |
-| 503 | the engine has died |
-| fingerprint | the model and rendering a task is fitted under; a task is applied only by a server with the same one |
+::symptoms{group="start"}
 
-:::
+## 2. A request fails
 
-## 1. Is it up?
+Every error comes with a `detail` that names what is wrong: read it first.
 
-A connection refused right after a start means the server is still starting: the first start downloads the checkpoint and warms the engine.
-`/health` answers once it is ready (7 min 54 s for the 31B's first start, with its download, on the measured machine).
-A 503 means the engine died; the server exits with code 70 and a restart policy brings a new one ([Health and monitoring](/docs/health/)).
+::symptoms{group="request"}
 
-## 2. Is it the request?
+## 3. A task does not apply
 
-A 422 or a 400 comes with a `detail` that names what is wrong; read it first.
-A prompt longer than the context the server serves (`/health` reports it) is a 422 that says the rendered prompt is longer than the context, and a choice with more than 255 options is a 400.
-The `model` field does not choose a model, and fields the server does not know are ignored, not rejected.
+::symptoms{group="tasks"}
 
-## 3. Is it the tasks?
+## 4. An answer surprises you
 
-No `x-decisio-tasks` header on a question you registered means it matched no task: ask it exactly as registered.
-A server that prints `WARNING: tasks fitted under another model or rendering are not applied` at start was given tasks fitted under something else; register them again from their examples ([Teach a task](/docs/tasks/)).
-
-## 4. Is it the answer?
-
-Answers can differ between runs on the Gemma bases, which do not repeat bit for bit, and between sessions on the 31B for near-tied options.
-That is stated per base in [the evaluation card](/docs/evaluation-card/); it is not a fault.
+::symptoms{group="answers"}
 
 ## What next
 
-- [Health and monitoring](/docs/health/): what `/health` and the headers report.
-- [Flags and options](/docs/flags/): every flag, including the ones a start can refuse on.
+- [Operate](/docs/operating/): what to watch, and what happens when the engine dies.
+- [Requirements and limits](/docs/limits/): what each machine needs, and what repeats.
 - [The HTTP API](/docs/api/): every status and field.

@@ -15,4 +15,9 @@ export const redirects = [
 	{ from: '/docs/quickstart/ollama/', to: '/docs/deploy/mac/#on-a-laptop-with-ollama', why: 'Ollama merged into On a Mac or a laptop (docs rewrite, batch 3)' },
 	{ from: '/docs/quickstart/cpu-stand-in/', to: '/docs/deploy/development/', why: 'CPU stand-in became For development (docs rewrite, batch 3)' },
 	{ from: '/docs/guides/probability/', to: '/docs/tasks/certify/#pick-a-line-by-hand', why: 'Use the probability merged into Certify answers (docs rewrite, batch 4)' },
+	{ from: '/docs/guides/many-questions/', to: '/docs/scale/#1-ask-many-questions-in-one-request', why: 'Many questions about one text merged into Scale (docs rewrite, batch 5)' },
+	{ from: '/docs/guides/latency/', to: '/docs/scale/#2-plan-for-the-first-read', why: 'Make it fast merged into Scale (docs rewrite, batch 5)' },
+	{ from: '/docs/guides/long-and-wide/', to: '/docs/scale/#3-plan-for-long-texts', why: 'Long documents and many options merged into Scale (docs rewrite, batch 5)' },
+	{ from: '/docs/health/', to: '/docs/operating/#2-watch-it', why: 'Health and monitoring merged into Operate (docs rewrite, batch 5)' },
+	{ from: '/docs/guides/images/', to: '/docs/images/', why: 'Images became Ask about images (docs rewrite, batch 5)' },
 ];

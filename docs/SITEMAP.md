@@ -34,8 +34,12 @@ Every page, its route, and where its content comes from.
 | `/docs/tasks/certify/` | Certify answers | Site-written: the certify slider on the support inbox (`src/data/teach-certify/`), docs/tasks.md's worked example, the floor table, the setup steps, the threshold picked by hand and abstention; `/docs/guides/probability/` redirects here |
 | `/docs/tasks/drift/` | Watch for drift | Site-written: the three checks, the status and the metrics, from docs/tasks.md "The monitor"; the drift replay chart from runs/2026-10-17_drift-monitor/ |
 | `/docs/migrating/` | Move from System One | Site-written steps around docs/migrating.md's two blocks; the differences from docs/api.md "Where this route differs from System One" (`src/config/sourced.mjs`) |
-| `/docs/operating/` | Deploying and operating | Upstream docs/running.md "Checking a server" and "When the engine dies" (from the release after v0.7.1), docs/api.md "GET /health", SECURITY.md, and deploy/ when the tag has it |
-| `/docs/upgrading/` | Upgrading | Upstream docs/upgrading.md, whole (what changes for a running deployment from one release to the next; from v0.10.0) |
+| `/docs/operating/` | Operate | Site-written: the supervisor table, what to watch, what happens when the engine dies (the server-life figure, timings from docs/running.md), tasks across restarts, and the security steps from SECURITY.md; `/docs/health/` redirects here |
+| `/docs/upgrading/` | Upgrade | Site-written: the eight steps of every upgrade, with the export, the re-certify call and the check |
+| `/docs/upgrade-notes/` | Upgrade notes | Upstream docs/upgrading.md, whole |
+| `/docs/scale/` | Scale | Site-written: many questions in one request, the first read by text length (docs/running.md's table, `::latency-table`), long texts, long option lists, the flags that move server time; the three guides it merges redirect here |
+| `/docs/troubleshooting/` | Troubleshoot | Site-written tables of symptoms by situation, each row guarded by the sentence of decisio's docs it rests on (`src/lib/figures/run-it.mjs`) |
+| `/docs/images/` | Ask about images | Site-written: the image server's start, the limits table, what an image costs, what it does not do; `/docs/guides/images/` redirects here |
 | `/docs/limits/` | Requirements and limits | Site-written: the machines, the context length, the production setup steps, what was measured on what, repeatability and what was not tested; every number in `src/config/sourced.mjs` |
 | `/docs/evaluation-card/` | The evaluation card | Upstream EVAL_CARD.md, whole |
 | `/docs/demos/` | Demos, judged decision by decision | Upstream docs/demos/README.md, under `docs/CONTENT_RULES.md` |
@@ -51,6 +55,6 @@ Every page, its route, and where its content comes from.
 
 ## Docs groups
 
-The sidebar, `llms.txt` and `llms-full.txt` share `src/config/docs-groups.mjs`, grouped as the docs rewrite's structure has them: Get started (Get started, Call it from your code, Move from System One); How-to guides (the four deploy guides, Teach a task, Certify answers, Watch for drift, the guides, Deploying and operating, Health and monitoring, Upgrading, Troubleshooting); Reference (HTTP API, Flags, Bases, Requirements and limits, Glossary, Releases, the evaluation card, How Decisio compares, Questions); How it works (How it works, What the probability means, Repeatability, Demos). Use cases joins when its first page does.
+The sidebar, `llms.txt` and `llms-full.txt` share `src/config/docs-groups.mjs`, grouped as the docs rewrite's structure has them: Get started (Get started, Call it from your code, Move from System One); How-to guides (the four deploy guides, Teach a task, Certify answers, Watch for drift, Scale, Operate, Upgrade, Troubleshoot, Ask about images); Reference (HTTP API, Flags, Bases, Requirements and limits, Glossary, Releases, Upgrade notes, the evaluation card, How Decisio compares, Questions); How it works (How it works, What the probability means, Repeatability, Demos). Use cases joins when its first page does.
 Reference pages (the API, the flags) render from decisio's own docs folder with `::upstream`, so decisio's changes there reach the site on the next bump; each page's footer links its source file on GitHub.
 `llms.txt` and `llms-full.txt` are written after the build by `scripts/llms.mjs` from the built pages and checked by `scripts/checks/llms.mjs`.

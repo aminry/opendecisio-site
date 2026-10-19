@@ -42,7 +42,7 @@ Arguments after the image name go to the server, so every [server flag](/docs/fl
 - The container runs as a non-root user, and the port is published on `127.0.0.1` only.
 - It checks for an NVIDIA GPU first, and exits with an explanation when it cannot see one.
 - When its engine dies, the server exits with code 70. Docker restarts a container when its process exits, not when its health check fails, so `restart: unless-stopped` brings it back.
-- After upgrading the image, certify your tasks again ([Upgrading](/docs/upgrading/)).
+- After upgrading the image, certify your tasks again ([Upgrade](/docs/upgrading/)).
 
 ## 5. Build the image yourself
 
@@ -56,4 +56,4 @@ This builds the image from decisio's own `Dockerfile` and `compose.yaml`, with n
 
 - [On a cloud GPU](/docs/deploy/cloud-gpu/): the same server without a container, under systemd or Kubernetes.
 - [Requirements and limits](/docs/limits/): every machine, the context length and what was measured on what.
-- [Deploying and operating](/docs/operating/): health, monitoring and what to watch in production.
+- [Operate](/docs/operating/): health, monitoring and what to watch in production.

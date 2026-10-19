@@ -1,42 +1,67 @@
 ---
-title: Upgrading
-description: What changes for a running deployment from one release to the next, newest first.
+title: Upgrade
+description: Move a running deployment to a new decisio release in eight steps, without losing your tasks or serving uncertified answers as certified.
 ---
 
-<!-- Site-written: the figure, the TL;DR, the glossary and the links. The page below is decisio's docs/upgrading.md at the pinned release. -->
+<!-- Site-written: the Upgrade guide, as steps. The per-release notes are Upgrade notes (decisio's docs/upgrading.md at the pinned release); the facts are docs/upgrading.md's, docs/tasks.md's and SECURITY.md's (src/config/sourced.mjs checks them). -->
 
-The changelog lists every change; this page is for the ones that change what a deployment serves.
-Read the entry for each release between yours and the one you are moving to.
+Every upgrade is the same eight steps, whatever the release.
+Before you start, export what you have taught:
 
-::figure{name="upgrade-path"}
+```bash
+curl -s 'http://127.0.0.1:8000/v1/tasks?full=1' > tasks.json
+```
 
-## TL;DR
+## 1. Read the notes for every release you skip
 
-To keep the Qwen base, which the container served before 0.10.0:
+[Upgrade notes](/docs/upgrade-notes/) has, for each release that changes what a deployment serves, who is affected and what to do.
+Read every entry between your release and the one you are moving to.
 
-::upstream{file="docs/upgrading.md" block="1"}
+## 2. Pin what you serve
 
-:::glossary
+- Install the exact release: `pip install "decisio[serve]==<version>"`, or a clone at its tag.
+- Name the model repository at a commit, `--base tachara-ai/decisio-gemma-4-31b@<commit>`, so the weights cannot change under you.
+- Give `--max-model-len` the same value on every card.
 
-| Word | Meaning |
-| --- | --- |
-| default base | the model served when you name none: Gemma 4 31B since 0.10.0 |
-| pin | the revision of a model repository that a release serves |
-| served name | what `GET /v1/models` lists; it changes with the base |
+## 3. Start the new release next to the old one
 
-:::
+Keep the old server serving, start the new one on another port or machine, and read its `/health`: the model, its checkpoint and revision, and `max_model_len` with its source.
 
-:::caution[Common mistake]
-Tasks fitted on one base are not applied by a server on another.
-The server prints `WARNING: tasks fitted under another model or rendering are not applied` at start, and `POST /v1/tasks/import` refuses them: register them again from their examples.
-:::
+## 4. Load your tasks into it
 
-## The releases
+Start it with `--tasks-file tasks.json`, or import the export with `POST /v1/tasks/import`.
+A task taught under another model or rendering is not applied, and the server says so at start: teach it again from its examples.
 
-::upstream{file="docs/upgrading.md"}
+## 5. Certify your tasks again
+
+The decisio version is part of the serving setup a certificate covers, so a certificate made on the old release is suspended on the new one.
+Certify each certified task again on the new server, on labelled examples that share no input with the task's fit, such as the held-out examples it was certified on:
+
+```text
+POST /v1/tasks/ticket-routing/certify
+{"examples": [{"request": <a /v1/systemone request>, "answer": "payment_failed"}, ...]}
+```
+
+The fit is kept; the call answers with the new certificate.
+
+## 6. Check that it took
+
+```bash
+curl -s http://127.0.0.1:8000/v1/tasks/ticket-routing
+```
+
+The task's `status` should read `ok` for every certified task, with no `suspended`.
+
+## 7. Move the traffic
+
+Point your proxy at the new server, and watch `/health` and the server time as the traffic arrives ([Operate](/docs/operating/#2-watch-it)).
+
+## 8. Stop the old server
+
+Only the latest release receives security fixes, so do not keep the old one running.
 
 ## What next
 
-- [Releases](/docs/releases/): the changelog, every change.
-- [Deploying and operating](/docs/operating/): keeping a server up across an upgrade.
-- [Choosing a base](/docs/bases/): what changes when the default base does.
+- [Upgrade notes](/docs/upgrade-notes/): what each release changes for a running deployment.
+- [Release notes](/docs/releases/): every change in every release.
+- [Certify answers](/docs/tasks/certify/): what a certificate covers, and how to certify again.
