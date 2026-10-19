@@ -96,50 +96,72 @@ jobs:
           key: upstream-${{ hashFiles('upstream.json') }}
       - run: npm ci
       - name: Build from the pinned release
+        id: build
         run: npm run build
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Content rules
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/content.mjs
       - name: The JevBench claims are those launch_facts.public.json allows
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/launch.mjs
       - name: Wording the facts allow in one place only
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/wording.mjs
       - name: No rank and no comparison on any page
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/claims.mjs
       - name: Nothing internal in the public repository
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/internal.mjs
       - name: Nothing internal on any built page, decisio's rendered docs included
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/internal.mjs --dist
       - name: No page sends readers to GitHub for docs (counts may only fall)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/docs-links.mjs
       - name: Every recorded output is current, or labelled with its release, card and date and unchanged since
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/recorded.mjs
       - name: No page names another decisio release outside source notes, code and Release notes
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/versions.mjs
       - name: Every moved page redirects to a built page
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/redirects.mjs
       - name: Every fact the site words itself still stands in decisio's docs
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/sourced.mjs
       - name: llms.txt and llms-full.txt
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/llms.mjs
       - name: Every docs page follows the page pattern
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/docs-pattern.mjs
       - name: Articles and news (canonical links, feeds, the launch rules)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/posts.mjs
       - name: The analytics beacon and the privacy page
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/analytics.mjs
       - name: Colour contrast of the tokens
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/contrast.mjs
       - name: Every published code block is in the verification plan
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/verify-commands.mjs --dry-run
       - name: Internal links and anchors
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/links.mjs
       - name: External-link retry rules, against a local server
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/external-selftest.mjs
       - name: How the verification runner stops a server, against local stand-ins (one ignores SIGTERM)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/verify-stop-selftest.mjs
       - name: The recorded-output rule, on made-up pages
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/recorded-selftest.mjs
       - name: Cloudflare accepts the configuration (wrangler deploy --dry-run)
         run: npx wrangler deploy --dry-run
