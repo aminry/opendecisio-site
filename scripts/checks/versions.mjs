@@ -34,16 +34,19 @@ const words = (t) => t.toLowerCase().replace(/[^a-z0-9.]+/g, ' ').replace(/\s+/g
 const upstreamText = words(mdFiles(upstreamRoot).map((p) => plain(readFileSync(p, 'utf8'))).join('\n'));
 const decisios = [];
 // decisio's history text the site knows of, by the pin it is allowed at: at v0.18.0 all of it (decisio 0.18.1's docs
-// dropped most); at v0.18.1 the eight phrases 0.18.1 still has, which its next release drops.
+// dropped most); at v0.18.1 the seven history phrases 0.18.1 still has, which its next release drops (decisio #238).
 const DECISIO_HISTORY = {
 	'v0.18.0': null,
-	'v0.18.1': ['before 0.12.0 a NaN', 'the default since 0.8.0', 'From decisio 0.14.0 the Gemma', 'In 0.8.1 a single question', 'default from 0.9.0 to 0.11.0', "keeps 0.8.1's order", "0.8.0's default", 'started again from v0.6.0'],
+	'v0.18.1': ['before 0.12.0 a NaN', 'the default since 0.8.0', 'From decisio 0.14.0 the Gemma', 'In 0.8.1 a single question', 'default from 0.9.0 to 0.11.0', "keeps 0.8.1's order", "0.8.0's default"],
 };
 const pending = pin.tag in DECISIO_HISTORY;
 const allowed = DECISIO_HISTORY[pin.tag];
 const named = (context) => allowed === null || (allowed ?? []).some((p) => context.replace(/[\u2018\u2019]/g, "'").includes(p));
 const PENDING_PAGES = ['/docs/api/', '/docs/flags/', '/docs/evaluation-card/'];
 // History words just before a release ("since 0.10.0", "before 0.12.0 it", "default from 0.9.0"), or "X to Y" after it.
+// Wording that reads like history but states how a measurement was run ("the same server was started again from v0.6.0"):
+// a condition (Amin, 2026-10-19).
+const CONDITION_BEFORE = /\bstarted again from\s+v?$/i;
 const HISTORY_BEFORE = /\b(since|before|until|from|after|earlier|later|default|defaults|in|up to|as of|prior to)\s+(decisio\s+)?v?$/i;
 const HISTORY_AFTER = /^(\s+to\s+v?\d+\.\d+\.\d+|\s+(it|the server|such|there)\b|'s (default|order))/i;
 
@@ -74,7 +77,7 @@ for (const file of walk(root)) {
 		const near = [around.split(' ').slice(-2).join(' '), following.split(' ').slice(0, 2).join(' ')];
 		const decisioText = (around.length > 12 && upstreamText.includes(around)) || (following.length > 12 && upstreamText.includes(following))
 			|| (PENDING_PAGES.includes(route) && near.some((w) => w.includes(' ') && upstreamText.includes(w)));
-		const history = HISTORY_BEFORE.test(before) || HISTORY_AFTER.test(after);
+		const history = !CONDITION_BEFORE.test(before) && (HISTORY_BEFORE.test(before) || HISTORY_AFTER.test(after));
 		// A measurement's condition in decisio's own text (its evaluation card, its README's tables) passes; history in
 		// it is listed on the pages Serve is cleaning while the pin's list names it; site prose never passes.
 		if ((route === '/docs/evaluation-card/' || decisioText) && !history) continue;
