@@ -3131,6 +3131,73 @@
      }
     }
    },
+   "run": {
+    "decisio": {
+     "release": "v0.11.1",
+     "commit": "6cf5e2cd89c062e15f57e513cf632438e2c2baf5"
+    },
+    "vllm": "0.30.0",
+    "attention_backend": "TRITON_ATTN",
+    "engine_mode": "separate",
+    "engine_process": "in",
+    "models": {
+     "gemma_4_31b": {
+      "repository": "tachara-ai/decisio-gemma-4-31b",
+      "revision": "931a9dadeb92a3533781606b3355799779c62cf5",
+      "exported_for_decisio": "0.11.0",
+      "source_repository": "google/gemma-4-31B-it",
+      "source_revision": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+      "weights_dtype": "fp8_e4m3",
+      "weights_modified": true,
+      "quantization": "compressed-tensors",
+      "temperatures": {
+       "choice": 4.672,
+       "noul": 5.252,
+       "score": 5.252
+      },
+      "head": "hidden (serving engine, reserved logit columns)",
+      "requests_per_question": 7
+     },
+     "gemma_4_12b": {
+      "repository": "tachara-ai/decisio-gemma-4-12b",
+      "revision": "a5a1ac8f2398147d4e5738cac9ab6dc138b13b82",
+      "exported_for_decisio": "0.11.1",
+      "source_repository": "google/gemma-4-12B-it",
+      "source_revision": "707f0a3b8a3c7ad586ed01e27eafbad8a27dd0f7",
+      "weights_dtype": "bfloat16",
+      "weights_modified": false,
+      "quantization": "None",
+      "temperatures": {
+       "choice": 3.592,
+       "noul": 3.592,
+       "score": 3.592
+      },
+      "head": "hidden (serving engine, reserved logit columns)",
+      "requests_per_question": 5
+     }
+    },
+    "machine": {
+     "gpu": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+     "gpu_count": 1,
+     "gpu_memory_mib": 97887,
+     "power_limit_w": 600.0,
+     "cpu": "AMD EPYC 9534 64-Core Processor",
+     "driver": "595.104.02"
+    },
+    "dates": {
+     "start_utc": "2026-10-14T19:34Z",
+     "end_utc": "2026-10-15T03:38Z",
+     "grid_fitted_offline": "2026-10-15 (the grid files were first committed at 05:13 UTC)"
+    },
+    "sources": {
+     "results/card/health_s31.json": "ee5949eab823577bbdcda799e340d635770b990e27ece7e67750e0fbd367a170",
+     "results/card/health_g12.json": "351e716c047e3951398c4d9aab450c9b89e72b570c19707c790429b5bb4fbc4c",
+     "results/card/first_contact.json": "57d414a379760868332f194965b20c7ba95658136ef2c48a94a7db20f115d1ff",
+     "code/card/env.sh": "4000d6565ac095efe92ec66e6ab174810b91c134f871733db747ae08d1b5e800"
+    },
+    "wording": "Read through decisio v0.11.1 on vLLM 0.30.0, on one NVIDIA RTX PRO 6000 Blackwell Workstation Edition (600 W, AMD EPYC 9534 64-Core Processor, driver 595.104.02), on 2026-10-14 and 2026-10-15 (the session ran from 2026-10-14T19:34Z to 2026-10-15T03:38Z); the 31B is tachara-ai/decisio-gemma-4-31b at 931a9dad (fp8_e4m3 weights of google/gemma-4-31B-it), the 12B is tachara-ai/decisio-gemma-4-12b at a5a1ac8f (bfloat16 weights of google/gemma-4-12B-it); the teaching was fitted offline on the readouts afterwards.",
+    "note": "These are the conditions of the readouts behind every figure of the issue-triage block; the live server was not used for the fits (reporting_sentence)."
+   },
    "reading": {
     "largest_accuracy_change_points": 1.7,
     "plain": "On these four questions the frozen model is already at its level untaught: teaching moves accuracy by at most the figure above, and the changes that exist are from per-task calibration (which never changes the answer) except the 12-option SIG question at 1,000 examples, where the head is applied. Teaching on these sets is a calibration result more than an accuracy result."

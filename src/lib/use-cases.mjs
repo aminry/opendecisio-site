@@ -134,15 +134,28 @@ export function issueTriage() {
 	const niTaught = Object.values(ni.taught);
 	if (!niTaught.every((a) => a.score.value <= ni.untaught.score.value)) fail('teaching no longer lowers needs-information on the 31B');
 	const p = (x) => `${x.printed}%`;
+	const run = triageRun(t);
 	return {
-		t, kind, sig, prio, ni, sig1000,
+		t, kind, sig, prio, ni, sig1000, run,
 		values: {
+			'triage-run': `Gemma 4 31B, ${run.label}`,
 			'triage-kind': p(kind.untaught.accuracy),
 			'triage-sig': p(sig.untaught.accuracy),
 			'triage-priority': p(prio.untaught.accuracy),
 			'triage-needs-info': p(ni.untaught.score),
 		},
 	};
+}
+
+/** The conditions of the issue-triage readouts (teaching.issue_triage.run): a short label, and the facts' own sentence. */
+function triageRun(t) {
+	const r = t.run ?? fail('teaching.issue_triage has no run conditions');
+	const release = /^v(\d+\.\d+\.\d+)$/.exec(r.decisio?.release ?? '')?.[1] ?? fail('the issue-triage run names no decisio release');
+	if (!/^NVIDIA RTX PRO 6000 /.test(r.machine?.gpu ?? '') || r.machine.gpu_count !== 1) fail('the issue-triage run is no longer on one RTX PRO 6000');
+	const day = (x) => /^(\d{4}-\d{2}-\d{2})T/.exec(x ?? '')?.[1] ?? fail(`the issue-triage run's date ${x} is not a UTC time`);
+	const [from, to] = [day(r.dates?.start_utc), day(r.dates?.end_utc)];
+	if (!r.vllm || !r.wording?.includes(`decisio ${r.decisio.release}`)) fail("the issue-triage run's wording does not name its release");
+	return { label: `decisio ${release}, one RTX PRO 6000, vLLM ${r.vllm}, ${from === to ? from : `${from} to ${to}`}`, wording: r.wording };
 }
 
 // --- How many labelled examples a recipe needs -------------------------------------------------------------------------
@@ -223,13 +236,14 @@ const PROOFS = {
 		];
 	},
 	'issue-triage': () => {
-		const { t, kind, sig, prio, ni, sig1000 } = issueTriage();
+		const { t, kind, sig, prio, ni, sig1000, run } = issueTriage();
 		const p = (x) => `${x.printed}%`;
 		return [
-			`<b>${p(kind.untaught.accuracy)}</b> right on the kind of an issue (macro-F1 ${p(kind.untaught.score)}) and <b>${p(sig.untaught.accuracy)}</b> on its owning SIG, the ${sig.options} most frequent (macro-F1 ${p(sig.untaught.score)}), by Gemma 4 31B, untaught, on ${fmt(kind.test_items)} real kubernetes/kubernetes issues.`,
+			`<b>${p(kind.untaught.accuracy)}</b> right on the kind of an issue (macro-F1 ${p(kind.untaught.score)}) and <b>${p(sig.untaught.accuracy)}</b> on its owning SIG, the ${sig.options} most frequent (macro-F1 ${p(sig.untaught.score)}), by Gemma 4 31B, untaught, on ${fmt(kind.test_items)} real kubernetes/kubernetes issues (${run.label}).`,
 			`It works out of the box: teaching changed accuracy by under a point, except on the owning SIG at ${fmt(sig1000.examples)} examples, ${p(sig.untaught.accuracy)} to ${p(sig1000.accuracy)} (macro-F1 ${p(sig.untaught.score)} to ${p(sig1000.score)}).`,
 			`Priority is ${p(prio.untaught.accuracy)} right, and needs-information has a balanced accuracy of ${p(ni.untaught.score)}, which teaching lowers slightly.`,
 			`These figures are ${t.reporting_sentence}.`,
+			esc(run.wording),
 			esc(t.licence_line),
 		];
 	},

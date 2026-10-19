@@ -90,12 +90,12 @@ const CARDS = {
 /** The six cards, in the index's order, each with its one proof figure (or what stands for it). */
 export function useCaseCards() {
 	const g = tcData().gatekeeper;
-	const { kind } = issueTriage();
+	const { kind, run } = issueTriage();
 	const suite = suite31();
 	const proof = {
 		'support-routing': 'Measured: the support inbox above.',
 		gatekeeper: `${pct(g.at5.share[0], 0)} to ${pct(g.at5.share[1], 0)} of commands decided on their own at a 5% error rate (Gemma 4 12B on a Mac, decisio ${g.decisio}).`,
-		'issue-triage': `${kind.untaught.accuracy.printed}% right on an issue's kind, untaught (Gemma 4 31B, ${kind.test_items.toLocaleString('en-US')} kubernetes issues).`,
+		'issue-triage': `${kind.untaught.accuracy.printed}% right on an issue's kind, untaught (Gemma 4 31B, ${kind.test_items.toLocaleString('en-US')} kubernetes issues, ${run.label}).`,
 		guardrails: `${pct(suite.read('ToxicChat').acc)} right on ToxicChat's toxicity question (Gemma 4 31B, ${runOf('gemma-4-31b')}).`,
 		'rag-gate': `${pct(suite.read('SciFact').acc)} right on SciFact's claims and their evidence (Gemma 4 31B, ${runOf('gemma-4-31b')}).`,
 		'document-classification': 'A recipe: no run on documents is published yet.',
