@@ -61,7 +61,11 @@ for (const file of walk(root)) {
 		const after = text.slice(m.index + m[0].length, m.index + m[0].length + 20);
 		const where = `${route}: names decisio ${v}: "...${text.slice(Math.max(0, m.index - 70), m.index + 40).trim()}..."`;
 		const following = words(`${m[0]}${after}`).split(' ').slice(0, 4).join(' ');
-		const decisioText = (around.length > 12 && upstreamText.includes(around)) || (following.length > 12 && upstreamText.includes(following));
+		// On the pages that are decisio's own text, where links are relabelled and code is cut, the release with one
+		// neighbouring word is enough.
+		const near = [around.split(' ').slice(-2).join(' '), following.split(' ').slice(0, 2).join(' ')];
+		const decisioText = (around.length > 12 && upstreamText.includes(around)) || (following.length > 12 && upstreamText.includes(following))
+			|| (PENDING_PAGES.includes(route) && near.some((w) => w.includes(' ') && upstreamText.includes(w)));
 		const history = HISTORY_BEFORE.test(before) || HISTORY_AFTER.test(after);
 		// A measurement's condition in decisio's own text (its evaluation card, its README's tables) passes; history in
 		// it is listed on the pages Serve is cleaning while the pin is DECISIO_HISTORY_UNTIL; site prose never passes.
