@@ -114,10 +114,11 @@ const adapterStart = () => `pip install "decisio[serve]==${version()}"\npython -
 const adapterAsk = () => `curl -s http://127.0.0.1:8000/v1/systemone -H 'Content-Type: application/json' -d '{
   "state": "I was charged twice for the same order.",
   "adapter": "${ADAPTER}",
-  "questions": {"refund": {"type": "noul", "instructions": "Is the customer asking for money back?"}}
+  "questions": {"refund": {"type": "noul", "instructions": "Does the customer want a refund?"}}
 }' -D - -o answer.json | grep -i '^x-decisio-adapter'`;
 const adapterHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; h = json.load(sys.stdin); print(json.dumps({k: h.get(k) for k in ("adapter_temperatures", "adapter_identity")}, indent=1))'`;
-const adapterFit = () => lineOf(adapterBlocks().find((b) => b.includes(' fit --reads')) ?? '', ' fit --reads');
+// decisio's fit line, broken before its flags so it fits the page.
+const adapterFit = () => lineOf(adapterBlocks().find((b) => b.includes(' fit --reads')) ?? '', ' fit --reads').replace(/ (--out|--data) /g, ' \\\n  $1 ');
 
 // The recorded answers as the comment lines a client prints: one per question, its likeliest option and probability.
 const printed = () => Object.entries(recordedResponse().answers).map(([name, a]) => {

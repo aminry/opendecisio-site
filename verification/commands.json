@@ -201,14 +201,6 @@
 			"status": "shown",
 			"why": "it needs Linux with one NVIDIA card and a LoRA adapter, which this check does not have"
 		},
-		"12a1adae4e18de15": {
-			"status": "shown",
-			"why": "it needs your adapter's readouts on your labelled items"
-		},
-		"62207ed45dc26653": {
-			"status": "shown",
-			"why": "it needs a server with an adapter loaded, on one NVIDIA card"
-		},
 		"0f84d4b60ee5b3f4": {
 			"status": "shown",
 			"why": "it needs a server with an adapter loaded, on one NVIDIA card"
@@ -388,6 +380,14 @@
 		"4e4a6138dc4a0560": {
 			"status": "shown",
 			"why": "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model"
+		},
+		"c502727dffa20cd1": {
+			"status": "shown",
+			"why": "it needs your adapter's readouts on your labelled items"
+		},
+		"10f6f0acac6bfc65": {
+			"status": "shown",
+			"why": "it needs a server with an adapter loaded, on one NVIDIA card"
 		}
 	}
 }

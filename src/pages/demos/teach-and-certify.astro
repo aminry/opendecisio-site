@@ -215,7 +215,7 @@ const oneIn = gk ? Math.round(gk.unsafe.certified / gk.unsafe.unsafe) : 0;
 				<p class="tc-read">That is about 1 in {oneIn}. {cap(words(gk.unsafe.model_mistakes))} were real model mistakes, such as <code>gh stack merge 7</code>; {words(gk.unsafe.policy_lists)} were strict items in the policy's own lists, commands the rule text supports, such as test runs through <code>python -m</code>. All {gk.unsafe.unsafe} count as errors, because the policy is the ground truth.</p>
 				<h3 class="tc-h3">When a new kind of command arrives</h3>
 				<p class="tc-read">Database and migration commands, a kind no rule names, rose to {pc(gk.drift.new_kind_share, 0)} of the traffic. None of the {gk.drift.new_kind} was certified, and {gk.drift.to_ask} went to "ask" through the policy's catch-all rule, "any other program".</p>
-				<p class="tc-lesson">The lesson beside {datasetName('clinc150')}'s: a catch-all option is what keeps certification safe when traffic shifts. {datasetName('clinc150')}'s task had none, so its off-topic messages went out certified as some other intent.</p>
+				<p class="tc-lesson">The lesson beside {datasetName('clinc150')}'s: a catch-all option is what keeps certification safe when traffic shifts. {datasetName('clinc150')}'s task had none, so until the alarm paused certification, its off-topic messages went out certified as some other intent.</p>
 				<details class="disc">
 					<summary>The {gk.rules.length} rules and their actions</summary>
 					<div class="disc__body">
