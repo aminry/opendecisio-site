@@ -248,7 +248,7 @@ export const plan = [
 
 	// Paths that need hardware this check does not have.
 	// The deploy guides: decisio's commands at the pinned release, from a package, a clone or the release image.
-	{ page: '/docs/deploy/cloud-gpu/', n: 1, mode: 'shown', expect: 'python3.12 -m venv .venv', why: "it needs Linux with one NVIDIA card, which this check does not have; decisio's README measured the same install on 2026-10-09" },
+	{ page: '/docs/deploy/cloud-gpu/', n: 1, mode: 'shown', expect: 'python3.12 -m venv .venv', why: "it needs Linux with one NVIDIA card, which this check does not have; decisio's README timed the same install, of decisio 0.11.0, on 2026-10-09" },
 	{ page: '/docs/deploy/cloud-gpu/', n: 2, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: 'it needs Linux with one NVIDIA card, which this check does not have' },
 	{ page: '/docs/deploy/cloud-gpu/', n: 3, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --base tachara-ai/decisio-gemma-4-31b', needs: 'Linux with one NVIDIA card' },
 	{ page: '/docs/deploy/cloud-gpu/', n: 4, mode: 'shown', expect: '# /etc/systemd/system/decisio.service', why: "decisio wrote it for its docs and has not run it; the options are systemd's documented ones" },
