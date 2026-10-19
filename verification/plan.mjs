@@ -141,6 +141,51 @@ export const plan = [
 	{ page: '/docs/tasks/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/tasks', of: ['/docs/faq/', 2] },
 	{ page: '/docs/images/', n: 1, mode: 'example', expect: 'import base64' },
 	{ page: '/docs/images/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
+	// The use-case recipes, on the stand-in: each asks its question and routes on the certificate (src/lib/use-cases.mjs);
+	// the stand-in certifies nothing, so every answer takes the person's branch, which the assertion accepts like the other.
+	{
+		page: '/docs/use-cases/support-routing/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
+		assert(stdout) {
+			if (!stdout.trim()) throw new Error('the support-routing recipe printed no route');
+		},
+	},
+	{ page: '/docs/use-cases/support-routing/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "support-routing",' },
+	{
+		page: '/docs/use-cases/gatekeeper/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
+		assert(stdout) {
+			if (!stdout.trim()) throw new Error('the gatekeeper recipe printed no route');
+		},
+	},
+	{ page: '/docs/use-cases/gatekeeper/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "gatekeeper",' },
+	{
+		page: '/docs/use-cases/issue-triage/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
+		assert(stdout) {
+			if (!stdout.trim()) throw new Error('the issue-triage recipe printed no route');
+		},
+	},
+	{ page: '/docs/use-cases/issue-triage/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "issue-triage",' },
+	{
+		page: '/docs/use-cases/guardrails/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
+		assert(stdout) {
+			if (!stdout.trim()) throw new Error('the guardrails recipe printed no route');
+		},
+	},
+	{ page: '/docs/use-cases/guardrails/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "guardrails",' },
+	{
+		page: '/docs/use-cases/rag-gate/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
+		assert(stdout) {
+			if (!stdout.trim()) throw new Error('the rag-gate recipe printed no route');
+		},
+	},
+	{ page: '/docs/use-cases/rag-gate/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "rag-gate",' },
+	{
+		page: '/docs/use-cases/document-classification/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
+		assert(stdout) {
+			if (!stdout.trim()) throw new Error('the document-classification recipe printed no route');
+		},
+	},
+	{ page: '/docs/use-cases/document-classification/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "document-classification",' },
+	{ page: '/docs/use-cases/', n: 1, mode: 'same-as', expect: 'import json\nimport urllib.request', of: ['/docs/use-cases/support-routing/', 1] },
 	// Operate and Troubleshoot, on the stand-in.
 	{
 		page: '/docs/operating/', n: 1, mode: 'run', expect: 'until curl -sf http://127.0.0.1:8000/health',

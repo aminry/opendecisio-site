@@ -32,6 +32,7 @@ import { splitParagraph } from './sentences.mjs';
 import { integrationsTable } from './figures/use-from.mjs';
 import { taskGains } from './teach.mjs';
 import { symptomTable } from './figures/run-it.mjs';
+import { proofHtml, value } from './use-cases.mjs';
 
 const parser = unified().use(remarkParse).use(remarkGfm);
 const cache = new Map();
@@ -199,6 +200,28 @@ export default function remarkUpstream(options = {}) {
 			if (node.name !== 'symptoms') return;
 			parent.children.splice(index, 1, { type: 'html', value: symptomTable(node.attributes?.group) });
 			return index + 1;
+		});
+		// :value{name="..."}: a number a page states in its own words, read from its record (src/lib/use-cases.mjs).
+		visit(tree, 'textDirective', (node, index, parent) => {
+			if (node.name !== 'value') return;
+			parent.children.splice(index, 1, { type: 'text', value: value(node.attributes?.name) });
+			return index + 1;
+		});
+		// ::proof{name="..."}: a use case's measured result, read from its record (src/lib/use-cases.mjs).
+		visit(tree, 'leafDirective', (node, index, parent) => {
+			if (node.name !== 'proof') return;
+			parent.children.splice(index, 1, { type: 'html', value: proofHtml(node.attributes?.name) });
+			return index + 1;
+		});
+		// :::fit, two lists, the second with another bullet (* after -) so Markdown keeps them apart: when a use case is a
+		// good fit, and when it is not; one box, side by side.
+		visit(tree, 'containerDirective', (node) => {
+			if (node.name !== 'fit') return;
+			const lists = node.children.filter((c) => c.type === 'list');
+			if (lists.length !== 2) throw new Error(`fit: a :::fit box in ${vfile.path} needs two lists, the good fit and the not (start the second with * so it is not joined to the first)`);
+			const col = (label, list, cls) => ({ type: 'fitCol', data: { hName: 'div', hProperties: { className: ['fit__col', cls] } }, children: [{ type: 'paragraph', data: { hName: 'p', hProperties: { className: ['fit__label'] } }, children: [{ type: 'text', value: label }] }, list] });
+			node.data = { ...node.data, hName: 'div', hProperties: { className: ['fit'] } };
+			node.children = [col('Good fit', lists[0], 'fit__col--yes'), col('Not a good fit', lists[1], 'fit__col--no')];
 		});
 		// ::recorded-label: the line that says which recorded decision, on which box, an answer on the page came from.
 		visit(tree, 'leafDirective', (node, index, parent) => {

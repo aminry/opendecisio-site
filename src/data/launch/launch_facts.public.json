@@ -2194,6 +2194,947 @@
     },
     "examples_per_intent": 10
    }
+  },
+  "issue_triage": {
+   "what": "GitHub issue triage on kubernetes/kubernetes: four questions answered by the frozen model, untaught and after teaching on the repository's own labelled issues (kind, owning SIG, priority, needs-information)",
+   "reporting_sentence": "fitted offline on the readouts the server returns; the live server's head gave the same answer on every item we compared",
+   "reporting_note": "Every figure here is fitted offline on the readouts the server returns; the live server's head gave the same answer on every item we compared. It is not 'measured on the live server'.",
+   "licence_line": "Issues from kubernetes/kubernetes (Apache-2.0), created 2018-01-01 to 2026-09-30 and fetched through the GitHub API on 2026-10-14; used under the repository's licence (GitHub Terms of Service D.6: content added to a repository containing a licence notice is licensed under the same terms). No issue text, user name or e-mail address is shown or stored here; the results are aggregates.",
+   "taught_means": "the grid's `taught_served` arm: what a registered task does today (a head for 10 or more options with 5 examples of each, otherwise per-task calibration, otherwise nothing, by decisio's own cross-validation rule)",
+   "score": {
+    "macro_f1": "macro-F1 over the options (kind, SIG, priority)",
+    "balanced_accuracy": "balanced accuracy over yes and no (needs-information); it is not macro-F1",
+    "accuracy_beside": "accuracy is reported beside the score"
+   },
+   "sets": {
+    "kind": {
+     "question": "kind",
+     "options": 5,
+     "request_set": "issues_ks",
+     "test_items": 1000,
+     "pools": {
+      "teach": 1200,
+      "cert": 800,
+      "test": 1000
+     },
+     "score": "macro_f1",
+     "note": null
+    },
+    "sig": {
+     "question": "owning SIG (sig/*, the 12 most frequent)",
+     "options": 12,
+     "request_set": "issues_ks",
+     "test_items": 1000,
+     "pools": {
+      "teach": 1200,
+      "cert": 800,
+      "test": 1000
+     },
+     "score": "macro_f1",
+     "note": "the `area/*` label family had too few labelled issues to test; the owning SIG (`sig/*`) is asked instead"
+    },
+    "priority": {
+     "question": "priority",
+     "options": 5,
+     "request_set": "issues_prio",
+     "test_items": 787,
+     "pools": {
+      "teach": 936,
+      "cert": 628,
+      "test": 787
+     },
+     "score": "macro_f1",
+     "note": null
+    },
+    "needs_info": {
+     "question": "needs-information (yes or no)",
+     "options": 2,
+     "request_set": "issues_ni",
+     "test_items": 300,
+     "pools": {
+      "teach": 448,
+      "cert": 250,
+      "test": 300
+     },
+     "score": "balanced_accuracy",
+     "note": "positives are the issues that ever carried the needs-information label among triaged issues; 300 test items"
+    }
+   },
+   "by_base": {
+    "gemma_4_31b": {
+     "label": "Gemma 4 31B",
+     "kind": {
+      "question": "kind",
+      "options": 5,
+      "test_items": 1000,
+      "score_name": "macro_f1",
+      "untaught": {
+       "accuracy": {
+        "value": 0.851,
+        "printed": "85.1"
+       },
+       "score": {
+        "value": 0.811719095454,
+        "printed": "81.2"
+       }
+      },
+      "taught": {
+       "n10": {
+        "examples": 10,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.8516,
+         "printed": "85.2",
+         "draws_min": 0.851,
+         "draws_max": 0.854
+        },
+        "score": {
+         "value": 0.8131629394400914,
+         "printed": "81.3",
+         "draws_min": 0.8117190954544297,
+         "draws_max": 0.8156955547748627
+        },
+        "change_points": {
+         "accuracy": 0.1,
+         "score": 0.1
+        },
+        "kept_by_draw": {
+         "calibration": 2,
+         "none": 3
+        },
+        "wording": "Gemma 4 31B, kind: 81.2% untaught, 81.3% after 10 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n50": {
+        "examples": 50,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.8516,
+         "printed": "85.2",
+         "draws_min": 0.851,
+         "draws_max": 0.853
+        },
+        "score": {
+         "value": 0.8123837796473972,
+         "printed": "81.2",
+         "draws_min": 0.8117190954544297,
+         "draws_max": 0.8138362084570762
+        },
+        "change_points": {
+         "accuracy": 0.1,
+         "score": 0.1
+        },
+        "kept_by_draw": {
+         "calibration": 2,
+         "none": 3
+        },
+        "wording": "Gemma 4 31B, kind: 81.2% untaught, 81.2% after 50 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n200": {
+        "examples": 200,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.851,
+         "printed": "85.1",
+         "draws_min": 0.851,
+         "draws_max": 0.851
+        },
+        "score": {
+         "value": 0.8119634153337344,
+         "printed": "81.2",
+         "draws_min": 0.8117190954544297,
+         "draws_max": 0.8120244953035606
+        },
+        "change_points": {
+         "accuracy": 0.0,
+         "score": 0.0
+        },
+        "kept_by_draw": {
+         "calibration": 4,
+         "none": 1
+        },
+        "wording": "Gemma 4 31B, kind: 81.2% untaught, 81.2% after 200 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n1000": {
+        "examples": 1000,
+        "draws": 3,
+        "accuracy": {
+         "value": 0.8516666666666667,
+         "printed": "85.2",
+         "draws_min": 0.851,
+         "draws_max": 0.852
+        },
+        "score": {
+         "value": 0.8123132867369771,
+         "printed": "81.2",
+         "draws_min": 0.8117190954544297,
+         "draws_max": 0.8126103823782509
+        },
+        "change_points": {
+         "accuracy": 0.1,
+         "score": 0.1
+        },
+        "kept_by_draw": {
+         "calibration": 2,
+         "none": 1
+        },
+        "wording": "Gemma 4 31B, kind: 81.2% untaught, 81.2% after 1000 labelled examples (macro-f1; mean of 3 draws, 1000 test items)"
+       }
+      },
+      "source": {
+       "sha256_of_stored_gz": "55c0c5f4234b106ce14d5c7b2a53298299e43084a5df0aa0a2744e4826ba96df",
+       "request_set": "issues_ks"
+      }
+     },
+     "sig": {
+      "question": "owning SIG (sig/*, the 12 most frequent)",
+      "options": 12,
+      "test_items": 1000,
+      "score_name": "macro_f1",
+      "untaught": {
+       "accuracy": {
+        "value": 0.853,
+        "printed": "85.3"
+       },
+       "score": {
+        "value": 0.809535695399,
+        "printed": "81.0"
+       }
+      },
+      "taught": {
+       "n10": {
+        "examples": 10,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.853,
+         "printed": "85.3",
+         "draws_min": 0.853,
+         "draws_max": 0.853
+        },
+        "score": {
+         "value": 0.8095356953990732,
+         "printed": "81.0",
+         "draws_min": 0.8095356953990732,
+         "draws_max": 0.8095356953990732
+        },
+        "change_points": {
+         "accuracy": 0.0,
+         "score": 0.0
+        },
+        "kept_by_draw": {
+         "none": 5
+        },
+        "wording": "Gemma 4 31B, owning SIG (sig/*, the 12 most frequent): 81.0% untaught, 81.0% after 10 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n50": {
+        "examples": 50,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.853,
+         "printed": "85.3",
+         "draws_min": 0.853,
+         "draws_max": 0.853
+        },
+        "score": {
+         "value": 0.8095356953990732,
+         "printed": "81.0",
+         "draws_min": 0.8095356953990732,
+         "draws_max": 0.8095356953990732
+        },
+        "change_points": {
+         "accuracy": 0.0,
+         "score": 0.0
+        },
+        "kept_by_draw": {
+         "none": 5
+        },
+        "wording": "Gemma 4 31B, owning SIG (sig/*, the 12 most frequent): 81.0% untaught, 81.0% after 50 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n200": {
+        "examples": 200,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.853,
+         "printed": "85.3",
+         "draws_min": 0.853,
+         "draws_max": 0.853
+        },
+        "score": {
+         "value": 0.8095356953990732,
+         "printed": "81.0",
+         "draws_min": 0.8095356953990732,
+         "draws_max": 0.8095356953990732
+        },
+        "change_points": {
+         "accuracy": 0.0,
+         "score": 0.0
+        },
+        "kept_by_draw": {
+         "none": 5
+        },
+        "wording": "Gemma 4 31B, owning SIG (sig/*, the 12 most frequent): 81.0% untaught, 81.0% after 200 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n1000": {
+        "examples": 1000,
+        "draws": 3,
+        "accuracy": {
+         "value": 0.8586666666666667,
+         "printed": "85.9",
+         "draws_min": 0.857,
+         "draws_max": 0.862
+        },
+        "score": {
+         "value": 0.8244422631212919,
+         "printed": "82.4",
+         "draws_min": 0.8196908440379852,
+         "draws_max": 0.8312959604976933
+        },
+        "change_points": {
+         "accuracy": 0.6,
+         "score": 1.5
+        },
+        "kept_by_draw": {
+         "head": 3
+        },
+        "wording": "Gemma 4 31B, owning SIG (sig/*, the 12 most frequent): 81.0% untaught, 82.4% after 1000 labelled examples (macro-f1; mean of 3 draws, 1000 test items)"
+       }
+      },
+      "source": {
+       "sha256_of_stored_gz": "ecf6fbf9374b95a49cd1282f5acf3609582cf4d55eff14a68389df5b8636dcdb",
+       "request_set": "issues_ks"
+      }
+     },
+     "priority": {
+      "question": "priority",
+      "options": 5,
+      "test_items": 787,
+      "score_name": "macro_f1",
+      "untaught": {
+       "accuracy": {
+        "value": 0.509529860229,
+        "printed": "51.0"
+       },
+       "score": {
+        "value": 0.404171214405,
+        "printed": "40.4"
+       }
+      },
+      "taught": {
+       "n10": {
+        "examples": 10,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.508259212198221,
+         "printed": "50.8",
+         "draws_min": 0.5019059720457433,
+         "draws_max": 0.5108005082592122
+        },
+        "score": {
+         "value": 0.4060619187623551,
+         "printed": "40.6",
+         "draws_min": 0.40417121440464837,
+         "draws_max": 0.4109849602150941
+        },
+        "change_points": {
+         "accuracy": -0.1,
+         "score": 0.2
+        },
+        "kept_by_draw": {
+         "calibration": 2,
+         "none": 3
+        },
+        "wording": "Gemma 4 31B, priority: 40.4% untaught, 40.6% after 10 labelled examples (macro-f1; mean of 5 draws, 787 test items)"
+       },
+       "n50": {
+        "examples": 50,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.5110546378653112,
+         "printed": "51.1",
+         "draws_min": 0.5095298602287166,
+         "draws_max": 0.5133418043202033
+        },
+        "score": {
+         "value": 0.40832656098914666,
+         "printed": "40.8",
+         "draws_min": 0.407253218851802,
+         "draws_max": 0.41002224414478244
+        },
+        "change_points": {
+         "accuracy": 0.2,
+         "score": 0.4
+        },
+        "kept_by_draw": {
+         "calibration": 5
+        },
+        "wording": "Gemma 4 31B, priority: 40.4% untaught, 40.8% after 50 labelled examples (macro-f1; mean of 5 draws, 787 test items)"
+       },
+       "n200": {
+        "examples": 200,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.510292249047014,
+         "printed": "51.0",
+         "draws_min": 0.5095298602287166,
+         "draws_max": 0.5133418043202033
+        },
+        "score": {
+         "value": 0.40586105159011165,
+         "printed": "40.6",
+         "draws_min": 0.40417121440464837,
+         "draws_max": 0.40932095393968365
+        },
+        "change_points": {
+         "accuracy": 0.1,
+         "score": 0.2
+        },
+        "kept_by_draw": {
+         "calibration": 2,
+         "none": 3
+        },
+        "wording": "Gemma 4 31B, priority: 40.4% untaught, 40.6% after 200 labelled examples (macro-f1; mean of 5 draws, 787 test items)"
+       }
+      },
+      "source": {
+       "sha256_of_stored_gz": "a6e012d1dd9ae2e8c1012dc33ad477b57a85f579301d90602f6d9339badd9041",
+       "request_set": "issues_prio"
+      }
+     },
+     "needs_info": {
+      "question": "needs-information (yes or no)",
+      "options": 2,
+      "test_items": 300,
+      "score_name": "balanced_accuracy",
+      "untaught": {
+       "accuracy": {
+        "value": 0.613333333333,
+        "printed": "61.3"
+       },
+       "score": {
+        "value": 0.613333333333,
+        "printed": "61.3"
+       }
+      },
+      "taught": {
+       "n10": {
+        "examples": 10,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.61,
+         "printed": "61.0",
+         "draws_min": 0.6033333333333334,
+         "draws_max": 0.6133333333333333
+        },
+        "score": {
+         "value": 0.61,
+         "printed": "61.0",
+         "draws_min": 0.6033333333333333,
+         "draws_max": 0.6133333333333333
+        },
+        "change_points": {
+         "accuracy": -0.3,
+         "score": -0.3
+        },
+        "kept_by_draw": {
+         "calibration": 3,
+         "none": 2
+        },
+        "wording": "Gemma 4 31B, needs-information (yes or no): 61.3% untaught, 61.0% after 10 labelled examples (balanced-accuracy; mean of 5 draws, 300 test items)"
+       },
+       "n50": {
+        "examples": 50,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.61,
+         "printed": "61.0",
+         "draws_min": 0.6033333333333334,
+         "draws_max": 0.6133333333333333
+        },
+        "score": {
+         "value": 0.61,
+         "printed": "61.0",
+         "draws_min": 0.6033333333333333,
+         "draws_max": 0.6133333333333333
+        },
+        "change_points": {
+         "accuracy": -0.3,
+         "score": -0.3
+        },
+        "kept_by_draw": {
+         "calibration": 2,
+         "none": 3
+        },
+        "wording": "Gemma 4 31B, needs-information (yes or no): 61.3% untaught, 61.0% after 50 labelled examples (balanced-accuracy; mean of 5 draws, 300 test items)"
+       },
+       "n200": {
+        "examples": 200,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.6053333333333334,
+         "printed": "60.5",
+         "draws_min": 0.6033333333333334,
+         "draws_max": 0.6133333333333333
+        },
+        "score": {
+         "value": 0.6053333333333333,
+         "printed": "60.5",
+         "draws_min": 0.6033333333333333,
+         "draws_max": 0.6133333333333333
+        },
+        "change_points": {
+         "accuracy": -0.8,
+         "score": -0.8
+        },
+        "kept_by_draw": {
+         "calibration": 4,
+         "none": 1
+        },
+        "wording": "Gemma 4 31B, needs-information (yes or no): 61.3% untaught, 60.5% after 200 labelled examples (balanced-accuracy; mean of 5 draws, 300 test items)"
+       }
+      },
+      "source": {
+       "sha256_of_stored_gz": "6281841dc595aed6bb924a88d125e9d93b0b83f6d02127d614d9689b47e92a44",
+       "request_set": "issues_ni"
+      }
+     }
+    },
+    "gemma_4_12b": {
+     "label": "Gemma 4 12B",
+     "kind": {
+      "question": "kind",
+      "options": 5,
+      "test_items": 1000,
+      "score_name": "macro_f1",
+      "untaught": {
+       "accuracy": {
+        "value": 0.863,
+        "printed": "86.3"
+       },
+       "score": {
+        "value": 0.799154265561,
+        "printed": "79.9"
+       }
+      },
+      "taught": {
+       "n10": {
+        "examples": 10,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.8628,
+         "printed": "86.3",
+         "draws_min": 0.862,
+         "draws_max": 0.863
+        },
+        "score": {
+         "value": 0.8003201620670052,
+         "printed": "80.0",
+         "draws_min": 0.7991542655607082,
+         "draws_max": 0.8049837480921932
+        },
+        "change_points": {
+         "accuracy": -0.0,
+         "score": 0.1
+        },
+        "kept_by_draw": {
+         "calibration": 1,
+         "none": 4
+        },
+        "wording": "Gemma 4 12B, kind: 79.9% untaught, 80.0% after 10 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n50": {
+        "examples": 50,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.8628,
+         "printed": "86.3",
+         "draws_min": 0.862,
+         "draws_max": 0.863
+        },
+        "score": {
+         "value": 0.7989483868965785,
+         "printed": "79.9",
+         "draws_min": 0.7981248722400596,
+         "draws_max": 0.7991542655607082
+        },
+        "change_points": {
+         "accuracy": -0.0,
+         "score": -0.0
+        },
+        "kept_by_draw": {
+         "calibration": 1,
+         "none": 4
+        },
+        "wording": "Gemma 4 12B, kind: 79.9% untaught, 79.9% after 50 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n200": {
+        "examples": 200,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.863,
+         "printed": "86.3",
+         "draws_min": 0.863,
+         "draws_max": 0.863
+        },
+        "score": {
+         "value": 0.7991542655607082,
+         "printed": "79.9",
+         "draws_min": 0.7991542655607082,
+         "draws_max": 0.7991542655607082
+        },
+        "change_points": {
+         "accuracy": 0.0,
+         "score": -0.0
+        },
+        "kept_by_draw": {
+         "none": 5
+        },
+        "wording": "Gemma 4 12B, kind: 79.9% untaught, 79.9% after 200 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n1000": {
+        "examples": 1000,
+        "draws": 3,
+        "accuracy": {
+         "value": 0.863,
+         "printed": "86.3",
+         "draws_min": 0.863,
+         "draws_max": 0.863
+        },
+        "score": {
+         "value": 0.7991542655607082,
+         "printed": "79.9",
+         "draws_min": 0.7991542655607082,
+         "draws_max": 0.7991542655607082
+        },
+        "change_points": {
+         "accuracy": 0.0,
+         "score": -0.0
+        },
+        "kept_by_draw": {
+         "none": 3
+        },
+        "wording": "Gemma 4 12B, kind: 79.9% untaught, 79.9% after 1000 labelled examples (macro-f1; mean of 3 draws, 1000 test items)"
+       }
+      },
+      "source": {
+       "sha256_of_stored_gz": "aaffbf380acf447a02a0b40e67b91c02c2eb46c71a5e0524a8ae8177bb2cdbe5",
+       "request_set": "issues_ks"
+      }
+     },
+     "sig": {
+      "question": "owning SIG (sig/*, the 12 most frequent)",
+      "options": 12,
+      "test_items": 1000,
+      "score_name": "macro_f1",
+      "untaught": {
+       "accuracy": {
+        "value": 0.833,
+        "printed": "83.3"
+       },
+       "score": {
+        "value": 0.791529514957,
+        "printed": "79.2"
+       }
+      },
+      "taught": {
+       "n10": {
+        "examples": 10,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.833,
+         "printed": "83.3",
+         "draws_min": 0.833,
+         "draws_max": 0.833
+        },
+        "score": {
+         "value": 0.7915295149568813,
+         "printed": "79.2",
+         "draws_min": 0.7915295149568813,
+         "draws_max": 0.7915295149568813
+        },
+        "change_points": {
+         "accuracy": 0.0,
+         "score": -0.0
+        },
+        "kept_by_draw": {
+         "none": 5
+        },
+        "wording": "Gemma 4 12B, owning SIG (sig/*, the 12 most frequent): 79.2% untaught, 79.2% after 10 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n50": {
+        "examples": 50,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.833,
+         "printed": "83.3",
+         "draws_min": 0.833,
+         "draws_max": 0.833
+        },
+        "score": {
+         "value": 0.7915295149568813,
+         "printed": "79.2",
+         "draws_min": 0.7915295149568813,
+         "draws_max": 0.7915295149568813
+        },
+        "change_points": {
+         "accuracy": 0.0,
+         "score": -0.0
+        },
+        "kept_by_draw": {
+         "none": 5
+        },
+        "wording": "Gemma 4 12B, owning SIG (sig/*, the 12 most frequent): 79.2% untaught, 79.2% after 50 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n200": {
+        "examples": 200,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.833,
+         "printed": "83.3",
+         "draws_min": 0.833,
+         "draws_max": 0.833
+        },
+        "score": {
+         "value": 0.7915295149568813,
+         "printed": "79.2",
+         "draws_min": 0.7915295149568813,
+         "draws_max": 0.7915295149568813
+        },
+        "change_points": {
+         "accuracy": 0.0,
+         "score": -0.0
+        },
+        "kept_by_draw": {
+         "none": 5
+        },
+        "wording": "Gemma 4 12B, owning SIG (sig/*, the 12 most frequent): 79.2% untaught, 79.2% after 200 labelled examples (macro-f1; mean of 5 draws, 1000 test items)"
+       },
+       "n1000": {
+        "examples": 1000,
+        "draws": 3,
+        "accuracy": {
+         "value": 0.8373333333333333,
+         "printed": "83.7",
+         "draws_min": 0.833,
+         "draws_max": 0.842
+        },
+        "score": {
+         "value": 0.8103318392899479,
+         "printed": "81.0",
+         "draws_min": 0.8021718627380731,
+         "draws_max": 0.8163292803714911
+        },
+        "change_points": {
+         "accuracy": 0.4,
+         "score": 1.9
+        },
+        "kept_by_draw": {
+         "head": 3
+        },
+        "wording": "Gemma 4 12B, owning SIG (sig/*, the 12 most frequent): 79.2% untaught, 81.0% after 1000 labelled examples (macro-f1; mean of 3 draws, 1000 test items)"
+       }
+      },
+      "source": {
+       "sha256_of_stored_gz": "53d406cbe288e405acd5600212a35ab07770c1ac41784e2b74259fa55a0e1157",
+       "request_set": "issues_ks"
+      }
+     },
+     "priority": {
+      "question": "priority",
+      "options": 5,
+      "test_items": 787,
+      "score_name": "macro_f1",
+      "untaught": {
+       "accuracy": {
+        "value": 0.479034307497,
+        "printed": "47.9"
+       },
+       "score": {
+        "value": 0.368734980756,
+        "printed": "36.9"
+       }
+      },
+      "taught": {
+       "n10": {
+        "examples": 10,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.4762388818297332,
+         "printed": "47.6",
+         "draws_min": 0.4714104193138501,
+         "draws_max": 0.47903430749682335
+        },
+        "score": {
+         "value": 0.36511244261691844,
+         "printed": "36.5",
+         "draws_min": 0.3595991022914388,
+         "draws_max": 0.36873498075628497
+        },
+        "change_points": {
+         "accuracy": -0.3,
+         "score": -0.4
+        },
+        "kept_by_draw": {
+         "calibration": 2,
+         "none": 3
+        },
+        "wording": "Gemma 4 12B, priority: 36.9% untaught, 36.5% after 10 labelled examples (macro-f1; mean of 5 draws, 787 test items)"
+       },
+       "n50": {
+        "examples": 50,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.47827191867852603,
+         "printed": "47.8",
+         "draws_min": 0.47522236340533675,
+         "draws_max": 0.47903430749682335
+        },
+        "score": {
+         "value": 0.3681372640336418,
+         "printed": "36.8",
+         "draws_min": 0.365746397143069,
+         "draws_max": 0.36873498075628497
+        },
+        "change_points": {
+         "accuracy": -0.1,
+         "score": -0.1
+        },
+        "kept_by_draw": {
+         "calibration": 1,
+         "none": 4
+        },
+        "wording": "Gemma 4 12B, priority: 36.9% untaught, 36.8% after 50 labelled examples (macro-f1; mean of 5 draws, 787 test items)"
+       },
+       "n200": {
+        "examples": 200,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.47954256670902157,
+         "printed": "48.0",
+         "draws_min": 0.4777636594663278,
+         "draws_max": 0.48284625158831
+        },
+        "score": {
+         "value": 0.37143866236535755,
+         "printed": "37.1",
+         "draws_min": 0.3677789785566691,
+         "draws_max": 0.37558261951710487
+        },
+        "change_points": {
+         "accuracy": 0.1,
+         "score": 0.3
+        },
+        "kept_by_draw": {
+         "calibration": 4,
+         "none": 1
+        },
+        "wording": "Gemma 4 12B, priority: 36.9% untaught, 37.1% after 200 labelled examples (macro-f1; mean of 5 draws, 787 test items)"
+       }
+      },
+      "source": {
+       "sha256_of_stored_gz": "06bd6db04f51fe07490d7113efd73631f3dcecac09f9c3e454be09c42ce63bd6",
+       "request_set": "issues_prio"
+      }
+     },
+     "needs_info": {
+      "question": "needs-information (yes or no)",
+      "options": 2,
+      "test_items": 300,
+      "score_name": "balanced_accuracy",
+      "untaught": {
+       "accuracy": {
+        "value": 0.58,
+        "printed": "58.0"
+       },
+       "score": {
+        "value": 0.58,
+        "printed": "58.0"
+       }
+      },
+      "taught": {
+       "n10": {
+        "examples": 10,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.58,
+         "printed": "58.0",
+         "draws_min": 0.58,
+         "draws_max": 0.58
+        },
+        "score": {
+         "value": 0.5800000000000001,
+         "printed": "58.0",
+         "draws_min": 0.5800000000000001,
+         "draws_max": 0.5800000000000001
+        },
+        "change_points": {
+         "accuracy": 0.0,
+         "score": 0.0
+        },
+        "kept_by_draw": {
+         "none": 5
+        },
+        "wording": "Gemma 4 12B, needs-information (yes or no): 58.0% untaught, 58.0% after 10 labelled examples (balanced-accuracy; mean of 5 draws, 300 test items)"
+       },
+       "n50": {
+        "examples": 50,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.596,
+         "printed": "59.6",
+         "draws_min": 0.58,
+         "draws_max": 0.6
+        },
+        "score": {
+         "value": 0.596,
+         "printed": "59.6",
+         "draws_min": 0.5800000000000001,
+         "draws_max": 0.6
+        },
+        "change_points": {
+         "accuracy": 1.6,
+         "score": 1.6
+        },
+        "kept_by_draw": {
+         "calibration": 4,
+         "none": 1
+        },
+        "wording": "Gemma 4 12B, needs-information (yes or no): 58.0% untaught, 59.6% after 50 labelled examples (balanced-accuracy; mean of 5 draws, 300 test items)"
+       },
+       "n200": {
+        "examples": 200,
+        "draws": 5,
+        "accuracy": {
+         "value": 0.5973333333333334,
+         "printed": "59.7",
+         "draws_min": 0.5933333333333334,
+         "draws_max": 0.6066666666666667
+        },
+        "score": {
+         "value": 0.5973333333333333,
+         "printed": "59.7",
+         "draws_min": 0.5933333333333333,
+         "draws_max": 0.6066666666666667
+        },
+        "change_points": {
+         "accuracy": 1.7,
+         "score": 1.7
+        },
+        "kept_by_draw": {
+         "calibration": 5
+        },
+        "wording": "Gemma 4 12B, needs-information (yes or no): 58.0% untaught, 59.7% after 200 labelled examples (balanced-accuracy; mean of 5 draws, 300 test items)"
+       }
+      },
+      "source": {
+       "sha256_of_stored_gz": "223edb9804b29449ab24c141238d26ac3105e304e025d9c2a760a5a6057a28ac",
+       "request_set": "issues_ni"
+      }
+     }
+    }
+   },
+   "reading": {
+    "largest_accuracy_change_points": 1.7,
+    "plain": "On these four questions the frozen model is already at its level untaught: teaching moves accuracy by at most the figure above, and the changes that exist are from per-task calibration (which never changes the answer) except the 12-option SIG question at 1,000 examples, where the head is applied. Teaching on these sets is a calibration result more than an accuracy result."
+   }
   }
  }
 }

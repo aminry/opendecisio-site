@@ -2,8 +2,7 @@
 // other page must follow it: a figure at the top, a TL;DR with its commands, a "What next" list, reading time and date.
 // A page with a `shape` (`guide` or `reference`) follows the rewrite's page shapes in docs/STYLE_GUIDE.md instead.
 // The docs' groups, in the order of the sidebar, the llms.txt index and the group pages' links, as the rewrite's
-// structure has them (docs/STYLE_GUIDE.md): Get started, How-to guides, Reference, How it works; Use cases joins when
-// its first page does.
+// structure has them (docs/STYLE_GUIDE.md): Get started, Use cases, How-to guides, Reference, How it works.
 export const docsGroups = [
 	{
 		label: 'Get started',
@@ -11,6 +10,18 @@ export const docsGroups = [
 			{ slug: 'docs', label: 'Get started', shape: 'guide' },
 			{ slug: 'docs/use-from', label: 'Call it from your code', shape: 'guide' },
 			{ slug: 'docs/migrating', label: 'Move from System One', shape: 'guide' },
+		],
+	},
+	{
+		label: 'Use cases',
+		items: [
+			{ slug: 'docs/use-cases', label: 'Use cases', shape: 'guide' },
+			{ slug: 'docs/use-cases/support-routing', label: 'Support routing', shape: 'guide' },
+			{ slug: 'docs/use-cases/gatekeeper', label: 'Coding-agent gatekeeper', shape: 'guide' },
+			{ slug: 'docs/use-cases/issue-triage', label: 'Issue triage', shape: 'guide' },
+			{ slug: 'docs/use-cases/guardrails', label: 'Guardrails', shape: 'guide' },
+			{ slug: 'docs/use-cases/rag-gate', label: 'RAG: answer or abstain', shape: 'guide' },
+			{ slug: 'docs/use-cases/document-classification', label: 'Document classification', shape: 'guide' },
 		],
 	},
 	{

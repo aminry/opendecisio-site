@@ -42,6 +42,7 @@ const ollamaRequest = (model) => `curl http://localhost:11434/v1/systemone \\
 
 import { recordedRequest, recordedResponse } from './docs-figures.mjs';
 import { pin, readUpstream } from './upstream.mjs';
+import { recipeIds, routeScript, teachBody } from './use-cases.mjs';
 
 // The recorded decision of the docs' first pages (the launch facts (launch_facts.public.json), figures.recorded_decisions), as a request
 // to a server on this machine. The body is indented JSON between single quotes, so no value may hold a single quote.
@@ -205,4 +206,10 @@ export function siteBlock(name) {
 	const b = siteBlocks[name];
 	if (!b) throw new Error(`site-blocks: no block named "${name}"`);
 	return b;
+}
+
+// The use-case recipes: each one's routing script and its registration (src/lib/use-cases.mjs).
+for (const id of recipeIds) {
+	Object.defineProperty(siteBlocks, `route-${id}`, { get: () => ({ lang: 'python', text: routeScript(id) }), enumerable: true });
+	Object.defineProperty(siteBlocks, `teach-${id}`, { get: () => ({ lang: 'text', text: teachBody(id) }), enumerable: true });
 }

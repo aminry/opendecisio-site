@@ -1811,3 +1811,38 @@ a.fig__card:hover {
 	stroke: var(--sl-color-accent);
 	stroke-dasharray: none;
 }
+
+/* A use case's one "Good fit / Not a good fit" box: two columns, side by side when there is room. */
+.sl-markdown-content .fit {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+	gap: 1rem 1.5rem;
+	margin: 1.5rem 0;
+	padding: 1rem 1.25rem;
+	border: 1px solid var(--sl-color-gray-5);
+	border-radius: 12px;
+}
+
+.sl-markdown-content .fit > * {
+	margin-top: 0;
+}
+
+.sl-markdown-content .fit__label {
+	margin: 0 0 0.4rem;
+	font: 600 0.75rem/1.2 var(--d-font-mono, 'Geist Mono Site', monospace);
+	letter-spacing: 0.04em;
+	color: var(--sl-color-gray-3);
+}
+
+.sl-markdown-content .fit__col--yes .fit__label {
+	color: var(--sl-color-accent);
+}
+
+.sl-markdown-content .fit ul {
+	margin: 0;
+}
+
+/* A use case's measured result. */
+.sl-markdown-content .proof b {
+	font-variant-numeric: tabular-nums;
+}
