@@ -205,24 +205,13 @@ export const plan = [
 			if (!/^200$/m.test(stdout)) throw new Error('/health did not answer 200');
 		},
 	},
-	// Understand, on the stand-in.
+	// How it works, and the questions page, on the stand-in.
+	{ page: '/docs/how-it-works/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/', 3] },
+	{ page: '/docs/how-it-works/', n: 2, mode: 'same-as', expect: '{\n  "answers": {', of: ['/docs/', 4] },
 	{
-		page: '/docs/how-it-works/', n: 1, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone',
+		page: '/docs/faq/', n: 1, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone',
 		assert(stdout) {
 			if (typeof json(stdout).answers?.urgent?.noul !== 'number') throw new Error('the one yes/no question was not answered with a probability');
-		},
-	},
-	{ page: '/docs/faq/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/how-it-works/', 1] },
-	{
-		page: '/docs/probability/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
-		assert(stdout) {
-			if (!/^likeliest: \S+$/m.test(stdout) || !/^sum of probabilities: 1(\.0)?$/m.test(stdout)) throw new Error('the probabilities of a choice did not add up to 1');
-		},
-	},
-	{
-		page: '/docs/repeatability/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request',
-		assert(stdout) {
-			if (!/^distinct answers in 5 sends: 1$/m.test(stdout)) throw new Error('five identical requests did not get one answer');
 		},
 	},
 	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
@@ -322,7 +311,6 @@ export const plan = [
 	{ page: '/docs/deploy/mac/', n: 6, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma', models: ['aminroudaki/decisio-gemma', 'aminroudaki/decisio'], needs: '0.35.1', assert: pulled },
 	{ page: '/docs/deploy/mac/', n: 7, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma'], needs: '0.35.1', assert: ticketAnswers },
 	{ page: '/docs/bases/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', needs: 'an NVIDIA card', record: 'runs/2026-10-04_gemma-base/' },
-	{ page: '/docs/bases/', n: 2, mode: 'same-as', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', of: ['/docs/bases/', 1] },
 
 	{ page: '/docs/upgrade-notes/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b', needs: 'an NVIDIA card, and for the container the NVIDIA Container Toolkit' },
 
@@ -330,8 +318,7 @@ export const plan = [
 	{ page: '/docs/api/', n: 2, mode: 'example', expect: '{"model": "decisio-gemma-4-31b-it-letters",' },
 	{ page: '/docs/api/', n: 3, mode: 'example', expect: '{"id": "ticket-routing",' },
 	{ page: '/docs/api/', n: 4, mode: 'example', expect: '{"id": "...",' },
-	{ page: '/docs/flags/', n: 1, mode: 'same-as', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', of: ['/docs/bases/', 1] },
-	{ page: '/docs/flags/', n: 2, mode: 'example', expect: 'uv run python -m decisio.serve.vllm_engine [flags]' },
+	{ page: '/docs/flags/', n: 1, mode: 'example', expect: 'uv run python -m decisio.serve.vllm_engine [flags]' },
 	// Move from System One: decisio's docs/migrating.md blocks, TypeSafe's SDK against the stand-in, then the two reads.
 	{ page: '/docs/migrating/', n: 1, mode: 'run', expect: 'export TYPESAFE_BASE_URL=', note: 'sets the variables the SDK reads' },
 	{

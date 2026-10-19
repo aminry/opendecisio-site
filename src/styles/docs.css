@@ -254,27 +254,6 @@ h1#_top {
 	fill: var(--sl-color-gray-3);
 }
 
-.dg-read {
-	fill: var(--sl-color-accent);
-}
-
-.dg-cached {
-	fill: var(--sl-color-accent-low);
-	stroke: var(--sl-color-accent);
-}
-
-.dg-kept {
-	fill: var(--sl-color-accent);
-}
-
-.dg-esc {
-	fill: #8c97a8;
-}
-
-:root[data-theme='light'] .dg-esc {
-	fill: #667386;
-}
-
 @media (prefers-reduced-motion: no-preference) {
 	.dg-arrow {
 		stroke-dasharray: 1;
@@ -770,7 +749,6 @@ h1#_top {
 }
 
 .fig__list,
-.fig__routes,
 .fig__cards,
 .fig__tick {
 	margin: 0;
@@ -784,14 +762,11 @@ h1#_top {
 }
 
 .sl-markdown-content .fig__list li,
-.sl-markdown-content .fig__routes li,
 .sl-markdown-content .fig__cards li {
 	margin: 0;
 }
 
-.fig__list a,
-.fig__routes a,
-.fig__routes li > div {
+.fig__list a {
 	display: grid;
 	gap: 0.15rem;
 	padding: 0.6rem 0.8rem;
@@ -803,41 +778,13 @@ h1#_top {
 	font-size: 0.8rem;
 }
 
-.fig__list a:hover,
-.fig__routes a:hover {
+.fig__list a:hover {
 	border-color: var(--sl-color-accent);
 }
 
 .fig__list b {
 	font-size: 0.95rem;
 	color: var(--sl-color-accent);
-}
-
-.fig__routes {
-	display: grid;
-	gap: 0.4rem;
-}
-
-.fig__verbs {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.25rem 0.75rem;
-}
-
-.fig__verbs code {
-	font: 0.8rem var(--d-font-mono, 'Geist Mono Site', monospace);
-	color: var(--sl-color-white);
-	background: none;
-	padding: 0;
-}
-
-.fig__verbs code b {
-	color: var(--sl-color-accent);
-	font-weight: 600;
-}
-
-.fig__what {
-	font-size: 0.8rem;
 }
 
 /* A client change, as a diff. */
@@ -1047,7 +994,7 @@ h1#_top {
 	font-variant-numeric: tabular-nums;
 }
 
-/* The threshold slider. */
+/* The certify slider: the range, its stops and the bar it moves. */
 .th {
 	display: grid;
 	gap: 0.6rem;
@@ -1175,55 +1122,6 @@ h1#_top {
 	color: var(--sl-color-black);
 }
 
-.fig__groups {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-	gap: 0.6rem;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.sl-markdown-content .fig__groups li {
-	margin: 0;
-}
-
-.fig__groups a {
-	display: grid;
-	gap: 0.3rem;
-	height: 100%;
-	padding: 0.7rem 0.85rem;
-	border: 1px solid var(--sl-color-gray-5);
-	border-radius: 10px;
-	background: var(--sl-color-gray-6);
-	text-decoration: none;
-}
-
-.fig__groups a:hover {
-	border-color: var(--sl-color-accent);
-}
-
-.fig__groups b {
-	color: var(--sl-color-white);
-}
-
-.fig__n {
-	font: 0.72rem var(--d-font-mono, 'Geist Mono Site', monospace);
-	color: var(--sl-color-accent);
-}
-
-.fig__chips {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.25rem;
-}
-
-.fig__chips code {
-	font-size: 0.68rem;
-	padding: 0.1rem 0.35rem;
-	color: var(--sl-color-gray-2);
-}
-
 .fig__list--tight li div {
 	display: grid;
 	gap: 0.1rem;
@@ -1320,19 +1218,6 @@ h1#_top {
 	fill: var(--base);
 }
 
-.fig__bases {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-	gap: 0.7rem;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.sl-markdown-content .fig__bases li {
-	margin: 0;
-}
-
 .fig__base {
 	display: grid;
 	gap: 0.4rem;
@@ -1347,11 +1232,6 @@ h1#_top {
 .fig__base b {
 	font-size: 1.05rem;
 	color: var(--sl-color-white);
-}
-
-.fig__tag {
-	font-size: 0.8rem;
-	color: var(--sl-color-gray-2);
 }
 
 .fig__base dl {
@@ -1373,99 +1253,10 @@ h1#_top {
 	color: var(--sl-color-white);
 }
 
-.fig__matrix {
-	display: grid;
-	gap: 0.4rem;
-	font-size: 0.8rem;
-}
-
-.fig__mrow {
-	display: grid;
-	grid-template-columns: 8rem repeat(4, minmax(0, 1fr));
-	gap: 0.4rem;
-}
-
-.fig__mrow > span {
-	padding: 0.5rem 0.6rem;
-	border: 1px solid var(--sl-color-gray-5);
-	border-radius: 8px;
-	background: var(--sl-color-gray-6);
-	color: var(--sl-color-gray-2);
-}
-
-.fig__mhead > span {
-	background: none;
-	border: 0;
-	font: 500 0.68rem var(--d-font-mono, 'Geist Mono Site', monospace);
-	text-transform: uppercase;
-	letter-spacing: 0.08em;
-	color: var(--sl-color-gray-3);
-	padding-block: 0;
-}
-
 .fig__mbase {
 	font-weight: 650;
 	color: var(--sl-color-white);
 	border-left: 3px solid var(--base) !important;
-}
-
-@media (max-width: 56rem) {
-	.fig__mrow {
-		grid-template-columns: minmax(0, 1fr);
-	}
-
-	.fig__mhead {
-		display: none;
-	}
-
-	.fig__mrow > span[data-col]::before {
-		content: attr(data-col) ': ';
-		font-weight: 650;
-		color: var(--sl-color-gray-3);
-	}
-}
-
-.fig__map {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-	gap: 0.5rem;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.sl-markdown-content .fig__map li {
-	margin: 0;
-}
-
-.fig__map a {
-	display: flex;
-	align-items: center;
-	gap: 0.6rem;
-	height: 100%;
-	padding: 0.55rem 0.75rem;
-	border: 1px solid var(--sl-color-gray-5);
-	border-radius: 10px;
-	background: var(--sl-color-gray-6);
-	text-decoration: none;
-	color: var(--sl-color-gray-1);
-	font-size: 0.85rem;
-}
-
-.fig__map a:hover {
-	border-color: var(--sl-color-accent);
-}
-
-.fig__num {
-	display: inline-grid;
-	place-items: center;
-	flex: none;
-	width: 1.5rem;
-	height: 1.5rem;
-	border-radius: 50%;
-	background: var(--sl-color-accent-low);
-	font: 600 0.72rem var(--d-font-mono, 'Geist Mono Site', monospace);
-	color: var(--sl-color-white);
 }
 
 .fig__chiplist {
@@ -1845,4 +1636,11 @@ a.fig__card:hover {
 /* A use case's measured result. */
 .sl-markdown-content .proof b {
 	font-variant-numeric: tabular-nums;
+}
+
+/* The where-it-runs panels: the guide each one links to, under its engine. */
+.sl-markdown-content .fig__go {
+	margin-top: 0.4rem;
+	font-size: var(--sl-text-xs);
+	color: var(--sl-color-accent);
 }

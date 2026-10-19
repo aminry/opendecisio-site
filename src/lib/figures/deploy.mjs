@@ -96,8 +96,26 @@ ${r.weights ? `<rect class="f-bar" x="${x0}" y="${y}" width="${Number(r.weights)
 	});
 }
 
+
+/** The same server everywhere, on four engines: each panel names its engine and links its guide. */
+function layouts() {
+	const panels = [
+		{ title: 'One NVIDIA card', engine: 'stock vLLM with decisio\'s plugin', href: '/docs/deploy/cloud-gpu/', guide: 'On a cloud GPU' },
+		{ title: 'Docker', engine: 'vLLM\'s release image with decisio inside', href: '/docs/deploy/docker/', guide: 'With Docker' },
+		{ title: 'A Mac', engine: 'MLX, from an MLX build of the model', href: '/docs/deploy/mac/', guide: 'On a Mac or a laptop' },
+		{ title: 'Any machine, for development', engine: 'a small model on the CPU', href: '/docs/deploy/development/', guide: 'For development' },
+	];
+	const body = `<ul class="fig__cards fig__cards--wide">${panels.map((p) => `<li><a class="fig__card" href="${p.href}"><b>${esc(p.title)}</b><span>${esc(p.engine)}</span><span class="fig__go">${esc(p.guide)}</span></a></li>`).join('')}</ul>`;
+	return panel({
+		name: 'layouts', label: 'Where it runs', title: 'The same server and the same routes everywhere; only the engine under it changes.',
+		desc: `The same decisio server and routes on four engines: ${panels.map((p) => `${p.title}, ${p.engine}`).join('; ')}. Each links to its deploy guide.`,
+		body, interactive: true, legend: 'Each panel links to its guide.',
+	});
+}
+
 export const deployFigures = {
 	'layout-gpu': layoutGpu,
 	'layout-docker': layoutDocker,
 	'mac-memory': macMemory,
+	layouts,
 };

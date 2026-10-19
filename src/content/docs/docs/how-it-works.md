@@ -1,74 +1,76 @@
 ---
 title: How it works
-description: A question becomes one prompt and is answered in one forward pass, read at one position; the state is read once and shared.
+description: Send a text and your questions; decisio reads the text once and gives a probability for every option, in one call, with no text generated.
 ---
 
-<!-- Site-written: the figure, the TL;DR, the glossary, the headings and the links, and the diagrams drawn at build time from launch_facts.public.json and the README (src/lib/diagrams.mjs). The mechanism is the README's "How it works" at the pinned release. -->
+<!-- Site-written: the one visual page of how decisio works, merging How it works, What the probability means and Repeatability. The diagrams are drawn at build time (src/lib/diagrams.mjs, src/lib/figures/); the request and its answer are the first recorded decision; the facts are decisio's README, docs/cli.md, docs/running.md, docs/tasks.md and EVAL_CARD.md at the pinned release (src/config/sourced.mjs checks them). -->
 
-Most language-model APIs write text and make you parse it.
-Decisio asks the model one question at a time and reads its answer straight off the model's output, so the answer is a probability for every option, and nothing is generated.
+::covers{links="README.md#how-it-works"}
 
-::figure{name="one-pass"}
+Send one request with a text and your questions, and get a probability for every option back, with no text generated.
+A support ticket and three questions about it:
 
-## TL;DR
+::site-block{name="first-decision-request"}
 
-With a server running ([Get started](/docs/) starts one), one yes/no question is one prompt and one pass:
+::site-block{name="first-decision-response"}
 
-```bash
-curl http://127.0.0.1:8000/v1/systemone \
-  -H 'Content-Type: application/json' \
-  -d '{"state": "I was charged twice for October. Please refund one.", "questions": {"urgent": {"type": "noul"}}}'
-# {"model": "...", "answers": {"urgent": {"type": "noul", "noul": ...}}, "usage": {"input_tokens": ..., "output_tokens": ...}}
-```
+::recorded-label
 
-`usage.output_tokens` is one per question: the "token" is the letter that was read.
-
-:::glossary
-
-| Word | Meaning |
-| --- | --- |
-| forward pass | one run of the model over a prompt, which is all a question costs |
-| readout | the model's distribution over the option letters at the answer's position |
-| prefix cache | where the state's read is kept, so every question about it starts from there |
-| hidden state | the model's internal representation at the answer position, which an intent head reads |
-
-:::
-
-## 1. The mechanism
-
-::upstream{file="README.md" section="How it works"}
-
-## 2. A request
-
-One request carries a state, such as a support ticket, and the questions to ask about it.
-On the default Gemma 4 31B the server scores all of a request's questions together in one batch and writes no text; the Gemma 4 12B and Qwen bases answer them one at a time by default.
+## 1. The request flow
 
 ::diagram{name="request-flow"}
 
-## 3. The cache
+- The text is read once per request, and every question is answered from that read.
+- On the default model the questions are answered together; on the other two, one after another. Either way they pick the same options on every item measured.
+- A later request about the same text starts from what was read, so it is quick.
 
-The state is read once per request, and its questions are scored from that one read.
-A later request about the same state starts from the cache, which is why asking many questions about one document is cheap.
+## 2. One decision and its probabilities
 
-::diagram{name="cache-timeline"}
+::figure{name="one-pass"}
 
-## 4. The threshold
+Each question becomes one prompt that ends where the answer goes, and decisio reads the model's probability for each option at that point.
+The probabilities add up to 1, and three things shape them:
 
-Every answer carries a probability for each option.
-Keep the answers above a threshold you pick and send the rest to a person or a larger model.
-The tradeoff is yours to set from your own labelled items: how well the number separates right from wrong depends on your questions.
+| What | Where it comes from |
+| --- | --- |
+| The model's own setting | fitted once per model; it never changes which option is likeliest |
+| Your task's correction | learned from your labelled examples, and kept only when it helps |
+| The certified threshold | set when you certify a task: answers at or above it are certified |
 
-::diagram{name="routing-threshold"}
+A task's correction makes the probabilities more honest: on six held-out tasks, 20 labelled examples each lowered the calibration error from 0.058 to 0.037.
 
-## 5. The bases
+## 3. Teach, then certify, then route
 
-One flag picks the model.
-The routes and the calibration are the same for each.
+::figure{name="teach-flow-all"}
 
-::diagram{name="bases"}
+On the support inbox, :value{name="inbox-certified-5"} of the messages were answered on their own at a 5% error target ([Certify answers](/docs/tasks/certify/)).
+
+- After upgrading decisio, certify your tasks again.
+- A certificate covers one task on one serving setup. Certify again when you change either.
+
+## 4. Where it runs
+
+::figure{name="layouts"}
+
+## What repeats
+
+| Model | Asked again, on the same server | Many questions in one request | After a restart |
+| --- | --- | --- | --- |
+| Gemma 4 31B | exactly, on a freshly started server; on one that has already answered, 5 of 200 moved, by at most 0.031, with no top answer changed | the same choice on every item measured; probabilities within 0.0073 | not promised |
+| Gemma 4 12B | a first read and a cached read can differ, by up to 0.113 | the same choice; probabilities within 0.035 | not promised |
+| Qwen3.6-35B-A3B | the same probabilities every time | the same probabilities as each question on its own | an earlier record matched in most starts measured |
+
+The top answer is stable; exact numbers repeat only on one running server.
+
+## Under the hood
+
+- decisio runs on stock vLLM 0.31.0: a plugin registers its model classes, and no patch is needed.
+- Every model is an official checkpoint, frozen: no training, no fine-tuning, no adapter.
+- A taught task's intent head reads the model's internal representation of the text at the answer position.
+- On a Mac, the MLX engine answers each question on its own from one shared read of the text.
 
 ## What next
 
-- [Choosing a base](/docs/bases/): which model to serve, and why.
-- [What the probability means](/docs/probability/): temperatures, calibration, and what was measured.
-- [Scale](/docs/scale/): one read, then every question.
+- [Teach a task](/docs/tasks/): teach decisio your question from labelled examples.
+- [Certify answers](/docs/tasks/certify/): the promise behind a certified answer.
+- [Choosing a model](/docs/bases/): which of the three models to serve.

@@ -44,14 +44,14 @@ export const docsGroups = [
 	{
 		label: 'Reference',
 		items: [
-			{ slug: 'docs/api', label: 'HTTP API' },
-			{ slug: 'docs/flags' },
-			{ slug: 'docs/bases' },
+			{ slug: 'docs/api', label: 'HTTP API', shape: 'reference' },
+			{ slug: 'docs/flags', label: 'Server flags', shape: 'reference' },
+			{ slug: 'docs/bases', label: 'Choosing a model', shape: 'reference' },
 			{ slug: 'docs/limits', label: 'Requirements and limits', shape: 'reference' },
 			{ slug: 'docs/glossary', shape: 'reference' },
-			{ slug: 'docs/releases' },
+			{ slug: 'docs/releases', label: 'Release notes', shape: 'reference' },
 			{ slug: 'docs/upgrade-notes', label: 'Upgrade notes', shape: 'reference' },
-			{ slug: 'docs/evaluation-card' },
+			{ slug: 'docs/evaluation-card', label: 'Evaluation card', shape: 'reference' },
 			{ slug: 'docs/comparison' },
 			{ slug: 'docs/faq', label: 'Questions' },
 		],
@@ -59,9 +59,7 @@ export const docsGroups = [
 	{
 		label: 'How it works',
 		items: [
-			{ slug: 'docs/how-it-works' },
-			{ slug: 'docs/probability', label: 'What the probability means' },
-			{ slug: 'docs/repeatability' },
+			{ slug: 'docs/how-it-works', label: 'How it works', shape: 'guide' },
 			{ slug: 'docs/demos', legacy: true },
 		],
 	},

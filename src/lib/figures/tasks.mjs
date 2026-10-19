@@ -18,7 +18,7 @@ const STEPS = [
 function teachFlow(on) {
 	const box = (s, i) => {
 		const x = 12 + i * 236;
-		const lit = s.id === on || (on === 'drift' && s.id === 'route');
+		const lit = on !== 'all' && (s.id === on || (on === 'drift' && s.id === 'route'));
 		return `<rect class="f-node${lit ? ' f-node--on' : ''}" x="${x}" y="12" width="208" height="104" rx="12"/>
 <text class="ft ft-b" x="${x + 16}" y="40">${esc(s.title)}</text>
 ${s.lines.map((l, j) => `<text class="ft ft-s" x="${x + 16}" y="${64 + j * 18}">${esc(l)}</text>`).join('')}
@@ -29,7 +29,7 @@ ${i < STEPS.length - 1 ? `<path class="f-line" d="M${x + 208} 64L${x + 236} 64" 
 <text class="ft ft-s" x="340" y="166">the server suspends certificates when traffic shifts</text>
 <path class="f-frame" d="M480 116L480 136"/>`;
 	const body = `<svg class="fig__svg" viewBox="0 0 720 196" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><marker id="tf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-head" d="M0 0L10 5L0 10z"/></marker></defs>${STEPS.map(box).join('')}${watch}</svg>`;
-	const page = { teach: 'This page is the first step.', certify: 'This page is the second step.', drift: 'This page is the watch over the third.' }[on];
+	const page = { teach: 'This page is the first step.', certify: 'This page is the second step.', drift: 'This page is the watch over the third.', all: 'Teach a task, Certify answers and Watch for drift each take one of these.' }[on];
 	return panel({
 		name: `teach-flow-${on}`, label: 'Teach and trust', title: 'Teach the question, certify its answers, route on the certificate, and let the server watch.',
 		desc: `Three steps and a watch. 1, teach: your labelled examples fit a correction to your question. 2, certify: examples held back set a threshold with an error target. 3, route: certified answers act on their own and the rest go to a person. The server watches the traffic and suspends certificates when it shifts. ${page}`,
@@ -124,6 +124,7 @@ export const tasksFigures = {
 	'teach-flow-teach': () => teachFlow('teach'),
 	'teach-flow-certify': () => teachFlow('certify'),
 	'teach-flow-drift': () => teachFlow('drift'),
+	'teach-flow-all': () => teachFlow('all'),
 	'certify-slider': certifySlider,
 	'drift-replay': drift,
 };

@@ -144,7 +144,10 @@ export function issueTriage() {
 
 /** A value a page names in its own words, read from its record (`:value{name="..."}`). */
 export function value(name) {
-	const v = issueTriage().values[name];
+	const ib = tcData().inbox;
+	const t5 = ib.targets['0.05'] ?? fail('the inbox has no 5% certificate');
+	const others = { 'inbox-certified-5': pct(t5.covered / ib.test_n) };
+	const v = { ...issueTriage().values, ...others }[name];
 	if (v === undefined) fail(`no value "${name}"`);
 	return v;
 }
