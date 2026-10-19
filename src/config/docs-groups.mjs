@@ -52,7 +52,6 @@ export const docsGroups = [
 			{ slug: 'docs/releases', label: 'Release notes', shape: 'reference' },
 			{ slug: 'docs/upgrade-notes', label: 'Upgrade notes', shape: 'reference' },
 			{ slug: 'docs/evaluation-card', label: 'Evaluation card', shape: 'reference' },
-			{ slug: 'docs/faq', label: 'Questions' },
 		],
 	},
 	{

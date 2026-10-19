@@ -69,7 +69,7 @@ function standingLines() {
 	return {
 		heads: pick(/^(The )?[Ii]ntent heads use labelled examples/, 'the intent heads'),
 		calibration: pick(/^Calibration on JevBench/, 'calibration'),
-		card: pick(/EVAL_CARD\.md has the full tables/, 'the evaluation card'),
+		card: pick(/(EVAL_CARD\.md|Evaluation card) has the full tables/, 'the evaluation card'),
 	};
 }
 

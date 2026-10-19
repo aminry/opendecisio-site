@@ -6,6 +6,8 @@ import { data as tcData, baseName } from './teach-certify.mjs';
 import { readUpstream } from './upstream.mjs';
 import { facts } from './launch.mjs';
 import { recordedValues } from './recorded.mjs';
+import { runOf } from './bench-page.mjs';
+import { setupLine } from './demos.mjs';
 
 const fail = (what) => { throw new Error(`use-cases: ${what}`); };
 const pct = (x, d = 1) => `${(x * 100).toFixed(d)}%`;
@@ -143,11 +145,40 @@ export function issueTriage() {
 	};
 }
 
+// --- How many labelled examples a recipe needs -------------------------------------------------------------------------
+
+/**
+ * The fewest labelled examples a recipe can be certified from at 5%: the server holds back half of them (docs/tasks.md,
+ * "half by default"), a 5% certificate needs 59 held back (docs/tasks.md's table at the default 90%), and the half it
+ * teaches from needs 10 per option for the intent head (the README). A yes/no question has no intent head.
+ */
+export function floor(id) {
+	const tasks = readUpstream('docs/tasks.md');
+	const held = Number((/^\| 0\.05 \| (\d+) \| \d+ \|$/m.exec(tasks) ?? fail("docs/tasks.md's table no longer gives the fewest held-back examples at 0.05"))[1]);
+	if (!/\(half by default\)/.test(tasks)) fail('docs/tasks.md no longer says the server holds back half the examples');
+	const per = Number((/\((\d+) per option for the intent head, and \d+ held out to certify at the defaults/.exec(readUpstream('README.md')) ?? fail('the README no longer says how many examples per option the intent head needs'))[1]);
+	const r = recipe(id);
+	const options = r.type === 'noul' ? 0 : Object.keys(r.criteria).length;
+	const total = 2 * Math.max(held, per * options);
+	return { held, per, options, total };
+}
+
+const FLOOR_NOUN = { 'support-routing': 'tickets', gatekeeper: 'commands', 'issue-triage': 'issues', guardrails: 'messages', 'rag-gate': 'question and passage pairs', 'document-classification': 'documents' };
+
+/** The recipe's floor in one sentence. */
+const floorSentence = (id) => {
+	const f = floor(id);
+	const noun = FLOOR_NOUN[id] ?? fail(`no noun for ${id}'s examples`);
+	const teach = f.options && f.per * f.options > f.held ? `; the other half teaches, at ${f.per} per option for this question's ${f.options} options` : '';
+	return `Send at least ${f.total.toLocaleString('en-US')} labelled ${noun}. The server holds back half to certify, and a 5% certificate needs ${f.held} of those${teach}. More examples certify a larger share.`;
+};
+
 /** A value a page names in its own words, read from its record (`:value{name="..."}`). */
 export function value(name) {
 	const ib = tcData().inbox;
 	const t5 = ib.targets['0.05'] ?? fail('the inbox has no 5% certificate');
 	const others = { 'inbox-certified-5': pct(t5.covered / ib.test_n) };
+	for (const id of Object.keys(RECIPES)) others[`floor-${id}`] = floorSentence(id);
 	const v = { ...issueTriage().values, ...others, ...recordedValues() }[name];
 	if (v === undefined) fail(`no value "${name}"`);
 	return v;
@@ -161,7 +192,7 @@ const PROOFS = {
 		const triage = /^\| Gemma 4 31B \| ([\d.]+)% \[[^\]]+\] \| ([\d.]+)% \[/m.exec(readUpstream('docs/demos/README.md')) ?? fail("docs/demos/README.md's triage table has no 31B row");
 		return [
 			`<b>${pct(t.covered / ib.test_n)}</b> of a support inbox's messages answered on their own at a 5% error target, ${pct(t.errors / t.covered)} of them wrong: BANKING77's 77 intents, ${baseName(ib.model)} taught with ${ib.k} examples per intent, ${fmt(ib.test_n)} test messages, decisio ${d.decisio}, ${d.dates[0]}.`,
-			`<b>${triage[1]}%</b> of 400 held-out tickets routed right over 20 queues by ${baseName('g31')} with the plain question, and ${triage[2]}% after teaching it from 200 labelled tickets (decisio's triage demo).`,
+			`<b>${triage[1]}%</b> of 400 held-out tickets routed right over 20 queues by ${baseName('g31')} with the plain question, and ${triage[2]}% after teaching it from 200 labelled tickets: decisio's triage demo, decisio ${setupLine().version}, one RTX PRO 6000, ${setupLine().date}.`,
 		];
 	},
 	gatekeeper: () => {
@@ -175,7 +206,7 @@ const PROOFS = {
 	guardrails: () => {
 		const tox = suite31().read('ToxicChat');
 		return [
-			`<b>${pct(tox.acc)}</b> right on ToxicChat's toxicity question, with a calibration error of ${tox.ece}, on ${baseName('g31')}, untaught, in decisio's 1,400-item suite (its evaluation card, section 7.2). The default temperatures were fitted on that suite, so the calibration error is in-sample.`,
+			`<b>${pct(tox.acc)}</b> right on ToxicChat's toxicity question, with a calibration error of ${tox.ece}, on ${baseName('g31')}, untaught, in decisio's 1,400-item suite: ${runOf('gemma-4-31b')} (its evaluation card, section 7.2). The model's default settings were tuned on that same suite, so that calibration error is its best case.`,
 			'Other guardrails, such as off-topic or prompt-injection checks, follow the same recipe; no run of them is published.',
 		];
 	},
@@ -184,7 +215,7 @@ const PROOFS = {
 		const sci = s.read('SciFact');
 		const bool = s.read('BoolQ');
 		return [
-			`<b>${pct(sci.acc)}</b> right on SciFact, does the evidence support the claim, and <b>${pct(bool.acc)}</b> on BoolQ, yes or no over a passage, on ${baseName('g31')}, untaught, in decisio's 1,400-item suite (its evaluation card, section 7.2).`,
+			`<b>${pct(sci.acc)}</b> right on SciFact, does the evidence support the claim, and <b>${pct(bool.acc)}</b> on BoolQ, yes or no over a passage, on ${baseName('g31')}, untaught, in decisio's 1,400-item suite: ${runOf('gemma-4-31b')} (its evaluation card, section 7.2).`,
 			'Those measure the reading, not a whole retrieval pipeline: no end-to-end run of this gate is published.',
 		];
 	},

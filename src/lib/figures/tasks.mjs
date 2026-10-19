@@ -116,7 +116,7 @@ function drift() {
 		name: 'drift-replay', label: 'Watching for drift', title: `From decisio ${R.suspended.version}, the alarm suspends certification early; before it, only the answer mix alerted, late.`,
 		desc: `A certified CLINC150 task on ${R.base}, sent ${fmt(R.messages)} messages, with messages that fit none of its options rising from message ${fmt(R.start)} to ${R.share * 100}% at message ${fmt(R.full)}. On decisio ${R.suspended.version}, certification was first suspended at message ${fmt(R.suspended.at)}, after ${R.suspended.wrong} wrong certified answers. Under decisio ${R.old}, only the answer mix alerted, after message ${fmt(R.mix.at)}, by when ${fmt(R.mix.wrong)} wrong answers had been certified, and certification stayed on.`,
 		body, legend: 'The shaded area is the share of messages the task has no option for, from 0% to its peak; each of them is a wrong answer. While certification is suspended, answers keep coming, none marked certified.',
-		source: `Source: the teach-and-certify runs, ${R.suspended.model}: decisio ${R.old} on ${R.machine}, ${R.dates[0]}; and ${R.suspended.on}.`,
+		source: `Source: the teach-and-certify runs, ${R.suspended.model}: decisio ${R.old} on ${R.machine}, ${R.dates[0]}; and a build of decisio ${R.suspended.version} before its release.`,
 	});
 }
 

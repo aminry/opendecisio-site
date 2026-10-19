@@ -10,6 +10,8 @@ It sorts issues well untaught; this script asks for the issue's kind and applies
 
 ::site-block{name="route-issue-triage"}
 
+Until the task is certified (step 2), every answer goes to a person, as on the stand-in.
+
 :::fit
 - The kind of an issue: :value{name="triage-kind"} right untaught on real Kubernetes issues.
 - The team that owns it: :value{name="triage-sig"} right untaught on the owning SIG.
@@ -25,11 +27,13 @@ Ask them in the same request, so the issue is read once ([Scale](/docs/scale/)).
 
 ## 2. Certify them
 
-They work untaught, so there is little to teach; certify each question on labelled issues, so that each label says whether it can be applied on its own:
+They work untaught, so there is little to teach; certify each question on labelled issues, so that each label says whether it can be applied on its own.
+
+:value{name="floor-issue-triage"}
 
 ::site-block{name="teach-issue-triage"}
 
-[Certify answers](/docs/tasks/certify/) has the steps and the fields.
+[Certify answers](/docs/tasks/certify/#2-teach-the-task-with-a-certificate) runs this call on a server, with its answer.
 
 ## 3. Route on the certificate
 

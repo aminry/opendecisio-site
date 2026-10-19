@@ -7,6 +7,7 @@ import { ALPHAS, baseName, data as tcData, datasetName, task } from './teach-cer
 import { siteBlock } from './site-blocks.mjs';
 import { readUpstream } from './upstream.mjs';
 import { issueTriage, recipeIds, suite31 } from './use-cases.mjs';
+import { runOf } from './bench-page.mjs';
 
 const fail = (what) => { throw new Error(`home-page: ${what}`); };
 const pct = (x, d = 1) => `${(x * 100).toFixed(d)}%`;
@@ -30,6 +31,9 @@ export function heroStats() {
 	const release = /^- decisio (v[\d.]+) on vLLM [\d.]+ \(the 31B and the 12B at their repositories' pins\)/m.exec(readUpstream('README.md'))?.[1];
 	if (!release) fail("the README no longer names the decisio release of the same-box session");
 	const date = stable('speed_same_box_2026_10_11').date;
+	// The first figure's run, by its record's name (runs/2026-10-06_latency-585w/, in the facts' conditions).
+	const firstDate = /runs\/(\d{4}-\d{2}-\d{2})_latency/.exec(facts().figures.latency_on_new_state_300.conditions)?.[1];
+	if (!firstDate) fail('the one-question figure no longer names its dated record');
 	const tokens = (k) => `${Number(k).toLocaleString('en-US')}-token`;
 	return {
 		stats: [
@@ -37,7 +41,7 @@ export function heroStats() {
 			{ n: printed('3000'), l: `for 50 questions about a ${tokens('3000')} document` },
 			{ n: printed('32000'), l: `for 50 questions about a ${tokens('32000')} document` },
 		],
-		conditions: `Server time on Gemma 4 31B and one RTX PRO 6000: the first on decisio 0.8.1 at 585 W, the other two on decisio ${release} at 600 W, on ${date}.`,
+		conditions: `Server time on Gemma 4 31B and one RTX PRO 6000: the first on decisio 0.8.1 at 585 W, on ${firstDate}; the other two on decisio ${release} at 600 W, on ${date}.`,
 	};
 }
 
@@ -90,10 +94,10 @@ export function useCaseCards() {
 	const suite = suite31();
 	const proof = {
 		'support-routing': 'Measured: the support inbox above.',
-		gatekeeper: `${pct(g.at5.share[0], 0)} to ${pct(g.at5.share[1], 0)} of commands decided on their own at a 5% error rate.`,
-		'issue-triage': `${kind.untaught.accuracy.printed}% right on an issue's kind, untaught.`,
-		guardrails: `${pct(suite.read('ToxicChat').acc)} right on ToxicChat's toxicity question.`,
-		'rag-gate': `${pct(suite.read('SciFact').acc)} right on SciFact's claims and their evidence.`,
+		gatekeeper: `${pct(g.at5.share[0], 0)} to ${pct(g.at5.share[1], 0)} of commands decided on their own at a 5% error rate (Gemma 4 12B on a Mac, decisio ${g.decisio}).`,
+		'issue-triage': `${kind.untaught.accuracy.printed}% right on an issue's kind, untaught (Gemma 4 31B, ${kind.test_items.toLocaleString('en-US')} kubernetes issues).`,
+		guardrails: `${pct(suite.read('ToxicChat').acc)} right on ToxicChat's toxicity question (Gemma 4 31B, ${runOf('gemma-4-31b')}).`,
+		'rag-gate': `${pct(suite.read('SciFact').acc)} right on SciFact's claims and their evidence (Gemma 4 31B, ${runOf('gemma-4-31b')}).`,
 		'document-classification': 'A recipe: no run on documents is published yet.',
 	};
 	const ids = Object.keys(CARDS);

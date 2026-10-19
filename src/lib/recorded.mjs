@@ -78,6 +78,14 @@ export function example5Table() {
 	return `<div class="table-wrap"><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 
+/** The 31B's /health on the pinned release, as the replay's server answered it, trimmed to the fields a reader checks. */
+export function health() {
+	const h = json('replay/health.json');
+	const keys = ['ok', 'base', 'max_model_len', 'max_model_len_source', 'max_model_len_ceiling', 'engine_process', 'vllm', 'gpu'];
+	for (const k of keys) if (!(k in h)) fail(`the recorded /health has no ${k}`);
+	return Object.fromEntries(keys.map((k) => [k, h[k]]));
+}
+
 /** The numbers and labels the docs state in their own words about these records (`:value{name="..."}`). */
 export function recordedValues() {
 	const s = session();
@@ -87,6 +95,7 @@ export function recordedValues() {
 	return {
 		'certify-result': `answers with a top probability of at least ${c.threshold.toFixed(4)} are certified: ${c.certified_n} of the ${c.n} held-back tickets, ${c.errors_at_threshold} of them wrong`,
 		'certify-recorded': `Recorded on ${box}; the response is abridged.`,
+		'health-recorded': `Recorded on ${box}; trimmed to the fields a reader checks.`,
 		'example5-recorded': `decisio-examples' example 5, Escalate only when unsure: ${n0(e.questions)} ARC-Challenge questions, a public benchmark the model may have seen, on ${box}`,
 	};
 }

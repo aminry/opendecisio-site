@@ -34,6 +34,20 @@ export const sourced = [
 	...fromPage('/benchmarks/', [
 		['from decisio 0.14.0 a Gemma base serves what the card holds, up to 98,304 on the 31B', 'docs/comparison.md', 'from decisio 0.14.0 the Gemma bases serve the largest context that fits the card'],
 	]),
+	// Batch 10: the FAQ's answers in their new homes.
+	...fromPage('/docs/bases/', [
+		["The weights are under Apache-2.0: Alibaba's Qwen3.6-35B-A3B and Google's Gemma 4 12B and 31B", readme, "The model weights are Alibaba's Qwen3.6-35B-A3B under Apache-2.0 and, for the other two bases, Google's Gemma 4 12B and 31B under Apache-2.0"],
+		['redistribute them with their licence and provenance files', readme, 'redistribute those weights under Apache-2.0 with their licence and provenance files'],
+	]),
+	...fromPage('/docs/operating/', [
+		['With a release before 0.12.0, have the proxy refuse a POST whose Content-Type is not application/json', security, 'With an earlier release, have the proxy refuse a POST whose Content-Type is not `application/json`.'],
+	]),
+	...fromPage('/docs/use-cases/', [
+		['Each answer is read from one forward pass and no generated text', readme, 'from one forward pass and no generated text'],
+	]),
+	...fromPage('/benchmarks/', [
+		['none of these is a board score', readme, 'None is a board score.'],
+	]),
 	// Home: the Good fit box.
 	...fromPage('/', [
 		['118 or more, at the defaults, for a task you want certified', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
@@ -184,6 +198,7 @@ export const sourced = [
 	]),
 	// Certify answers
 	...fromPage('/docs/tasks/certify/', [
+		['so a 5% certificate needs at least 118 labelled examples', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
 		['With probability at least 90% by default, at most your error target of the certified answers are wrong', tasksDoc, '**with probability at least 1 - `delta` over the draw of your examples (90% by default), at most `alpha` of the answers marked certified are wrong (5% by default)'],
 		['one certified answer can still be wrong', tasksDoc, 'a single certified answer can still be wrong'],
 		['The server holds back half the examples', tasksDoc, 'It **sets aside some of your labelled examples** (half by default)'],
@@ -244,6 +259,11 @@ export const sourced = [
 	]),
 	// Scale
 	...fromPage('/docs/scale/', [
+		["together, in one batch, with the engine in the server's process (the default)", cli, 'On the Gemma 4 31B base `warm` is the default when the engine runs in the server\'s process'],
+		['with --head-engine or --image-model the engine runs in its own process', cli, 'to `separate` when a second engine is configured (`--image-model`, `--head-engine`, `--one-engine`)'],
+		['the 31B scores the questions one at a time', cli, '| `--multi-question` | `sequential` | `sequential` | `warm` with the engine in the server\'s process, else `sequential` |'],
+		['serves texts of up to 32,768 tokens', cli, 'The Qwen base, `--image-model`, a second engine, `--engine-process separate` and the other backends stay at 32768'],
+		['for thousands, send several requests about the same text', api, 'for thousands of questions send several requests about the same state'],
 		['the same choice on every item measured; probabilities within 0.0073', readme, 'the same choice as one engine call per question on every item measured, probabilities within 0.0073'],
 		['the same choice; probabilities within 0.035', readme, 'the same choice as each question sent alone, probabilities within 0.035'],
 		['Qwen3.6-35B-A3B one at a time, from the one read the same probabilities', readme, 'the same probabilities as each question sent alone, bit for bit'],
@@ -254,7 +274,7 @@ export const sourced = [
 		['the 31B served 98,304 tokens at 0.90 and 49,152 at 0.85, and did not start at 0.70', running, '| 0.70 | 18.54 GiB | 22,064 | does not start |'],
 		['A prompt longer than the length gets 422, and the server stays up.', api, 'the server stays up'],
 		['A choice can have up to 255 options; more gets 422.', api, 'up to 255 options (more is 422)'],
-		["+21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens (one card at 585 W)", running, 'and +21, +34 and +34 ms on Gemma 4 31B'],
+		["+21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens (one card at 585 W, decisio 0.8.1, 2026-10-06)", running, 'and +21, +34 and +34 ms on Gemma 4 31B (`runs/2026-10-06_latency-585w/`'],
 		['the 31B kept 0.61 and 0.74 of it at 32 and 64 clients', running, 'but the 31B kept only 0.61 and 0.74'],
 		['a second copy of the weights on the card, and no image engine', tasksDoc, 'holds a second copy of the model\'s weights, leaves no room for the image engine on the card'],
 		['nvidia-smi -q -d POWER', running, '(`nvidia-smi -q -d POWER`)'],
@@ -285,6 +305,7 @@ export const sourced = [
 	// How it works
 	...fromPage('/docs/how-it-works/', [
 		['20 labelled examples each lowered the calibration error from 0.058 to 0.037', tasksDoc, 'pooled ECE 0.058 | pooled ECE **0.037**'],
+		['(the Qwen model, 900 test items, 2026-09-29)', tasksDoc, 'six other held-out tasks, 20 labelled examples, 100 draws, 900 test items'],
 		['it never changes which option is likeliest', tasksDoc, 'It does not change which option is the top one'],
 		['exactly, on a freshly started server; on one that has already answered, 5 of 200 moved, by at most 0.031, with no top answer changed', card, 'A request repeats exactly on a freshly started server; on a server that has already answered it, a repeat can differ (5 of 200 items, up to 0.031, no top answer changed'],
 		['the same choice on every item measured; probabilities within 0.0073', readme, 'the same choice as one engine call per question on every item measured, probabilities within 0.0073'],

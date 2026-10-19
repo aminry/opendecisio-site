@@ -3,10 +3,19 @@
 import { posix } from 'node:path';
 import { visit } from 'unist-util-visit';
 import { pin } from './upstream.mjs';
-import { inclusionMap } from './upstream-map.mjs';
+import { inclusionMap, titleFor } from './upstream-map.mjs';
 import { servable } from '../config/media-policy.mjs';
 
 const HF_CHECKPOINT = /^(?:aminry\/decisio-(?:gemma-4-31b|gemma-4-12b|qwen3\.6-35b-a3b)|google\/gemma-4-(?:12B|31B)-it|Qwen\/Qwen3\.6-35B-A3B-FP8)$/;
+
+// A link whose words are a decisio file's name ("`docs/running.md`") and that now lands on a site page reads as that
+// page's title, so the reader sees where it goes.
+function relabel(node, path) {
+	const only = node.children?.length === 1 ? node.children[0] : null;
+	if (only?.type !== 'inlineCode' || !/(^|\/)[\w.-]+\.md$/.test(only.value)) return;
+	const title = titleFor(path);
+	if (title) node.children = [{ type: 'text', value: title }];
+}
 
 export function rewriteLinks(nodes, file, map = inclusionMap()) {
 	const base = posix.dirname(file);
@@ -28,6 +37,7 @@ export function rewriteLinks(nodes, file, map = inclusionMap()) {
 		const isDir = path.endsWith('/') || !/\.[a-z]+$/i.test(path.split('/').pop());
 		const url = route ? route.path + (route.anchor ? `#${route.anchor}` : '') : `https://github.com/${pin.repository}/${isDir ? 'tree' : 'blob'}/${pin.tag}/${path.replace(/\/$/, '')}`;
 		parent.children[index] = { type: 'link', url, children: [node], data: { resolved: true } };
+		if (route) relabel(parent.children[index], route.path);
 	});
 	visit(root, ['link', 'image', 'definition'], (node) => {
 		const url = node.url;
@@ -49,6 +59,7 @@ export function rewriteLinks(nodes, file, map = inclusionMap()) {
 		const route = map.routeFor(resolved, anchor);
 		if (route) {
 			node.url = route.path + (route.anchor ? `#${route.anchor}` : '');
+			relabel(node, route.path);
 		} else {
 			node.url = `https://github.com/${pin.repository}/blob/${pin.tag}/${resolved}${anchor ? `#${anchor}` : ''}`;
 		}

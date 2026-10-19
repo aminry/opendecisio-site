@@ -10,6 +10,8 @@ This script sends the question and the passage as one text and acts only on a ce
 
 ::site-block{name="route-rag-gate"}
 
+Until the task is certified (step 2), every answer goes to a person, as on the stand-in.
+
 :::fit
 - A retrieval step that returns passages, and questions your users ask again and again.
 - Labelled pairs of a question and a passage, to certify from.
@@ -25,11 +27,13 @@ Put the user's question and the passage in the text, as the script does.
 
 ## 2. Teach it and certify it
 
-Teach the question from labelled pairs, and certify it at your error target:
+Teach the question from labelled pairs, and certify it at your error target.
+
+:value{name="floor-rag-gate"}
 
 ::site-block{name="teach-rag-gate"}
 
-[Teach a task](/docs/tasks/) and [Certify answers](/docs/tasks/certify/) have the steps and the fields.
+[Certify answers](/docs/tasks/certify/#2-teach-the-task-with-a-certificate) runs this call on a server, with its answer.
 To let the server decline on its own, add a "can't tell" option and an abstention threshold ([Certify answers](/docs/tasks/certify/#let-the-server-abstain)).
 
 ## 3. Route on the certificate

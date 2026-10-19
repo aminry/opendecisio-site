@@ -25,6 +25,7 @@ decisio's compose file, from the release image:
 ::site-block{name="docker-compose"}
 
 Save it as `compose.yaml` and run `docker compose up -d`.
+It is ready when `/health` answers 200, as [a healthy server's answer](/docs/deploy/cloud-gpu/#2-start-the-server) shows.
 
 ## 3. Choose what it serves
 

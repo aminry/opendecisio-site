@@ -6,6 +6,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pin, siteRoot } from './upstream.mjs';
 
+const escHtml = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
 export const blockHash = (text) => createHash('sha256').update(text.trim()).digest('hex').slice(0, 16);
 
 let memo;
@@ -45,7 +47,7 @@ export function checkHtml(entry, { moved = false } = {}) {
 	const line = (text, cls = '') => `<p class="checked${cls}"><span>${text}${moved ? ' Its comments are shown above their commands.' : ''}</span></p>`;
 	switch (entry.status) {
 		case 'cpu':
-			return line(`Run against the CPU stand-in at ${entry.tag} on ${entry.date}${entry.note ? `: ${entry.note}` : ''}.`, ' checked--cpu');
+			return line(`Run against the CPU stand-in at ${entry.tag} on ${entry.date}${entry.note ? `: ${entry.note}` : ''}${entry.stdout ? (entry.trimmed ? '. It printed, trimmed to the fields this page uses:' : '. It printed:') : '.'}`, ' checked--cpu') + (entry.stdout ? `<pre class="checked__out" tabindex="0"><code>${escHtml(entry.stdout)}</code></pre>` : '');
 		case 'verbatim':
 			return line(`Needs ${entry.needs}: taken verbatim from the repository's tested docs${entry.record ? `, ${record(entry.record)}` : ''}.`);
 		case 'shown':

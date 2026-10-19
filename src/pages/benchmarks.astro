@@ -16,7 +16,7 @@ import UpstreamTable from '../components/UpstreamTable.astro';
 import { colourOf } from '../config/bases.mjs';
 import { site } from '../config/site';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { baseLines, benchTiles, demoPlayers, tableNotes } from '../lib/bench-page.mjs';
+import { baseLines, benchTiles, demoPlayers, tableConditions, tableNotes } from '../lib/bench-page.mjs';
 import { breadcrumbs } from '../lib/jsonld.mjs';
 import { BOARD_URL, decisionIndexBoard } from '../lib/launch.mjs';
 import { paragraphStarting, table } from '../lib/upstream-content.mjs';
@@ -28,6 +28,7 @@ const paired = table('README.md', 'Choosing a base', 2);
 const pairedIntro = paragraphStarting('README.md', 'Choosing a base', 'What drives the choice').split('\n')[0];
 const lines = baseLines();
 const notes = tableNotes();
+const measured = tableConditions();
 const players = demoPlayers();
 const KEY: Record<string, string> = { g31: 'gemma-4-31b', g12: 'gemma-4-12b', qwen: 'qwen3.6-35b-a3b' };
 const sections = [
@@ -79,7 +80,7 @@ const description = 'What decisio does, measured and dated: many questions about
 			<div class="section__head">
 				<p class="kicker">Each base</p>
 				<h2 id="bases">Choosing a <em class="hl">base</em></h2>
-				<p>Three models serve the same API. <a href="/docs/bases/">Choosing a model</a> says how to pick and start each one.</p>
+				<p>Three models serve the same API. Each was measured by us with the public harnesses, and none of these is a board score. <a href="/docs/bases/">Choosing a model</a> says how to pick and start each one.</p>
 			</div>
 			<ul class="bases">
 				{lines.map((l) => <li class:list={['bases__i', colourOf(KEY[l.base])]}><span class="dot" aria-hidden="true"></span><b>{l.name}</b>: {l.text}</li>)}
@@ -87,7 +88,7 @@ const description = 'What decisio does, measured and dated: many questions about
 			<div class="pcard tile">
 				<div class="pcard__head">
 					<h3 class="pcard__title">Accuracy and time, each base</h3>
-					<p class="pcard__meta">each base with its own defaults on one RTX PRO 6000; higher is better, but for the times; each column links to its record</p>
+					<p class="pcard__meta">each base with its own defaults on {measured.label}; higher is better, but for the times; each column links to its record</p>
 				</div>
 				<BenchmarkTable />
 				<div class="pcard__foot" data-table-notes>{notes.map((n) => <p>{n}</p>)}</div>
@@ -112,7 +113,7 @@ const description = 'What decisio does, measured and dated: many questions about
 			</div>
 			<div class="pcard tile">
 				<ConfidenceChart />
-				<p class="pcard__foot">Measured by us with JevBench's own measure, over ten equal-width bins of the probability; <a href="/docs/evaluation-card/#3-numbers">the evaluation card, section 3</a>, has every calibration table and what was fitted on what.</p>
+				<p class="pcard__foot">Measured by us on {measured.label}, with JevBench's own measure, over ten equal-width bins of the probability; <a href="/docs/evaluation-card/#3-numbers">the evaluation card, section 3</a>, has every calibration table and what was fitted on what.</p>
 			</div>
 		</div>
 	</section>

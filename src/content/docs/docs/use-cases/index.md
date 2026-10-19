@@ -21,6 +21,9 @@ The routing code is the same in every recipe; this is support routing's:
 
 "Measured" means a published run of the same question; "recipe" means the steps and the code, with no published run yet.
 
+Each answer is read from one forward pass and no generated text, so nothing is worked out step by step.
+A question that needs reasoning over several steps, or knowledge the text does not hold, is not a good fit.
+
 ## What next
 
 - [Teach a task](/docs/tasks/): the teaching step every recipe uses.

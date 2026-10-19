@@ -10,6 +10,8 @@ decisio names the rule a command falls under; your policy maps the rule to an ac
 
 ::site-block{name="route-gatekeeper"}
 
+Until the task is certified (step 2), every answer goes to a person, as on the stand-in.
+
 :::fit
 - Written rules for what an agent may do, each with an action.
 - Labelled commands for every rule, to teach and certify from.
@@ -26,11 +28,13 @@ Keep the policy beside it, so the action is yours, not the model's, and changing
 
 ## 2. Teach it and certify it
 
-Teach the question from labelled commands, about 20 per rule, and certify it at 5%:
+Teach the question from labelled commands and certify it at 5%.
+
+:value{name="floor-gatekeeper"}
 
 ::site-block{name="teach-gatekeeper"}
 
-[Teach a task](/docs/tasks/) and [Certify answers](/docs/tasks/certify/) have the steps and the fields.
+[Certify answers](/docs/tasks/certify/#2-teach-the-task-with-a-certificate) runs this call on a server, with its answer.
 
 ## 3. Route on the certificate
 

@@ -35,6 +35,11 @@ Start another model with `--base gemma-4-12b` or `--base qwen3.6-35b-a3b`.
 
 The first start downloads the weights and loads them onto the card.
 The 31B was ready after 7 min 54 s with the download, and after 4 min 3 s with the weights already on disk (decisio 0.11.0 from PyPI, one RTX PRO 6000 Blackwell at 600 W, 2026-10-09).
+It is ready when `/health` answers 200, with the model and the longest text it serves:
+
+::site-block{name="health-31b"}
+
+:value{name="health-recorded"}
 
 pip resolves its own versions around the engine.
 For exactly the versions decisio was measured with, install from a clone of the release with its lock file:
@@ -48,7 +53,7 @@ Name the model repository at a commit, so a later change to it cannot change you
 ::upstream{file="docs/running.md" section="Model repositories" block="1"}
 
 - The server checks the repository's settings against its own and refuses to start on a difference, naming what differs.
-- Give `--max-model-len` the same value on every card. The length served is part of what a certificate covers; `--max-model-len 32768` serves only what was measured.
+- Pin `--max-model-len 32768` unless you need longer texts: `--max-model-len 32768` serves only what was measured, and the same value on every card keeps one certificate valid on all of them, since the length served is part of what it covers.
 - After upgrading decisio, certify your tasks again ([Upgrade](/docs/upgrading/)).
 
 ## 4. Put it behind a proxy

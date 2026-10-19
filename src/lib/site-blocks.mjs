@@ -43,7 +43,7 @@ const ollamaRequest = (model) => `curl http://localhost:11434/v1/systemone \\
 import { recordedRequest, recordedResponse } from './docs-figures.mjs';
 import { pin, readUpstream } from './upstream.mjs';
 import { recipeIds, routeScript, teachBody } from './use-cases.mjs';
-import { certificate } from './recorded.mjs';
+import { certificate, health } from './recorded.mjs';
 
 // The recorded decision of the docs' first pages (the launch facts (launch_facts.public.json), figures.recorded_decisions), as a request
 // to a server on this machine. The body is indented JSON between single quotes, so no value may hold a single quote.
@@ -212,6 +212,8 @@ export const siteBlocks = {
 	get 'first-decision-response'() { return { lang: 'json', text: JSON.stringify(recordedResponse(), null, 2) }; },
 	// Certify answers: the worked certificate on the pinned release, and two answers after it.
 	get 'certificate-response'() { return { lang: 'json', text: certificateResponse() }; },
+	// On a cloud GPU: the 31B's /health on the pinned release, trimmed to what a reader checks (src/lib/recorded.mjs).
+	get 'health-31b'() { return { lang: 'json', text: JSON.stringify(health(), null, 1) }; },
 	get 'certificate-answers'() { return { lang: 'json', text: certificateAnswers() }; },
 	// The Qwen listing: the docs page, whose pull (at the pinned release) is this listing's alone.
 	'ollama-request': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio') },

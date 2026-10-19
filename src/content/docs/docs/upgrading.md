@@ -35,11 +35,14 @@ A task taught under another model or rendering is not applied, and the server sa
 ## 5. Certify your tasks again
 
 The decisio version is part of the serving setup a certificate covers, so a certificate made on the old release is suspended on the new one.
-Certify each certified task again on the new server, on labelled examples that share no input with the task's fit, such as the held-out examples it was certified on:
+Certify each certified task again on the new server, on labelled examples that share no input with the task's fit, such as the held-out examples it was certified on.
+For the walk-through task, decisio ships 48 held-out tickets; build the body from them and send it to the task's `certify` route:
 
-```text
-POST /v1/tasks/ticket-routing/certify
-{"examples": [{"request": <a /v1/systemone request>, "answer": "payment_failed"}, ...]}
+```bash
+uv run python examples/tasks/register.py --id ticket-routing --data examples/tasks/heldout.csv --dry-run --out heldout.json
+uv run python -c 'import json; b = json.load(open("heldout.json")); json.dump({"examples": b["examples"], "alpha": 0.1}, open("recertify.json", "w"))'
+curl -s http://127.0.0.1:8000/v1/tasks/ticket-routing/certify -H 'Content-Type: application/json' -d @recertify.json \
+  | uv run python -c 'import json, sys; r = json.load(sys.stdin); c = r.get("certificate", r); print(json.dumps({k: c.get(k) for k in ("alpha", "n", "threshold", "certified_n")}, indent=1))'
 ```
 
 The fit is kept; the call answers with the new certificate.

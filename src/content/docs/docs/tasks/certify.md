@@ -23,11 +23,17 @@ With probability at least 90% by default, at most your error target of the certi
 ## 2. Teach the task with a certificate
 
 Add `certify` to the registration, with your error target as `alpha`.
-decisio's worked example is a three-queue ticket question at an error target of 15%, here on the default model, Gemma 4 31B:
+With a server running, from the root of the clone ([Teach a task](/docs/tasks/#3-register) has both), add it to the 120 labelled tickets decisio ships and register them:
 
-::upstream{file="docs/tasks.md" section="A worked example" block="1"}
+```bash
+uv run python -c 'import json; b = json.load(open("examples/tasks/examples.json")); b["certify"] = {"alpha": 0.05}; json.dump(b, open("certify.json", "w"))'
+curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d @certify.json \
+  | uv run python -c 'import json, sys; c = json.load(sys.stdin)["certificate"]; print(json.dumps({k: c.get(k) for k in ("alpha", "n", "threshold", "certified_n", "errors_at_threshold", "summary")}, indent=1))'
+```
 
-The server holds back half the examples, teaches on the rest, reads the held-back ones as it will serve them, and answers with the certificate:
+The server holds back half the examples, teaches on the rest, reads the held-back ones as it will serve them, and answers with the certificate.
+The CPU stand-in is a small development model, so its certificate is its own.
+On the default model, Gemma 4 31B, decisio's worked example, a three-queue ticket question at an error target of 15%, answered:
 
 ::site-block{name="certificate-response"}
 
@@ -54,6 +60,7 @@ The server refuses to certify below the fewest held-back examples at which anyth
 | 10% | 29 |
 | 20% | 14 |
 
+The server holds back half of what you send, so a 5% certificate needs at least 118 labelled examples.
 That floor is for a task the model always gets right; yours needs more.
 With 75 examples, four of five test tasks certified nothing at 5% or 10%.
 Set `certify.min_examples` above the floor to refuse a certificate that thin.

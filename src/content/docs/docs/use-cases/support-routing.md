@@ -10,6 +10,8 @@ This script asks for the queue and acts only on a certified answer:
 
 ::site-block{name="route-support-routing"}
 
+Until the task is certified (step 2), every answer goes to a person, as on the stand-in.
+
 :::fit
 - A fixed list of queues your team already routes to.
 - Past tickets with the queue a person chose, to teach and certify from.
@@ -25,11 +27,13 @@ One `choice` question, with a description for each queue and an `other` queue, s
 
 ## 2. Teach it and certify it
 
-Teach the question from past tickets, at least 10 per queue, and ask for a certificate at your error target, here 5%:
+Teach the question from past tickets and ask for a certificate at your error target, here 5%.
+
+:value{name="floor-support-routing"}
 
 ::site-block{name="teach-support-routing"}
 
-[Teach a task](/docs/tasks/) and [Certify answers](/docs/tasks/certify/) have the steps and the fields.
+[Certify answers](/docs/tasks/certify/#2-teach-the-task-with-a-certificate) runs this call on a server, with its answer.
 
 ## 3. Route on the certificate
 

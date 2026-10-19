@@ -37,15 +37,16 @@ with urllib.request.urlopen(request) as response:
 
 ## 1. Ask many questions in one request
 
-On one RTX PRO 6000 at 600 W, the 31B answered 50 questions about one 3,000-token text in 1.08 s.
+On one RTX PRO 6000 at 600 W, the 31B answered 50 questions about one 3,000-token text in 1.08 s (decisio v0.11.1, 2026-10-11).
 
 | Model | How a request's questions are scored | Against each question on its own |
 | --- | --- | --- |
-| Gemma 4 31B | together, in one batch | the same choice on every item measured; probabilities within 0.0073 |
+| Gemma 4 31B | together, in one batch, with the engine in the server's process (the default) | the same choice on every item measured; probabilities within 0.0073 |
 | Gemma 4 12B | one at a time, from the one read | the same choice; probabilities within 0.035 |
 | Qwen3.6-35B-A3B | one at a time, from the one read | the same probabilities |
 
-A request can carry as many questions as you have.
+A second engine changes this: with `--head-engine` or `--image-model` the engine runs in its own process, so the 31B scores the questions one at a time and serves texts of up to 32,768 tokens.
+A request has no cap on its questions, but the response grows with them: for thousands, send several requests about the same text, and the later ones read it from the cache.
 
 ## 2. Plan for the first read
 
@@ -96,8 +97,8 @@ print("options answered:", len(answer["probabilities"]))
 
 | Flag | What it does | What it costs |
 | --- | --- | --- |
-| `--register-boundary before` | the Gemma models' default: registers a new text's boundary ahead of its first question | +21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens (one card at 585 W) |
-| `--register-boundary after` | registers it after the answer instead | the cost moves to throughput: the 31B kept 0.61 and 0.74 of it at 32 and 64 clients, so keep `before` on the 31B under load |
+| `--register-boundary before` | the Gemma models' default: registers a new text's boundary ahead of its first question | +21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens (one card at 585 W, decisio 0.8.1, 2026-10-06) |
+| `--register-boundary after` | registers it after the answer instead | the cost moves to throughput: the 31B kept 0.61 and 0.74 of it at 32 and 64 clients in the same run, so keep `before` on the 31B under load |
 | `--register-boundary off` | never registers | a later question re-reads the text; for traffic that asks one question per text |
 | `--multi-question` | `warm`, the 31B's default, scores a request's questions in one batch; `sequential` scores them one at a time | see the table in step 1 |
 | `--head-engine` | answers a taught task's head questions from a second engine | a second copy of the weights on the card, and no image engine |

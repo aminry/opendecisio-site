@@ -10,6 +10,8 @@ This script asks for the document's type and files it only on a certified answer
 
 ::site-block{name="route-document-classification"}
 
+Until the task is certified (step 2), every answer goes to a person, as on the stand-in.
+
 :::fit
 - A fixed set of document types, and past documents sorted into them.
 - Documents whose text fits the server's length, or whose first pages decide the type.
@@ -25,11 +27,13 @@ Send the document's text, or its first pages, as the text.
 
 ## 2. Teach it and certify it
 
-Teach the question from past documents and certify it at your error target:
+Teach the question from past documents and certify it at your error target.
+
+:value{name="floor-document-classification"}
 
 ::site-block{name="teach-document-classification"}
 
-[Teach a task](/docs/tasks/) and [Certify answers](/docs/tasks/certify/) have the steps and the fields.
+[Certify answers](/docs/tasks/certify/#2-teach-the-task-with-a-certificate) runs this call on a server, with its answer.
 
 ## 3. Route on the certificate
 

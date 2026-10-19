@@ -10,6 +10,8 @@ This script asks one yes-or-no question and blocks or allows only on a certified
 
 ::site-block{name="route-guardrails"}
 
+Until the task is certified (step 2), every answer goes to a person, as on the stand-in.
+
 :::fit
 - A policy you can state as a yes-or-no question: is it toxic, is it off-topic, does it ask for a refund.
 - Labelled messages, to certify from.
@@ -26,11 +28,13 @@ Several policies are several questions in the same request, read once.
 ## 2. Teach it and certify it
 
 A clear yes-or-no question the model already answers well often needs no teaching: the server declines a correction that does not help, and says so.
-Certify it anyway, so each answer says whether it can act on its own:
+Certify it anyway, so each answer says whether it can act on its own.
+
+:value{name="floor-guardrails"}
 
 ::site-block{name="teach-guardrails"}
 
-[Teach a task](/docs/tasks/) and [Certify answers](/docs/tasks/certify/) have the steps and the fields.
+[Certify answers](/docs/tasks/certify/#2-teach-the-task-with-a-certificate) runs this call on a server, with its answer.
 
 ## 3. Route on the certificate
 

@@ -27,11 +27,23 @@ From decisio 0.16.0, certification is suspended while the confidence alarm is on
 ## 2. Read the status
 
 `GET /v1/tasks/{id}` gives a task's `status`: `ok`, `suspended` with what changed, or `traffic_changed` with the signals that alerted.
+For the task [Certify answers](/docs/tasks/certify/#2-teach-the-task-with-a-certificate) registers:
+
+```bash
+curl -s http://127.0.0.1:8000/v1/tasks/ticket-routing \
+  | uv run python -c 'import json, sys; s = json.load(sys.stdin)["status"]; print(json.dumps({k: s.get(k) for k in ("state", "text")}, indent=1))'
+```
+
 `GET /v1/tasks` lists every task's status.
 
 ## 3. Alert on it
 
 `GET /metrics` serves Prometheus text for certified tasks:
+
+```bash
+curl -s http://127.0.0.1:8000/metrics | grep '^decisio_task_'
+```
+
 
 | Metric | What it counts |
 | --- | --- |

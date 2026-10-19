@@ -180,6 +180,21 @@ h1#_top {
 	color: inherit;
 }
 
+/* What a block printed when it was run on the stand-in, as the record keeps it: a quiet output panel under the line. */
+.sl-markdown-content .checked__out {
+	margin: 0.4rem 0 0;
+	padding: 0.7rem 0.9rem;
+	max-height: 22rem;
+	overflow: auto;
+	border: 1px solid var(--sl-color-gray-5);
+	border-left: 3px solid var(--sl-color-accent);
+	border-radius: var(--d-radius-control);
+	background: var(--d-code-bg);
+	color: var(--d-code-ink);
+	font: var(--d-step--1) / 1.55 var(--d-font-mono, 'Geist Mono Site', monospace);
+	white-space: pre;
+}
+
 .expressive-code {
 	--ec-brdRad: var(--d-radius-panel);
 }

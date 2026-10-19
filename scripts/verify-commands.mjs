@@ -126,6 +126,15 @@ const ctx = {
 
 const date = new Date().toISOString().slice(0, 10);
 const entries = {};
+// What a block printed, as its page shows it: a step that names `show` keeps that function's view of the output (trimmed
+// to what the page needs), and the page renders it under the block (src/lib/checks.mjs).
+const shown = (step, stdout) => {
+	if (!step.show) return {};
+	const text = String(step.show(stdout)).replace(/\s+$/, '');
+	if (!text) fail(`block ${step.n} on ${step.page} has a show that kept nothing of its output`);
+	if (text.length > 4000) fail(`block ${step.n} on ${step.page} shows ${text.length} characters of output; trim it in its show`);
+	return { stdout: text, ...(step.trimmed && { trimmed: true }) };
+};
 for (const step of steps) {
 	const { block } = step;
 	const text = block.text.trim();
@@ -139,7 +148,7 @@ for (const step of steps) {
 					fail(`block ${step.n} on ${step.page} ran, but ${e.message}\n--- stdout\n${stdout.slice(-2000)}`);
 				}
 			}
-			entries[block.hash] = { status: 'cpu', tag: pin.tag, date, ...(step.note && { note: step.note }) };
+			entries[block.hash] = { status: 'cpu', tag: pin.tag, date, ...(step.note && { note: step.note }), ...shown(step, stdout) };
 			break;
 		}
 		case 'run-then-server': {
@@ -164,7 +173,7 @@ for (const step of steps) {
 					fail(`block ${step.n} on ${step.page} ran, but ${e.message}\n--- stdout\n${r.stdout.slice(-2000)}`);
 				}
 			}
-			entries[block.hash] = { status: 'cpu', tag: pin.tag, date, ...(step.note && { note: step.note }) };
+			entries[block.hash] = { status: 'cpu', tag: pin.tag, date, ...(step.note && { note: step.note }), ...shown(step, r.stdout) };
 			break;
 		}
 		case 'node': {

@@ -74,7 +74,7 @@ for (const g of docsGroups) {
 		if (!/\d+ min read/.test(meta)) problems.push(`${where}: no reading time`);
 		if (!/updated \d{4}-\d{2}-\d{2}/.test(meta)) problems.push(`${where}: no last-updated date`);
 		const actions = doc.querySelector('.site-foot__actions')?.text ?? '';
-		if (!/View as Markdown/.test(actions) || !/(Edit on GitHub|Suggest an edit)/.test(actions)) problems.push(`${where}: the foot lacks its source and Markdown links`);
+		if (!/View as Markdown/.test(actions) || !/Edit this page on GitHub/.test(actions)) problems.push(`${where}: the foot lacks its source and Markdown links`);
 		for (const f of doc.querySelectorAll('.fig[data-live]')) if (!f.querySelector('[data-fig-pause]')) problems.push(`${where}: a moving figure has no Pause button`);
 	}
 }

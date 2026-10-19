@@ -5,7 +5,7 @@ description: Keep a decisio server up, know at a glance when it is not, and secu
 
 <!-- Site-written: the Operate guide, merging Deploying and operating with Health and monitoring. Its facts are decisio's docs/running.md ("When the engine dies"), docs/api.md ("What to watch", the response headers), docs/operating.md and SECURITY.md at the pinned release (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/operating.md docs/running.md#when-the-engine-dies=3-know-what-happens-when-the-engine-dies docs/running.md#checking-a-server=2-watch-it docs/api.md#what-to-watch=2-watch-it SECURITY.md#deployment-notes=5-secure-it SECURITY.md#cross-site-requests-from-a-web-page=5-secure-it SECURITY.md=5-secure-it"}
+::covers{links="docs/operating.md docs/running.md#when-the-engine-dies=3-know-what-happens-when-the-engine-dies docs/running.md#checking-a-server=2-watch-it docs/api.md#what-to-watch=2-watch-it SECURITY.md#deployment-notes=5-secure-it SECURITY.md#cross-site-requests-from-a-web-page=5-secure-it SECURITY.md#reporting-a-vulnerability=5-secure-it SECURITY.md=5-secure-it"}
 
 Wait until a server is ready, then read what it serves:
 
@@ -76,12 +76,12 @@ With several replicas, each one is a separate server with its own tasks.
 1. **Keep it on a private network, behind your proxy.** The server listens on `127.0.0.1` by default; do not expose it to the internet.
 2. **Put authentication, rate limits and request-size limits in the proxy.** The server has none.
 3. **Restrict the routes that change it** to trusted callers: `POST /v1/tasks`, `POST /v1/tasks/import`, `DELETE /v1/tasks/{id}` and the abstention routes.
-4. **Do not configure CORS on the proxy** for this server: it would let a web page's browser send requests to it.
+4. **Do not configure CORS on the proxy** for this server: it would let a web page's browser send requests to it. With a release before 0.12.0, have the proxy refuse a POST whose Content-Type is not `application/json`.
 5. **Run one server per trust boundary.** Its cache and its tasks are shared by every caller.
 6. **Leave `--debug-readout` off.**
 7. **Keep to the latest release:** it is the one that receives security fixes.
 
-Report a vulnerability through the repository's private vulnerability reporting, not a public issue: an acknowledgement comes within 5 working days, an assessment within 15.
+Report a vulnerability through [the repository's private vulnerability reporting](https://github.com/aminry/decisio/security/advisories/new), not a public issue: an acknowledgement comes within 5 working days, an assessment within 15.
 
 ## What next
 
