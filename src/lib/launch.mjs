@@ -30,12 +30,12 @@ const need = (cond, what) => {
 // The rows the site draws, in the file's keys, with the short name the site gives each and its colour class.
 const ROWS = [
 	{ id: 'h2o', name: 'H2O-Lightning-4B', match: /H2O-Lightning-4B/ },
-	{ id: '31b', name: 'decisio, Gemma 4 31B, v0.8.0', match: /decisio v0\.8\.0 on gemma-4-31B/i, base: 'base-g31', ours: true },
+	{ id: '31b', name: 'Decisio, Gemma 4 31B', match: /decisio v0\.8\.0 on gemma-4-31B/i, base: 'base-g31', ours: true },
 	{ id: 'jev', name: 'Jev 1.13.0', match: /^Jev 1\.13\.0/ },
 	{ id: 'quyet', name: 'Quyet-1.0-Large', match: /Quyet-1\.0-Large/ },
 	{ id: 'deck31b', name: 'deck-31B', match: /^deck-31B/ },
-	{ id: '12b_v080', name: 'decisio, Gemma 4 12B, v0.8.0', match: /decisio v0\.8\.0 on gemma-4-12B/i, base: 'base-g12', ours: true },
-	{ id: '12b_v090', name: 'decisio, Gemma 4 12B, v0.9.0', match: /decisio v0\.9\.0 on gemma-4-12B/i, base: 'base-g12', ours: true },
+	{ id: '12b_v080', name: 'Decisio, Gemma 4 12B, run of 2026-10-06', match: /decisio v0\.8\.0 on gemma-4-12B/i, base: 'base-g12', ours: true },
+	{ id: '12b_v090', name: 'Decisio, Gemma 4 12B, run of 2026-10-07', match: /decisio v0\.9\.0 on gemma-4-12B/i, base: 'base-g12', ours: true },
 ];
 
 const num = (x) => x.value;
@@ -93,6 +93,8 @@ export function jevbench() {
 		forbidden: claims.forbidden_words,
 		rules: f.rules,
 		fileSha256: board.revision.sha256,
+		// The release each of our rows ran, as the board names it, for the source note (no release in the prose).
+		releases: rows.filter((r) => r.ours).map((r) => ({ name: r.name, release: /decisio (v\d+\.\d+\.\d+)/.exec(r.display)?.[1] ?? need(false, `row ${r.id} names no decisio release`) })),
 		overlaps: rows.filter((r) => r !== ours && overlaps(ours, r)).map((r) => r.name),
 		clear: rows.filter((r) => r !== ours && !overlaps(ours, r)).map((r) => r.name),
 	};
@@ -157,7 +159,7 @@ export function axesFigure() {
 		// The redrawn picture's alt text (alphabetical, plain values), else the earlier one.
 		alt: t.public?.alt_text ?? t.alt_text,
 		columns: t.columns.map((c) => ({ id: c.id, name: c.name, tagline: c.tagline })),
-		rows: t.rows.map((r) => ({ key: r.key, label: r.label, ours: r.is_decisio, jev: r === jev, cells: t.columns.map((c) => ({ text: printed(r, c.id) })) })).sort(byName((r) => r.label, (r) => r.jev)),
+		rows: t.rows.map((r) => ({ key: r.key, label: r.label.replace(/\s+v\d+\.\d+\.\d+\b/, ''), ours: r.is_decisio, jev: r === jev, cells: t.columns.map((c) => ({ text: printed(r, c.id) })) })).sort(byName((r) => r.label, (r) => r.jev)),
 		bullets,
 		note: t.no_intervals_note,
 		versionNote: t.version_note,
@@ -207,7 +209,13 @@ export const DI_BOARD = 'https://huggingface.co/spaces/multimodalart/jev-decisio
 export function decisionIndexBoard() {
 	const c = stable('decision_index_board_03');
 	const val = (x) => Number(x?.value ?? x);
-	const rows = (c.values?.rows ?? []).map((r) => ({ name: r.name, pub: val(r.public_index), v03: val(r.edition_03) }));
+	// The board names each row by its release and model ("decisio 0.6.0 (Gemma 4 31B)"); the site names it by its model and
+	// gives the release in the source note.
+	const rows = (c.values?.rows ?? []).map((r) => {
+		const m = /^decisio (\d+\.\d+\.\d+) \((.+)\)$/.exec(r.name);
+		need2(m, `has a decision_index_board_03 row "${r.name}" that is not "decisio <release> (<model>)"`);
+		return { name: `Decisio, ${m[2]}`, release: m[1], boardName: r.name, pub: val(r.public_index), v03: val(r.edition_03) };
+	});
 	const ours = rows.find((r) => /Gemma 4 31B/.test(r.name));
 	const date = /^\d{4}-\d{2}-\d{2}/.exec(c.date ?? '')?.[0];
 	need2(ours && date && c.values?.label, 'has a decision_index_board_03 claim without the 31B row, its date or the board\'s version');

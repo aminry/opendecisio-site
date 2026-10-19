@@ -662,7 +662,9 @@ h1#_top {
 	white-space: pre;
 }
 
-.sl-markdown-content .recorded {
+/* A number's source note (::source, src/lib/remark-upstream.mjs) reads like a recorded output's label. */
+.sl-markdown-content .recorded,
+.sl-markdown-content p.src-note {
 	margin-top: 0.5rem;
 	font-size: var(--d-step--2);
 	color: var(--sl-color-gray-3);

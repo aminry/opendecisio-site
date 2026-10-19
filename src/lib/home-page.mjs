@@ -92,17 +92,18 @@ export function useCaseCards() {
 	const g = tcData().gatekeeper;
 	const { kind, run } = issueTriage();
 	const suite = suite31();
+	// Each card's figure, and its source note (the release, model and card or date it was measured on), apart from it.
 	const proof = {
-		'support-routing': 'Measured: the support inbox above.',
-		gatekeeper: `${pct(g.at5.share[0], 0)} to ${pct(g.at5.share[1], 0)} of commands decided on their own at a 5% error rate (Gemma 4 12B on a Mac, decisio ${g.decisio}).`,
-		'issue-triage': `${kind.untaught.accuracy.printed}% right on an issue's kind, untaught (Gemma 4 31B, ${kind.test_items.toLocaleString('en-US')} kubernetes issues, ${run.label}).`,
-		guardrails: `${pct(suite.read('ToxicChat').acc)} right on ToxicChat's toxicity question (Gemma 4 31B, ${runOf('gemma-4-31b')}).`,
-		'rag-gate': `${pct(suite.read('SciFact').acc)} right on SciFact's claims and their evidence (Gemma 4 31B, ${runOf('gemma-4-31b')}).`,
-		'document-classification': 'A recipe: no run on documents is published yet.',
+		'support-routing': ['Measured: the support inbox above.'],
+		gatekeeper: [`${pct(g.at5.share[0], 0)} to ${pct(g.at5.share[1], 0)} of commands decided on their own at a 5% error rate.`, `Gemma 4 12B on a Mac, decisio ${g.decisio}, ${g.dates.join(' and ')}`],
+		'issue-triage': [`${kind.untaught.accuracy.printed}% right on an issue's kind, untaught, on ${kind.test_items.toLocaleString('en-US')} kubernetes issues.`, `Gemma 4 31B, ${run.label}`],
+		guardrails: [`${pct(suite.read('ToxicChat').acc)} right on ToxicChat's toxicity question.`, `Gemma 4 31B, ${runOf('gemma-4-31b')}`],
+		'rag-gate': [`${pct(suite.read('SciFact').acc)} right on SciFact's claims and their evidence.`, `Gemma 4 31B, ${runOf('gemma-4-31b')}`],
+		'document-classification': ['A recipe: no run on documents is published yet.'],
 	};
 	const ids = Object.keys(CARDS);
 	if (JSON.stringify(ids) !== JSON.stringify(recipeIds)) fail('the use-case cards are not the recipes, in their order');
-	return ids.map((id) => ({ id, href: `/docs/use-cases/${id}/`, ...CARDS[id], proof: proof[id], measured: id !== 'document-classification' }));
+	return ids.map((id) => ({ id, href: `/docs/use-cases/${id}/`, ...CARDS[id], proof: proof[id][0], source: proof[id][1], measured: id !== 'document-classification' }));
 }
 
 /**

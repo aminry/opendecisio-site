@@ -74,7 +74,7 @@ With several replicas, each one is a separate server with its own tasks.
 1. **Keep it on a private network, behind your proxy.** The server listens on `127.0.0.1` by default; do not expose it to the internet.
 2. **Put authentication, rate limits and request-size limits in the proxy.** The server has none.
 3. **Restrict the routes that change it** to trusted callers: `POST /v1/tasks`, `POST /v1/tasks/import`, `DELETE /v1/tasks/{id}` and the abstention routes.
-4. **Do not configure CORS on the proxy** for this server: it would let a web page's browser send requests to it. With a release before 0.12.0, have the proxy refuse a POST whose Content-Type is not `application/json`.
+4. **Do not configure CORS on the proxy** for this server: it would let a web page's browser send requests to it.
 5. **Run one server per trust boundary**, one for each group of callers that trust each other: its cache and its tasks are shared by every caller.
 6. **Leave `--debug-readout` off.** It exposes the model's raw readouts.
 7. **Keep to the latest release:** it is the one that receives security fixes.

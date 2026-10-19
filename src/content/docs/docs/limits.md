@@ -63,19 +63,23 @@ Each request holds:
 - as many images as the context holds, up to the image engine's `--max-images` (128 unless set), PNG, JPEG or WebP, 20 MB each;
 - a prompt up to the length above; a longer one gets 422.
 
-A long text takes longer to read the first time: on the 31B, 3,370 ms at 16,000 tokens and 8,880 ms at 32,000 (one RTX PRO 6000 at 600 W, decisio 0.11.1).
+A long text takes longer to read the first time: on the 31B, 3,370 ms at 16,000 tokens and 8,880 ms at 32,000.
+
+::source[Measured on decisio 0.11.1, one RTX PRO 6000 at 600 W, 2026-10-14.]
+
 At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right against 25 of 30 short; a 30-item check is a smoke test, not an accuracy measurement.
 
 ## 3. Set up for production
 
 1. **Give `--max-model-len` the same value on every card.** The length served is part of what a certificate covers. On an RTX PRO 6000, 98,304 against 32,768 changed 6 of 200 top answers.
-2. **After upgrading decisio, certify your tasks again.** For example, a task certified before 0.16.0 gets no drift protection until it is certified again.
+2. **After upgrading decisio, certify your tasks again.** A certificate covers the release it was made on.
 3. **A certificate covers one task on one serving setup.** The setup is the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length and the serving flags. When any of it changes, the task's answers stop being certified until you certify again.
 4. **Keep the cache type you certified on.** `--kv-cache-dtype fp8` suspends a certificate made without it.
 5. **On a Mac, run one model server at a time.** Two servers can add up to more memory than the Mac has.
 
 ## 4. What was measured on what
 
+:::sources
 | What | Model | Machine | Conditions | Date |
 | --- | --- | --- | --- | --- |
 | Accuracy and calibration | Qwen3.6-35B-A3B, FP8 | one RTX PRO 6000 Blackwell, 96 GB | vLLM 0.30.0 | 2026-10-03 |
@@ -86,6 +90,7 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 | Context length against the card's share | Gemma 4 31B, FP8; Gemma 4 12B | one H100 PCIe, 80 GB | vLLM 0.31.0 | 2026-10-15 |
 | Mac memory | Gemma 4 31B and 12B, MLX builds | one Apple M5 Pro, 64 GB | MLX | 2026-10-05 to 2026-10-16 |
 | Ollama memory | Gemma 4 12B, `q4_k_m` | one Apple M5 Pro | Ollama 0.35.1 | 2026-10-07 |
+:::
 
 - One card and one run per configuration.
 - Each model's default settings were tuned on decisio's own 1,400-item suite, so its calibration errors on that suite are a best case.

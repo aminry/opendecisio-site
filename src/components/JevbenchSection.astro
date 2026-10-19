@@ -21,7 +21,7 @@ const file = `JevBench ${j.revision}, the board's file, read ${read}`;
 		<div class="section__head">
 			<p class="kicker">Public boards</p>
 			<h2 id="jevbench">The JevBench <em class="hl">board</em></h2>
-			<p>JevBench is an outside board that sends decision questions to each system and scores its answers on intelligence (right answers, on open questions and on sealed ones it never published), calibration, speed and cost, and on a composite of them. Its 31B row is decisio v0.8.0 on Gemma 4 31B, an earlier release of the same model; systems are in alphabetical order, and <a href={BOARD_URL}>the live board</a> has today's standings.</p>
+			<p>JevBench is an outside board that sends decision questions to each system and scores its answers on intelligence (right answers, on open questions and on sealed ones it never published), calibration, speed and cost, and on a composite of them. Systems are in alphabetical order, and <a href={BOARD_URL}>the live board</a> has today's standings.</p>
 		</div>
 		<ul class="plain-list jb__claims" data-claims data-table-notes>
 			{claims.map((t) => <li>{t}</li>)}
@@ -34,6 +34,7 @@ const file = `JevBench ${j.revision}, the board's file, read ${read}`;
 			</div>
 			<JevbenchChart />
 			<p class="pcard__foot">The 12B rows' intervals are wide on the low side. Our temperatures were not fitted on JevBench, but we have read its published items (<a href="/docs/evaluation-card/#74-what-was-fitted-on-what">the evaluation card</a>, section 7.4).</p>
+			<p class="pcard__foot src-note">Decisio's rows as the board ran them: {j.releases.map((r) => `${r.name} on decisio ${r.release}`).join('; ')}.</p>
 		</div>
 
 		<AxisByAxis />

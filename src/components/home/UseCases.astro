@@ -17,6 +17,7 @@ const cards = useCaseCards();
 					<h3 class="uc__t"><a href={c.href}>{c.title}</a></h3>
 					<p class="uc__l">{c.line}</p>
 					<p class:list={['uc__p', { 'uc__p--recipe': !c.measured }]}>{c.proof}</p>
+					{c.source && <p class="uc__src src-note">{c.source}</p>}
 				</li>
 			))}
 		</ul>

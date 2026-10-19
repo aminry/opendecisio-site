@@ -414,14 +414,6 @@
 	fill: var(--h-ink);
 }
 
-.tc-drift {
-	--base: var(--d-base-g31);
-}
-
-.tc-drift:has([data-base='g12'][aria-pressed='true']) {
-	--base: var(--d-base-g12);
-}
-
 .tc-oos {
 	fill: none;
 	stroke: var(--h-ink);
@@ -513,17 +505,6 @@
 }
 
 /* The fix beside the failure: a small table, then what each target's promise did. */
-.tc-compare {
-	margin-top: 16px;
-}
-
-.tc-compare caption {
-	caption-side: bottom;
-	padding-top: 8px;
-	text-align: left;
-	color: var(--h-dim);
-	font-size: 12.5px;
-}
 
 .tc-promise {
 	max-width: 70ch;
@@ -687,13 +668,4 @@
 
 .tc-keep b {
 	color: var(--h-ink);
-}
-
-.tc-drift-history > summary {
-	cursor: pointer;
-	font-weight: 600;
-}
-
-.tc-drift-history[open] > summary {
-	margin-bottom: 14px;
 }

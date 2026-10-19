@@ -104,7 +104,7 @@ export function tableNotes() {
 	for (const l of lines) if (!text.includes(`\n${l}\n`)) fail(`the README no longer says "${l}" under its benchmark table`);
 	const latency = /^Latency is server time on decisio 0\.8\.1's served defaults, at a 585 W power limit \(default 600 W\), so a card at 600 W may read new states faster/m.exec(text);
 	if (!latency) fail("the README no longer gives the latency rows' conditions");
-	return [...lines, "Latency is server time on decisio 0.8.1's served defaults, at a 585 W power limit (the default is 600 W)."];
+	return [...lines.map((text) => ({ text })), { text: "Latency is server time on decisio 0.8.1's served defaults, at a 585 W power limit (the default is 600 W).", source: true }];
 }
 
 /**

@@ -60,7 +60,7 @@ const description = 'What decisio does, measured and dated: many questions about
 					<li class:list={['card3', 'tile', { 'tile--active': i === 0 }]}>
 						<span class="card3__n">{t.n}</span>
 						<span class="card3__l">{t.text}</span>
-						<span class="card3__d"><a href={t.href}>{t.date}</a></span>
+						<span class="card3__d src-note"><a href={t.href}>{t.date}</a></span>
 					</li>
 				))}
 			</ul>
@@ -91,7 +91,7 @@ const description = 'What decisio does, measured and dated: many questions about
 					<p class="pcard__meta">each base with its own defaults on {measured.label}; higher is better, but for the times; each column links to its record</p>
 				</div>
 				<BenchmarkTable />
-				<div class="pcard__foot" data-table-notes>{notes.map((n) => <p>{n}</p>)}</div>
+				<div class="pcard__foot" data-table-notes>{notes.map((n) => <p class:list={{ 'src-note': n.source }}>{n.text}</p>)}</div>
 				<details class="disc">
 					<summary>Gemma 4 12B and Qwen3.6-35B-A3B on the same items, with JevBench v1.5, {runOf('gemma-4-12b')}</summary>
 					<div class="disc__body">
@@ -149,6 +149,7 @@ const description = 'What decisio does, measured and dated: many questions about
 						</tbody>
 					</table>
 				</div>
+				<p class="pcard__foot src-note">The rows as the board lists them: {di.rows.map((r) => `${r.name.replace(/^Decisio, /, '')} on decisio ${r.release}`).join('; ')}.</p>
 				<p class="pcard__foot"><a href="/docs/evaluation-card/#8-the-decision-indexs-whole-suite-self-run">The evaluation card, section 8</a>, has our own runs of the whole suite.</p>
 			</div>
 		</div>

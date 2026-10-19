@@ -3,14 +3,14 @@
 // labelled examples, then asked to certify which answers can go out with no one checking them. Each part is from the
 // run records in src/data/teach-certify/teach_certify.json (src/lib/teach-certify.mjs checks them): the support inbox
 // split by the certificate at the rate picked, the share each setup automates at each rate, the promise over 200
-// re-splits, drift (decisio 0.16.0's pause first, then the out-of-scope fix, then the 0.14.0 replay), the gatekeeper,
+// re-splits, drift (the pause, then the out-of-scope fix), the gatekeeper,
 // one box of what to keep in mind, the method and what next. The inbox, the re-splits and the drift chart are drawn here in their first view
 // and redrawn by src/scripts/teach-certify.ts when a chip changes it; without scripts the first view stays.
 import PageHero from '../../components/PageHero.astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { site } from '../../config/site';
 import { breadcrumbs } from '../../lib/jsonld.mjs';
-import { driftChart, drawsChart, pc, scatter, sharesChart } from '../../lib/tc-charts.mjs';
+import { drawsChart, pc, scatter, sharesChart } from '../../lib/tc-charts.mjs';
 import { ALPHAS, SETUPS, baseClass, baseName, data, datasetName, task } from '../../lib/teach-certify.mjs';
 import '../../styles/teach-certify.css';
 
@@ -41,12 +41,8 @@ const resplits = Object.fromEntries(SETUPS.map(([b, ds]) => [`${b}-${ds}`, { lab
 const first = scatter({ splits: resplits['g31-banking77'].by[START], alpha: Number(START), label: resplits['g31-banking77'].label });
 const c12 = task('g12', 'clinc150'), c31 = task('g31', 'clinc150');
 
-// The drift replay, on each base.
-const drift = { g31: d.drift.g31, g12: d.drift.g12, ...(d.fix && { g31oos: d.fix }) };
-const driftFor = (b: 'g31' | 'g12') => ({ ...drift[b], svg: driftChart(drift[b], `CLINC150, ${baseName(b)}`) });
-const dr0 = driftFor('g31');
-const driftLabel = (b: string) => (b === 'g31oos' ? `CLINC150 with out of scope taught, ${baseName('g31')}` : `CLINC150, ${baseName(b)}`);
-const driftData = Object.fromEntries(Object.entries(drift).map(([b, x]) => [b, { ...x, label: driftLabel(b) }]));
+// The drift stream, on the 31B.
+const dr0 = d.drift.g31;
 const fix = d.fix;
 const gk = d.gatekeeper;
 // decisio 0.16.0's alarm and served-path certificate.
@@ -120,7 +116,7 @@ const oneIn = gk ? Math.round(gk.unsafe.certified / gk.unsafe.unsafe) : 0;
 					<div><dt>Wrong among those</dt><dd><b data-total="errors">{n(ib.targets[START].errors)}</b>{' '}<span data-total="rate">{pc(ib.targets[START].errors / ib.targets[START].covered)} of them</span></dd></div>
 					<div><dt>The certificate's threshold</dt><dd><b data-total="threshold">{ib.targets[START].threshold.toFixed(2)}</b>{' '}<span data-total="why">certified at or above it</span></dd></div>
 				</dl>
-				<p class="tc-src">{datasetName(ib.dataset)}'s test split, credited under How it was run. {baseName(ib.model)} from {d.models[ib.model].build} on {d.models[ib.model].machine.replace(/ \(.*\)$/, '')}, decisio {d.decisio}: taught with {n(ib.teach_n)} examples, certified on {n(ib.cal_n)} held-out ones. The {ib.messages.length} messages are a seeded random sample of the test split, not picked by hand.</p>
+				<p class="tc-src src-note">{datasetName(ib.dataset)}'s test split, credited under How it was run. {baseName(ib.model)} from {d.models[ib.model].build} on {d.models[ib.model].machine.replace(/ \(.*\)$/, '')}, decisio {d.decisio}: taught with {n(ib.teach_n)} examples, certified on {n(ib.cal_n)} held-out ones. The {ib.messages.length} messages are a seeded random sample of the test split, not picked by hand.</p>
 			</div>
 		</div>
 	</section>
@@ -177,56 +173,23 @@ const oneIn = gk ? Math.round(gk.unsafe.certified / gk.unsafe.unsafe) : 0;
 				<p>The {datasetName('clinc150')} task was taught its {fix.options - 1} intents and no way to say a message fits none of them. A replay of {n(dr0.messages)} messages then mixed in off-topic ones, from none at message {n(dr0.start)} to {perHundred(dr0.top_share)} in every 100 by message {n(dr0.top)}, and each one certified was a wrong answer sent out.</p>
 			</div>
 
-			<div class="pcard tile tc-fix tc-016">
-				<h3 class="tc-h3">From decisio {r16.version}: the alarm pauses certification</h3>
-				<p class="tc-read">From {r16.version} the confidence alarm pauses certification by default, for a task certified on {r16.version}: answers keep coming, but none is marked certified until the traffic looks like the examples again. Measured on a build of decisio {r16.version} before its release, {baseName('g31')} FP8.</p>
+			<div class="pcard tile tc-fix">
+				<h3 class="tc-h3">The alarm pauses certification</h3>
+				<p class="tc-read">The confidence alarm pauses certification by default: answers keep coming, but none is marked certified until the traffic looks like the examples again.</p>
 				<ul class="tc-promise" data-table-notes>
-					<li>On the {datasetName('clinc150')} stream above, the first paused answer came at message {n(r16.clinc.first_suspended)}, with {r16.clinc.wrong_before} wrong answers certified before it, against {n(r16.clinc.wrong_before_014)} under {d.decisio}, which never paused.</li>
+					<li>On the {datasetName('clinc150')} stream above, the first paused answer came at message {n(r16.clinc.first_suspended)}, with {r16.clinc.wrong_before} wrong answers certified before it.</li>
 					<li>On a stream whose traffic jumps at message {n(r16.jump.jump_at)}, the first paused answer came {r16.jump.first_suspended - r16.jump.jump_at} messages after the jump, with {r16.jump.wrong_before} wrong answers certified before it. Certification resumed {r16.jump.resumed_after} messages after the traffic returned to normal.</li>
 					<li>On normal traffic it paused nothing.</li>
 				</ul>
+				<p class="tc-src src-note">Measured on the decisio {r16.version} release candidate, {baseName('g31')} FP8, {d.models.g31.machine.replace(/ \(.*\)$/, '')}.</p>
 			</div>
 
 			<div class="pcard tile tc-fix" id="fix">
 				<h3 class="tc-h3">The fix: teach it to say none of these</h3>
 				<p class="tc-read">Give the task one more option, out of scope, taught from {fix.oos_taught} off-topic examples, and certify it on held-out examples that include {fix.cert_oos} off-topic ones. An off-topic message then has a right answer, and the certificate counts it.</p>
-				<div class="table-scroll tc-compare">
-					<table class="data-table">
-						<caption>The same drift stream, off-topic rising from 0 to {pc(fix.stream_oos_share, 0)}: {fix.options - 1} options, then the out-of-scope option taught. {baseName('g31')} FP8, decisio {d.decisio}, <span class="nowrap">{fix.date}</span>.</caption>
-						<thead><tr><th scope="col"></th><th scope="col">No out-of-scope option</th><th scope="col">Out of scope taught</th></tr></thead>
-						<tbody>
-							<tr><th scope="row">Wrong among the certified</th><td>{pc(fix.wrong_rate_before)}</td><td>{pc(fix.wrong_rate)}</td></tr>
-							<tr><th scope="row">The alarm, first after message</th><td>{n(d.drift.g31.first_alert_after)}</td><td>{n(fix.first_alert_after)}</td></tr>
-							<tr><th scope="row">Wrong answers certified before it</th><td>{n(d.drift.g31.wrong_before)}</td><td>{n(fix.wrong_before)}</td></tr>
-						</tbody>
-					</table>
-				</div>
-				<ul class="tc-promise" data-table-notes>
-					<li><b>At most 10% wrong</b>, every message was automated and {pc(fix.wrong_rate)} were wrong: the promise held.</li>
-					<li><b>At most 5% wrong</b>, the same {pc(fix.wrong_rate)} missed the promise, because the certificate's examples were {pc(fix.cert_oos_share)} off-topic, against the stream's {pc(fix.stream_oos_share, 0)}.</li>
-				</ul>
 				<p class="tc-read">The promise covers traffic like the examples; the alarm flags when traffic shifts away from them.</p>
 			</div>
 
-			<details class="pcard tile disc tc-drift-history">
-				<summary>The replay on decisio {d.decisio}, where an alarm paused nothing</summary>
-				<div class="tc-drift" data-tc-drift={JSON.stringify(driftData)}>
-					<div class="tc-controls">
-						<div class="tc-chips" role="group" aria-label="Base">
-							{(['g31', 'g12'] as const).map((b, i) => <button class:list={['chip', baseClass(b)]} type="button" aria-pressed={String(i === 0)} data-base={b}><span class="dot" aria-hidden="true"></span>{baseName(b)}</button>)}
-							<button class:list={['chip', baseClass('g31')]} type="button" aria-pressed="false" data-base="g31oos"><span class="dot" aria-hidden="true"></span>{baseName('g31')}, out of scope taught</button>
-						</div>
-						<p class="tc-key"><span class="tc-key__i"><span class="tc-key__oos" aria-hidden="true"></span>off-topic messages per 100</span> <span class="tc-key__i"><span class="tc-key__wrong" aria-hidden="true"></span>wrong answers certified per 100</span></p>
-					</div>
-					<div class="tc-chart" data-tc-driftchart set:html={dr0.svg} />
-					<dl class="tc-totals" aria-live="polite" data-table-keys>
-						<div><dt>The certificate's threshold</dt><dd><b data-drift="threshold">{dr0.threshold.toFixed(2)}</b>{' '}<span data-drift="share">{pc(dr0.certified_share)} of the stream certified</span></dd></div>
-						<div><dt>Wrong answers certified before the alert</dt><dd><b data-drift="before">{n(dr0.wrong_before)}</b></dd></div>
-						<div><dt>And after it, to message {n(dr0.last_reading)}</dt><dd><b data-drift="after">{n(dr0.wrong_after)}</b></dd></div>
-					</dl>
-					<p class="tc-read">The monitor has no labels: it watches the mix of answers and says when the mix moves. In decisio {d.decisio}, where these replays ran, an alert changed no answer and withdrew no certificate; from {r16.version}, it pauses certification.</p>
-				</div>
-			</details>
 		</div>
 	</section>
 
@@ -261,7 +224,7 @@ const oneIn = gk ? Math.round(gk.unsafe.certified / gk.unsafe.unsafe) : 0;
 						</ul>
 					</div>
 				</details>
-				<p class="tc-src">{baseName(gk.model)}, the 6-bit MLX conversion <code>{gk.conversion}</code>, decisio {gk.decisio}, {gk.dates.join(' and ')}. Three draws of {gk.per_rule} commands per rule, each read on the same {n(gk.test_n)} test commands; one more version, taught with 10 per rule, was read across two server starts. The sources are under How it was run.</p>
+				<p class="tc-src src-note">{baseName(gk.model)}, the 6-bit MLX conversion <code>{gk.conversion}</code>, decisio {gk.decisio}, {gk.dates.join(' and ')}. Three draws of {gk.per_rule} commands per rule, each read on the same {n(gk.test_n)} test commands; one more version, taught with 10 per rule, was read across two server starts. The sources are under How it was run.</p>
 			</div>
 		</div>
 	</section>
@@ -275,7 +238,7 @@ const oneIn = gk ? Math.round(gk.unsafe.certified / gk.unsafe.unsafe) : 0;
 			<div class="pcard tile">
 				<ul class="tc-keep">
 					<li><b>Certify where you serve.</b> A certificate holds on the serving setup it was made on: one made on a Mac does not carry to a card, or the reverse.</li>
-					<li><b>Certify again after upgrading decisio.</b> A task certified before {r16.version} gets no drift pause until it is certified again.</li>
+					<li><b>Certify again after upgrading decisio.</b> A certificate covers the release it was made on.</li>
 					<li><b>Give it a way to say none of these.</b> A certificate holds for messages like its held-out examples, and it cannot cover an answer the task cannot give, such as out of scope.</li>
 					<li><b>Which examples you teach with matters at 5%.</b> Three random draws of {ib.k} examples per intent on {datasetName('banking77')} certified very different shares of the test split at 5%; at 10% the draws agree, as the chart below shows.</li>
 					<li><b>A harder test split moves the rate.</b> Both 2% certificates on {datasetName('clinc150')} came in a little over the rate on its official test split, which is harder than the validation split they were made on: there {baseName('g12')} is right {pc(c12.cal_accuracy)} of the time and {baseName('g31')} {pc(c31.cal_accuracy)}. Pooled and re-split, the same answers hold.</li>
@@ -293,7 +256,8 @@ const oneIn = gk ? Math.round(gk.unsafe.certified / gk.unsafe.unsafe) : 0;
 			<div class="section__head">
 				<p class="kicker">Method</p>
 				<h2 id="method">How it <em class="hl">was run</em></h2>
-				<p>Decisio {d.decisio}, every serving setting at its default, on {d.dates.slice(0, -1).join(', ')} and {d.dates.at(-1)}; the drift pause on a build of decisio {r16.version}. The model's weights never changed: teaching fits a small layer on what the model reads.</p>
+				<p>Every serving setting at its default. The model's weights never changed: teaching fits a small layer on what the model reads.</p>
+				<p class="tc-src src-note">Measured on decisio {d.decisio} on {d.dates.slice(0, -1).join(', ')} and {d.dates.at(-1)}; the drift pause on the decisio {r16.version} release candidate.</p>
 			</div>
 			<div class="pcard tile">
 				<details class="disc">
@@ -325,6 +289,7 @@ const oneIn = gk ? Math.round(gk.unsafe.certified / gk.unsafe.unsafe) : 0;
 					<div class="disc__body">
 						<p>Each message is one question over every intent, "Which of these labels fits the text?", and the confidence is the answer's top probability. Each task was taught with its examples, and the server fitted a small layer on them.</p>
 						<p>The certificate was made on held-out examples that share none with the teaching set: drawn from {datasetName('banking77')}'s training split, and all of {datasetName('clinc150')}'s validation split. It finds the lowest confidence at which the held-out mistakes stay under the rate, with a statistical bound (Learn then Test, with Clopper-Pearson bounds).</p>
+						<p>Certificates are made on the serving path: read again through it, {r16.served_path.n} of {r16.served_path.n} held-out examples gave the same confidence.</p>
 						<p>What it promises: nine times in ten over the draw of held-out examples, at most the rate picked of the certified answers is wrong, for traffic like those examples, on the serving setup it was made on.</p>
 					</div>
 				</details>
@@ -333,13 +298,6 @@ const oneIn = gk ? Math.round(gk.unsafe.certified / gk.unsafe.unsafe) : 0;
 					<div class="disc__body">
 						<p>For each task, the held-out and test answers were pooled and split again {n(splits)} times, by intent, into parts of the original sizes. A split that certified nothing counts as held, and the counts show how often that happened.</p>
 						<p>The drift stream holds every in-scope {datasetName('clinc150')} test message once, plus off-topic messages from its out-of-scope list, read one at a time through the task with its 5% certificate. The monitor was read every 100 messages.</p>
-					</div>
-				</details>
-				<details class="disc">
-					<summary>Found and fixed in decisio {r16.version}</summary>
-					<div class="disc__body">
-						<p>In {d.decisio}, teaching and serving scored a certificate's examples by different paths, so on the card a few confidences moved between the two. {r16.version} certifies on the serving path; a certificate made on an earlier version keeps the gap until it is made again.</p>
-						<p>Read again through the serving path when taught, {r16.served_path.n} of {r16.served_path.n} held-out examples gave the same confidence: the largest shift was {r16.served_path.max_shift.toFixed(1)}.</p>
 					</div>
 				</details>
 			</div>

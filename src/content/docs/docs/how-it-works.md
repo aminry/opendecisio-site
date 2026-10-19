@@ -42,7 +42,9 @@ A task's correction makes the probabilities more honest: on six held-out tasks, 
 
 ::figure{name="teach-flow-all"}
 
-On the support inbox, :value{name="inbox-certified-5"} of the messages were answered on their own at a 5% error target (BANKING77, Gemma 4 31B, decisio 0.14.0; [Certify answers](/docs/tasks/certify/)).
+On the support inbox, :value{name="inbox-certified-5"} of the messages were answered on their own at a 5% error target (BANKING77, Gemma 4 31B; [Certify answers](/docs/tasks/certify/)).
+
+::source{name="teach-certify"}
 
 - After upgrading decisio, certify your tasks again.
 - A certificate covers one task on one serving setup. Certify again when you change either.

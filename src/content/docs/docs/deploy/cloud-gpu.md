@@ -34,7 +34,10 @@ Start another model with `--base gemma-4-12b` or `--base qwen3.6-35b-a3b`.
 ## 2. Start the server
 
 The first start downloads the weights and loads them onto the card.
-The 31B was ready after 7 min 54 s with the download, and after 4 min 3 s with the weights already on disk (decisio 0.11.0 from PyPI, one RTX PRO 6000 Blackwell at 600 W, 2026-10-09).
+The 31B was ready after 7 min 54 s with the download, and after 4 min 3 s with the weights already on disk.
+
+::source[Measured on decisio 0.11.0 from PyPI, one RTX PRO 6000 Blackwell at 600 W, 2026-10-09.]
+
 It is ready when `/health` answers 200, with the model and the longest text it serves:
 
 ::site-block{name="health-31b"}

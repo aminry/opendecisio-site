@@ -93,6 +93,8 @@ These compare the taught server with the untaught one on the same messages, whic
 - **Teaching:** every example is scored once, plus the fit, as in the times above.
 - **Each later question:** a correction costs nothing extra. A question the intent head answers takes extra work on the server: :value{name="head-cost"}
 
+::source{name="triage-demo"}
+
 ## What next
 
 - [Certify answers](/docs/tasks/certify/): get answers the server stands behind, at the error rate you choose.

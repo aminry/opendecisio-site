@@ -58,7 +58,7 @@ export const sourced = [
 		["with JevBench's own measure, over ten equal-width bins of the probability", readme, "over 10 equal-width bins of the probability (JevBench's own measure"],
 	]),
 	...fromPage('/benchmarks/', [
-		['from decisio 0.14.0 a Gemma base serves what the card holds, up to 98,304 on the 31B', 'docs/comparison.md', 'from decisio 0.14.0 the Gemma bases serve the largest context that fits the card'],
+		['At least 32,768 tokens on a Gemma base, and up to 98,304 on the 31B, as the card holds', readme, 'on the Gemma bases, of the largest length the card holds, at least 32,768 and at most 98,304 on the 31B'],
 	]),
 	// Batch 10: the FAQ's answers in their new homes.
 	...fromPage('/docs/bases/', [
@@ -66,7 +66,6 @@ export const sourced = [
 		['redistribute them with their licence and provenance files', readme, 'redistribute those weights under Apache-2.0 with their licence and provenance files'],
 	]),
 	...fromPage('/docs/operating/', [
-		['With a release before 0.12.0, have the proxy refuse a POST whose Content-Type is not application/json', security, 'With an earlier release, have the proxy refuse a POST whose Content-Type is not `application/json`.'],
 	]),
 	...fromPage('/docs/use-cases/', [
 		['Each answer is read from one forward pass and no generated text', readme, 'from one forward pass and no generated text'],
@@ -76,7 +75,7 @@ export const sourced = [
 	]),
 	...fromPage('/benchmarks/', [
 		['within 0.001 on the 12B, except GPQA Diamond (two of 196 items)', card, 'within 0.001 on the 12B except GPQA Diamond (two of 196 items)'],
-		['from decisio 0.12.0 certifies which answers to trust', 'CHANGELOG.md', '**serve:** certified answers and a monitor in /v1/tasks'],
+		['and certifies which answers to trust at the error rate you pick', readme, 'a certificate holds for one task on one serving setup'],
 	]),
 	...fromPage('/docs/images/', [
 		['It prints route: image when the image engine answered', api, '`x-decisio-route`: the route that served it (`text` or `image`).'],
@@ -87,7 +86,7 @@ export const sourced = [
 	// Home: the Good fit box.
 	...fromPage('/', [
 		['118 or more, at the defaults, for a task you want certified', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
-		['from decisio 0.16.0, certification pauses on its own while the confidence alert is on', upgrading, '| A certified task made on 0.16.0 | The confidence alert suspends certification while it is on |'],
+		['certification pauses on its own while the confidence alert is on', 'docs/tasks.md', '**By default this suspends certification:** every answer of the task is `certified: false` with the reason `traffic_changed` while the alert is on'],
 		['up to 255 per question', readme, 'and 255 options per question'],
 		['at least 32,768 tokens on a Gemma model on a card, and up to 98,304 on the 31B, as the card allows', readme, 'on the Gemma bases, of the largest length the card holds, at least 32,768 and at most 98,304 on the 31B'],
 		['the default model runs on one NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or on a 64 GB Mac', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
@@ -203,10 +202,9 @@ export const sourced = [
 		['as many images as the context holds, up to the image engine\'s --max-images (128 unless set)', card, 'as many images per request as the context holds (up to `--max-images`, 128 by default)'],
 		['PNG, JPEG or WebP, 20 MB each', card, '(PNG, JPEG or WebP, up to 20 MB each)'],
 		["it starts and answers, an H100 PCIe; the full measurements are the 96 GB card's", running, 'it is measured in full on a 96 GB card, and it also started and answered on an 80 GB H100'],
-		['3,370 ms at 16,000 tokens and 8,880 ms at 32,000 (one RTX PRO 6000 at 600 W, decisio 0.11.1)', running, '3,370 ms at 16,000 and 8,880 ms at 32,000 on the 31B'],
+		['3,370 ms at 16,000 tokens and 8,880 ms at 32,000', running, '3,370 ms at 16,000 and 8,880 ms at 32,000 on the 31B'],
 		['answered a check at 85,000 tokens, 23 of 30 right against 25 of 30 short', running, 'answered a check at a state of 85,000 tokens (23 of 30 items right against 25 of 30 for the same items short'],
 		['98,304 against 32,768 changed 6 of 200 top answers', running, '**6 of 200 top answers changed**'],
-		['a task certified before 0.16.0 gets no drift protection until it is certified again', upgrading, 'A task certified before 0.16.0 has no confidence statistic, so it gets no drift protection until it is certified again.'],
 		['--kv-cache-dtype fp8 suspends a certificate made without it', running, "a certificate made under the model's own cache dtype is suspended under fp8"],
 		['Two servers can add up to more memory than the Mac has', running, 'Two servers each stay under their own limit and can still add up to more than the machine has.'],
 		['One card and one run per configuration.', card, 'One card per run and one run per configuration.'],
@@ -271,7 +269,6 @@ export const sourced = [
 		['The counters live in memory and start again when the server does.', tasksDoc, 'The counters are in memory and start again with the server.'],
 		['label a sample of it and certify again', tasksDoc, 'The only direct check that the promise holds on live traffic is to label some of it and certify again.'],
 		['"suspend_on_alert": false', tasksDoc, 'A certify block with `"suspend_on_alert": false` only reports.'],
-		['A task certified before decisio 0.16.0 has no confidence check until it is certified again', upgrading, 'A task certified before 0.16.0 has no confidence statistic, so it gets no drift protection until it is certified again.'],
 	]),
 	// Operate
 	...fromPage('/docs/operating/', [
@@ -312,7 +309,7 @@ export const sourced = [
 		['the 31B served 98,304 tokens at 0.90 and 49,152 at 0.85, and did not start at 0.70', running, '| 0.70 | 18.54 GiB | 22,064 | does not start |'],
 		['A prompt longer than the length gets 422, and the server stays up.', api, 'the server stays up'],
 		['A choice can have up to 255 options; more gets 422.', api, 'up to 255 options (more is 422)'],
-		["+21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens (one card at 585 W, decisio 0.8.1, 2026-10-06)", running, 'and +21, +34 and +34 ms on Gemma 4 31B (`runs/2026-10-06_latency-585w/`'],
+		["+21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens", running, 'and +21, +34 and +34 ms on Gemma 4 31B (`runs/2026-10-06_latency-585w/`'],
 		['the 31B kept 0.61 and 0.74 of it at 32 and 64 clients', running, 'but the 31B kept only 0.61 and 0.74'],
 		['a second copy of the weights on the card, and no image engine', tasksDoc, 'holds a second copy of the model\'s weights, leaves no room for the image engine on the card'],
 		['nvidia-smi -q -d POWER', running, '(`nvidia-smi -q -d POWER`)'],

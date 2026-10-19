@@ -194,11 +194,14 @@ export function value(name) {
 	for (const id of Object.keys(RECIPES)) others[`floor-${id}`] = floorSentence(id);
 	// The intent head's cost per question, from the triage demo's 31B row: its median latency plain and with the head.
 	const tri = /^\| Gemma 4 31B \| [^|]+\| [^|]+\| [^|]+\| [^|]+\| (\d+) \/ (\d+) \|$/m.exec(readUpstream('docs/demos/README.md')) ?? fail("docs/demos/README.md's triage table no longer gives the 31B's latency plain and registered");
-	others['head-cost'] = `in the triage demo the 31B answered in ${tri[1]} ms plain and ${tri[2]} ms with the head, median (decisio ${setupLine().version}, one RTX PRO 6000, ${setupLine().date}).`;
+	others['head-cost'] = `in the triage demo the 31B answered in ${tri[1]} ms plain and ${tri[2]} ms with the head, median.`;
 	const v = { ...issueTriage().values, ...others, ...recordedValues() }[name];
 	if (v === undefined) fail(`no value "${name}"`);
 	return v;
 }
+
+// A proof's source notes, kept apart from its sentences (docs/STYLE_GUIDE.md, "Numbers").
+const sources = (...lines) => lines.map((source) => ({ source }));
 
 const PROOFS = {
 	'support-routing': () => {
@@ -207,17 +210,17 @@ const PROOFS = {
 		const t = ib.targets['0.05'] ?? fail('the inbox has no 5% certificate');
 		const triage = /^\| Gemma 4 31B \| ([\d.]+)% \[[^\]]+\] \| ([\d.]+)% \[/m.exec(readUpstream('docs/demos/README.md')) ?? fail("docs/demos/README.md's triage table has no 31B row");
 		return [
-			`<b>${pct(t.covered / ib.test_n)}</b> of a support inbox's messages answered on their own at a 5% error target, ${pct(t.errors / t.covered)} of them wrong: BANKING77's 77 intents, ${baseName(ib.model)} taught with ${ib.k} examples per intent, ${fmt(ib.test_n)} test messages, decisio ${d.decisio}, ${d.dates[0]}.`,
-			`<b>${triage[1]}%</b> of 400 held-out tickets routed right over 20 queues by ${baseName('g31')} with the plain question, and ${triage[2]}% after teaching it from 200 labelled tickets: decisio's triage demo, decisio ${setupLine().version}, one RTX PRO 6000, ${setupLine().date}.`,
-		];
+			`<b>${pct(t.covered / ib.test_n)}</b> of a support inbox's messages answered on their own at a 5% error target, ${pct(t.errors / t.covered)} of them wrong: BANKING77's 77 intents, ${baseName(ib.model)} taught with ${ib.k} examples per intent, ${fmt(ib.test_n)} test messages.`,
+			`<b>${triage[1]}%</b> of 400 held-out tickets routed right over 20 queues by ${baseName('g31')} with the plain question, and ${triage[2]}% after teaching it from 200 labelled tickets: decisio's triage demo.`,
+		].concat(sources(`The inbox: measured on decisio ${d.decisio}, ${d.models[ib.model].machine.replace(/ \(.*\)$/, '')}, ${d.dates[0]}.`, `The triage demo: measured on decisio ${setupLine().version}, one RTX PRO 6000, ${setupLine().date}.`));
 	},
 	gatekeeper: () => {
 		const d = tcData();
 		const g = d.gatekeeper;
 		return [
-			`<b>${pct(g.at5.share[0], 0)} to ${pct(g.at5.share[1], 0)}</b> of a coding agent's shell commands decided on their own at a 5% error target, with the wrong action on ${pct(g.at5.wrong_action[0])} to ${pct(g.at5.wrong_action[1])} of them: ${g.rules.length} rules, ${baseName(g.model)} on a Mac (${d.models[g.model].build}), taught with ${g.per_rule} labelled commands per rule, ${g.draws} draws, ${fmt(g.test_n)} test commands, decisio ${g.decisio}, ${g.dates[0]}.`,
+			`<b>${pct(g.at5.share[0], 0)} to ${pct(g.at5.share[1], 0)}</b> of a coding agent's shell commands decided on their own at a 5% error target, with the wrong action on ${pct(g.at5.wrong_action[0])} to ${pct(g.at5.wrong_action[1])} of them: ${g.rules.length} rules, ${baseName(g.model)} on a Mac (${d.models[g.model].build}), taught with ${g.per_rule} labelled commands per rule, ${g.draws} draws, ${fmt(g.test_n)} test commands.`,
 			`When a kind of command no rule names rose to ${pct(g.drift.new_kind_share, 0)} of the traffic, none of its ${g.drift.new_kind} commands was certified.`,
-		];
+		].concat(sources(`Measured on decisio ${g.decisio}, ${baseName(g.model)} on a Mac, ${g.dates.join(' and ')}.`));
 	},
 	guardrails: () => {
 		const tox = suite31().read('ToxicChat');
@@ -239,21 +242,22 @@ const PROOFS = {
 		const { t, kind, sig, prio, ni, sig1000, run } = issueTriage();
 		const p = (x) => `${x.printed}%`;
 		return [
-			`<b>${p(kind.untaught.accuracy)}</b> right on the kind of an issue (macro-F1 ${p(kind.untaught.score)}) and <b>${p(sig.untaught.accuracy)}</b> on its owning SIG, the ${sig.options} most frequent (macro-F1 ${p(sig.untaught.score)}), by Gemma 4 31B, untaught, on ${fmt(kind.test_items)} real kubernetes/kubernetes issues (${run.label}).`,
+			`<b>${p(kind.untaught.accuracy)}</b> right on the kind of an issue (macro-F1 ${p(kind.untaught.score)}) and <b>${p(sig.untaught.accuracy)}</b> on its owning SIG, the ${sig.options} most frequent (macro-F1 ${p(sig.untaught.score)}), by Gemma 4 31B, untaught, on ${fmt(kind.test_items)} real kubernetes/kubernetes issues.`,
 			`It works out of the box: teaching changed accuracy by under a point, except on the owning SIG at ${fmt(sig1000.examples)} examples, ${p(sig.untaught.accuracy)} to ${p(sig1000.accuracy)} (macro-F1 ${p(sig.untaught.score)} to ${p(sig1000.score)}).`,
 			`Priority is ${p(prio.untaught.accuracy)} right, and needs-information has a balanced accuracy of ${p(ni.untaught.score)}, which teaching lowers slightly.`,
 			`These figures are ${t.reporting_sentence}.`,
-			esc(run.wording),
 			esc(t.licence_line),
-		];
+		].concat(sources(esc(run.wording)));
 	},
 	'document-classification': () => ['A recipe: decisio is measured on short texts, such as the intent sets of the support inbox; no run on long documents is published.'],
 };
 
-/** The measured result of a recipe, as a list. */
+/** The measured result of a recipe, as a list, and under it the source notes of its numbers (release, card, date). */
 export function proofHtml(id) {
 	const p = (PROOFS[id] ?? fail(`no proof for "${id}"`))();
-	return `<ul class="proof">${p.map((x) => `<li>${x}</li>`).join('')}</ul>`;
+	const items = p.filter((x) => !x.source);
+	const notes = p.filter((x) => x.source).map((x) => `<p class="src-note">${x.source}</p>`).join('');
+	return `<ul class="proof">${items.map((x) => `<li>${x}</li>`).join('')}</ul>${notes}`;
 }
 
 export const recipeIds = Object.keys(RECIPES);

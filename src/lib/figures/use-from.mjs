@@ -74,5 +74,5 @@ export function integrationsTable() {
 <thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead>
 <tbody>${rows}</tbody>
 </table></div>
-<p class="table-note">Checked on the CPU stand-in of decisio ${run.tag.replace(/^v/, '')} on ${run.date} (decisio-examples at <code>${run.examples.commit.slice(0, 7)}</code>), and against Gemma 4 31B on decisio ${checked[1]}, ${checked[2]}. The stand-in's answers are not the default model's: the checks test the paths, fields, parsing and errors. The programs below ran on the stand-in on ${programs[1]}.</p>`;
+<p class="table-note src-note">Checked on the CPU stand-in of decisio ${run.tag.replace(/^v/, '')} on ${run.date} (decisio-examples at <code>${run.examples.commit.slice(0, 7)}</code>), and against Gemma 4 31B on decisio ${checked[1]}, ${checked[2]}. The stand-in's answers are not the default model's: the checks test the paths, fields, parsing and errors. The programs below ran on the stand-in on ${programs[1]}.</p>`;
 }

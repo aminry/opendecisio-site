@@ -30,6 +30,7 @@ import { diagram } from './diagrams.mjs';
 import { docsFigure, recordedLabel } from './docs-figures.mjs';
 import { example5Table } from './recorded.mjs';
 import { glossaryTerms, linkFirstUses } from './glossary.mjs';
+import { sourceNote } from './source-notes.mjs';
 import { runOf } from './bench-page.mjs';
 import { splitParagraph } from './sentences.mjs';
 import { integrationsTable } from './figures/use-from.mjs';
@@ -237,6 +238,20 @@ export default function remarkUpstream(options = {}) {
 			if (node.name !== 'recorded-label') return;
 			parent.children.splice(index, 1, { type: 'html', value: recordedLabel(node.attributes?.shows) });
 			return index + 1;
+		});
+		// ::source[Measured on decisio 0.11.1, one RTX PRO 6000 at 600 W, 2026-10-11.]: a number's source note, the one place a
+		// page names the release, card and date it was measured on (docs/STYLE_GUIDE.md, "Numbers"); :::sources wraps a block
+		// of them, such as a table of what was measured on what. scripts/checks/versions.mjs reads class src-note.
+		visit(tree, 'leafDirective', (node) => {
+			if (node.name !== 'source') return;
+			// ::source{name="..."}: a note built from the site's data (src/lib/source-notes.mjs), not typed.
+			if (node.attributes?.name) node.children = [{ type: 'text', value: sourceNote(node.attributes.name) }];
+			if (!node.children?.length) throw new Error(`upstream: ::source with no text in ${vfile.path}`);
+			node.data = { ...node.data, hName: 'p', hProperties: { className: ['src-note'] } };
+		});
+		visit(tree, 'containerDirective', (node) => {
+			if (node.name !== 'sources') return;
+			node.data = { ...node.data, hName: 'div', hProperties: { className: ['src-note'] } };
 		});
 		// :::glossary: a short table of the terms a page uses, set apart from the text around it.
 		visit(tree, 'containerDirective', (node) => {

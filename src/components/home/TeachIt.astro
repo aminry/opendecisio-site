@@ -47,7 +47,8 @@ const steps = [
 					<dd><b>{d.learn.examples.toLocaleString('en-US')} examples</b> <span>{d.learn.perLabel} for each label</span></dd>
 				</div>
 			</dl>
-			<p class="teach__src">{d.source}. The dots are {d.certify.n} of its answers, a seeded random sample, split by the certificate at most {pct(d.certify.alpha, 0)} wrong.</p>
+			<p class="teach__src">The dots are {d.certify.n} of its answers, a seeded random sample, split by the certificate at most {pct(d.certify.alpha, 0)} wrong.</p>
+			<p class="teach__src src-note">{d.source}.</p>
 		</div>
 
 		<ol class="teach__how" aria-label="How it works">

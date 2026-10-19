@@ -8,7 +8,7 @@ description: Know when live traffic stops looking like the examples a task was c
 ::covers{links="docs/tasks.md#the-monitor"}
 
 A certified task watches its own traffic with three checks that need no labels.
-From decisio 0.16.0, certification is suspended while the confidence alarm is on, so a shift does not quietly fill your queue with wrong certified answers:
+Certification is suspended while the confidence alarm is on, so a shift does not quietly fill your queue with wrong certified answers:
 
 ::figure{name="drift-replay"}
 
@@ -61,7 +61,6 @@ The only direct check that the promise holds on live traffic is to label a sampl
 
 - **Give the task an "other" option.** A message that fits none of the options gets a wrong answer, and the checks only notice once enough of them arrive.
 - **To report without suspending**, certify with `"suspend_on_alert": false` in the `certify` block.
-- **A task certified before decisio 0.16.0** has no confidence check until it is certified again.
 
 ## What next
 
