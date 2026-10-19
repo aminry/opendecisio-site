@@ -3,12 +3,12 @@ title: Watch for drift
 description: Know when live traffic stops looking like the examples a task was certified on. The server watches without labels, and suspends certification when it moves.
 ---
 
-<!-- Site-written: the third Teach and trust guide, rewritten from decisio's docs/tasks.md ("The monitor") and docs/api.md ("What to watch") at the pinned release; the chart is decisio's drift replay (src/lib/figures/tasks.mjs); the facts are docs/tasks.md's (src/config/sourced.mjs checks them). -->
+<!-- Site-written: the third Teach and trust guide, rewritten from decisio's docs/tasks.md ("The monitor") and docs/api.md ("What to watch") at the pinned release; the chart is the card measurement the teach-and-certify page shows, under 0.14.0 and on the 0.16.0 release candidate (src/lib/figures/tasks.mjs, src/data/teach-certify/); the facts are docs/tasks.md's (src/config/sourced.mjs checks them). -->
 
 ::covers{links="docs/tasks.md#the-monitor"}
 
 A certified task watches its own traffic with three checks that need no labels.
-When the traffic moves away from the examples, the server stops certifying, so a shift does not quietly fill your queue with wrong certified answers:
+From decisio 0.16.0, certification is suspended while the confidence alarm is on, so a shift does not quietly fill your queue with wrong certified answers:
 
 ::figure{name="drift-replay"}
 

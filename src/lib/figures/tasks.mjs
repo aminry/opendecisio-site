@@ -1,8 +1,6 @@
 // The figures of "Teach and trust": the order the three guides follow (teach, certify, route, watched), the certify
-// slider on the support inbox, and decisio's drift replay. The slider reads the teach-and-certify runs
-// (src/lib/teach-certify.mjs, which checks them); the drift chart reads docs/tasks.md and the replay's summary at the
-// pinned release. All three are still apart from the slider, which moves only when the reader moves it.
-import { readUpstream } from '../upstream.mjs';
+// slider on the support inbox, and the drift stream on the card. The slider and the drift chart read the
+// teach-and-certify runs (src/lib/teach-certify.mjs, which checks them), the records the demo page shows too. All three are still apart from the slider, which moves only when the reader moves it.
 import { baseName, data as tcData, datasetName } from '../teach-certify.mjs';
 import { esc, panel } from './core.mjs';
 
@@ -79,43 +77,46 @@ function certifySlider() {
 
 // --- The drift replay ---------------------------------------------------------------------------------------------------
 
-/** decisio's replay: when each of the two signals alerted, and how many wrong certified answers came before. */
-export function driftReplay() {
-	const tasks = readUpstream('docs/tasks.md');
-	const summary = readUpstream('runs/2026-10-17_drift-monitor/summary.md');
-	const num = (s) => Number(s.replace(/,/g, ''));
-	const m = /([\d,]+) messages, out-of-scope messages rising from message ([\d,]+) to (\d+)%/.exec(tasks);
-	const a = /the confidence signal alerted at message ([\d,]+) after (\d+) wrong certified answers, where the answer mix alerted after message ([\d,]+) and (\d+)/.exec(tasks);
-	const top = /rises from 0 at message ([\d,]+) to (\d+)% at message ([\d,]+)/.exec(summary);
-	if (!m || !a || !top) throw new Error('drift replay: docs/tasks.md or the replay summary no longer states the stream and its alerts');
-	if (num(top[1]) !== num(m[2]) || Number(top[2]) !== Number(m[3])) throw new Error('drift replay: docs/tasks.md and the replay summary describe different streams');
-	return { messages: num(m[1]), start: num(m[2]), share: Number(m[3]) / 100, full: num(top[3]), confidence: { at: num(a[1]), wrong: Number(a[2]) }, mix: { at: num(a[3]), wrong: Number(a[4]) } };
+/** The CLINC150 drift stream on the card, as the teach-and-certify page shows it: under decisio 0.14.0, where only
+ * the answer mix alerted and certification stayed on, and on the 0.16.0 release candidate, where the confidence alarm
+ * suspended it. Both from src/data/teach-certify/ (src/lib/teach-certify.mjs checks that the two compare one stream). */
+export function driftStream() {
+	const d = tcData();
+	const g = d.drift.g31;
+	const r = d.release016;
+	if (!r?.released) throw new Error('drift chart: the 0.16.0 measurement is not marked released in teach_certify.json');
+	return {
+		messages: g.messages, start: g.start, full: g.top, share: g.top_share, old: d.decisio,
+		mix: { at: g.first_alert_after, wrong: g.wrong_before },
+		suspended: { at: r.clinc.first_suspended, wrong: r.clinc.wrong_before, version: r.version, on: r.measured_on, model: r.model },
+		base: baseName('g31'), machine: d.models.g31.machine, dates: d.dates,
+	};
 }
 
 function drift() {
-	const R = driftReplay();
+	const R = driftStream();
 	const x = (n) => 24 + (600 * n) / R.messages;
 	const y = (s) => 186 - (s / R.share) * 100;
-	// The first alert's label sits above the shaded area, right of its line; the second's inside the area, left of its
-	// line, so the two never meet.
+	// The suspension's label sits above the shaded area, right of its line; the old alert's inside the area, left of
+	// its line, so the two never meet.
 	const body = `<svg class="fig__svg" viewBox="0 0 720 222" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 <path class="f-area" d="M${x(0)} 186L${x(R.start).toFixed(1)} 186L${x(R.full).toFixed(1)} ${y(R.share).toFixed(1)}L${x(R.messages).toFixed(1)} ${y(R.share).toFixed(1)}L${x(R.messages).toFixed(1)} 186Z"/>
 <path class="f-axis" d="M24 186L${x(R.messages)} 186"/>
-<path class="f-mark f-mark--on" d="M${x(R.confidence.at).toFixed(1)} 20L${x(R.confidence.at).toFixed(1)} 186"/>
-<text class="ft ft-b" x="${(x(R.confidence.at) + 8).toFixed(1)}" y="34">The confidence signal alerts</text>
-<text class="ft ft-d" x="${(x(R.confidence.at) + 8).toFixed(1)}" y="52">message ${fmt(R.confidence.at)}, after ${R.confidence.wrong} wrong certified answers</text>
+<path class="f-mark f-mark--on" d="M${x(R.suspended.at).toFixed(1)} 20L${x(R.suspended.at).toFixed(1)} 186"/>
+<text class="ft ft-b" x="${(x(R.suspended.at) + 8).toFixed(1)}" y="34">decisio ${R.suspended.version}: certification suspended</text>
+<text class="ft ft-d" x="${(x(R.suspended.at) + 8).toFixed(1)}" y="52">message ${fmt(R.suspended.at)}, after ${R.suspended.wrong} wrong certified answers</text>
 <path class="f-mark" d="M${x(R.mix.at).toFixed(1)} 20L${x(R.mix.at).toFixed(1)} 186"/>
-<text class="ft ft-b" x="${(x(R.mix.at) - 8).toFixed(1)}" y="${(y(R.share) + 40).toFixed(1)}" text-anchor="end">The answer mix alerts</text>
-<text class="ft ft-d" x="${(x(R.mix.at) - 8).toFixed(1)}" y="${(y(R.share) + 58).toFixed(1)}" text-anchor="end">message ${fmt(R.mix.at)}, after ${fmt(R.mix.wrong)} wrong</text>
+<text class="ft ft-b" x="${(x(R.mix.at) - 8).toFixed(1)}" y="${(y(R.share) + 40).toFixed(1)}" text-anchor="end">decisio ${R.old}: only the answer mix alerts</text>
+<text class="ft ft-d" x="${(x(R.mix.at) - 8).toFixed(1)}" y="${(y(R.share) + 58).toFixed(1)}" text-anchor="end">message ${fmt(R.mix.at)}, after ${fmt(R.mix.wrong)} wrong; still certifying</text>
 <text class="ft ft-d" x="24" y="208">message 0</text><text class="ft ft-d" x="${x(R.messages)}" y="208" text-anchor="end">${fmt(R.messages)}</text>
 <text class="ft ft-d" x="${(x(R.messages) + 8).toFixed(1)}" y="${(y(R.share) + 4).toFixed(1)}">${R.share * 100}%</text>
 <text class="ft ft-d" x="${(x(R.messages) + 8).toFixed(1)}" y="190">0%</text>
 </svg>`;
 	return panel({
-		name: 'drift-replay', label: 'Watching for drift', title: 'The confidence signal sees the shift early; the answer mix sees it late.',
-		desc: `decisio's replay of ${fmt(R.messages)} messages to a certified task, with messages that fit none of its options rising from message ${fmt(R.start)} to ${R.share * 100}%. The confidence signal alerted at message ${fmt(R.confidence.at)}, after ${R.confidence.wrong} wrong certified answers; the answer mix alerted after message ${fmt(R.mix.at)}, after ${fmt(R.mix.wrong)}.`,
-		body, legend: 'The shaded area is the share of messages the task has no option for, from 0% to its peak; each of them is a wrong answer. The confidence signal suspends certification by default; the answer mix only reports.',
-		source: 'Source: docs/tasks.md and runs/2026-10-17_drift-monitor/ at the pinned release: an offline replay of recorded reads of the stored Gemma 4 31B, one task.',
+		name: 'drift-replay', label: 'Watching for drift', title: `From decisio ${R.suspended.version}, the alarm suspends certification early; before it, only the answer mix alerted, late.`,
+		desc: `A certified CLINC150 task on ${R.base}, sent ${fmt(R.messages)} messages, with messages that fit none of its options rising from message ${fmt(R.start)} to ${R.share * 100}% at message ${fmt(R.full)}. On decisio ${R.suspended.version}, certification was first suspended at message ${fmt(R.suspended.at)}, after ${R.suspended.wrong} wrong certified answers. Under decisio ${R.old}, only the answer mix alerted, after message ${fmt(R.mix.at)}, by when ${fmt(R.mix.wrong)} wrong answers had been certified, and certification stayed on.`,
+		body, legend: 'The shaded area is the share of messages the task has no option for, from 0% to its peak; each of them is a wrong answer. While certification is suspended, answers keep coming, none marked certified.',
+		source: `Source: the teach-and-certify runs, ${R.suspended.model}: decisio ${R.old} on ${R.machine}, ${R.dates[0]}; and ${R.suspended.on}.`,
 	});
 }
 
