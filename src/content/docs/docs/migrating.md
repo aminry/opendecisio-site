@@ -5,7 +5,6 @@ description: Point a System One client you already have at decisio by changing t
 
 <!-- Site-written: a rewrite of decisio's docs/migrating.md at the pinned release, whose blocks it shows; its facts are that file's and docs/api.md's (src/config/sourced.mjs checks them). -->
 
-Move a System One client to decisio by changing two settings: the base URL and the model name.
 The route, the request and the answer stay the same, so the rest of your code does not change.
 With TypeSafe's SDK, set its environment variables and leave the code as it is:
 

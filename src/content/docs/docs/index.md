@@ -5,8 +5,7 @@ description: Run decisio and get your first answer in about five minutes. A text
 
 <!-- Site-written: the start page. The machine table follows decisio's README "Install and run" at the pinned release; the request and its answer are the first recorded decision (launch_facts.public.json, figures.recorded_decisions); every command was run, as the record says. -->
 
-Run decisio and get your first answer in about five minutes.
-You send a text and questions about it, each with its options; decisio sends back a probability for every option, in one call.
+Four steps: pick your machine, start a server, ask a question and read the answer.
 
 ::figure{name="request-flow"}
 
