@@ -1,60 +1,134 @@
 ---
-title: Ways in
-description: Five ways to talk to a Decisio server; all of them send the same JSON to the same route.
+title: Call it from your code
+description: Ask decisio from curl, Python, JavaScript or TypeScript, or the framework you already use. Every way sends the same JSON to one route.
 ---
 
-<!-- Site-written: a map of the ways in. Every claim about a route or a client is from docs/api.md or docs/migrating.md of the pinned release, or on the page it links to. -->
+<!-- Site-written: the merged Ways in, Python, JavaScript and Frameworks pages. The scripts send the first recorded decision (launch_facts.public.json, figures.recorded_decisions); the facts about errors, timeouts and the SDK are decisio's docs/api.md and docs/migrating.md at the pinned release (src/config/sourced.mjs checks them); the frameworks' facts are src/data/integrations.json, and their programs are decisio's docs/integrations.md. -->
 
-A Decisio server speaks TypeSafe's System One wire format on `POST /v1/systemone`.
-Anything that can send JSON can use it, and so can a client or framework that already speaks that format.
-Pick the way that matches what you have.
+Call decisio from any language with one HTTP request, and get a probability for every option back.
+Each script below sends the support ticket from [Get started](/docs/) and prints each question's likeliest option.
 
-::figure{name="ways-in"}
+:::tabs
 
-## TL;DR
+::tab{label="curl"}
 
-With a server running ([Get started](/docs/) starts one), one yes/no question needs no options and no instructions:
+::site-block{name="first-decision-request"}
 
-```bash
-curl http://127.0.0.1:8000/v1/systemone \
-  -H 'Content-Type: application/json' \
-  -d '{"state": "I was charged twice for October. Please refund one.", "questions": {"urgent": {"type": "noul"}}}'
-# {"model": "...", "answers": {"urgent": {"type": "noul", "noul": ...}}, "usage": {"input_tokens": ..., "output_tokens": ...}}
-```
+::tab{label="Python"}
 
-:::glossary
+Python's standard library is all it needs.
 
-| Word | Meaning |
-| --- | --- |
-| wire format | the shape of the request and the answer; Decisio implements TypeSafe's published System One format |
-| route | an address on the server that does one thing; `POST /v1/systemone` asks questions |
-| base URL | the address a client sends its requests to, here `http://127.0.0.1:8000` unless `--host` and `--port` say otherwise |
+::site-block{name="python-urllib"}
+
+::tab{label="TypeSafe SDK"}
+
+Install TypeSafe's SDK on its own: `pip install typesafe-sdk==0.7.2`, the version checked.
+It needs a key; any string works.
+
+::site-block{name="python-sdk"}
+
+::tab{label="JavaScript"}
+
+Save it as `ask.mjs` and run `node ask.mjs` (Node 22 or later; no package).
+
+::site-block{name="js-fetch"}
+
+::tab{label="TypeScript"}
+
+Save it as `ask.ts` and run `node --experimental-strip-types ask.ts` (Node 22.6 or later; no package).
+
+::site-block{name="ts-fetch"}
 
 :::
 
-## 1. Every way sends the same body
+In the Python, JavaScript and TypeScript tabs, the comment lines are what the default model answered.
 
-The body is a `state` and its `questions`, by name.
-`GET /v1/models` names the model the server serves, and the answer carries the server's time in a header (`x-decisio-server-ms`).
-[The HTTP API](/docs/api/) has every field.
+::recorded-label{shows="printed"}
 
-## 2. Choose a way in
+## Keep the server private
 
-| If you have | Use | Page |
-| --- | --- | --- |
-| nothing yet, or any language | HTTP | [The HTTP API](/docs/api/) |
-| a Python script | the standard library, or TypeSafe's SDK | [Python](/docs/use-from/python/) |
-| a Node or browser app | `fetch`, no package | [JavaScript and TypeScript](/docs/use-from/javascript/) |
-| a System One client already | change its address | [System One clients](/docs/migrating/) |
-| LangChain, the Vercel AI SDK, n8n, TanStack AI or Pipecat | their TypeSafe integration, pointed here | [Frameworks](/docs/use-from/frameworks/) |
+- The server has no authentication: it accepts the `Authorization` header and any API key, and ignores them.
+- Run it on `127.0.0.1`, or behind a reverse proxy that authenticates the caller.
+- Call it from your backend, not from a web page: the server sets no CORS headers, so a browser cannot call it.
 
-:::caution[Common mistake]
-There is no authentication: the `Authorization` header and any API key are accepted and ignored.
-Keep the server on `127.0.0.1`, or behind a reverse proxy that authenticates.
+## Handle errors
+
+Every error comes back with a `detail` that names the problem.
+
+| Status | What it means |
+| --- | --- |
+| 422 | the server cannot read the request: a missing field, more than 255 options, a text longer than the context |
+| 400 | the model cannot answer this request |
+| 415 | the body is not sent as `Content-Type: application/json` |
+
+With the standard library, an error is an `HTTPError` whose body holds the `detail`:
+
+```python
+import json
+import urllib.error
+import urllib.request
+
+request = urllib.request.Request(
+    "http://127.0.0.1:8000/v1/systemone",
+    data=json.dumps({"state": "No questions asked.", "questions": {}}).encode(),
+    headers={"Content-Type": "application/json"},
+)
+try:
+    urllib.request.urlopen(request)
+except urllib.error.HTTPError as error:
+    print(error.code, "detail" in json.load(error))
+# 422 True
+```
+
+- In JavaScript, check `response.ok` before reading the answer, as the script does.
+- TypeSafe's SDK raises `TypeSafeUnprocessableEntityError` for a 422 and `TypeSafeBadRequestError` for a 400.
+
+## Set a timeout
+
+- The first request after a server starts warms the model and takes longer than the rest; allow for it.
+- TypeSafe's SDK gives up after 10 s by default; raise its `timeout`.
+- `fetch` has no timeout of its own; pass `signal: AbortSignal.timeout(ms)` to stop sooner.
+- The server sets no rate limit, so the SDK's retries on 429 never fire; it still retries 408 and 5xx.
+
+## Use a framework
+
+Five frameworks that speak TypeSafe's format work with decisio once they point at the server.
+Each was checked against a running server, and every check passed.
+
+::integrations-table
+
+- Every one needs an API key; any string works.
+- Only the Vercel AI SDK wants `/v1` at the end of the base URL; the others add it themselves.
+- Tasks and certified answers are decisio's own routes: none of these frameworks calls them, so call those routes directly.
+
+Each program below asks two questions about one ticket and prints the answers.
+
+:::tabs
+
+::tab{label="LangChain"}
+
+::upstream{file="docs/integrations.md" section="LangChain"}
+
+::tab{label="Vercel AI SDK"}
+
+::upstream{file="docs/integrations.md" section="Vercel AI SDK"}
+
+::tab{label="n8n"}
+
+::upstream{file="docs/integrations.md" section="n8n"}
+
+::tab{label="TanStack AI"}
+
+::upstream{file="docs/integrations.md" section="TanStack AI"}
+
+::tab{label="Pipecat"}
+
+::upstream{file="docs/integrations.md" section="Pipecat"}
+
 :::
 
 ## What next
 
+- [Move from System One](/docs/migrating/): point a client you already have at decisio, and what changes.
+- [Teach it your question](/docs/tasks/): teach a question you ask again and again, and certify its answers.
 - [The HTTP API](/docs/api/): every route, request field and response field.
-- [Your first decision](/docs/first-request/): one request and its answer, line by line.
-- [Teaching it a task](/docs/tasks/): register a question you ask again and again.

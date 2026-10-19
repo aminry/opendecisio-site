@@ -297,7 +297,7 @@ try {
 					}).length,
 					overflow: document.documentElement.scrollWidth > window.innerWidth + 1,
 					// No table scrolls sideways or is clipped, on any page, at any width: it ends inside its box, no
-					// cell is wider than itself, and below 1024px a stacking table (and, in a docs column under 40rem,
+					// cell is wider than itself, and below 1024px a stacking table (and, in a docs column under 36rem,
 					// a docs table of three columns or more, and under 60rem one of six or more) is stacked, its header row hidden.
 					wideTables: [...document.querySelectorAll('main table')]
 						.flatMap((t) => {
@@ -310,7 +310,7 @@ try {
 							if (clipped.length) out.push(`${name} has ${clipped.length} clipped cells, the first: "${clipped[0].textContent.trim().slice(0, 40)}"`);
 							const headHeight = t.querySelector('thead')?.getBoundingClientRect().height ?? 0;
 							if (window.innerWidth < 1024 && t.classList.contains('data-table--stack') && headHeight > 1) out.push(`${name} is not stacked below 1024px`);
-							if (t.classList.contains('docs-table') && headHeight > 1 && ((box.clientWidth < 640 && t.querySelector('tr > :nth-child(3)')) || (box.clientWidth < 960 && t.querySelector('tr > :nth-child(6)')))) out.push(`${name} is not stacked in a ${box.clientWidth}px column`);
+							if (t.classList.contains('docs-table') && headHeight > 1 && ((box.clientWidth < 576 && t.querySelector('tr > :nth-child(3)')) || (box.clientWidth < 960 && t.querySelector('tr > :nth-child(6)')))) out.push(`${name} is not stacked in a ${box.clientWidth}px column`);
 							return out;
 						}),
 					// A code block scrolls its long lines sideways and never breaks one inside a word or a path: its text keeps

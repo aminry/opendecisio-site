@@ -14,7 +14,7 @@ import * as chromeLauncher from 'chrome-launcher';
 import lighthouse from 'lighthouse';
 
 const port = 4391;
-const pages = ['/', '/docs/quickstart/', '/benchmarks/', '/demos/', '/demos/teach-and-certify/'];
+const pages = ['/', '/docs/quickstart/gpu-server/', '/benchmarks/', '/demos/', '/demos/teach-and-certify/'];
 const categories = ['performance', 'accessibility', 'best-practices', 'seo'];
 const MIN = 0.95;
 const RUNS = 3;

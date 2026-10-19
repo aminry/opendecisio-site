@@ -41,6 +41,7 @@ const ollamaRequest = (model) => `curl http://localhost:11434/v1/systemone \\
 }'`;
 
 import { recordedRequest, recordedResponse } from './docs-figures.mjs';
+import { pin } from './upstream.mjs';
 
 // The recorded decision of the docs' first pages (the launch facts (launch_facts.public.json), figures.recorded_decisions), as a request
 // to a server on this machine. The body is indented JSON between single quotes, so no value may hold a single quote.
@@ -50,10 +51,10 @@ const curl = (body) => {
 	return `curl http://127.0.0.1:8000/v1/systemone \\\n  -H 'Content-Type: application/json' \\\n  -d '${json}'`;
 };
 const firstRequest = () => recordedRequest();
-const oneQuestion = () => {
-	const r = firstRequest();
-	return { state: r.state, questions: { queue: r.questions.queue } };
-};
+const standInStart = () => `git clone --branch ${pin.tag} https://github.com/${pin.repository}
+cd decisio
+uv sync --extra dev --frozen
+uv run python -m decisio.serve.vllm_engine --backend hf --model Qwen/Qwen3-0.6B-Base`;
 
 // The recorded answers as the comment lines a client prints: one per question, its likeliest option and probability.
 const printed = () => Object.entries(recordedResponse().answers).map(([name, a]) => {
@@ -134,10 +135,11 @@ export const siteBlocks = {
 	get 'python-sdk'() { return { lang: 'python', text: pythonSdk() }; },
 	get 'js-fetch'() { return { lang: 'js', text: jsFetch(false) }; },
 	get 'ts-fetch'() { return { lang: 'ts', text: jsFetch(true) }; },
+	// Get started: the CPU stand-in, from a clone of the pinned release.
+	get 'stand-in-start'() { return { lang: 'bash', text: standInStart() }; },
 	// The first pages: the recorded support ticket as a request, and its recorded answer, abridged and rounded.
 	get 'first-decision-request'() { return { lang: 'sh', text: curl(firstRequest()) }; },
 	get 'first-decision-response'() { return { lang: 'json', text: JSON.stringify(recordedResponse(), null, 2) }; },
-	get 'first-decision-one-question'() { return { lang: 'sh', text: curl(oneQuestion()) }; },
 	// The Qwen listing: the docs page, whose pull (at the pinned release) is this listing's alone.
 	'ollama-request': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio') },
 	// The Gemma listing, the 16 GB laptop's: the home page's.

@@ -1,121 +1,114 @@
 {
 	"tag": "v0.17.0",
 	"commit": "3db918310830edce4c32cec7f209c7a1e63d2a93",
-	"date": "2026-10-18",
+	"date": "2026-10-19",
 	"runner": "linux-x64",
 	"blocks": {
 		"5466c85ed7c16c65": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18",
+			"date": "2026-10-19",
 			"note": "the install and the server start; the unit tests passed in decisio's own CI on this commit"
 		},
-		"8264ecf29e551fbc": {
+		"ee135501cdcafea9": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18",
+			"date": "2026-10-19",
 			"note": "the clone is the pinned release, as the check has it; the install and the server start"
+		},
+		"8f11af2eabc6bbfe": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
 		},
 		"25a39b2b77f85c16": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18",
+			"date": "2026-10-19",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
 		"643e9b3102b8e77e": {
 			"status": "output"
 		},
-		"8f11af2eabc6bbfe": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-18"
-		},
-		"5cc493cddee4f30b": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-18"
-		},
-		"4b473a2e28dc808e": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-18",
-			"note": "the one question alone, as the stand-in answers it"
-		},
-		"0ee8302a99cf1a2f": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-18"
-		},
 		"d2bcc600501c2438": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"b8e39aa5af896e09": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18",
+			"date": "2026-10-19",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
 		"e52a4af57e3dc356": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18",
+			"date": "2026-10-19",
 			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
-		},
-		"4a4acf27add92e82": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-18"
 		},
 		"f6cbcd5a9fc3dc60": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18",
+			"date": "2026-10-19",
 			"runtime": "node v22.23.3",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
 		"d04086a256fe44c4": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18",
+			"date": "2026-10-19",
 			"runtime": "node v22.23.3",
 			"note": "the answers are the stand-in's, not the measured system's"
 		},
-		"66046ec80a063266": {
-			"status": "example"
+		"4a4acf27add92e82": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
 		},
-		"ff75b17b756051dc": {
-			"status": "example"
+		"b8b87bd11208dbf6": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19",
+			"note": "with langchain-typesafe 0.0.1a3, the version the page names"
 		},
-		"cf710156b36f8f12": {
-			"status": "example"
+		"a920b699008ced94": {
+			"status": "verbatim",
+			"needs": "Node 22 with ai 7.0.131 and @ai-sdk/typesafe-ai 3.0.15"
 		},
-		"389a70e9b0fd0732": {
-			"status": "example"
+		"a7590d8d62fbfb87": {
+			"status": "verbatim",
+			"needs": "n8n 2.35.7"
 		},
-		"94d1a94709dde836": {
-			"status": "example"
+		"16c5473f2df81ee8": {
+			"status": "verbatim",
+			"needs": "Node 22 with @tanstack/ai 0.65.1 and @tanstack/ai-typesafe 0.1.8"
+		},
+		"4d1a31105a234994": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19",
+			"note": "with pipecat-ai 1.12.0, the version the page names"
 		},
 		"8ce25428cd21b951": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"29e5a1d4282701a8": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"de70ee7442d32029": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"72182c644904351a": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"b3683dfa1074b049": {
 			"status": "example"
@@ -123,47 +116,52 @@
 		"f6db6123f6c620a4": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"8e1893dfe07a7129": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"f1f8b3bc6973f111": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
+		},
+		"0ee8302a99cf1a2f": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
 		},
 		"2e51eedbfff016ee": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"7f7cb276b5b16179": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"ebacf4f532e09ea5": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"71e4822b8241007c": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"95953c278a640239": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"b6bb95d7ceb2a509": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18",
+			"date": "2026-10-19",
 			"note": "the install and the server start"
 		},
 		"b1b57b2e75a2a8d6": {
@@ -172,22 +170,22 @@
 		"8c2a5b518155ccb3": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"c3457e7a7bf24b69": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"065093b062639c13": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"3ef7d4649178b987": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18"
+			"date": "2026-10-19"
 		},
 		"e23a9d899b93f3fe": {
 			"status": "example"
@@ -201,7 +199,7 @@
 		"f88514bde0c31e5b": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18",
+			"date": "2026-10-19",
 			"note": "registers the walk-through task again"
 		},
 		"135f2c5258e4a371": {
@@ -242,17 +240,17 @@
 		"2f8572cf92b21336": {
 			"status": "example"
 		},
-		"b548306327cee4fa": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-18",
-			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
-		},
 		"fe30a8fa5922e73e": {
 			"status": "cpu",
 			"tag": "v0.17.0",
-			"date": "2026-10-18",
+			"date": "2026-10-19",
 			"note": "sets the variables the SDK reads"
+		},
+		"b548306327cee4fa": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19",
+			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
 		}
 	}
 }

@@ -29,7 +29,7 @@ import { siteBlock } from './site-blocks.mjs';
 import { diagram } from './diagrams.mjs';
 import { docsFigure, recordedLabel } from './docs-figures.mjs';
 import { splitParagraph } from './sentences.mjs';
-import { integrationParts } from './figures/use-from.mjs';
+import { integrationsTable } from './figures/use-from.mjs';
 
 const parser = unified().use(remarkParse).use(remarkGfm);
 const cache = new Map();
@@ -156,13 +156,11 @@ export default function remarkUpstream(options = {}) {
 			parent.children.splice(index, 1, { type: 'html', value: docsFigure(node.attributes?.name) });
 			return index + 1;
 		});
-		// ::integration{id="..."}: one checked integration's facts, its snippet as a code block, and what its check found.
+		// ::integrations-table: the checked integrations, one row each (src/data/integrations.json).
 		visit(tree, 'leafDirective', (node, index, parent) => {
-			if (node.name !== 'integration') return;
-			const { before, snippet, after } = integrationParts(node.attributes?.id);
-			const nodes = [{ type: 'html', value: before }, ...(snippet ? [{ type: 'code', lang: snippet.lang, value: snippet.text }] : []), { type: 'html', value: after }];
-			parent.children.splice(index, 1, ...nodes);
-			return index + nodes.length;
+			if (node.name !== 'integrations-table') return;
+			parent.children.splice(index, 1, { type: 'html', value: integrationsTable() });
+			return index + 1;
 		});
 		// ::recorded-label: the line that says which recorded decision, on which box, an answer on the page came from.
 		visit(tree, 'leafDirective', (node, index, parent) => {

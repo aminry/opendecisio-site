@@ -33,13 +33,13 @@ It needs Ollama 0.35.1 or later.
 
 ## The listings
 
-::upstream{file="docs/running.md" section="Ollama"}
+::upstream{file="docs/running.md" section="Ollama" covers="README.md#ollama"}
 
 ## Ask a question
 
 <!-- Site-written: decisio's docs give the pulls only. The blocks are in src/lib/site-blocks.mjs, run by scripts/verify-ollama.mjs. -->
 
-Send the support-ticket example from [your first request](/docs/first-request/) to Ollama's decision route, naming the listing.
+Send the support-ticket example from [Get started](/docs/#3-ask-your-first-question) to Ollama's decision route, naming the listing.
 The Gemma listing, the one for 16 GB laptops:
 
 ::site-block{name="ollama-request-gemma"}
@@ -50,6 +50,6 @@ The Qwen listing, which needs a machine with more memory:
 
 ## What next
 
-- [Choose your machine](/docs/quickstart/): the other paths.
+- [Pick your machine](/docs/#1-pick-your-machine): the other paths.
 - [Choosing a base](/docs/bases/): which base is which.
 - [Mac with MLX](/docs/quickstart/mac-mlx/): the same laptop, served by decisio itself.
