@@ -360,7 +360,10 @@ export const plan = [
 	{ page: '/docs/migrating/', n: 1, mode: 'run', expect: 'export TYPESAFE_BASE_URL=', note: 'sets the variables the SDK reads' },
 	{
 		page: '/docs/migrating/', n: 2, mode: 'python', expect: 'from typesafe_sdk import TypeSafeClient',
-		with: ['typesafe-sdk==0.7.2'], note: "with TypeSafe's Python SDK 0.7.2, the version the page names",
+		with: ['typesafe-sdk==0.7.2'], note: "with TypeSafe's Python SDK 0.7.2, the version the page names", show: asPrinted,
+		assert(stdout) {
+			if (!/^(billing|access|bug) [\d.]+$/m.test(stdout)) throw new Error('the SDK script did not print a label and its confidence');
+		},
 	},
 	{
 		page: '/docs/migrating/', n: 3, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/models', show: (stdout) => JSON.stringify(json(stdout), null, 1),

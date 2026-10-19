@@ -319,9 +319,9 @@ export const sourced = [
 		['so a certificate made on the old release is suspended on the new one', tasksDoc, 'the decisio version, the base and checkpoint revision'],
 		['such as the held-out examples it was certified on', upgrading, 'such as the held-out examples it was certified on'],
 		['The fit is kept; the call answers with the new certificate.', upgrading, 'The fit is kept; the call returns the new certificate'],
-		["The call keeps the certificate's settings unless the body sets them", api, '`POST /v1/tasks/{id}/certify` with `{"examples": [...]}` (and optionally `alpha`, `delta`, `min_examples`)'],
-		['59 at the 5% error target the walk-through task was certified at', readme, 'Below 59 held-out examples (at the defaults) the server refuses to certify at all'],
-		['decisio ships 48 held-out tickets for that task', 'examples/tasks/README.md', '48 other tickets, 4 per queue'],
+		["The call keeps the certificate's error target unless the body names one", api, 'It keeps the old `alpha`, `delta` and `suspend_on_alert` unless the call names them'],
+		['the fewest examples it needs follow the target: 59 at the default 5%, 29 at 10%', api, 'otherwise the minimum is derived from the new `alpha` and `delta` (29 at 10% and 10%), so a looser target needs fewer examples than the 59 of the defaults'],
+		['decisio ships 48 held-out tickets for the walk-through task', 'examples/tasks/README.md', '48 other tickets, 4 per queue'],
 		['Only the latest release receives security fixes', security, 'The latest release on `main` receives security fixes.'],
 	]),
 	// Ask about images
