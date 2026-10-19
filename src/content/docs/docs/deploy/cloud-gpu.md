@@ -42,7 +42,7 @@ It is ready when `/health` answers 200, with the model and the longest text it s
 
 ::site-block{name="health-31b"}
 
-:value{name="health-recorded"}
+::source{value="health-recorded"}
 
 pip resolves its own versions around the engine.
 For exactly the versions decisio was measured with, install from a clone of the release with its lock file:

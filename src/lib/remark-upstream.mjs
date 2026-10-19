@@ -246,6 +246,8 @@ export default function remarkUpstream(options = {}) {
 			if (node.name !== 'source') return;
 			// ::source{name="..."}: a note built from the site's data (src/lib/source-notes.mjs), not typed.
 			if (node.attributes?.name) node.children = [{ type: 'text', value: sourceNote(node.attributes.name) }];
+			// ::source{value="..."}: a recorded output's label, from the values the pages state (src/lib/recorded.mjs).
+			if (node.attributes?.value) node.children = [{ type: 'text', value: value(node.attributes.value) }];
 			if (!node.children?.length) throw new Error(`upstream: ::source with no text in ${vfile.path}`);
 			node.data = { ...node.data, hName: 'p', hProperties: { className: ['src-note'] } };
 		});

@@ -3,7 +3,7 @@ title: Upgrade
 description: Move a running deployment to a new decisio release in eight steps, without losing your tasks or serving uncertified answers as certified.
 ---
 
-<!-- Site-written: the Upgrade guide, as steps. The per-release notes are Upgrade notes (decisio's docs/upgrading.md at the pinned release); the facts are docs/upgrading.md's, docs/tasks.md's and SECURITY.md's (src/config/sourced.mjs checks them). -->
+<!-- Site-written: the Upgrade guide, as steps, the same for every release. The per-release notes are on Release notes (decisio's docs/upgrading.md at the pinned release); the facts are docs/upgrading.md's, docs/tasks.md's and SECURITY.md's (src/config/sourced.mjs checks them). -->
 
 Every upgrade is the same eight steps, whatever the release.
 Before you start, export what you have taught:
@@ -14,7 +14,7 @@ curl -s 'http://127.0.0.1:8000/v1/tasks?full=1' > tasks.json
 
 ## 1. Read the notes for every release you skip
 
-[Upgrade notes](/docs/upgrade-notes/) has, for each release that changes what a deployment serves, who is affected and what to do.
+[Release notes](/docs/releases/#upgrade-notes) has, for each release that changes what a deployment serves, who is affected and what to do.
 Read every entry between your release and the one you are moving to.
 
 ## 2. Pin what you serve
@@ -69,6 +69,5 @@ Only the latest release receives security fixes, so do not keep the old one runn
 
 ## What next
 
-- [Upgrade notes](/docs/upgrade-notes/): what each release changes for a running deployment.
-- [Release notes](/docs/releases/): every change in every release.
+- [Release notes](/docs/releases/): every change in every release, and what each one changes for a running deployment.
 - [Certify answers](/docs/tasks/certify/): what a certificate covers, and how to certify again.

@@ -51,7 +51,6 @@ export const docsGroups = [
 			{ slug: 'docs/limits', label: 'Requirements and limits', shape: 'reference' },
 			{ slug: 'docs/glossary', shape: 'reference' },
 			{ slug: 'docs/releases', label: 'Release notes', shape: 'reference' },
-			{ slug: 'docs/upgrade-notes', label: 'Upgrade notes', shape: 'reference' },
 			{ slug: 'docs/evaluation-card', label: 'Evaluation card', shape: 'reference' },
 		],
 	},

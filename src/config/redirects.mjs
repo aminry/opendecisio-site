@@ -25,4 +25,5 @@ export const redirects = [
 	{ from: '/docs/comparison/', to: '/benchmarks/#compares', why: 'How it compares moved into Benchmarks, beside a hosted service and open entries (docs rewrite, batch 9)' },
 	{ from: '/docs/demos/', to: '/demos/', why: 'The demos write-up folded into Demos (docs rewrite, batch 9)' },
 	{ from: '/docs/faq/', to: '/docs/how-it-works/', why: 'Questions: each answer moved to the page where its question comes up (docs rewrite, batch 10)' },
+	{ from: '/docs/upgrade-notes/', to: '/docs/releases/#upgrade-notes', why: 'Upgrade notes folded into Release notes, the one page of version history (docs rewrite, batch 10)' },
 ];

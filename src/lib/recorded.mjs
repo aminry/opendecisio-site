@@ -96,6 +96,7 @@ export function recordedValues() {
 		'certify-result': `answers with a top probability of at least ${c.threshold.toFixed(4)} are certified: ${c.certified_n} of the ${c.n} held-back tickets, ${c.errors_at_threshold} of them wrong`,
 		'certify-recorded': `Recorded on ${box}; the response is abridged.`,
 		'health-recorded': `Recorded on ${box}; trimmed to the fields a reader checks.`,
-		'example5-recorded': `decisio-examples' example 5, Escalate only when unsure: ${n0(e.questions)} ARC-Challenge questions, a public benchmark the model may have seen, on ${box}`,
+		'example5-recorded': `decisio-examples' example 5, Escalate only when unsure: ${n0(e.questions)} ARC-Challenge questions, a public benchmark the model may have seen`,
+		'example5-source': `Recorded on ${box}.`,
 	};
 }

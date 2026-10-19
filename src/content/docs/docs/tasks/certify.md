@@ -38,7 +38,9 @@ On the default model, Gemma 4 31B, decisio's worked example, a three-queue ticke
 ::site-block{name="certificate-response"}
 
 Here, :value{name="certify-result"}.
-:value{name="certify-recorded"}
+
+::source{value="certify-recorded"}
+
 If no threshold can keep the promise, `threshold` is `null` and the task works as before, with every answer marked not certified.
 
 ## 3. Read each answer
@@ -83,6 +85,8 @@ Pick the line from the cost of an escalation against the cost of a wrong answer,
 On :value{name="example5-recorded"}:
 
 ::escalation-table
+
+::source{value="example5-source"}
 
 A line on the raw probability promises nothing for new traffic; a certificate does.
 To keep answers above a line of your own:
