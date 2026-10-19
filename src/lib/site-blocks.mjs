@@ -200,7 +200,7 @@ export const siteBlocks = {
 	get 'docker-compose'() { return { lang: 'yaml', text: dockerCompose() }; },
 	get 'docker-build'() { return { lang: 'bash', text: `${clone()}\nuv build --wheel\ndocker compose up --build` }; },
 	get 'kubernetes'() { return { lang: 'yaml', text: kubernetes() }; },
-	get 'images-start'() { return { lang: 'bash', text: `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b --image-model Qwen/Qwen3.6-35B-A3B-FP8 \\\n  --gpu-memory-utilization 0.47 --image-gpu-memory-utilization 0.49` }; },
+	get 'images-start'() { return { lang: 'bash', text: `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b --image-model Qwen/Qwen3.6-35B-A3B-FP8` }; },
 	get 'mac-install'() { return { lang: 'bash', text: `${clone()}\nuv sync --extra mlx` }; },
 	get 'mac-31b-6bit'() { return { lang: 'bash', text: macStart('gemma-4-31b-it-6bit') }; },
 	get 'mac-31b-4bit'() { return { lang: 'bash', text: macStart('decisio-gemma-4-31b-mlx-4bit') }; },

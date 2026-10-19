@@ -25,7 +25,7 @@ curl -s http://127.0.0.1:8000/health
 | Machine | Model and build | Memory it takes | Longest text | Measured |
 | --- | --- | --- | --- | --- |
 | NVIDIA, 96 GB | Gemma 4 31B, FP8, the default | 30.6 GiB of weights | up to 98,304 tokens, chosen at start | yes, an RTX PRO 6000 Blackwell |
-| NVIDIA, 80 GB | Gemma 4 31B, FP8 | 33.85 GiB of cache at the default share | 98,304 tokens at the default share; 49,152 at 0.85 | yes, an H100 PCIe |
+| NVIDIA, 80 GB | Gemma 4 31B, FP8 | 33.85 GiB of cache at the default share | 98,304 tokens at the default share; 49,152 at 0.85 | it starts and answers, an H100 PCIe; the full measurements are the 96 GB card's |
 | NVIDIA, 96 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights | up to 65,536 tokens | yes |
 | NVIDIA, 32 GB | Gemma 4 12B, bf16 | does not start on vLLM's defaults | none | simulated on the 96 GB card |
 | NVIDIA, 96 GB | Qwen3.6-35B-A3B, FP8 | 33.3 GiB of weights | 32,768 tokens | yes |
@@ -59,7 +59,7 @@ The guides have the commands: [on a cloud GPU](/docs/deploy/cloud-gpu/), [with D
 
 Each request holds:
 - up to 255 options per question; a request with more gets 422;
-- up to 2 images, PNG, JPEG or WebP, 20 MB each;
+- as many images as the context holds, up to the image engine's `--max-images` (128 unless set), PNG, JPEG or WebP, 20 MB each;
 - a prompt up to the length above; a longer one gets 422.
 
 A long text takes longer to read the first time: on the 31B, 3,370 ms at 16,000 tokens and 8,880 ms at 32,000 (one RTX PRO 6000 at 600 W, decisio 0.11.1).

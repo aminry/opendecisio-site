@@ -39,7 +39,7 @@ Use the Qwen base: the image route was measured with it only.
 
 ::site-block{name="images-start"}
 
-- On one card, set both shares, as above: the text engine's default share and the image engine's do not fit together. 0.47 and 0.49 is the split decisio measured.
+- The two engines' default shares of the card, 0.47 for the text engine and 0.49 for the image engine, fit one card together, so no memory flag is needed.
 - `--one-engine` loads only the image engine and serves text on it too, for a card that cannot hold both.
 - With an image engine, the longest text stays at 32,768 tokens.
 - A Mac does not serve images.
@@ -48,7 +48,7 @@ Use the Qwen base: the image route was measured with it only.
 
 | Limit | What it is |
 | --- | --- |
-| Images per request | up to 2; a third is refused with 422 |
+| Images per request | as many as the context holds, up to the image engine's `--max-images` (128 unless set); each costs tokens |
 | Formats | PNG, JPEG or WebP |
 | Size | up to 20 MB and 20 megapixels each; a larger one is refused with 422 |
 | How | data URLs in `images`, `data:image/...` URIs inside the text, or a `multipart/form-data` request |

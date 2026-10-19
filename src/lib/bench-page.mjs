@@ -72,7 +72,7 @@ export function baseLines() {
 	const img = row('Image input');
 	if (img.g12 !== 'n/m' || img.g31 !== 'n/m' || img.qwen === 'n/m') fail('image input is no longer measured on the Qwen base alone');
 	return [
-		{ base: 'g31', name: 'Gemma 4 31B, the default', text: 'at or above the other two on every accuracy measure in the table, and the slowest to read a new text. One NVIDIA card of 80 GB or 96 GB, or a 64 GB Mac.' },
+		{ base: 'g31', name: 'Gemma 4 31B, the default', text: 'at or above the other two on every accuracy measure in the table, and the slowest to read a new text. One NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or a 64 GB Mac.' },
 		{ base: 'g12', name: 'Gemma 4 12B', text: 'the smaller Gemma, for a 32 GB Mac, or a laptop with Ollama.' },
 		{ base: 'qwen', name: 'Qwen3.6-35B-A3B', text: 'the quickest to read a new text, and the only one measured with images in the text.' },
 	];
