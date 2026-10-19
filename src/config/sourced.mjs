@@ -48,6 +48,16 @@ export const sourced = [
 	...fromPage('/benchmarks/', [
 		['none of these is a board score', readme, 'None is a board score.'],
 	]),
+	...fromPage('/benchmarks/', [
+		['within 0.001 on the 12B, except GPQA Diamond (two of 196 items)', card, 'within 0.001 on the 12B except GPQA Diamond (two of 196 items)'],
+		['from decisio 0.12.0 certifies which answers to trust', 'CHANGELOG.md', '**serve:** certified answers and a monitor in /v1/tasks'],
+	]),
+	...fromPage('/docs/images/', [
+		['It prints route: image when the image engine answered', api, '`x-decisio-route`: the route that served it (`text` or `image`).'],
+	]),
+	...fromPage('/docs/upgrading/', [
+		["A server takes 0.90 of its card's memory by default", running, '| 0.90 (the default) | 33.85 GiB |'],
+	]),
 	// Home: the Good fit box.
 	...fromPage('/', [
 		['118 or more, at the defaults, for a task you want certified', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
@@ -128,8 +138,8 @@ export const sourced = [
 		['33.7 GB at about 8k, 16k and 32k tokens 16,383 tokens not measured', running, 'Server times are not measured.'],
 		['Measured on one Apple M5 Pro with 64 GB; no smaller Mac was measured', running, 'Measured on one Apple M5 Pro with 64 GB; no smaller Mac was measured.'],
 		['its 4-bit build is for Macs with more than 32 GB', running, 'The 4-bit conversion is for Macs with more than 32 GB of memory'],
-		['about an hour for BANKING77 and about 2.6 hours for CLINC150', running, 'about an hour for a BANKING77 draw and about 2.6 hours for a CLINC150 draw'],
-		['Images, packed mode, LoRA adapters and the second-engine head', running, 'It refuses the image route, packed mode, LoRA adapters and the second-engine head.'],
+		['about an hour for 770 labelled examples (77 options) and about 2.6 hours for 1,500 (150 options)', running, 'about an hour for a BANKING77 draw and about 2.6 hours for a CLINC150 draw'],
+		['Images in a question, adapters (--adapter), packed mode, or the intent head on a second engine (--head-engine)', running, 'It refuses the image route, packed mode, LoRA adapters and the second-engine head.'],
 		['Ollama 0.35.1 or later', running, 'Requires Ollama 0.35.1 or later.'],
 		['q8_0 not given 13.6 GB', running, 'its `q8_0` tag takes 13.6 GB'],
 		['a 23 GB download', running, "The Qwen listing's smallest tag is a 23 GB download"],
@@ -150,6 +160,7 @@ export const sourced = [
 		['22.8 GiB of weights', readme, 'bf16, 22.8 GiB in memory'],
 		['33.3 GiB of weights', readme, '33.3 GiB in memory'],
 		['33.85 GiB of cache at the default share', running, '| 0.90 (the default) | 33.85 GiB |'],
+		['43.28 GiB of cache at the default share', running, 'On the same 80 GB card the 12B served its ceiling of 65,536 at the default share (43.28 GiB of KV cache)'],
 		['98,304 tokens at the default share; 49,152 at 0.85', running, '| 0.85 | 29.9 GiB | 53,696 | 49,152 |'],
 		["does not start on vLLM's defaults", card, "The Gemma base does not fit a 32 GB card on vLLM's defaults."],
 		['simulated on the 96 GB card', card, 'Simulated on the 96 GB card'],
@@ -173,8 +184,9 @@ export const sourced = [
 		['--kv-cache-dtype fp8 suspends a certificate made without it', running, "a certificate made under the model's own cache dtype is suspended under fp8"],
 		['Two servers can add up to more memory than the Mac has', running, 'Two servers each stay under their own limit and can still add up to more than the machine has.'],
 		['One card and one run per configuration.', card, 'One card per run and one run per configuration.'],
-		["so that suite's calibration figures are in-sample", card, "so the suite's ECE figures are in-sample"],
+		["so its calibration errors on that suite are a best case", card, "so the suite's ECE figures are in-sample"],
 		['scores the same within noise', card, 'the stored FP8 repository scores the same within noise'],
+		["213 of JevBench's 231 published questions right with each, and 162 of 200 suite requests (vLLM 0.31.0)", card, 'both give 213 right, tier by tier; on 200 suite requests, in one session on one box and one stack (vLLM 0.31.0), 162 are right in each arm'],
 		['5 of 200 items, by at most 0.031, with no top answer changed', card, '(5 of 200 items, up to 0.031, no top answer changed'],
 		['answers are not promised to repeat', card, 'Repeatability across sessions is not promised.'],
 		['Latency with the intent head on a second engine', card, 'The second-engine head mode with the registered text-only class is unmeasured for latency.'],
@@ -199,7 +211,7 @@ export const sourced = [
 	// Certify answers
 	...fromPage('/docs/tasks/certify/', [
 		['so a 5% certificate needs at least 118 labelled examples', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
-		['With probability at least 90% by default, at most your error target of the certified answers are wrong', tasksDoc, '**with probability at least 1 - `delta` over the draw of your examples (90% by default), at most `alpha` of the answers marked certified are wrong (5% by default)'],
+		['at most 5% are wrong, for traffic like your examples, nine times in ten (the default delta of 0.1)', tasksDoc, '**with probability at least 1 - `delta` over the draw of your examples (90% by default), at most `alpha` of the answers marked certified are wrong (5% by default)'],
 		['one certified answer can still be wrong', tasksDoc, 'a single certified answer can still be wrong'],
 		['The server holds back half the examples', tasksDoc, 'It **sets aside some of your labelled examples** (half by default)'],
 		['a three-queue ticket question at an error target of 15%', tasksDoc, 'on a three-queue ticket question'],
@@ -252,7 +264,7 @@ export const sourced = [
 		['Put authentication, rate limits and request-size limits in the proxy.', security, 'Put authentication, rate limiting and request-size limits in the proxy.'],
 		['POST /v1/tasks, POST /v1/tasks/import, DELETE /v1/tasks/{id} and the abstention routes', security, '`POST /v1/tasks`, `POST /v1/tasks/import`, `DELETE /v1/tasks/{id}` and the abstention routes change server state.'],
 		['Do not configure CORS on the proxy', security, 'so do not configure CORS on it for this server'],
-		['Run one server per trust boundary.', security, 'Run one server per trust boundary.'],
+		['Run one server per trust boundary', security, 'Run one server per trust boundary.'],
 		['Leave --debug-readout off.', security, '`--debug-readout` exposes raw model readouts; leave it off in production.'],
 		['it is the one that receives security fixes', security, 'The latest release on `main` receives security fixes.'],
 		['an acknowledgement comes within 5 working days, an assessment within 15', security, 'You will get an acknowledgement within 5 working days and an assessment within 15.'],
@@ -315,6 +327,8 @@ export const sourced = [
 		['an earlier record matched in most starts measured', cli, 'single-question answers have matched an earlier record on the whole suite in most starts measured'],
 		['decisio runs on stock vLLM 0.31.0: a plugin registers its model classes, and no patch is needed.', running, 'so vLLM 0.31.0 loads them without any patch'],
 		['no training, no fine-tuning, no adapter', readme, 'No training: every base is an official checkpoint, frozen, with no fine-tuning and no adapter.'],
+		['on the 12B, one choice of 60 changed between a first and a cached read', card, 'and one choice of the 60 changed'],
+		['no adapter unless you serve one with --adapter', cli, 'of a vLLM-format LoRA adapter; repeatable. A request uses it only when its body names it'],
 		['the MLX engine answers each question on its own from one shared read of the text', running, 'It scores each question as its own continuation of the shared prefix'],
 	]),
 	// Choosing a model

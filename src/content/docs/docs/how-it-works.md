@@ -7,7 +7,6 @@ description: Send a text and your questions; decisio reads the text once and giv
 
 ::covers{links="README.md#how-it-works"}
 
-Send one request with a text and your questions, and get a probability for every option back, with no text generated.
 A support ticket and three questions about it:
 
 ::site-block{name="first-decision-request"}
@@ -60,12 +59,12 @@ On the support inbox, :value{name="inbox-certified-5"} of the messages were answ
 | Gemma 4 12B | a first read and a cached read can differ, by up to 0.113 | the same choice; probabilities within 0.035 | not promised |
 | Qwen3.6-35B-A3B | the same probabilities every time | the same probabilities as each question on its own | an earlier record matched in most starts measured |
 
-The top answer is stable; exact numbers repeat only on one running server.
+The top answer rarely moves: on the 12B, one choice of 60 changed between a first and a cached read. Exact numbers repeat only on one running server.
 
 ## Under the hood
 
 - decisio runs on stock vLLM 0.31.0: a plugin registers its model classes, and no patch is needed.
-- Every model is an official checkpoint, frozen: no training, no fine-tuning, no adapter.
+- Every model is an official checkpoint, frozen: no training, no fine-tuning, no adapter unless you serve one with `--adapter`.
 - A taught task's intent head reads the model's internal representation of the text at the answer position.
 - On a Mac, the MLX engine answers each question on its own from one shared read of the text.
 

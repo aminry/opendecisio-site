@@ -179,6 +179,9 @@ export function value(name) {
 	const t5 = ib.targets['0.05'] ?? fail('the inbox has no 5% certificate');
 	const others = { 'inbox-certified-5': pct(t5.covered / ib.test_n) };
 	for (const id of Object.keys(RECIPES)) others[`floor-${id}`] = floorSentence(id);
+	// The intent head's cost per question, from the triage demo's 31B row: its median latency plain and with the head.
+	const tri = /^\| Gemma 4 31B \| [^|]+\| [^|]+\| [^|]+\| [^|]+\| (\d+) \/ (\d+) \|$/m.exec(readUpstream('docs/demos/README.md')) ?? fail("docs/demos/README.md's triage table no longer gives the 31B's latency plain and registered");
+	others['head-cost'] = `in the triage demo the 31B answered in ${tri[1]} ms plain and ${tri[2]} ms with the head, median (decisio ${setupLine().version}, one RTX PRO 6000, ${setupLine().date}).`;
 	const v = { ...issueTriage().values, ...others, ...recordedValues() }[name];
 	if (v === undefined) fail(`no value "${name}"`);
 	return v;

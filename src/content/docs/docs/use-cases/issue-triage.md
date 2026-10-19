@@ -5,7 +5,6 @@ description: Label each new issue by its kind and its owning team, out of the bo
 
 <!-- Site-written: a use-case recipe. The question, the routing script and the registration are src/lib/use-cases.mjs; the measured result, and the numbers in the box, are the issue-triage run in launch_facts.public.json (teaching.issue_triage), read by the same module, with its reporting sentence and licence line as the facts give them. -->
 
-Label every new issue as it arrives, and apply the labels decisio is sure of without waiting for a maintainer.
 It sorts issues well untaught; this script asks for the issue's kind and applies the label only when the answer is certified:
 
 ::site-block{name="route-issue-triage"}

@@ -695,3 +695,10 @@
 .ic-other .ic-bar {
 	fill: var(--d-other);
 }
+
+/* Benchmarks (batch 10): the area headings inside the one "every benchmark" disclosure. */
+.compares .compares__area {
+	margin: var(--d-space-5) 0 var(--d-space-2);
+	font-size: 15px;
+	font-weight: 600;
+}

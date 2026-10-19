@@ -25,7 +25,8 @@ Read every entry between your release and the one you are moving to.
 
 ## 3. Start the new release next to the old one
 
-Keep the old server serving, start the new one on another port or machine, and read its `/health`: the model, its checkpoint and revision, and `max_model_len` with its source.
+Keep the old server serving, start the new one on another machine, and read its `/health`: the model, its checkpoint and revision, and `max_model_len` with its source.
+A server takes 0.90 of its card's memory by default, leaving no room for a second: on a single card, stop the old server and start the new one in its place, at a quiet time or behind a maintenance page.
 
 ## 4. Load your tasks into it
 

@@ -84,12 +84,11 @@ export const plan = [
 	},
 	{
 		page: '/docs/', n: 3, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone',
-		note: "the answers are the stand-in's, not the measured system's",
+		note: "the answers are the stand-in's, not the default model's",
 		assert: recordedAnswers,
 	},
-	{ page: '/docs/', n: 4, mode: 'output', expect: '{\n  "answers": {' },
 	{
-		page: '/docs/api/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/models', show: (stdout) => JSON.stringify(json(stdout), null, 1),
+		page: '/docs/api/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/models', show: (stdout) => stdout.replace(/\}\{/g, '}\n{'),
 		assert(stdout) {
 			if (!stdout.includes('"ok":true') && !stdout.includes('"ok": true')) throw new Error('/health did not answer ok');
 			if (!stdout.includes('"category"')) throw new Error('the choice question was not answered');
@@ -98,13 +97,13 @@ export const plan = [
 	// Call it from your code, on the stand-in: the recorded support ticket sent from each language (src/lib/site-blocks.mjs),
 	// then decisio's programs for the frameworks (docs/integrations.md), the Python ones run with the versions they name.
 	{ page: '/docs/use-from/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/', 3] },
-	{ page: '/docs/use-from/', n: 2, mode: 'python', expect: 'import json\nimport urllib.request', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the measured system's" },
+	{ page: '/docs/use-from/', n: 2, mode: 'python', expect: 'import json\nimport urllib.request', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the default model's" },
 	{
 		page: '/docs/use-from/', n: 3, mode: 'python', expect: 'from typesafe_sdk import TypeSafeClient', with: ['typesafe-sdk==0.7.2'],
 		assert: printsThreeAnswers, note: "with TypeSafe's Python SDK 0.7.2, the version the page names",
 	},
-	{ page: '/docs/use-from/', n: 4, mode: 'node', expect: 'const body = {', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the measured system's" },
-	{ page: '/docs/use-from/', n: 5, mode: 'node', ts: true, expect: 'const body: {', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the measured system's" },
+	{ page: '/docs/use-from/', n: 4, mode: 'node', expect: 'const body = {', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the default model's" },
+	{ page: '/docs/use-from/', n: 5, mode: 'node', ts: true, expect: 'const body: {', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the default model's" },
 	{
 		page: '/docs/use-from/', n: 6, mode: 'python', expect: 'import json\nimport urllib.error',
 		assert(stdout) {
@@ -216,14 +215,14 @@ export const plan = [
 		},
 	},
 	{
-		page: '/docs/troubleshooting/', n: 1, mode: 'run', expect: 'curl -s -o /dev/null -w', show: asPrinted,
+		page: '/docs/troubleshooting/', n: 1, mode: 'run', expect: '# 200 when the engine is up', show: asPrinted,
 		assert(stdout) {
 			if (!/^200$/m.test(stdout)) throw new Error('/health did not answer 200');
 		},
 	},
 	// How it works, on the stand-in.
 	{ page: '/docs/how-it-works/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/', 3] },
-	{ page: '/docs/how-it-works/', n: 2, mode: 'same-as', expect: '{\n  "answers": {', of: ['/docs/', 4] },
+	{ page: '/docs/how-it-works/', n: 2, mode: 'output', expect: '{\n  "answers": {' },
 	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 	{ page: '/docs/deploy/development/', n: 1, mode: 'same-as', expect: `git clone --branch ${pin.tag}`, of: ['/docs/', 1] },
@@ -365,5 +364,5 @@ export const plan = [
 	{ page: '/', n: 4, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/deploy/mac/', 6] },
 	{ page: '/', n: 5, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 7] },
 	{ page: '/', n: 6, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/', 3] },
-	{ page: '/', n: 7, mode: 'same-as', expect: '{\n  "answers": {', of: ['/docs/', 4] },
+	{ page: '/', n: 7, mode: 'same-as', expect: '{\n  "answers": {', of: ['/docs/how-it-works/', 2] },
 ];

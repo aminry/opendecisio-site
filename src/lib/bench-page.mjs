@@ -22,7 +22,7 @@ function baseTable() {
 	return { rows, row };
 }
 
-/** The four tiles at the top: the speed, a question on a text already read, the board's composite and the calibration error. */
+/** The three tiles at the top: the speed, a question on a text already read, and the calibration error. */
 export function benchTiles() {
 	const sp = stable('speed_same_box_2026_10_11');
 	const s = Number(sp.values['decisio Gemma 4 31B']['3000'].value);
@@ -35,7 +35,6 @@ export function benchTiles() {
 	const tiles = [
 		{ n: `${s.toFixed(2)} s`, text: 'for 50 questions about a 3,000-token document, Decisio 31B', date: `one box, ${sp.date}`, href: '#many-questions' },
 		{ n: cached, text: 'for one more question about a 1,000-token text already read, Gemma 4 31B', date: "decisio 0.8.1's defaults, 585 W", href: '#bases' },
-		{ n: Number(comp.values.ours.value).toFixed(2), text: `JevBench v1.6.1 composite of Decisio 31B (95% interval ${lo.toFixed(2)} to ${hi.toFixed(2)})`, date: `the board's file, read ${read}`, href: '#jevbench' },
 		{ n: cal.standard.toFixed(3), text: `calibration error of Gemma 4 31B on JevBench's standard tier, lower is better; ${cal.hard.toFixed(3)} on its hard tier`, date: tableConditions().label, href: '#confidence' },
 	];
 	tiles.forEach((t) => refuse(t.text));

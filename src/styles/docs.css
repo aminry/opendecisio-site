@@ -1659,3 +1659,20 @@ a.fig__card:hover {
 	font-size: var(--sl-text-xs);
 	color: var(--sl-color-accent);
 }
+
+/* A glossary word's first use on a page (src/lib/glossary.mjs): the text's own colour, a dotted underline, so a sentence
+   with several stays easy to read; the accent on hover. */
+.sl-markdown-content a.gloss {
+	color: inherit;
+	text-decoration: underline dotted;
+	text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+	text-underline-offset: 0.2em;
+}
+
+.sl-markdown-content a.gloss:hover {
+	color: var(--sl-color-accent);
+}
+
+.sl-markdown-content .glossary-table tr:target {
+	background: color-mix(in srgb, var(--sl-color-accent) 12%, transparent);
+}

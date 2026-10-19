@@ -22,7 +22,7 @@ Install it from PyPI and start it: it serves the default model, Gemma 4 31B, on 
 | Qwen3.6-35B-A3B | 33.3 GiB, FP8; about 36 GB to download | one 96 GB card | 32,768 tokens |
 
 Start another model with `--base gemma-4-12b` or `--base qwen3.6-35b-a3b`.
-[Choosing a base](/docs/bases/) compares them; [Requirements and limits](/docs/limits/) has every machine.
+[Choosing a model](/docs/bases/) compares them; [Requirements and limits](/docs/limits/) has every machine.
 
 | Part | What you need |
 | --- | --- |

@@ -150,7 +150,7 @@ export function axesFigure() {
 	need2(ours && jev, 'has an axes_table without decisio 31B or Jev 1.13.0');
 	const printed = (r, c) => r.cells[c].printed;
 	// The measured values, as the launch facts' stable claims state them; no rank (decided 2026-10-15).
-	const bullets = [stable('sealed_v161').text, 'The sealed set was never published.', stable('axes_v161').text, 'On your own hardware you pay for the card, not per token.'];
+	const bullets = [stable('sealed_v161').text, 'The sealed set was never published.', stable('axes_v161').text];
 	need2(stable('axes_v161').text.includes(printed(ours, 'intelligence')) && stable('sealed_v161').text.includes(printed(ours, 'sealed')), 'has stable claims whose values differ from the axes table\'s');
 	bullets.forEach(refuse);
 	return {
@@ -300,7 +300,8 @@ export function recordedExamples() {
 				need2(typeof p === 'number', `has an option (${it.id}, ${q.name}, ${b.label}) the replay gave no probability`);
 				return { ...b, p, top: q.type === 'choice' ? b.label === a.choice : String(js(a.score)) === b.label };
 			});
-			return { ...q, bars, result: q.type === 'choice' ? a.choice : `level ${a.score.toFixed(1)}` };
+			// A score's answer is the expected level over its levels (the probabilities' weighted mean), not one level.
+			return { ...q, bars, result: q.type === 'choice' ? a.choice : `expected level ${a.score.toFixed(1)}` };
 		});
 		for (const q of questions) {
 			const total = q.bars.reduce((sum, b) => sum + b.p, 0);

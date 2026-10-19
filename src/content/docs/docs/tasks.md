@@ -49,7 +49,7 @@ The answer has one record for each correction, `calibration` and `head`:
 | Field | What it says |
 | --- | --- |
 | `applied` | `true` when later questions with this option list are answered with the correction |
-| `reason` | why, in words: "cross-validated gain" when it was kept, or what was missing |
+| `reason` | why, in words: "cross-validated gain" when it was kept, because it helped on examples it was not fitted on, or what was missing |
 
 The server keeps a correction only when it helps on your own examples, checked by scoring each fifth of them with a fit made on the other four.
 When it declines one, the question is answered exactly as before:
@@ -73,7 +73,7 @@ Export it once, and start every server with `--tasks-file tasks.json`, or import
 
 ::upstream{file="docs/tasks.md" section="5. List, export, reload, delete" block="1"}
 
-- A task applies only under the model and rendering it was taught on; on another, the server does not apply it and says why.
+- A task applies only under the model and the prompt layout it was taught on; on another, the server does not apply it and says why.
 - Renaming, adding or reordering an option makes a new task: teach it again.
 - To reproduce a task exactly, export and import it rather than registering it again.
 
@@ -91,7 +91,7 @@ These compare the taught server with the untaught one on the same messages, whic
 ## What it costs
 
 - **Teaching:** every example is scored once, plus the fit, as in the times above.
-- **Each later question:** a correction costs nothing extra. A question the head answers reads the text's internal representation in extra engine requests, so it takes longer than a plain one.
+- **Each later question:** a correction costs nothing extra. A question the intent head answers takes extra work on the server: :value{name="head-cost"}
 
 ## What next
 

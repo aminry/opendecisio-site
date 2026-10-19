@@ -14,11 +14,11 @@ Pick how often a certified answer may be wrong; the server finds the threshold t
 
 ## 1. Know the promise
 
-With probability at least 90% by default, at most your error target of the certified answers are wrong, for traffic like your examples, on the serving setup the certificate was made on.
+Pick an error rate, say 5%: of the answers decisio certifies, at most 5% are wrong, for traffic like your examples, nine times in ten (the default `delta` of 0.1).
 
-- It is a rate over many answers: one certified answer can still be wrong.
-- It covers one task on one server, not other traffic or another task.
-- It costs coverage: a stricter target certifies fewer answers, and too few examples certify none.
+- The promise is about the rate: even so, one certified answer can still be wrong.
+- A certificate covers one task on one serving setup: certify again when you change either.
+- A stricter rate certifies fewer answers, and too few examples certify none; the rest go to a person.
 
 ## 2. Teach the task with a certificate
 
@@ -70,7 +70,7 @@ Set `certify.min_examples` above the floor to refuse a certificate that thin.
 1. **Give the task an "other" option.** A message that fits none of the options gets a wrong answer, and that answer can be certified. The server warns when a choice task has no such option.
 2. **Certify again when the setup changes.** A certificate covers one task on one serving setup: the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length and the serving flags. When any of it changes, every answer of the task is `certified: false` with the reason `serving_stack_changed`. Certify again with `POST /v1/tasks/{id}/certify`, on new labelled examples.
 3. **After upgrading decisio, certify your tasks again.**
-4. **Expect a few answers near the threshold to change sides** between two fresh starts of the same server.
+4. **Expect a few answers near the threshold to change sides** between two fresh starts of the same server: judge the certificate by its rate over many answers, not by one.
 
 What is certified: choice and yes/no questions on text, asked in one order.
 Score questions and requests with images carry no certificate.

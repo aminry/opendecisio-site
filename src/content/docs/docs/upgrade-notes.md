@@ -5,7 +5,6 @@ description: What each decisio release changes for a running deployment, newest 
 
 <!-- Site-written: the intro and the links. The notes are decisio's docs/upgrading.md at the pinned release. -->
 
-What each release changes for a running deployment, newest first: who is affected, and what to do.
 Every upgrade follows the same steps, in [Upgrade](/docs/upgrading/); the notes are what differs from one release to the next.
 
 ::upstream{file="docs/upgrading.md"}

@@ -56,7 +56,7 @@ The first question about a new text pays for reading it, and that grows with its
 
 The server's time, median of 10 new texts per length, on one RTX PRO 6000 Blackwell at 600 W, decisio 0.11.1 on vLLM 0.30.0.
 A later, different question about the same text is read from the cache: under 165 ms at every length, on every model.
-On the Gemma models the server registers each text's boundary so that the later question finds it; that is on by default.
+On the Gemma models the server marks where each text ends, so that a later question finds the text in the cache; that is on by default.
 
 ## 3. Plan for long texts
 
@@ -97,9 +97,9 @@ print("options answered:", len(answer["probabilities"]))
 
 | Flag | What it does | What it costs |
 | --- | --- | --- |
-| `--register-boundary before` | the Gemma models' default: registers a new text's boundary ahead of its first question | +21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens (one card at 585 W, decisio 0.8.1, 2026-10-06) |
-| `--register-boundary after` | registers it after the answer instead | the cost moves to throughput: the 31B kept 0.61 and 0.74 of it at 32 and 64 clients in the same run, so keep `before` on the 31B under load |
-| `--register-boundary off` | never registers | a later question re-reads the text; for traffic that asks one question per text |
+| `--register-boundary before` | the Gemma models' default: marks where a new text ends, ahead of its first question | +21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens (one card at 585 W, decisio 0.8.1, 2026-10-06) |
+| `--register-boundary after` | marks it after the answer instead | the cost moves to throughput: the 31B kept 0.61 and 0.74 of it at 32 and 64 clients in the same run, so keep `before` on the 31B under load |
+| `--register-boundary off` | never marks it | a later question re-reads the text; for traffic that asks one question per text |
 | `--multi-question` | `warm`, the 31B's default, scores a request's questions in one batch; `sequential` scores them one at a time | see the table in step 1 |
 | `--head-engine` | answers a taught task's head questions from a second engine | a second copy of the weights on the card, and no image engine |
 
@@ -137,4 +137,4 @@ print("a different question about the same text:", server_ms({"type": "noul", "i
 
 - [Operate](/docs/operating/): watch the server time and the queue in production.
 - [Requirements and limits](/docs/limits/): every model's memory and longest text, and what was measured on what.
-- [Choosing a base](/docs/bases/): which model is faster on what.
+- [Choosing a model](/docs/bases/): which model is faster on what.

@@ -5,7 +5,6 @@ description: Sort incoming documents by type, file the ones decisio can stand be
 
 <!-- Site-written: a use-case recipe. The question, the routing script and the registration are src/lib/use-cases.mjs. It is labelled a recipe: decisio is measured on short texts, and no run on long documents is published. -->
 
-Sort every incoming document by type, and file the ones decisio is sure of without a person.
 This script asks for the document's type and files it only on a certified answer:
 
 ::site-block{name="route-document-classification"}

@@ -5,7 +5,6 @@ description: Before a retrieval pipeline answers, check whether the passages it 
 
 <!-- Site-written: a use-case recipe. The question, the routing script and the registration are src/lib/use-cases.mjs; the measured result is the SciFact and BoolQ rows of decisio's EVAL_CARD.md section 7.2, read by the same module. -->
 
-Check that the retrieved passage answers the question before your pipeline answers from it, and say "not in the documents" when it does not.
 This script sends the question and the passage as one text and acts only on a certified answer:
 
 ::site-block{name="route-rag-gate"}

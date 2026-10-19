@@ -29,6 +29,7 @@ import { siteBlock } from './site-blocks.mjs';
 import { diagram } from './diagrams.mjs';
 import { docsFigure, recordedLabel } from './docs-figures.mjs';
 import { example5Table } from './recorded.mjs';
+import { glossaryTerms, linkFirstUses } from './glossary.mjs';
 import { runOf } from './bench-page.mjs';
 import { splitParagraph } from './sentences.mjs';
 import { integrationsTable } from './figures/use-from.mjs';
@@ -307,6 +308,16 @@ export default function remarkUpstream(options = {}) {
 				return index + 2;
 			});
 		}
+		// ::glossary-table: the glossary's words, each in a row with its own anchor (src/lib/glossary.mjs).
+		visit(tree, 'leafDirective', (node, index, parent) => {
+			if (node.name !== 'glossary-table') return;
+			const md = (t) => t.replace(/`([^`]+)`/g, '<code>$1</code>');
+			const rows = glossaryTerms().map((g) => `<tr id="${g.anchor}"><th scope="row">${g.word}</th><td data-label="What it means">${md(g.means)}</td></tr>`).join('');
+			parent.children.splice(index, 1, { type: 'html', value: `<div class="table-wrap"><table class="docs-table glossary-table"><thead><tr><th scope="col">Word</th><th scope="col">What it means</th></tr></thead><tbody>${rows}</tbody></table></div>` });
+			return index + 1;
+		});
+		// A glossary word's first use on a docs page links to its meaning (not on the glossary itself).
+		if (annotate && !/docs\/glossary\.md$/.test(vfile.path ?? '')) linkFirstUses(tree);
 		// Source comments (SPDX headers, notes on site-written blocks) are not shipped.
 		visit(tree, 'html', (node, index, parent) => {
 			if (/^<!--[\s\S]*-->$/.test(node.value.trim())) {

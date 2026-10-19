@@ -5,7 +5,6 @@ description: Decide allow, ask or block for each shell command a coding agent pr
 
 <!-- Site-written: a use-case recipe. The rules and their actions are the teach-and-certify gatekeeper's policy; the question, the routing script and the registration are src/lib/use-cases.mjs; the measured result is that run, read by the same module. -->
 
-Let a coding agent run the commands your rules allow, stop the ones they block, and ask a person about the rest.
 decisio names the rule a command falls under; your policy maps the rule to an action, and only a certified answer acts on its own:
 
 ::site-block{name="route-gatekeeper"}

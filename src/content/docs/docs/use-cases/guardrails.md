@@ -5,7 +5,6 @@ description: Check each message against a policy, such as toxicity, in one yes-o
 
 <!-- Site-written: a use-case recipe. The question, the routing script and the registration are src/lib/use-cases.mjs; the measured result is the ToxicChat row of decisio's EVAL_CARD.md section 7.2, read by the same module. -->
 
-Check every message against your policy before it reaches a person or a model, with a probability you can act on.
 This script asks one yes-or-no question and blocks or allows only on a certified answer:
 
 ::site-block{name="route-guardrails"}

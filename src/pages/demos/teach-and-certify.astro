@@ -76,7 +76,7 @@ const oneIn = gk ? Math.round(gk.unsafe.certified / gk.unsafe.unsafe) : 0;
 			<div class="section__head">
 				<p class="kicker">Inbox autopilot</p>
 				<h2 id="inbox">A support inbox, <em class="hl">split by the certificate</em></h2>
-				<p>These are real messages from {datasetName(ib.dataset)}'s test split, answered by {baseName(ib.model)} after {ib.k} labelled examples per intent. Pick an error rate: the answers the certificate covers go out on their own, and the rest go to a person.</p>
+				<p>These are real messages from {datasetName(ib.dataset)}'s test split, answered by {baseName(ib.model)} after {ib.k} labelled examples per intent. Pick an <a class="gloss" href="/docs/glossary/#error-target">error rate</a>: the answers the certificate covers go out on their own, and the rest go to a person.</p>
 				<p>A stricter rate sends more of the inbox to a person. That is what the promise costs.</p>
 			</div>
 

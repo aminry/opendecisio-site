@@ -5,7 +5,6 @@ description: Send each support ticket to the right queue, act on the routes deci
 
 <!-- Site-written: a use-case recipe. The question, the routing script and the registration are src/lib/use-cases.mjs; the measured result is the teach-and-certify runs' support inbox and decisio's triage demo (docs/demos/README.md), read by the same module. -->
 
-Route every ticket to its queue in one request, and let the routes decisio is sure of go through without a person.
 This script asks for the queue and acts only on a certified answer:
 
 ::site-block{name="route-support-routing"}

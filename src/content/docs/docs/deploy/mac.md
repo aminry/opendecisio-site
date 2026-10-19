@@ -22,7 +22,7 @@ On a 64 GB Mac, install it and start the default model, Gemma 4 31B.
 | 64 GB | Gemma 4 31B, 6-bit | 24.9 GB; 29.6, 31.1 and 33.7 GB at about 8k, 16k and 32k tokens | 16,383 tokens | not measured |
 | 48 GB | Gemma 4 31B, 4-bit | 19.2 GB; 23.9, 25.3 and 28.0 GB, read on a 64 GB Mac | 16,383 tokens | 9.4 s at 3,000 tokens, on a busy Mac |
 | 32 GB | Gemma 4 12B, 6-bit | 9.7 GB; 15.1 GB at 32,687 tokens | 32,768 tokens | 1,312 ms at 1,000 tokens |
-| 16 GB, or any laptop | Gemma 4 12B on Ollama | a 7.7 GB download; 8.6 GB in Ollama | 8,192 tokens | not recorded |
+| A 16 GB laptop | Gemma 4 12B on Ollama | a 7.7 GB download; 8.6 GB in Ollama, read on a 64 GB Mac | 8,192 tokens | not recorded |
 
 Measured on one Apple M5 Pro with 64 GB; no smaller Mac was measured, and GB are 10⁹ bytes.
 The Qwen base runs from its 6-bit build too; its 4-bit build is for Macs with more than 32 GB.
@@ -58,9 +58,9 @@ On a smaller Mac, start the build that fits it instead:
 
 ## 4. What a Mac does not serve
 
-- Images, packed mode, LoRA adapters and the second-engine head.
+- Images in a question, adapters (`--adapter`), packed mode, or the intent head on a second engine (`--head-engine`).
 - FP8 checkpoints: a Mac always names an MLX build with `--model`.
-- Teaching a task works, slowly: on the 31B 4-bit, about an hour for BANKING77 and about 2.6 hours for CLINC150.
+- Teaching a task works, slowly: on the 31B 4-bit, about an hour for 770 labelled examples (77 options) and about 2.6 hours for 1,500 (150 options).
 
 ## On a laptop, with Ollama
 
@@ -79,7 +79,7 @@ Then ask it a question on Ollama's decision route, on port 11434, with the listi
 
 ::site-block{name="ollama-request-gemma"}
 
-Ollama builds its own prompt and applies no calibration, so its probabilities are not decisio's measured ones.
+Ollama builds its own prompt and applies none of decisio's corrections to the probabilities, so they are not decisio's measured ones.
 To teach and certify tasks, run a decisio server.
 
 ## What next

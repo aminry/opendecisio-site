@@ -25,7 +25,8 @@ curl -s http://127.0.0.1:8000/health
 | Machine | Model and build | Memory it takes | Longest text | Measured |
 | --- | --- | --- | --- | --- |
 | NVIDIA, 96 GB | Gemma 4 31B, FP8, the default | 30.6 GiB of weights | up to 98,304 tokens, chosen at start | yes, an RTX PRO 6000 Blackwell |
-| NVIDIA, 80 GB | Gemma 4 31B, FP8 | 33.85 GiB of cache at the default share | 98,304 tokens at the default share; 49,152 at 0.85 | it starts and answers, an H100 PCIe; the full measurements are the 96 GB card's |
+| NVIDIA, 80 GB | Gemma 4 31B, FP8 | 30.6 GiB of weights; 33.85 GiB of cache at the default share | 98,304 tokens at the default share; 49,152 at 0.85 | it starts and answers, an H100 PCIe; the full measurements are the 96 GB card's |
+| NVIDIA, 80 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights; 43.28 GiB of cache at the default share | 65,536 tokens at the default share | yes, an H100 PCIe |
 | NVIDIA, 96 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights | up to 65,536 tokens | yes |
 | NVIDIA, 32 GB | Gemma 4 12B, bf16 | does not start on vLLM's defaults | none | simulated on the 96 GB card |
 | NVIDIA, 96 GB | Qwen3.6-35B-A3B, FP8 | 33.3 GiB of weights | 32,768 tokens | yes |
@@ -87,9 +88,9 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 | Ollama memory | Gemma 4 12B, `q4_k_m` | one Apple M5 Pro | Ollama 0.35.1 | 2026-10-07 |
 
 - One card and one run per configuration.
-- The temperatures were fitted on decisio's own 1,400-item suite, so that suite's calibration figures are in-sample.
+- Each model's default settings were tuned on decisio's own 1,400-item suite, so its calibration errors on that suite are a best case.
 - Latency depends on the host's CPU and the card's power limit, as well as the card.
-- Most published figures of the 31B were measured on Google's weights quantised on load; the stored FP8 repository it serves scores the same within noise.
+- Most published figures of the 31B were measured on Google's weights converted to FP8 as they load; the stored FP8 checkpoint it serves scores the same within noise: 213 of JevBench's 231 published questions right with each, and 162 of 200 suite requests (vLLM 0.31.0).
 
 [The evaluation card](/docs/evaluation-card/) has every measurement and its record.
 

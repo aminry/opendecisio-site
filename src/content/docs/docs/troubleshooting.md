@@ -11,10 +11,10 @@ Find what you see in the tables below, and what to do about it.
 Start with what the server says about itself:
 
 ```bash
-curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8000/health
-curl -s http://127.0.0.1:8000/v1/tasks
 # 200 when the engine is up, 503 when it has died, and 000 while nothing answers yet (the server is still starting)
-# the registered tasks, whether tasks are applied, and the server's fingerprint
+curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8000/health
+# the registered tasks, and whether the server applies them
+curl -s http://127.0.0.1:8000/v1/tasks
 ```
 
 ## 1. It does not start

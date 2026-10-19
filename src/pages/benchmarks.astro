@@ -16,7 +16,7 @@ import UpstreamTable from '../components/UpstreamTable.astro';
 import { colourOf } from '../config/bases.mjs';
 import { site } from '../config/site';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { baseLines, benchTiles, demoPlayers, tableConditions, tableNotes } from '../lib/bench-page.mjs';
+import { baseLines, benchTiles, demoPlayers, runOf, tableConditions, tableNotes } from '../lib/bench-page.mjs';
 import { breadcrumbs } from '../lib/jsonld.mjs';
 import { BOARD_URL, decisionIndexBoard } from '../lib/launch.mjs';
 import { paragraphStarting, table } from '../lib/upstream-content.mjs';
@@ -93,7 +93,7 @@ const description = 'What decisio does, measured and dated: many questions about
 				<BenchmarkTable />
 				<div class="pcard__foot" data-table-notes>{notes.map((n) => <p>{n}</p>)}</div>
 				<details class="disc">
-					<summary>Gemma 4 12B and Qwen3.6-35B-A3B on the same items</summary>
+					<summary>Gemma 4 12B and Qwen3.6-35B-A3B on the same items, with JevBench v1.5, {runOf('gemma-4-12b')}</summary>
 					<div class="disc__body">
 						<p set:html={pairedIntro} />
 						<UpstreamTable head={paired.head} rows={paired.rows} caption="Gemma 4 12B against Qwen3.6-35B-A3B on the same items" />
@@ -109,7 +109,7 @@ const description = 'What decisio does, measured and dated: many questions about
 			<div class="section__head">
 				<p class="kicker">Confidence</p>
 				<h2 id="confidence">Probabilities that <em class="hl">mean what they say</em></h2>
-				<p>The calibration error is the average gap between the probability an answer states and how often answers like it were right: lower is better, and zero would be exact. Here it is on JevBench's published items, on its standard and hard tiers.</p>
+				<p>The <a class="gloss" href="/docs/glossary/#calibration-error">calibration error</a> is the average gap between the probability an answer states and how often answers like it were right: lower is better, and zero would be exact. Here it is on JevBench's published items, on its standard and hard tiers.</p>
 			</div>
 			<div class="pcard tile">
 				<ConfidenceChart />

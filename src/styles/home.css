@@ -1897,3 +1897,11 @@ html:not(.js) .cert__ctl .chip {
 	font-size: 15px;
 	font-weight: 600;
 }
+
+/* A glossary word linked on a main page: the text's own colour and a dotted underline. */
+.home a.gloss {
+	color: inherit;
+	text-decoration: underline dotted;
+	text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+	text-underline-offset: 0.2em;
+}

@@ -27,7 +27,7 @@ const QUESTIONS = [
 	{ id: 'trust', q: 'Probabilities I can trust?', from: ['Calibration'], ours: /Gemma 4 31B 0\.035 and 0\.091/, theirs: /trained for calibrated decisions/,
 		decisio: yes('Fitted per base; each base\'s calibration error is under Confidence, above'), jev: yes('Trained for calibrated decisions, in its documentation') },
 	{ id: 'teach', q: 'Can I teach it with my own examples?', from: ['Teaching from labelled examples'], ours: /\/v1\/tasks/, theirs: /not fine-tuned or LoRA-adapted with customer data/,
-		decisio: yes('POST /v1/tasks fits calibration and an intent head to your labelled examples; the model stays frozen'), jev: no('Not fine-tuned on customer data; shaped through the request') },
+		decisio: yes('POST /v1/tasks fits calibration and an intent head to your labelled examples, and from decisio 0.12.0 certifies which answers to trust at the error rate you pick; the model stays frozen'), jev: no('Not fine-tuned on customer data; shaped through the request') },
 	{ id: 'repeat', q: 'Same answer every time?', from: ['Repeatability'], ours: /bit for bit/, theirs: /do not state whether a repeated request/,
 		decisio: say('Qwen: bit for bit. The Gemma bases: the same top answer on one running server, with the exact numbers able to move'), jev: say('Not stated in its documentation; an alias moves when a release ships') },
 	{ id: 'licence', q: 'Licence?', from: ['Licence'], ours: /Apache-2\.0/, theirs: /customer agreements/,

@@ -20,7 +20,7 @@ const y = (i: number) => TOP + i * ROW + (rows[i]?.jev ? GAP : 0);
 // Room under the axis label's baseline for its descenders (the comma was clipped).
 const H = y(rows.length - 1) + 60;
 const ticks = [64, 66, 68, 70, 72, 74, 76];
-const alt = `Dot and interval chart of JevBench ${j.revision} composite scores with 95% intervals: ten open-weights systems from the board's file and Jev 1.13.0 as a reference row, in alphabetical order; every row is in the table on this page and on the benchmarks page.`;
+const alt = `Dot and interval chart of JevBench ${j.revision} composite scores with 95% intervals: ten open-weights systems from the board's file and Jev 1.13.0 as a reference row, in alphabetical order; every row's axes are in the table under Axis by axis, below.`;
 ---
 <figure class="jb" data-launch="chart">
 	<div class="jb__lc">
