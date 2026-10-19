@@ -172,7 +172,9 @@ export default function remarkUpstream(options = {}) {
 		// ::integrations-table: the checked integrations, one row each (src/data/integrations.json).
 		visit(tree, 'leafDirective', (node, index, parent) => {
 			if (node.name !== 'integrations-table') return;
-			parent.children.splice(index, 1, { type: 'html', value: integrationsTable() });
+			// It holds no code block, so the runner that collects blocks (annotate off) skips it: a release bump runs
+			// that before verification/integrations.json is written again for the new release.
+			parent.children.splice(index, 1, { type: 'html', value: annotate ? integrationsTable() : '' });
 			return index + 1;
 		});
 		// ::teach-gains: what teaching did on the default model, one row per intent set (src/lib/teach.mjs checks each

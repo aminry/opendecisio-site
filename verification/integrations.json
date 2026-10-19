@@ -1,0 +1,51 @@
+{
+	"_note": "decisio-examples' integration checks, run by scripts/verify-integrations.mjs against decisio's CPU stand-in (Qwen/Qwen3-0.6B-Base, --backend hf) at the pinned release. They check the plumbing, not the answers.",
+	"tag": "v0.18.0",
+	"commit": "ae8f7dba16250386c83d8aa4d660d0c2f65c0b4e",
+	"examples": {
+		"repository": "aminry/decisio-examples",
+		"commit": "343691565ad708f99389bc863e3f64c398856fed"
+	},
+	"server": "CPU stand-in, Qwen/Qwen3-0.6B-Base, --backend hf",
+	"date": "2026-10-19",
+	"items": {
+		"langchain": {
+			"passed": 42,
+			"total": 42,
+			"versions": {
+				"langchain-typesafe": "0.0.1a3"
+			}
+		},
+		"ai-sdk": {
+			"passed": 42,
+			"total": 42,
+			"versions": {
+				"ai": "7.0.131",
+				"@ai-sdk/typesafe-ai": "3.0.15"
+			}
+		},
+		"n8n": {
+			"passed": 44,
+			"total": 44,
+			"versions": {
+				"n8n": "2.35.7",
+				"n8n-nodes-jev": "0.2.3"
+			}
+		},
+		"tanstack": {
+			"passed": 39,
+			"total": 39,
+			"versions": {
+				"@tanstack/ai": "0.65.1",
+				"@tanstack/ai-typesafe": "0.1.8"
+			}
+		},
+		"pipecat": {
+			"passed": 39,
+			"total": 39,
+			"versions": {
+				"pipecat-ai": "1.12.0"
+			}
+		}
+	}
+}
