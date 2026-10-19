@@ -40,6 +40,10 @@ export function rewriteLinks(nodes, file, map = inclusionMap()) {
 		if (route) relabel(parent.children[index], route.path);
 	});
 	visit(root, ['link', 'image', 'definition'], (node) => {
+		// The first release's changelog heading compares the tag with itself (release-please's link, kept as written):
+		// it goes to that release instead, which an empty comparison does not show.
+		const same = new RegExp(`^https://github\\.com/${pin.repository.replace('/', '\\/')}/compare/(v[\\d.]+)\\.\\.\\.\\1$`).exec(node.url ?? '');
+		if (same) node.url = `https://github.com/${pin.repository}/releases/tag/${same[1]}`;
 		const url = node.url;
 		if (node.data?.resolved || !url || /^[a-z]+:/i.test(url) || url.startsWith('//')) return;
 		let [target, anchor] = url.split('#');
