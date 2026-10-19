@@ -1,6 +1,8 @@
-// Outputs the site shows as recorded from a decisio server, with the release that recorded them (docs/STYLE_GUIDE.md,
-// "Numbers"; Amin, 2026-10-18). scripts/checks/recorded.mjs finds every page that shows one (by its marker text) and fails
-// a page showing an output older than the pinned minor release unless the page says which release recorded it.
+// Outputs the site shows as recorded from a decisio server, with the release, card and date that recorded them
+// (docs/STYLE_GUIDE.md, "Numbers"; Amin, 2026-10-18 and 2026-10-19). scripts/checks/recorded.mjs finds every page that
+// shows one (by its marker text) and applies scripts/checks/recorded-rule.mjs: an output older than the pinned minor
+// stays if each page labels it with its release, card and date, and if every release since was read for a change to what
+// it shows (`reviews`, from the release notes). No GPU is rented to re-record; that happens when a training box is up.
 // All three were recorded again on decisio 0.17.0 (src/lib/recorded.mjs), so the earlier recordings are retired: their
 // marks must appear on no page.
 import { certificate, session } from '../lib/recorded.mjs';
@@ -10,22 +12,40 @@ import { recordedResponse } from '../lib/figures/core.mjs';
 // the recorded answer, not one that only sends the same text as an example (Scale, the FAQ).
 const firstAnswer = () => { const q = Object.values(recordedResponse().answers).find((a) => a.type === 'choice'); return String(q.probabilities[q.choice]); };
 
+// The card as the labels name it, and the reviews of the releases since the recording, from their notes.
+const card = () => session().card.replace(/^NVIDIA /, '').replace(/ Blackwell.*$/, '');
+const textRoute018 = "0.18.0's changes are adapters (their temperatures and fingerprint), generated reference docs, the image count and the image engines' shares, and W4A16 checkpoints' engine stream; it has no upgrade notes, and none of these touches a text request to the FP8 31B with no adapter";
+const reviews = {
+	decisions: { 'v0.18.0': { changed: false, why: textRoute018 } },
+	example5: { 'v0.18.0': { changed: false, why: textRoute018 } },
+	certificate: { 'v0.18.0': { changed: false, why: `${textRoute018}; a server with no adapter keeps its certificates as before (docs/running.md), though any release change suspends a certificate until it is made again` } },
+};
+
 export const recordedOutputs = [
 	{
 		name: 'the recorded decisions (decisio-examples, support routing and three more), sent again',
 		version: () => session().decisio,
 		marker: 'I was charged twice for October',
+		card,
+		date: () => session().date,
+		reviews: reviews.decisions,
 		alsoShows: firstAnswer,
 	},
 	{
 		name: 'the routing example (decisio-examples example 5)',
 		version: () => session().decisio,
 		marker: 'Escalate only when unsure',
+		card,
+		date: () => session().date,
+		reviews: reviews.example5,
 	},
 	{
 		name: "docs/tasks.md's worked certificate, on the 31B",
 		version: () => session().decisio,
 		marker: certificate().certificate.id,
+		card,
+		date: () => session().date,
+		reviews: reviews.certificate,
 	},
 ];
 

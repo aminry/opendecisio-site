@@ -19,7 +19,7 @@ export const recorded = () => recordedExamples();
 // `shows` says what the line sits under, so it says only what is true of it: a response (abridged, three places), a client's
 // printed lines (three places in the code, two in a figure) or a figure's bars (two places).
 export const recordedLabel = (shows = 'response') => `<p class="recorded">${sourceLine(recorded(), shows === 'printed' ? 'the printed probabilities are rounded to three places' : 'the response is abridged and its probabilities are rounded to three places')}</p>`;
-export const sourceLine = (r, shown = 'the probabilities are rounded to two places') => `Recorded decision: ${esc(r.boxLabel)}, ${r.run.date}; record 1 of ${r.items[0].of} of decisio-examples' support-routing run, sent again to this release; ${shown}.`;
+export const sourceLine = (r, shown = 'the probabilities are rounded to two places') => `Recorded decision: ${esc(r.boxLabel)}, ${r.run.date}; record 1 of ${r.items[0].of} of decisio-examples' support-routing run, sent again on that release; ${shown}.`;
 export const wrapText = (text, width) => {
 	const lines = [];
 	let line = '';

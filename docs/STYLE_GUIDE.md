@@ -73,6 +73,9 @@ Internals (the readout, the probabilities, repeatability) live on one page: How 
 - The build checks that a number still matches its source; a page never types a measured number by hand.
 - Each figure appears once per page (the content check); a figure on a chart may repeat a table's.
 - A number carries its conditions beside it once: the model, the card or Mac, the date.
+- A recorded output (a decision, a run's table, a certificate) carries one label naming the release, the card and the date it ran on.
+- It stays when the pin moves on, unless a later release changed what it shows; that is decided from each release's notes and written in `src/config/recorded-outputs.mjs`, and the recorded-output check enforces both.
+- No GPU is rented to verify the site: a recording is made again only when a training box is already up.
 
 ## Visuals
 

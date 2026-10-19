@@ -137,6 +137,8 @@ jobs:
         run: node scripts/checks/external-selftest.mjs
       - name: How the verification runner stops a server, against local stand-ins (one ignores SIGTERM)
         run: node scripts/checks/verify-stop-selftest.mjs
+      - name: The recorded-output rule, on made-up pages
+        run: node scripts/checks/recorded-selftest.mjs
       - name: Cloudflare accepts the configuration (wrangler deploy --dry-run)
         run: npx wrangler deploy --dry-run
         env:
