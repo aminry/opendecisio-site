@@ -84,12 +84,7 @@
 			"date": "2026-10-19",
 			"note": "with pipecat-ai 1.12.0, the version the page names"
 		},
-		"8ce25428cd21b951": {
-			"status": "cpu",
-			"tag": "v0.17.0",
-			"date": "2026-10-19"
-		},
-		"29e5a1d4282701a8": {
+		"3c0166dc27189fc1": {
 			"status": "cpu",
 			"tag": "v0.17.0",
 			"date": "2026-10-19"
@@ -99,15 +94,24 @@
 			"tag": "v0.17.0",
 			"date": "2026-10-19"
 		},
-		"b3683dfa1074b049": {
+		"020e37d4612cef85": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
+		},
+		"e49d690312902481": {
 			"status": "example"
+		},
+		"ce033c53d29be54b": {
+			"status": "shown",
+			"why": "it needs Linux with one NVIDIA card, which this check does not have"
 		},
 		"f6db6123f6c620a4": {
 			"status": "cpu",
 			"tag": "v0.17.0",
 			"date": "2026-10-19"
 		},
-		"8e1893dfe07a7129": {
+		"886fa7f7cc2d6a6c": {
 			"status": "cpu",
 			"tag": "v0.17.0",
 			"date": "2026-10-19"
@@ -179,6 +183,19 @@
 			"tag": "v0.17.0",
 			"date": "2026-10-19",
 			"note": "registers the walk-through task again"
+		},
+		"c8ce725f58ac4f6f": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
+		},
+		"42b3893f6c447a0a": {
+			"status": "example"
+		},
+		"19ca27e30a6dc573": {
+			"status": "cpu",
+			"tag": "v0.17.0",
+			"date": "2026-10-19"
 		},
 		"34a548d175c41da5": {
 			"status": "shown",
