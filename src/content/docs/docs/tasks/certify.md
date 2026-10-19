@@ -14,25 +14,33 @@ Pick how often a certified answer may be wrong; the server finds the threshold t
 
 ## 1. Know the promise
 
-With probability at least 90% by default, at most your error target of the certified answers are wrong, for traffic like your examples, on the serving setup the certificate was made on.
+Pick an error rate, say 5%: of the answers decisio certifies, at most 5% are wrong, for traffic like your examples, nine times in ten (the default `delta` of 0.1).
 
-- It is a rate over many answers: one certified answer can still be wrong.
-- It covers one task on one server, not other traffic or another task.
-- It costs coverage: a stricter target certifies fewer answers, and too few examples certify none.
+- The promise is about the rate: even so, one certified answer can still be wrong.
+- A certificate covers one task on one serving setup: certify again when you change either.
+- A stricter rate certifies fewer answers, and too few examples certify none; the rest go to a person.
 
 ## 2. Teach the task with a certificate
 
 Add `certify` to the registration, with your error target as `alpha`.
-decisio's worked example is a three-queue ticket question at an error target of 15%, here on the default model, Gemma 4 31B:
+With a server running, from the root of the clone ([Teach a task](/docs/tasks/#3-register) has both), add it to the 120 labelled tickets decisio ships and register them:
 
-::upstream{file="docs/tasks.md" section="A worked example" block="1"}
+```bash
+uv run python -c 'import json; b = json.load(open("examples/tasks/examples.json")); b["certify"] = {"alpha": 0.05}; json.dump(b, open("certify.json", "w"))'
+curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d @certify.json \
+  | uv run python -c 'import json, sys; c = json.load(sys.stdin)["certificate"]; print(json.dumps({k: c.get(k) for k in ("alpha", "n", "threshold", "certified_n", "errors_at_threshold", "summary")}, indent=1))'
+```
 
-The server holds back half the examples, teaches on the rest, reads the held-back ones as it will serve them, and answers with the certificate:
+The server holds back half the examples, teaches on the rest, reads the held-back ones as it will serve them, and answers with the certificate.
+The CPU stand-in is a small development model, so its certificate is its own.
+On the default model, Gemma 4 31B, decisio's worked example, a three-queue ticket question at an error target of 15%, answered:
 
 ::site-block{name="certificate-response"}
 
 Here, :value{name="certify-result"}.
-:value{name="certify-recorded"}
+
+::source{value="certify-recorded"}
+
 If no threshold can keep the promise, `threshold` is `null` and the task works as before, with every answer marked not certified.
 
 ## 3. Read each answer
@@ -54,7 +62,9 @@ The server refuses to certify below the fewest held-back examples at which anyth
 | 10% | 29 |
 | 20% | 14 |
 
+The server holds back half of what you send, so a 5% certificate needs at least 118 labelled examples.
 That floor is for a task the model always gets right; yours needs more.
+
 With 75 examples, four of five test tasks certified nothing at 5% or 10%.
 Set `certify.min_examples` above the floor to refuse a certificate that thin.
 
@@ -63,7 +73,7 @@ Set `certify.min_examples` above the floor to refuse a certificate that thin.
 1. **Give the task an "other" option.** A message that fits none of the options gets a wrong answer, and that answer can be certified. The server warns when a choice task has no such option.
 2. **Certify again when the setup changes.** A certificate covers one task on one serving setup: the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length and the serving flags. When any of it changes, every answer of the task is `certified: false` with the reason `serving_stack_changed`. Certify again with `POST /v1/tasks/{id}/certify`, on new labelled examples.
 3. **After upgrading decisio, certify your tasks again.**
-4. **Expect a few answers near the threshold to change sides** between two fresh starts of the same server.
+4. **Expect a few answers near the threshold to change sides** between two fresh starts of the same server: judge the certificate by its rate over many answers, not by one.
 
 What is certified: choice and yes/no questions on text, asked in one order.
 Score questions and requests with images carry no certificate.
@@ -76,6 +86,8 @@ Pick the line from the cost of an escalation against the cost of a wrong answer,
 On :value{name="example5-recorded"}:
 
 ::escalation-table
+
+::source{value="example5-source"}
 
 A line on the raw probability promises nothing for new traffic; a certificate does.
 To keep answers above a line of your own:

@@ -4,6 +4,7 @@ export const site = {
 	name: 'Decisio',
 	url: 'https://opendecisio.com',
 	repository: 'https://github.com/aminry/decisio',
+	siteRepository: 'https://github.com/aminry/opendecisio-site',
 	pypi: 'https://pypi.org/project/decisio/',
 	ollama: 'https://ollama.com/aminroudaki/decisio',
 	image: 'ghcr.io/aminry/decisio',

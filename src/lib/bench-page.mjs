@@ -2,7 +2,7 @@
 // base, one line on each base read from the README's benchmark table, and the recorded demos' players, the comparison
 // that left the demos page. Every number is read from its record here; a record that stops saying it stops the build.
 import { BOARD_URL, refuse, stable } from './launch.mjs';
-import { benchmarks } from './home.mjs';
+import { benchmarkRecords, benchmarks } from './home.mjs';
 import { results } from './demos.mjs';
 import { comparison } from './comparison.mjs';
 import { baseOfName } from '../config/bases.mjs';
@@ -22,7 +22,7 @@ function baseTable() {
 	return { rows, row };
 }
 
-/** The four tiles at the top: the speed, a question on a text already read, the board's composite and the calibration error. */
+/** The three tiles at the top: the speed, a question on a text already read, and the calibration error. */
 export function benchTiles() {
 	const sp = stable('speed_same_box_2026_10_11');
 	const s = Number(sp.values['decisio Gemma 4 31B']['3000'].value);
@@ -35,11 +35,30 @@ export function benchTiles() {
 	const tiles = [
 		{ n: `${s.toFixed(2)} s`, text: 'for 50 questions about a 3,000-token document, Decisio 31B', date: `one box, ${sp.date}`, href: '#many-questions' },
 		{ n: cached, text: 'for one more question about a 1,000-token text already read, Gemma 4 31B', date: "decisio 0.8.1's defaults, 585 W", href: '#bases' },
-		{ n: Number(comp.values.ours.value).toFixed(2), text: `JevBench v1.6.1 composite of Decisio 31B (95% interval ${lo.toFixed(2)} to ${hi.toFixed(2)})`, date: `the board's file, read ${read}`, href: '#jevbench' },
-		{ n: cal.standard.toFixed(3), text: `calibration error of Gemma 4 31B on JevBench's standard tier; ${cal.hard.toFixed(3)} on its hard tier`, date: 'lower is better', href: '#confidence' },
+		{ n: cal.standard.toFixed(3), text: `calibration error of Gemma 4 31B on JevBench's standard tier, lower is better; ${cal.hard.toFixed(3)} on its hard tier`, date: tableConditions().label, href: '#confidence' },
 	];
 	tiles.forEach((t) => refuse(t.text));
 	return { tiles, board: BOARD_URL };
+}
+
+/**
+ * Where the README's benchmark table was measured: one RTX PRO 6000 Blackwell, vLLM 0.30.0 with decisio's plugin (the
+ * evaluation card's "Engine" rows), on the dates of the records under its columns.
+ */
+export function tableConditions() {
+	const card = readUpstream('EVAL_CARD.md');
+	if ((card.match(/vLLM 0\.30\.0 with decisio's plugin/g) ?? []).length < 3) fail("the evaluation card no longer measures all three bases on vLLM 0.30.0 with decisio's plugin");
+	const recs = Object.entries(benchmarkRecords()).filter(([k]) => k !== 'image').map(([, r]) => /^runs\/(\d{4}-\d{2}-\d{2})_/.exec(r)?.[1] ?? fail(`the record ${r} is not dated`));
+	const dates = [...new Set(recs)].sort();
+	return { engine: 'vLLM 0.30.0', card: 'one RTX PRO 6000', dates, label: `one RTX PRO 6000, vLLM 0.30.0, ${dates.join(' and ')}` };
+}
+
+/** Where one base's column of the table was measured: the card, the engine and its record's date. */
+export function runOf(base) {
+	const r = benchmarkRecords()[base] ?? fail(`no record for ${base}`);
+	const date = /^runs\/(\d{4}-\d{2}-\d{2})_/.exec(r)?.[1] ?? fail(`the record ${r} is not dated`);
+	tableConditions();
+	return `one RTX PRO 6000, vLLM 0.30.0, ${date}`;
 }
 
 /** The calibration error (ECE) of each base on JevBench's standard and hard tiers, as the README states it. */
@@ -85,7 +104,7 @@ export function tableNotes() {
 	for (const l of lines) if (!text.includes(`\n${l}\n`)) fail(`the README no longer says "${l}" under its benchmark table`);
 	const latency = /^Latency is server time on decisio 0\.8\.1's served defaults, at a 585 W power limit \(default 600 W\), so a card at 600 W may read new states faster/m.exec(text);
 	if (!latency) fail("the README no longer gives the latency rows' conditions");
-	return [...lines, "Latency is server time on decisio 0.8.1's served defaults, at a 585 W power limit (the default is 600 W)."];
+	return [...lines.map((text) => ({ text })), { text: "Latency is server time on decisio 0.8.1's served defaults, at a 585 W power limit (the default is 600 W).", source: true }];
 }
 
 /**

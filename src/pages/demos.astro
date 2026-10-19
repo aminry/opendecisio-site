@@ -13,7 +13,7 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import { demoCards, sectionParts, setupLine } from '../lib/demos.mjs';
 import { breadcrumbs } from '../lib/jsonld.mjs';
 import { pin } from '../lib/upstream.mjs';
-import { baseName, data as teachCertify, datasetName } from '../lib/teach-certify.mjs';
+import { baseName, data as teachCertify, datasetName, oosReplay } from '../lib/teach-certify.mjs';
 
 const cards = demoCards();
 const setup = setupLine();
@@ -32,13 +32,13 @@ const ib = tc.inbox;
 const at5 = ib.targets['0.05'];
 const gk = tc.gatekeeper;
 const r16 = tc.release016;
-const fix = tc.fix;
-if (!r16?.released || !fix || !gk) throw new Error('demos: the teach-and-certify records lack the gatekeeper, the 0.16.0 alarm or the out-of-scope fix');
+const oos = oosReplay();
+if (!r16?.released || !gk) throw new Error('demos: the teach-and-certify records lack the gatekeeper or the drift pause');
 const results = [
 	{ n: pc(at5.covered / ib.test_n), l: `of a support inbox answered on its own at most 5% wrong; ${pc(at5.errors / at5.covered)} of those were wrong`, meta: `${datasetName(ib.dataset)}, ${baseName(ib.model)}, decisio ${tc.decisio}`, href: '/demos/teach-and-certify/#inbox' },
 	{ n: `${pc(gk.at5.share[0], 0)} to ${pc(gk.at5.share[1], 0)}`, l: "of a coding agent's shell commands decided on their own at most 5% wrong", meta: `${gk.rules.length} rules, ${baseName(gk.model)} on a Mac, decisio ${gk.decisio}`, href: '/demos/teach-and-certify/#gatekeeper' },
-	{ n: String(r16.clinc.wrong_before), l: `wrong answers certified before certification paused on drifting traffic, against ${r16.clinc.wrong_before_014.toLocaleString('en-US')} with no pause`, meta: `${datasetName('clinc150')}, ${baseName('g31')}, decisio ${r16.version}`, href: '/demos/teach-and-certify/#drift' },
-	{ n: `${pc(fix.wrong_rate_before)} to ${pc(fix.wrong_rate)}`, l: 'wrong among the certified answers, once the task was taught to say none of these', meta: `${datasetName('clinc150')} with off-topic traffic, decisio ${tc.decisio}`, href: '/demos/teach-and-certify/#fix' },
+	{ n: String(r16.clinc.wrong_before), l: 'wrong answers certified before certification paused on drifting traffic', meta: `${datasetName('clinc150')}, ${baseName('g31')}, decisio ${r16.version} release candidate`, href: '/demos/teach-and-certify/#drift' },
+	{ n: `${pc(oos.rightUntaught)} to ${pc(oos.rightTaught)}`, l: 'right over a drifting stream, once the task was taught to say none of these, with the pause on', meta: `${datasetName('clinc150')} with off-topic traffic, ${baseName('g31')}, replayed through the decisio ${oos.decisio} monitor`, href: '/demos/teach-and-certify/#fix' },
 ];
 ---
 <SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Demos', path: '/demos/' }])} title={`Demos: ${site.name}`} description="Certified answers on real tasks, then Pong, a driving simulator, a browser agent and ticket triage on each of decisio's three models, every decision checked where it can be.">
@@ -60,7 +60,7 @@ const results = [
 					<li class="cert4__i tile">
 						<span class="cert4__n">{r.n}</span>
 						<span class="cert4__l">{r.l}</span>
-						<a class="cert4__m" href={r.href}>{r.meta}</a>
+						<a class="cert4__m src-note" href={r.href}>{r.meta}</a>
 					</li>
 				))}
 			</ul>
@@ -72,7 +72,7 @@ const results = [
 		<div class="wrap">
 			<div class="section__head">
 				<p class="kicker">Recorded runs</p>
-				<h2 id="watch">Four demos, <em class="hl">recorded on decisio {setup.version}</em></h2>
+				<h2 id="watch">Four demos, <em class="hl">played as they ran</em></h2>
 				<p>Each clip is a recorded run, played at the speed it happened. Every base ran in one session on one {setup.card} on {setup.date}; each card opens on the default base, Gemma 4 31B, and its numbers are that base's.</p>
 			</div>
 
@@ -105,7 +105,7 @@ const results = [
 						<ul class="minis" data-table-keys>
 							{d.minis.map((m) => <li class="mini"><span class="mini__n">{m.n}</span><span class="mini__l">{m.l}</span></li>)}
 						</ul>
-						<p class="demo-card__meta">Gemma 4 31B, decisio {d.version}, {d.date}</p>
+						<p class="demo-card__meta src-note">Gemma 4 31B, decisio {d.version}, {d.date}</p>
 					</div>
 
 					<details class="disc">

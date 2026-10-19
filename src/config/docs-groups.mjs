@@ -31,6 +31,7 @@ export const docsGroups = [
 			{ slug: 'docs/deploy/docker', label: 'With Docker', shape: 'guide' },
 			{ slug: 'docs/deploy/mac', label: 'On a Mac or a laptop', shape: 'guide' },
 			{ slug: 'docs/deploy/development', label: 'For development (CPU)', shape: 'guide' },
+			{ slug: 'docs/deploy/adapter', label: 'Serve your own adapter', shape: 'guide' },
 			{ slug: 'docs/tasks', label: 'Teach a task', shape: 'guide' },
 			{ slug: 'docs/tasks/certify', label: 'Certify answers', shape: 'guide' },
 			{ slug: 'docs/tasks/drift', label: 'Watch for drift', shape: 'guide' },
@@ -50,9 +51,7 @@ export const docsGroups = [
 			{ slug: 'docs/limits', label: 'Requirements and limits', shape: 'reference' },
 			{ slug: 'docs/glossary', shape: 'reference' },
 			{ slug: 'docs/releases', label: 'Release notes', shape: 'reference' },
-			{ slug: 'docs/upgrade-notes', label: 'Upgrade notes', shape: 'reference' },
 			{ slug: 'docs/evaluation-card', label: 'Evaluation card', shape: 'reference' },
-			{ slug: 'docs/faq', label: 'Questions' },
 		],
 	},
 	{

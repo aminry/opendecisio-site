@@ -52,9 +52,9 @@ for (const file of pages) {
 	// that shows the former says what they are.
 	if (DI_SCORES.test(text) && cardRecordsSelfRuns && !/self-run|our own run/.test(text)) report(route, 'shows a Decision Index 0.2.1 score without saying it is our own run');
 
-	// JevBench counts: "on JevBench's 231 published questions".
+	// JevBench counts: "on JevBench's 231 published questions" (a Markdown page renders its apostrophe curly).
 	for (const m of text.matchAll(/.{0,40}\b231\b.{0,40}/g)) {
-		if (/JevBench/.test(m[0]) && !/JevBench's 231 published questions/.test(m[0])) report(route, `JevBench count not in the required wording: "${m[0].trim()}"`);
+		if (/JevBench/.test(m[0]) && !/JevBench['’]s 231 published questions/.test(m[0])) report(route, `JevBench count not in the required wording: "${m[0].trim()}"`);
 	}
 
 	// Media: no hosted player's clip embedded, no Gemini clip anywhere.

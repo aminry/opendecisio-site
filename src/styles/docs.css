@@ -180,6 +180,21 @@ h1#_top {
 	color: inherit;
 }
 
+/* What a block printed when it was run on the stand-in, as the record keeps it: a quiet output panel under the line. */
+.sl-markdown-content .checked__out {
+	margin: 0.4rem 0 0;
+	padding: 0.7rem 0.9rem;
+	max-height: 22rem;
+	overflow: auto;
+	border: 1px solid var(--sl-color-gray-5);
+	border-left: 3px solid var(--sl-color-accent);
+	border-radius: var(--d-radius-control);
+	background: var(--d-code-bg);
+	color: var(--d-code-ink);
+	font: var(--d-step--1) / 1.55 var(--d-font-mono, 'Geist Mono Site', monospace);
+	white-space: pre;
+}
+
 .expressive-code {
 	--ec-brdRad: var(--d-radius-panel);
 }
@@ -647,7 +662,9 @@ h1#_top {
 	white-space: pre;
 }
 
-.sl-markdown-content .recorded {
+/* A number's source note (::source, src/lib/remark-upstream.mjs) reads like a recorded output's label. */
+.sl-markdown-content .recorded,
+.sl-markdown-content p.src-note {
 	margin-top: 0.5rem;
 	font-size: var(--d-step--2);
 	color: var(--sl-color-gray-3);
@@ -1643,4 +1660,21 @@ a.fig__card:hover {
 	margin-top: 0.4rem;
 	font-size: var(--sl-text-xs);
 	color: var(--sl-color-accent);
+}
+
+/* A glossary word's first use on a page (src/lib/glossary.mjs): the text's own colour, a dotted underline, so a sentence
+   with several stays easy to read; the accent on hover. */
+.sl-markdown-content a.gloss {
+	color: inherit;
+	text-decoration: underline dotted;
+	text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+	text-underline-offset: 0.2em;
+}
+
+.sl-markdown-content a.gloss:hover {
+	color: var(--sl-color-accent);
+}
+
+.sl-markdown-content .glossary-table tr:target {
+	background: color-mix(in srgb, var(--sl-color-accent) 12%, transparent);
 }

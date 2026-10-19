@@ -50,7 +50,7 @@ jobs:
           # The files whose change means the examples may differ: the docs' pages (their code samples), the code that writes
           # a sample (site-blocks, the figures' recorded decision, the home page's blocks, the facts they come from), the plan
           # and the runner that runs them, the record, and the release they run against.
-          pattern='^(src/content/docs/|src/lib/(site-blocks|blocks|home|launch|remark-upstream)\.mjs$|src/lib/figures/core\.mjs$|src/lib/docs-figures\.mjs$|src/data/launch/|verification/|scripts/(verify-commands|verify-ollama)\.mjs$|scripts/checks/verify-record\.mjs$|upstream\.json$)'
+          pattern='^(src/content/docs/|src/lib/(site-blocks|blocks|home|launch|remark-upstream)\.mjs$|src/lib/figures/core\.mjs$|src/lib/docs-figures\.mjs$|src/data/launch/|verification/|src/data/integrations\.json$|scripts/(verify-commands|verify-integrations|verify-ollama)\.mjs$|scripts/checks/verify-record\.mjs$|upstream\.json$)'
           case "$EVENT" in
             pull_request) files=$(gh pr diff "$PR" --repo "$REPO" --name-only) ;;
             push)
@@ -96,48 +96,72 @@ jobs:
           key: upstream-${{ hashFiles('upstream.json') }}
       - run: npm ci
       - name: Build from the pinned release
+        id: build
         run: npm run build
         env:
           GH_TOKEN: ${{ github.token }}
       - name: Content rules
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/content.mjs
       - name: The JevBench claims are those launch_facts.public.json allows
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/launch.mjs
       - name: Wording the facts allow in one place only
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/wording.mjs
       - name: No rank and no comparison on any page
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/claims.mjs
       - name: Nothing internal in the public repository
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/internal.mjs
       - name: Nothing internal on any built page, decisio's rendered docs included
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/internal.mjs --dist
       - name: No page sends readers to GitHub for docs (counts may only fall)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/docs-links.mjs
-      - name: No recorded output older than the pinned release without saying so
+      - name: Every recorded output is current, or labelled with its release, card and date and unchanged since
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/recorded.mjs
+      - name: No page names another decisio release outside source notes, code and Release notes
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        run: node scripts/checks/versions.mjs
       - name: Every moved page redirects to a built page
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/redirects.mjs
       - name: Every fact the site words itself still stands in decisio's docs
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/sourced.mjs
       - name: llms.txt and llms-full.txt
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/llms.mjs
       - name: Every docs page follows the page pattern
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/docs-pattern.mjs
       - name: Articles and news (canonical links, feeds, the launch rules)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/posts.mjs
       - name: The analytics beacon and the privacy page
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/analytics.mjs
       - name: Colour contrast of the tokens
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/contrast.mjs
       - name: Every published code block is in the verification plan
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/verify-commands.mjs --dry-run
       - name: Internal links and anchors
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/links.mjs
       - name: External-link retry rules, against a local server
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/external-selftest.mjs
       - name: How the verification runner stops a server, against local stand-ins (one ignores SIGTERM)
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/verify-stop-selftest.mjs
       - name: The recorded-output rule, on made-up pages
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/recorded-selftest.mjs
       - name: Cloudflare accepts the configuration (wrangler deploy --dry-run)
         run: npx wrangler deploy --dry-run
@@ -262,12 +286,41 @@ jobs:
             verification/commands.json
           retention-days: 14
 
+  # decisio-examples' five integration checks (LangChain, the Vercel AI SDK, n8n, TanStack AI, Pipecat) against the CPU
+  # stand-in at the pinned release; the run must agree with verification/integrations.json, which the framework table shows.
+  integrations:
+    needs: changes
+    if: needs.changes.outputs.verify == 'true' && needs.changes.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - run: npm ci
+      - name: Keep the committed record
+        run: cp verification/integrations.json "$RUNNER_TEMP/integrations.committed.json" || echo '{}' > "$RUNNER_TEMP/integrations.committed.json"
+      - name: Run the integration checks on the CPU stand-in
+        shell: bash
+        run: node scripts/verify-integrations.mjs --check "$RUNNER_TEMP/integrations.committed.json" 2>&1 | tee integrations.log
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: integrations-log
+          path: |
+            integrations.log
+            verification/integrations.json
+          retention-days: 14
+
   # A failing nightly is an issue, not a red mark nobody opens: after a full run on main (the schedule, or on demand on
   # main), the first failure opens the issue labelled nightly-failure with the failed jobs, what failed by engine and page,
   # and the run; a later failure comments on it; the first full run that passes closes it (scripts/nightly-report.mjs).
   # A nightly skipped because its commit was already tested changes nothing.
   nightly-report:
-    needs: [changes, build, browsers, lighthouse-and-links, verify-examples]
+    needs: [changes, build, browsers, lighthouse-and-links, verify-examples, integrations]
     if: ${{ always() && needs.changes.result == 'success' && needs.changes.outputs.skip != 'true' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 5

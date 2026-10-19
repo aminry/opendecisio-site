@@ -1,11 +1,7 @@
-// The figures of "Understand": how a question becomes a probability, the three bases side by side, what the
-// calibration measured, what repeats and what does not, the evaluation card's map, how the headline compares,
-// the questions and the releases. Each reads the numbers it draws from the pinned release's docs and stops the
+// The figures of "Understand": how a question becomes a probability, and the releases. Each reads the numbers it draws from the pinned release's docs and stops the
 // build when one is no longer there.
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { slugify } from '../upstream-map.mjs';
-import { readUpstream, siteRoot } from '../upstream.mjs';
+import { readUpstream } from '../upstream.mjs';
 import { esc, p2, panel, recorded, sourceLine } from './core.mjs';
 
 const text = (file) => readUpstream(file);
@@ -57,18 +53,6 @@ ${rows}
 
 // --- Questions and releases -------------------------------------------------------------------------------------------------
 
-function faqMap() {
-	const file = readFileSync(join(siteRoot, 'src/content/docs/docs/faq.md'), 'utf8');
-	const qs = [...file.matchAll(/^## (.+\?)$/gm)].map((m) => m[1]);
-	if (qs.length < 8) throw new Error('docs-figures: the questions page has lost its questions');
-	const body = `<ul class="fig__chiplist">${qs.map((q, i) => `<li class="f-pop fd-${Math.min(i, 10)}"><a href="#${slugify(q)}">${esc(q)}</a></li>`).join('')}</ul>`;
-	return panel({
-		name: 'faq-map', label: 'Questions', title: `${qs.length} questions newcomers ask; each answer rests on the documentation it links to.`,
-		desc: `The questions on this page: ${qs.join(' ')}`,
-		body, interactive: true, legend: 'Each question links to its answer below.', source: 'Source: this page; every answer is a pointer or a section of the pinned release.',
-	});
-}
-
 function releaseTimeline() {
 	const log = text('CHANGELOG.md');
 	const items = [...log.matchAll(/^## \[(\d+\.\d+\.\d+)\]\([^)]*\) \((\d{4}-\d{2}-\d{2})\)$/gm)].map((m) => ({ v: m[1], date: m[2], href: `#${slugify(`${m[1]} (${m[2]})`)}` }));
@@ -84,6 +68,5 @@ function releaseTimeline() {
 
 export const understandFigures = {
 	'one-pass': onePass,
-	'faq-map': faqMap,
 	'release-timeline': releaseTimeline,
 };

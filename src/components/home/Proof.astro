@@ -2,7 +2,7 @@
 // On the board: the home page's one comparison with another system, the JevBench composite of Decisio 31B and Jev
 // 1.13.0 on the board's v1.6.1 file, in the launch facts' stable claim (composite_v161) with its date and source, and
 // drawn as the two intervals. Every other comparison is on the benchmarks page, dated.
-import { BOARD_URL, refuse, stable } from '../../lib/launch.mjs';
+import { BOARD_URL, jevbench, refuse, stable } from '../../lib/launch.mjs';
 const c = stable('composite_v161');
 const v = (x: any) => Number(x.value ?? x);
 const rows = [
@@ -20,7 +20,9 @@ const X1 = 610;
 const x = (s: number) => X0 + ((s - lo) / (hi - lo)) * (X1 - X0);
 const ticks = Array.from({ length: hi - lo + 1 }, (_, i) => lo + i);
 const desc = rows.map((r) => `${r.name}: ${r.at.toFixed(2)}, 95% interval ${r.ci[0].toFixed(2)} to ${r.ci[1].toFixed(2)}`).join('; ');
-const source = `Source: the JevBench board's v1.6.1 file, read on ${read}.`;
+const row = jevbench().ours.display.match(/decisio (v[\d.]+)/)?.[1];
+if (!row) throw new Error("Proof: the board's 31B row no longer names its decisio release");
+const source = `Source: the JevBench board's v1.6.1 file, read on ${read}; its Decisio 31B row is decisio ${row}.`;
 refuse(desc);
 refuse(source);
 ---
@@ -47,7 +49,8 @@ refuse(source);
 			</figure>
 			<div class="proof__text">
 				<p class="board__claim" data-launch="lead">{c.text}</p>
-				<p class="proof__src">{source} <a href={BOARD_URL}>The live board</a> has today's standings, and <a href="/benchmarks/#jevbench">Benchmarks</a> has what was measured and how.</p>
+				<p class="proof__src src-note">{source}</p>
+				<p class="proof__src"><a href={BOARD_URL}>The live board</a> has today's standings, and <a href="/benchmarks/#jevbench">Benchmarks</a> has what was measured and how.</p>
 			</div>
 		</div>
 	</div>

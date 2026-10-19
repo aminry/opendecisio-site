@@ -17,6 +17,32 @@ const cli = 'docs/cli.md';
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
 
 export const sourced = [
+	// Serve your own adapter
+	...fromPage('/docs/deploy/adapter/', [
+		['An adapter changes the scale of the model\'s readout', running, 'an adapter changes the scale of the readout'],
+		['one per question type, and for choice questions one per band of option count', running, 'The file can therefore carry a choice temperature per band of option count, beside the flat one'],
+		['Start the server with --adapter name=path, once per adapter', cli, '`name=path` of a vLLM-format LoRA adapter; repeatable'],
+		['The adapter is a vLLM-format LoRA adapter, served unmerged, on the text route, in separate mode.', running, 'The adapter is served unmerged, on the text route, in separate mode'],
+		['A Mac does not serve adapters.', running, 'the MLX backend refuses adapters'],
+		['A request uses the adapter only when it names it', cli, 'A request uses it only when its body names it'],
+		['Put the file beside the adapter\'s weights as decisio_adapter.json, or give it with --adapter-temperatures name=file when the adapter\'s folder is not yours to change.', running, 'in a file `decisio_adapter.json` beside its weights, or in a file given with `--adapter-temperatures name=file` for an adapter whose folder is not yours to change'],
+		['A type the file does not list keeps the base\'s temperature.', running, "A type the file does not list keeps the base's temperature."],
+		['within 2 to 255 and not overlapping', running, 'The keys are `lo-hi`, within 2 to 255 (the most options a choice can have) and not overlapping.'],
+		['a count in no band is served at temperatures.choice, then at the base\'s', running, "A count in no band is served at `temperatures.choice`, then at the base's."],
+		['Yes/no and score questions are not banded.', running, 'Yes/no and score questions are not banded'],
+		['An adapter with no file is served at the base\'s temperatures, and the server says so when it starts.', running, "An adapter with no file is served at the base's, and the server says so when it starts."],
+		['The file is checked before the engine is built, and an unusable one stops the start.', cli, 'An unusable file, or a name `--adapter` did not load, is refused before the engine is built.'],
+		['one row per item', running, 'One row per item, `{"type": "choice" | "noul" | "score", "probs": [...], "gold": <index>}`'],
+		['Fit on items that are not a benchmark\'s: a temperature holds for the kind of items it was fitted on.', running, "Use items that are not a benchmark's; a temperature is a statement about the items it was fitted on"],
+		['The answer carries "adapter" and the x-decisio-adapter header when the adapter answered.', api, 'The response carries `"adapter": "<name>"` (and the header `x-decisio-adapter`) when an adapter answered.'],
+		['An unknown name is answered 404, with the adapters that are loaded.', api, 'An unknown name is answered 404 with the name and the adapters that are loaded'],
+		['/health shows each adapter\'s temperatures in adapter_temperatures', running, '`/health` shows them in `adapter_temperatures`'],
+		['the hash of its weights and configuration in adapter_identity', running, "The server hashes each adapter's weights file and configuration when it starts, and `/health` reports them in `adapter_identity`."],
+		['A certificate covers one serving setup', readme, 'a certificate holds for one task on one serving setup'],
+		['holds each loaded adapter\'s name, weights hash and temperatures, so a different adapter, a retrained one or a changed temperature is a different setup', running, "holds each loaded adapter's name, weights hash and temperatures, so a different adapter, a retrained one or a changed temperature is a different stack"],
+		['A request that names an adapter is never certified', running, 'A request that names an adapter is never certified'],
+		['a question that a registered task matches is refused with an adapter', api, 'so a question that one of them matches is answered 400 with the task named'],
+	]),
 	// Benchmarks: one line on each base.
 	...fromPage('/benchmarks/', [
 		['One NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or a 64 GB Mac.', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
@@ -32,12 +58,35 @@ export const sourced = [
 		["with JevBench's own measure, over ten equal-width bins of the probability", readme, "over 10 equal-width bins of the probability (JevBench's own measure"],
 	]),
 	...fromPage('/benchmarks/', [
-		['from decisio 0.14.0 a Gemma base serves what the card holds, up to 98,304 on the 31B', 'docs/comparison.md', 'from decisio 0.14.0 the Gemma bases serve the largest context that fits the card'],
+		['At least 32,768 tokens on a Gemma base, and up to 98,304 on the 31B, as the card holds', readme, 'on the Gemma bases, of the largest length the card holds, at least 32,768 and at most 98,304 on the 31B'],
+	]),
+	// Batch 10: the FAQ's answers in their new homes.
+	...fromPage('/docs/bases/', [
+		["The weights are under Apache-2.0: Alibaba's Qwen3.6-35B-A3B and Google's Gemma 4 12B and 31B", readme, "The model weights are Alibaba's Qwen3.6-35B-A3B under Apache-2.0 and, for the other two bases, Google's Gemma 4 12B and 31B under Apache-2.0"],
+		['redistribute them with their licence and provenance files', readme, 'redistribute those weights under Apache-2.0 with their licence and provenance files'],
+	]),
+	...fromPage('/docs/operating/', [
+	]),
+	...fromPage('/docs/use-cases/', [
+		['Each answer is read from one forward pass and no generated text', readme, 'from one forward pass and no generated text'],
+	]),
+	...fromPage('/benchmarks/', [
+		['none of these is a board score', readme, 'None is a board score.'],
+	]),
+	...fromPage('/benchmarks/', [
+		['within 0.001 on the 12B, except GPQA Diamond (two of 196 items)', card, 'within 0.001 on the 12B except GPQA Diamond (two of 196 items)'],
+		['and certifies which answers to trust at the error rate you pick', readme, 'a certificate holds for one task on one serving setup'],
+	]),
+	...fromPage('/docs/images/', [
+		['It prints route: image when the image engine answered', api, '`x-decisio-route`: the route that served it (`text` or `image`).'],
+	]),
+	...fromPage('/docs/upgrading/', [
+		["A server takes 0.90 of its card's memory by default", running, '| 0.90 (the default) | 33.85 GiB |'],
 	]),
 	// Home: the Good fit box.
 	...fromPage('/', [
 		['118 or more, at the defaults, for a task you want certified', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
-		['from decisio 0.16.0, certification pauses on its own while the confidence alert is on', upgrading, '| A certified task made on 0.16.0 | The confidence alert suspends certification while it is on |'],
+		['certification pauses on its own while the confidence alert is on', 'docs/tasks.md', '**By default this suspends certification:** every answer of the task is `certified: false` with the reason `traffic_changed` while the alert is on'],
 		['up to 255 per question', readme, 'and 255 options per question'],
 		['at least 32,768 tokens on a Gemma model on a card, and up to 98,304 on the 31B, as the card allows', readme, 'on the Gemma bases, of the largest length the card holds, at least 32,768 and at most 98,304 on the 31B'],
 		['the default model runs on one NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or on a 64 GB Mac', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
@@ -110,12 +159,12 @@ export const sourced = [
 		['9.4 s at 3,000 tokens, on a busy Mac', running, 'on a busy Mac under the 27 GiB limit: 9.4 s at 3,000 tokens'],
 		['9.7 GB; 15.1 GB at 32,687 tokens', running, 'holds 9.7 GB of weights and peaks at 15.1 GB at 32,687 tokens of state'],
 		['1,312 ms at 1,000 tokens', running, 'one question on a new 1,000-token state takes 1,312 ms'],
-		['a 7.7 GB download; 8.6 GB in Ollama 8,192 tokens', running, "its `q4_k_m` tag (also `latest`) is a 7.7 GB download and takes 8.6 GB in Ollama at the listing's 8,192-token context"],
+		['a 7.7 GB download; 8.6 GB in Ollama', running, "its `q4_k_m` tag (also `latest`) is a 7.7 GB download and takes 8.6 GB in Ollama at the listing's 8,192-token context"],
 		['33.7 GB at about 8k, 16k and 32k tokens 16,383 tokens not measured', running, 'Server times are not measured.'],
 		['Measured on one Apple M5 Pro with 64 GB; no smaller Mac was measured', running, 'Measured on one Apple M5 Pro with 64 GB; no smaller Mac was measured.'],
 		['its 4-bit build is for Macs with more than 32 GB', running, 'The 4-bit conversion is for Macs with more than 32 GB of memory'],
-		['about an hour for BANKING77 and about 2.6 hours for CLINC150', running, 'about an hour for a BANKING77 draw and about 2.6 hours for a CLINC150 draw'],
-		['Images, packed mode, LoRA adapters and the second-engine head', running, 'It refuses the image route, packed mode, LoRA adapters and the second-engine head.'],
+		['about an hour for 770 labelled examples (77 options) and about 2.6 hours for 1,500 (150 options)', running, 'about an hour for a BANKING77 draw and about 2.6 hours for a CLINC150 draw'],
+		['Images in a question, adapters (--adapter), packed mode, or the intent head on a second engine (--head-engine)', running, 'It refuses the image route, packed mode, LoRA adapters and the second-engine head.'],
 		['Ollama 0.35.1 or later', running, 'Requires Ollama 0.35.1 or later.'],
 		['q8_0 not given 13.6 GB', running, 'its `q8_0` tag takes 13.6 GB'],
 		['a 23 GB download', running, "The Qwen listing's smallest tag is a 23 GB download"],
@@ -136,6 +185,7 @@ export const sourced = [
 		['22.8 GiB of weights', readme, 'bf16, 22.8 GiB in memory'],
 		['33.3 GiB of weights', readme, '33.3 GiB in memory'],
 		['33.85 GiB of cache at the default share', running, '| 0.90 (the default) | 33.85 GiB |'],
+		['43.28 GiB of cache at the default share', running, 'On the same 80 GB card the 12B served its ceiling of 65,536 at the default share (43.28 GiB of KV cache)'],
 		['98,304 tokens at the default share; 49,152 at 0.85', running, '| 0.85 | 29.9 GiB | 53,696 | 49,152 |'],
 		["does not start on vLLM's defaults", card, "The Gemma base does not fit a 32 GB card on vLLM's defaults."],
 		['simulated on the 96 GB card', card, 'Simulated on the 96 GB card'],
@@ -152,15 +202,15 @@ export const sourced = [
 		['as many images as the context holds, up to the image engine\'s --max-images (128 unless set)', card, 'as many images per request as the context holds (up to `--max-images`, 128 by default)'],
 		['PNG, JPEG or WebP, 20 MB each', card, '(PNG, JPEG or WebP, up to 20 MB each)'],
 		["it starts and answers, an H100 PCIe; the full measurements are the 96 GB card's", running, 'it is measured in full on a 96 GB card, and it also started and answered on an 80 GB H100'],
-		['3,370 ms at 16,000 tokens and 8,880 ms at 32,000 (one RTX PRO 6000 at 600 W, decisio 0.11.1)', running, '3,370 ms at 16,000 and 8,880 ms at 32,000 on the 31B'],
+		['3,370 ms at 16,000 tokens and 8,880 ms at 32,000', running, '3,370 ms at 16,000 and 8,880 ms at 32,000 on the 31B'],
 		['answered a check at 85,000 tokens, 23 of 30 right against 25 of 30 short', running, 'answered a check at a state of 85,000 tokens (23 of 30 items right against 25 of 30 for the same items short'],
 		['98,304 against 32,768 changed 6 of 200 top answers', running, '**6 of 200 top answers changed**'],
-		['a task certified before 0.16.0 gets no drift protection until it is certified again', upgrading, 'A task certified before 0.16.0 has no confidence statistic, so it gets no drift protection until it is certified again.'],
 		['--kv-cache-dtype fp8 suspends a certificate made without it', running, "a certificate made under the model's own cache dtype is suspended under fp8"],
 		['Two servers can add up to more memory than the Mac has', running, 'Two servers each stay under their own limit and can still add up to more than the machine has.'],
 		['One card and one run per configuration.', card, 'One card per run and one run per configuration.'],
-		["so that suite's calibration figures are in-sample", card, "so the suite's ECE figures are in-sample"],
+		["so its calibration errors on that suite are a best case", card, "so the suite's ECE figures are in-sample"],
 		['scores the same within noise', card, 'the stored FP8 repository scores the same within noise'],
+		["213 of JevBench's 231 published questions right with each, and 162 of 200 suite requests (vLLM 0.31.0)", card, 'both give 213 right, tier by tier; on 200 suite requests, in one session on one box and one stack (vLLM 0.31.0), 162 are right in each arm'],
 		['5 of 200 items, by at most 0.031, with no top answer changed', card, '(5 of 200 items, up to 0.031, no top answer changed'],
 		['answers are not promised to repeat', card, 'Repeatability across sessions is not promised.'],
 		['Latency with the intent head on a second engine', card, 'The second-engine head mode with the registered text-only class is unmeasured for latency.'],
@@ -177,14 +227,15 @@ export const sourced = [
 		['Registering the same id again replaces the task.', tasksDoc, 'Registering the same `id` again replaces the task.'],
 		['x-decisio-tasks: ticket-routing', tasksDoc, 'The response header `x-decisio-tasks: ticket-routing` says the question matched the registered task'],
 		['start every server with --tasks-file tasks.json', tasksDoc, 'start each server with `--tasks-file tasks.json`'],
-		['A task applies only under the model and rendering it was taught on', tasksDoc, 'A task is valid only for the model and rendering it was fitted under'],
+		['A task applies only under the model and the prompt layout it was taught on', tasksDoc, 'A task is valid only for the model and rendering it was fitted under'],
 		['a correction costs nothing extra', tasksDoc, 'Calibration and questions without a task cost nothing extra.'],
-		['reads the text\'s internal representation in extra engine requests', tasksDoc, 'because the hidden state is read in three extra requests'],
+		['A question the intent head answers takes extra work on the server', tasksDoc, 'because the hidden state is read in three extra requests'],
 		['The server declines the correction and says so', tasksDoc, 'A clear, well-calibrated question gains nothing, and the server says so.'],
 	]),
 	// Certify answers
 	...fromPage('/docs/tasks/certify/', [
-		['With probability at least 90% by default, at most your error target of the certified answers are wrong', tasksDoc, '**with probability at least 1 - `delta` over the draw of your examples (90% by default), at most `alpha` of the answers marked certified are wrong (5% by default)'],
+		['so a 5% certificate needs at least 118 labelled examples', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
+		['at most 5% are wrong, for traffic like your examples, nine times in ten (the default delta of 0.1)', tasksDoc, '**with probability at least 1 - `delta` over the draw of your examples (90% by default), at most `alpha` of the answers marked certified are wrong (5% by default)'],
 		['one certified answer can still be wrong', tasksDoc, 'a single certified answer can still be wrong'],
 		['The server holds back half the examples', tasksDoc, 'It **sets aside some of your labelled examples** (half by default)'],
 		['a three-queue ticket question at an error target of 15%', tasksDoc, 'on a three-queue ticket question'],
@@ -218,7 +269,6 @@ export const sourced = [
 		['The counters live in memory and start again when the server does.', tasksDoc, 'The counters are in memory and start again with the server.'],
 		['label a sample of it and certify again', tasksDoc, 'The only direct check that the promise holds on live traffic is to label some of it and certify again.'],
 		['"suspend_on_alert": false', tasksDoc, 'A certify block with `"suspend_on_alert": false` only reports.'],
-		['A task certified before decisio 0.16.0 has no confidence check until it is certified again', upgrading, 'A task certified before 0.16.0 has no confidence statistic, so it gets no drift protection until it is certified again.'],
 	]),
 	// Operate
 	...fromPage('/docs/operating/', [
@@ -237,13 +287,18 @@ export const sourced = [
 		['Put authentication, rate limits and request-size limits in the proxy.', security, 'Put authentication, rate limiting and request-size limits in the proxy.'],
 		['POST /v1/tasks, POST /v1/tasks/import, DELETE /v1/tasks/{id} and the abstention routes', security, '`POST /v1/tasks`, `POST /v1/tasks/import`, `DELETE /v1/tasks/{id}` and the abstention routes change server state.'],
 		['Do not configure CORS on the proxy', security, 'so do not configure CORS on it for this server'],
-		['Run one server per trust boundary.', security, 'Run one server per trust boundary.'],
+		['Run one server per trust boundary', security, 'Run one server per trust boundary.'],
 		['Leave --debug-readout off.', security, '`--debug-readout` exposes raw model readouts; leave it off in production.'],
 		['it is the one that receives security fixes', security, 'The latest release on `main` receives security fixes.'],
 		['an acknowledgement comes within 5 working days, an assessment within 15', security, 'You will get an acknowledgement within 5 working days and an assessment within 15.'],
 	]),
 	// Scale
 	...fromPage('/docs/scale/', [
+		["together, in one batch, with the engine in the server's process (the default)", cli, 'On the Gemma 4 31B base `warm` is the default when the engine runs in the server\'s process'],
+		['with --head-engine or --image-model the engine runs in its own process', cli, 'to `separate` when a second engine is configured (`--image-model`, `--head-engine`, `--one-engine`)'],
+		['the 31B scores the questions one at a time', cli, '| `--multi-question` | `sequential` | `sequential` | `warm` with the engine in the server\'s process, else `sequential` |'],
+		['serves texts of up to 32,768 tokens', cli, 'The Qwen base, `--image-model`, a second engine, `--engine-process separate` and the other backends stay at 32768'],
+		['for thousands, send several requests about the same text', api, 'for thousands of questions send several requests about the same state'],
 		['the same choice on every item measured; probabilities within 0.0073', readme, 'the same choice as one engine call per question on every item measured, probabilities within 0.0073'],
 		['the same choice; probabilities within 0.035', readme, 'the same choice as each question sent alone, probabilities within 0.035'],
 		['Qwen3.6-35B-A3B one at a time, from the one read the same probabilities', readme, 'the same probabilities as each question sent alone, bit for bit'],
@@ -254,7 +309,7 @@ export const sourced = [
 		['the 31B served 98,304 tokens at 0.90 and 49,152 at 0.85, and did not start at 0.70', running, '| 0.70 | 18.54 GiB | 22,064 | does not start |'],
 		['A prompt longer than the length gets 422, and the server stays up.', api, 'the server stays up'],
 		['A choice can have up to 255 options; more gets 422.', api, 'up to 255 options (more is 422)'],
-		["+21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens (one card at 585 W)", running, 'and +21, +34 and +34 ms on Gemma 4 31B'],
+		["+21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens", running, 'and +21, +34 and +34 ms on Gemma 4 31B (`runs/2026-10-06_latency-585w/`'],
 		['the 31B kept 0.61 and 0.74 of it at 32 and 64 clients', running, 'but the 31B kept only 0.61 and 0.74'],
 		['a second copy of the weights on the card, and no image engine', tasksDoc, 'holds a second copy of the model\'s weights, leaves no room for the image engine on the card'],
 		['nvidia-smi -q -d POWER', running, '(`nvidia-smi -q -d POWER`)'],
@@ -264,6 +319,9 @@ export const sourced = [
 		['so a certificate made on the old release is suspended on the new one', tasksDoc, 'the decisio version, the base and checkpoint revision'],
 		['such as the held-out examples it was certified on', upgrading, 'such as the held-out examples it was certified on'],
 		['The fit is kept; the call answers with the new certificate.', upgrading, 'The fit is kept; the call returns the new certificate'],
+		["The call keeps the certificate's settings unless the body sets them", api, '`POST /v1/tasks/{id}/certify` with `{"examples": [...]}` (and optionally `alpha`, `delta`, `min_examples`)'],
+		['59 at the 5% error target the walk-through task was certified at', readme, 'Below 59 held-out examples (at the defaults) the server refuses to certify at all'],
+		['decisio ships 48 held-out tickets for that task', 'examples/tasks/README.md', '48 other tickets, 4 per queue'],
 		['Only the latest release receives security fixes', security, 'The latest release on `main` receives security fixes.'],
 	]),
 	// Ask about images
@@ -285,6 +343,7 @@ export const sourced = [
 	// How it works
 	...fromPage('/docs/how-it-works/', [
 		['20 labelled examples each lowered the calibration error from 0.058 to 0.037', tasksDoc, 'pooled ECE 0.058 | pooled ECE **0.037**'],
+		['(the Qwen model, 900 test items, 2026-09-29)', tasksDoc, 'six other held-out tasks, 20 labelled examples, 100 draws, 900 test items'],
 		['it never changes which option is likeliest', tasksDoc, 'It does not change which option is the top one'],
 		['exactly, on a freshly started server; on one that has already answered, 5 of 200 moved, by at most 0.031, with no top answer changed', card, 'A request repeats exactly on a freshly started server; on a server that has already answered it, a repeat can differ (5 of 200 items, up to 0.031, no top answer changed'],
 		['the same choice on every item measured; probabilities within 0.0073', readme, 'the same choice as one engine call per question on every item measured, probabilities within 0.0073'],
@@ -294,6 +353,8 @@ export const sourced = [
 		['an earlier record matched in most starts measured', cli, 'single-question answers have matched an earlier record on the whole suite in most starts measured'],
 		['decisio runs on stock vLLM 0.31.0: a plugin registers its model classes, and no patch is needed.', running, 'so vLLM 0.31.0 loads them without any patch'],
 		['no training, no fine-tuning, no adapter', readme, 'No training: every base is an official checkpoint, frozen, with no fine-tuning and no adapter.'],
+		['on the 12B, one choice of 60 changed between a first and a cached read', card, 'and one choice of the 60 changed'],
+		['no adapter unless you serve one with --adapter', cli, 'of a vLLM-format LoRA adapter; repeatable. A request uses it only when its body names it'],
 		['the MLX engine answers each question on its own from one shared read of the text', running, 'It scores each question as its own continuation of the shared prefix'],
 	]),
 	// Choosing a model
@@ -303,7 +364,8 @@ export const sourced = [
 		['22.8 GiB, bf16', readme, 'bf16, 22.8 GiB in memory'],
 		['or an 80 GB H100', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
 		['a 64 GB Mac, or a 48 GB one from its 4-bit build', running, 'is for Macs with 48 GB of memory'],
-		['speed on long new texts, and answers that repeat across sessions', readme, 'Qwen3.6-35B-A3B for speed on long new states, for answers that repeat across sessions'],
+		['speed on long new texts', readme, 'Qwen3.6-35B-A3B for speed on long new states'],
+		['and the same probabilities every time on one server', card, 'Unlike the Qwen base, this base does not return the same probabilities bit for bit for a repeated question.'],
 		['a 32 GB Mac; a 16 GB laptop with Ollama', readme, 'It runs on a 32 GB Mac from its MLX conversion'],
 		['A flag you give explicitly overrides the model\'s value.', readme, 'a flag given explicitly overrides the base\'s value'],
 		['A checkpoint named with --model and no --base brings the model its config.json declares.', readme, 'A checkpoint named with `--model` and no `--base` brings the base its `config.json` declares'],

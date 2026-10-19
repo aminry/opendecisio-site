@@ -3,7 +3,7 @@ title: Evaluation card
 description: What was measured, on what, and what was fitted on what, for each base.
 ---
 
-<!-- Site-written: the intro, the section table and the links. The card below is decisio's EVAL_CARD.md at the pinned release. -->
+<!-- Site-written: the intro, the section table and the links. The card below is decisio's EVAL_CARD.md at the pinned release; its sections 8 and 9 compare decisio with other systems, dated, as Benchmarks does. -->
 
 What decisio was measured on, with which card and settings, and what each number was fitted on, so you can tell a measurement from a fit.
 Your own server says which model, checkpoint and revision it serves, the configuration the card's numbers refer to:
@@ -21,6 +21,8 @@ curl -s http://127.0.0.1:8000/health
 | What do the numbers not say? | [5. Limits](#5-limits) |
 | The Gemma 4 12B model | [6. The Gemma base](#6-the-gemma-base) |
 | The Gemma 4 31B model, the default | [7. The Gemma 4 31B base](#7-the-gemma-4-31b-base) |
+| Our own runs of the Decision Index's whole suite | [8. The Decision Index's whole suite, self-run](#8-the-decision-indexs-whole-suite-self-run) |
+| What the other systems' model cards state, for JevBench v1.6.1 | [9. JevBench v1.6.1: what the compared systems' cards state](#9-jevbench-v161-what-the-compared-systems-cards-state) |
 
 ## The card
 

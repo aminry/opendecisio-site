@@ -43,7 +43,7 @@ const ollamaRequest = (model) => `curl http://localhost:11434/v1/systemone \\
 import { recordedRequest, recordedResponse } from './docs-figures.mjs';
 import { pin, readUpstream } from './upstream.mjs';
 import { recipeIds, routeScript, teachBody } from './use-cases.mjs';
-import { certificate } from './recorded.mjs';
+import { certificate, health } from './recorded.mjs';
 
 // The recorded decision of the docs' first pages (the launch facts (launch_facts.public.json), figures.recorded_decisions), as a request
 // to a server on this machine. The body is indented JSON between single quotes, so no value may hold a single quote.
@@ -99,6 +99,26 @@ const kubernetes = () => {
 	if (!file.includes(placeholder)) throw new Error("site-blocks: docs/operating.md's Deployment no longer has the image placeholder");
 	return file.replace(placeholder, pin.image);
 };
+
+// Serve your own adapter: decisio's adapter file with choice bands (docs/running.md, "LoRA adapters"), written and checked
+// by decisio's own tool; the start, a question with the adapter, the /health fields and the fit, as that section gives them.
+const ADAPTER = 'my-adapter';
+const adapterBlocks = () => sectionBlocks('docs/running.md', 'LoRA adapters');
+const adapterFile = () => {
+	const file = adapterBlocks().find((b) => b.includes('"choice_bands"')) ?? (() => { throw new Error("site-blocks: docs/running.md's LoRA adapters section has no adapter file with choice_bands"); })();
+	JSON.parse(file);
+	return file;
+};
+const adapterCheck = () => `cat > decisio_adapter.json <<'EOF'\n${adapterFile()}\nEOF\nuv run python -m decisio.serve.adapter_temperatures check decisio_adapter.json`;
+const adapterStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --adapter ${ADAPTER}=/models/${ADAPTER} \\\n  --adapter-temperatures ${ADAPTER}=decisio_adapter.json`;
+const adapterAsk = () => `curl -s http://127.0.0.1:8000/v1/systemone -H 'Content-Type: application/json' -d '{
+  "state": "I was charged twice for the same order.",
+  "adapter": "${ADAPTER}",
+  "questions": {"refund": {"type": "noul", "instructions": "Does the customer want a refund?"}}
+}' -D - -o answer.json | grep -i '^x-decisio-adapter'`;
+const adapterHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; h = json.load(sys.stdin); print(json.dumps({k: h.get(k) for k in ("adapter_temperatures", "adapter_identity")}, indent=1))'`;
+// decisio's fit line, broken before its flags so it fits the page.
+const adapterFit = () => lineOf(adapterBlocks().find((b) => b.includes(' fit --reads')) ?? '', ' fit --reads').replace(/ (--out|--data) /g, ' \\\n  $1 ');
 
 // The recorded answers as the comment lines a client prints: one per question, its likeliest option and probability.
 const printed = () => Object.entries(recordedResponse().answers).map(([name, a]) => {
@@ -200,6 +220,11 @@ export const siteBlocks = {
 	get 'docker-compose'() { return { lang: 'yaml', text: dockerCompose() }; },
 	get 'docker-build'() { return { lang: 'bash', text: `${clone()}\nuv build --wheel\ndocker compose up --build` }; },
 	get 'kubernetes'() { return { lang: 'yaml', text: kubernetes() }; },
+	get 'adapter-check'() { return { lang: 'bash', text: adapterCheck() }; },
+	get 'adapter-start'() { return { lang: 'bash', text: adapterStart() }; },
+	get 'adapter-ask'() { return { lang: 'bash', text: adapterAsk() }; },
+	get 'adapter-health'() { return { lang: 'bash', text: adapterHealth() }; },
+	get 'adapter-fit'() { return { lang: 'bash', text: adapterFit() }; },
 	get 'images-start'() { return { lang: 'bash', text: `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b --image-model Qwen/Qwen3.6-35B-A3B-FP8` }; },
 	get 'mac-install'() { return { lang: 'bash', text: `${clone()}\nuv sync --extra mlx` }; },
 	get 'mac-31b-6bit'() { return { lang: 'bash', text: macStart('gemma-4-31b-it-6bit') }; },
@@ -212,6 +237,8 @@ export const siteBlocks = {
 	get 'first-decision-response'() { return { lang: 'json', text: JSON.stringify(recordedResponse(), null, 2) }; },
 	// Certify answers: the worked certificate on the pinned release, and two answers after it.
 	get 'certificate-response'() { return { lang: 'json', text: certificateResponse() }; },
+	// On a cloud GPU: the 31B's /health on the pinned release, trimmed to what a reader checks (src/lib/recorded.mjs).
+	get 'health-31b'() { return { lang: 'json', text: JSON.stringify(health(), null, 1) }; },
 	get 'certificate-answers'() { return { lang: 'json', text: certificateAnswers() }; },
 	// The Qwen listing: the docs page, whose pull (at the pinned release) is this listing's alone.
 	'ollama-request': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio') },

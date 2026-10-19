@@ -29,8 +29,11 @@ request = urllib.request.Request(
     headers={"Content-Type": "application/json"},
 )
 with urllib.request.urlopen(request) as response:
-    print(json.load(response)["answers"]["damaged"]["noul"])
+    print("route:", response.headers["x-decisio-route"])
+    print("damaged:", json.load(response)["answers"]["damaged"]["noul"])
 ```
+
+It prints `route: image` when the image engine answered, and the probability that the parcel is damaged.
 
 ## 1. Start a server for images
 

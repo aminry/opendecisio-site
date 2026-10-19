@@ -10,5 +10,6 @@ playwright-report/
 .DS_Store
 public/social-preview.png
 .verify/
+.verify-integrations/
 .lighthouse/
 .browser/

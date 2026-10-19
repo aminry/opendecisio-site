@@ -6,6 +6,8 @@ import { data as tcData, baseName } from './teach-certify.mjs';
 import { readUpstream } from './upstream.mjs';
 import { facts } from './launch.mjs';
 import { recordedValues } from './recorded.mjs';
+import { runOf } from './bench-page.mjs';
+import { setupLine } from './demos.mjs';
 
 const fail = (what) => { throw new Error(`use-cases: ${what}`); };
 const pct = (x, d = 1) => `${(x * 100).toFixed(d)}%`;
@@ -132,9 +134,12 @@ export function issueTriage() {
 	const niTaught = Object.values(ni.taught);
 	if (!niTaught.every((a) => a.score.value <= ni.untaught.score.value)) fail('teaching no longer lowers needs-information on the 31B');
 	const p = (x) => `${x.printed}%`;
+	const run = triageRun(t);
 	return {
-		t, kind, sig, prio, ni, sig1000,
+		t, kind, sig, prio, ni, sig1000, run,
 		values: {
+			'triage-run': `Gemma 4 31B, ${run.label}`,
+			'triage-run-note': `All four come from one run: Gemma 4 31B, ${run.label}; What it did, below, gives its full conditions.`,
 			'triage-kind': p(kind.untaught.accuracy),
 			'triage-sig': p(sig.untaught.accuracy),
 			'triage-priority': p(prio.untaught.accuracy),
@@ -143,15 +148,61 @@ export function issueTriage() {
 	};
 }
 
+/** The conditions of the issue-triage readouts (teaching.issue_triage.run): a short label, and the facts' own sentence. */
+function triageRun(t) {
+	const r = t.run ?? fail('teaching.issue_triage has no run conditions');
+	const release = /^v(\d+\.\d+\.\d+)$/.exec(r.decisio?.release ?? '')?.[1] ?? fail('the issue-triage run names no decisio release');
+	if (!/^NVIDIA RTX PRO 6000 /.test(r.machine?.gpu ?? '') || r.machine.gpu_count !== 1) fail('the issue-triage run is no longer on one RTX PRO 6000');
+	const day = (x) => /^(\d{4}-\d{2}-\d{2})T/.exec(x ?? '')?.[1] ?? fail(`the issue-triage run's date ${x} is not a UTC time`);
+	const [from, to] = [day(r.dates?.start_utc), day(r.dates?.end_utc)];
+	if (!r.vllm || !r.wording?.includes(`decisio ${r.decisio.release}`)) fail("the issue-triage run's wording does not name its release");
+	return { label: `decisio ${release}, one RTX PRO 6000, vLLM ${r.vllm}, ${from === to ? from : `${from} to ${to}`}`, wording: r.wording };
+}
+
+// --- How many labelled examples a recipe needs -------------------------------------------------------------------------
+
+/**
+ * The fewest labelled examples a recipe can be certified from at 5%: the server holds back half of them (docs/tasks.md,
+ * "half by default"), a 5% certificate needs 59 held back (docs/tasks.md's table at the default 90%), and the half it
+ * teaches from needs 10 per option for the intent head (the README). A yes/no question has no intent head.
+ */
+export function floor(id) {
+	const tasks = readUpstream('docs/tasks.md');
+	const held = Number((/^\| 0\.05 \| (\d+) \| \d+ \|$/m.exec(tasks) ?? fail("docs/tasks.md's table no longer gives the fewest held-back examples at 0.05"))[1]);
+	if (!/\(half by default\)/.test(tasks)) fail('docs/tasks.md no longer says the server holds back half the examples');
+	const per = Number((/\((\d+) per option for the intent head, and \d+ held out to certify at the defaults/.exec(readUpstream('README.md')) ?? fail('the README no longer says how many examples per option the intent head needs'))[1]);
+	const r = recipe(id);
+	const options = r.type === 'noul' ? 0 : Object.keys(r.criteria).length;
+	const total = 2 * Math.max(held, per * options);
+	return { held, per, options, total };
+}
+
+const FLOOR_NOUN = { 'support-routing': 'tickets', gatekeeper: 'commands', 'issue-triage': 'issues', guardrails: 'messages', 'rag-gate': 'question and passage pairs', 'document-classification': 'documents' };
+
+/** The recipe's floor in one sentence. */
+const floorSentence = (id) => {
+	const f = floor(id);
+	const noun = FLOOR_NOUN[id] ?? fail(`no noun for ${id}'s examples`);
+	const teach = f.options && f.per * f.options > f.held ? `; the other half teaches, at ${f.per} per option for this question's ${f.options} options` : '';
+	return `Send at least ${f.total.toLocaleString('en-US')} labelled ${noun}. The server holds back half to certify, and a 5% certificate needs ${f.held} of those${teach}. More examples certify a larger share.`;
+};
+
 /** A value a page names in its own words, read from its record (`:value{name="..."}`). */
 export function value(name) {
 	const ib = tcData().inbox;
 	const t5 = ib.targets['0.05'] ?? fail('the inbox has no 5% certificate');
 	const others = { 'inbox-certified-5': pct(t5.covered / ib.test_n) };
+	for (const id of Object.keys(RECIPES)) others[`floor-${id}`] = floorSentence(id);
+	// The intent head's cost per question, from the triage demo's 31B row: its median latency plain and with the head.
+	const tri = /^\| Gemma 4 31B \| [^|]+\| [^|]+\| [^|]+\| [^|]+\| (\d+) \/ (\d+) \|$/m.exec(readUpstream('docs/demos/README.md')) ?? fail("docs/demos/README.md's triage table no longer gives the 31B's latency plain and registered");
+	others['head-cost'] = `in the triage demo the 31B answered in ${tri[1]} ms plain and ${tri[2]} ms with the head, median.`;
 	const v = { ...issueTriage().values, ...others, ...recordedValues() }[name];
 	if (v === undefined) fail(`no value "${name}"`);
 	return v;
 }
+
+// A proof's source notes, kept apart from its sentences (docs/STYLE_GUIDE.md, "Numbers").
+const sources = (...lines) => lines.map((source) => ({ source }));
 
 const PROOFS = {
 	'support-routing': () => {
@@ -160,22 +211,22 @@ const PROOFS = {
 		const t = ib.targets['0.05'] ?? fail('the inbox has no 5% certificate');
 		const triage = /^\| Gemma 4 31B \| ([\d.]+)% \[[^\]]+\] \| ([\d.]+)% \[/m.exec(readUpstream('docs/demos/README.md')) ?? fail("docs/demos/README.md's triage table has no 31B row");
 		return [
-			`<b>${pct(t.covered / ib.test_n)}</b> of a support inbox's messages answered on their own at a 5% error target, ${pct(t.errors / t.covered)} of them wrong: BANKING77's 77 intents, ${baseName(ib.model)} taught with ${ib.k} examples per intent, ${fmt(ib.test_n)} test messages, decisio ${d.decisio}, ${d.dates[0]}.`,
-			`<b>${triage[1]}%</b> of 400 held-out tickets routed right over 20 queues by ${baseName('g31')} with the plain question, and ${triage[2]}% after teaching it from 200 labelled tickets (decisio's triage demo).`,
-		];
+			`<b>${pct(t.covered / ib.test_n)}</b> of a support inbox's messages answered on their own at a 5% error target, ${pct(t.errors / t.covered)} of them wrong: BANKING77's 77 intents, ${baseName(ib.model)} taught with ${ib.k} examples per intent, ${fmt(ib.test_n)} test messages.`,
+			`<b>${triage[1]}%</b> of 400 held-out tickets routed right over 20 queues by ${baseName('g31')} with the plain question, and ${triage[2]}% after teaching it from 200 labelled tickets: decisio's triage demo.`,
+		].concat(sources(`The inbox: measured on decisio ${d.decisio}, ${d.models[ib.model].machine.replace(/ \(.*\)$/, '')}, ${d.dates[0]}.`, `The triage demo: measured on decisio ${setupLine().version}, one RTX PRO 6000, ${setupLine().date}.`));
 	},
 	gatekeeper: () => {
 		const d = tcData();
 		const g = d.gatekeeper;
 		return [
-			`<b>${pct(g.at5.share[0], 0)} to ${pct(g.at5.share[1], 0)}</b> of a coding agent's shell commands decided on their own at a 5% error target, with the wrong action on ${pct(g.at5.wrong_action[0])} to ${pct(g.at5.wrong_action[1])} of them: ${g.rules.length} rules, ${baseName(g.model)} on a Mac (${d.models[g.model].build}), taught with ${g.per_rule} labelled commands per rule, ${g.draws} draws, ${fmt(g.test_n)} test commands, decisio ${g.decisio}, ${g.dates[0]}.`,
+			`<b>${pct(g.at5.share[0], 0)} to ${pct(g.at5.share[1], 0)}</b> of a coding agent's shell commands decided on their own at a 5% error target, with the wrong action on ${pct(g.at5.wrong_action[0])} to ${pct(g.at5.wrong_action[1])} of them: ${g.rules.length} rules, ${baseName(g.model)} on a Mac (${d.models[g.model].build}), taught with ${g.per_rule} labelled commands per rule, ${g.draws} draws, ${fmt(g.test_n)} test commands.`,
 			`When a kind of command no rule names rose to ${pct(g.drift.new_kind_share, 0)} of the traffic, none of its ${g.drift.new_kind} commands was certified.`,
-		];
+		].concat(sources(`Measured on decisio ${g.decisio}, ${baseName(g.model)} on a Mac, ${g.dates.join(' and ')}.`));
 	},
 	guardrails: () => {
 		const tox = suite31().read('ToxicChat');
 		return [
-			`<b>${pct(tox.acc)}</b> right on ToxicChat's toxicity question, with a calibration error of ${tox.ece}, on ${baseName('g31')}, untaught, in decisio's 1,400-item suite (its evaluation card, section 7.2). The default temperatures were fitted on that suite, so the calibration error is in-sample.`,
+			`<b>${pct(tox.acc)}</b> right on ToxicChat's toxicity question, with a calibration error of ${tox.ece}, on ${baseName('g31')}, untaught, in decisio's 1,400-item suite: ${runOf('gemma-4-31b')} (its evaluation card, section 7.2). The model's default settings were tuned on that same suite, so that calibration error is its best case.`,
 			'Other guardrails, such as off-topic or prompt-injection checks, follow the same recipe; no run of them is published.',
 		];
 	},
@@ -184,12 +235,12 @@ const PROOFS = {
 		const sci = s.read('SciFact');
 		const bool = s.read('BoolQ');
 		return [
-			`<b>${pct(sci.acc)}</b> right on SciFact, does the evidence support the claim, and <b>${pct(bool.acc)}</b> on BoolQ, yes or no over a passage, on ${baseName('g31')}, untaught, in decisio's 1,400-item suite (its evaluation card, section 7.2).`,
+			`<b>${pct(sci.acc)}</b> right on SciFact, does the evidence support the claim, and <b>${pct(bool.acc)}</b> on BoolQ, yes or no over a passage, on ${baseName('g31')}, untaught, in decisio's 1,400-item suite: ${runOf('gemma-4-31b')} (its evaluation card, section 7.2).`,
 			'Those measure the reading, not a whole retrieval pipeline: no end-to-end run of this gate is published.',
 		];
 	},
 	'issue-triage': () => {
-		const { t, kind, sig, prio, ni, sig1000 } = issueTriage();
+		const { t, kind, sig, prio, ni, sig1000, run } = issueTriage();
 		const p = (x) => `${x.printed}%`;
 		return [
 			`<b>${p(kind.untaught.accuracy)}</b> right on the kind of an issue (macro-F1 ${p(kind.untaught.score)}) and <b>${p(sig.untaught.accuracy)}</b> on its owning SIG, the ${sig.options} most frequent (macro-F1 ${p(sig.untaught.score)}), by Gemma 4 31B, untaught, on ${fmt(kind.test_items)} real kubernetes/kubernetes issues.`,
@@ -197,15 +248,17 @@ const PROOFS = {
 			`Priority is ${p(prio.untaught.accuracy)} right, and needs-information has a balanced accuracy of ${p(ni.untaught.score)}, which teaching lowers slightly.`,
 			`These figures are ${t.reporting_sentence}.`,
 			esc(t.licence_line),
-		];
+		].concat(sources(esc(run.wording)));
 	},
 	'document-classification': () => ['A recipe: decisio is measured on short texts, such as the intent sets of the support inbox; no run on long documents is published.'],
 };
 
-/** The measured result of a recipe, as a list. */
+/** The measured result of a recipe, as a list, and under it the source notes of its numbers (release, card, date). */
 export function proofHtml(id) {
 	const p = (PROOFS[id] ?? fail(`no proof for "${id}"`))();
-	return `<ul class="proof">${p.map((x) => `<li>${x}</li>`).join('')}</ul>`;
+	const items = p.filter((x) => !x.source);
+	const notes = p.filter((x) => x.source).map((x) => `<p class="src-note">${x.source}</p>`).join('');
+	return `<ul class="proof">${items.map((x) => `<li>${x}</li>`).join('')}</ul>${notes}`;
 }
 
 export const recipeIds = Object.keys(RECIPES);

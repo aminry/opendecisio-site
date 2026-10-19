@@ -111,32 +111,3 @@ export function scatter({ splits, alpha, label }) {
 	};
 	return { svg: pair(draw), held, over, nothing };
 }
-
-/**
- * The drift replay: wrong certified answers per 100 messages as bars, off-topic messages per 100 as a line over them,
- * the monitor's state at each reading as a strip under the axis, and the first alert as a marker.
- */
-export function driftChart({ series, messages, first_alert_after, start, top }, label) {
-	const desc = `${label}: off-topic messages rise from none at message ${n(start)} to 30 in every 100 at message ${n(top)}. The monitor's first alert came after message ${n(first_alert_after)}.`;
-	const ymax = Math.ceil(Math.max(...series.map((s) => Math.max(100 * s.oos, s.wrong))) / 10) * 10;
-	return pair((wide) => {
-		const W = wide ? 960 : 320, H = wide ? 340 : 300, L = wide ? 44 : 34, R = wide ? 16 : 10, T = 34, B = wide ? 84 : 90;
-		const x = (m) => r1(L + (m / messages) * (W - L - R));
-		const y = (v) => r1(T + (1 - v / ymax) * (H - T - B));
-		const base = y(0);
-		const yt = [];
-		for (let v = 0; v <= ymax; v += wide ? 10 : 20) yt.push(v);
-		const grid = yt.map((v) => `<line class="tc-grid" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="tc-tick" x="${L - 8}" y="${y(v) + 4}" text-anchor="end">${v}</text>`).join('');
-		const bw = r1(((W - L - R) / messages) * 100 * 0.7);
-		const bars = series.map((s) => `<rect class="tc-wrong" x="${r1(x(s.after - 50) - bw / 2)}" y="${y(s.wrong)}" width="${bw}" height="${r1(base - y(s.wrong))}"/>`).join('');
-		const oos = `<path class="tc-oos" d="${series.map((s, i) => `${i ? 'L' : 'M'}${x(s.after - 50)} ${y(100 * s.oos)}`).join('')}"/>`;
-		const xt = [0, start, top, messages].map((m, i, a) => `<text class="tc-tick" x="${x(m)}" y="${base + 17}" text-anchor="${i === 0 ? 'start' : i === a.length - 1 ? 'end' : 'middle'}">${n(m)}</text>`).join('');
-		const sy = base + 34;
-		const strip = series.map((s, i) => { const x0 = x(i ? series[i - 1].after : 0); return `<rect class="tc-state tc-state--${s.state === 'ok' ? 'ok' : 'alert'}" x="${x0}" y="${sy}" width="${r1(x(s.after) - x0)}" height="9"/>`; }).join('');
-		const legend = `<text class="tc-strip__l" x="${L}" y="${sy + 26}">the monitor at each reading: <tspan class="tc-key-ok">ok</tspan> or <tspan class="tc-key-alert">alert</tspan></text>`;
-		const ax = x(first_alert_after);
-		const right = ax > W * 0.6;
-		const marker = `<line class="tc-alert" x1="${ax}" x2="${ax}" y1="${T - 18}" y2="${base}"/><text class="tc-alert__l" x="${right ? ax - 6 : ax + 6}" y="${T - 20 + 12}" text-anchor="${right ? 'end' : 'start'}">${wide ? 'first alert, after message' : 'first alert after'} ${n(first_alert_after)}</text>`;
-		return svg(`tc-svg--${wide ? 'wide' : 'narrow'}`, W, H, `tc-dr-${wide ? 'w' : 'n'}`, 'The drift replay', desc, `${grid}${bars}${oos}${xt}${strip}${legend}${marker}`);
-	});
-}

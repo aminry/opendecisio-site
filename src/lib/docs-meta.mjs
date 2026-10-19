@@ -9,6 +9,7 @@ import { visit } from 'unist-util-visit';
 import { toString } from 'mdast-util-to-string';
 import remarkUpstream from './remark-upstream.mjs';
 import { site } from '../config/site';
+import { pin } from './upstream.mjs';
 
 const memo = new Map();
 
@@ -29,14 +30,14 @@ export function readingMinutes(entry) {
 }
 
 /**
- * The page's source: for a page built from decisio's own files, those files on GitHub (where it is edited); for a page
- * the site writes itself, a new issue on decisio, since the site's repository is private.
+ * The page's source: its own file in the site's repository (where it is edited), and decisio's files it renders, at the
+ * pinned release the page is built from.
  */
 export function sourceLinks(entry) {
 	const files = [...new Set([...(entry.body ?? '').matchAll(/::upstream(?:-or)?\{[^}]*file="([^"]+)"/g)].map((m) => m[1]))];
-	const title = entry.data?.title ?? 'a docs page';
+	const path = entry.filePath ?? `src/content/docs/${entry.id}.md`;
 	return {
-		files: files.map((f) => ({ file: f, href: `${site.repository}/edit/main/${f}` })),
-		suggest: `${site.repository}/issues/new?title=${encodeURIComponent(`Docs: ${title}`)}`,
+		edit: `${site.siteRepository}/edit/main/${path}`,
+		files: files.map((f) => ({ file: f, href: `${site.repository}/blob/${pin.tag}/${f}` })),
 	};
 }

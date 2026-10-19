@@ -22,7 +22,7 @@ Install it from PyPI and start it: it serves the default model, Gemma 4 31B, on 
 | Qwen3.6-35B-A3B | 33.3 GiB, FP8; about 36 GB to download | one 96 GB card | 32,768 tokens |
 
 Start another model with `--base gemma-4-12b` or `--base qwen3.6-35b-a3b`.
-[Choosing a base](/docs/bases/) compares them; [Requirements and limits](/docs/limits/) has every machine.
+[Choosing a model](/docs/bases/) compares them; [Requirements and limits](/docs/limits/) has every machine.
 
 | Part | What you need |
 | --- | --- |
@@ -34,7 +34,15 @@ Start another model with `--base gemma-4-12b` or `--base qwen3.6-35b-a3b`.
 ## 2. Start the server
 
 The first start downloads the weights and loads them onto the card.
-The 31B was ready after 7 min 54 s with the download, and after 4 min 3 s with the weights already on disk (decisio 0.11.0 from PyPI, one RTX PRO 6000 Blackwell at 600 W, 2026-10-09).
+The 31B was ready after 7 min 54 s with the download, and after 4 min 3 s with the weights already on disk.
+
+::source[Measured on decisio 0.11.0 from PyPI, one RTX PRO 6000 Blackwell at 600 W, 2026-10-09.]
+
+It is ready when `/health` answers 200, with the model and the longest text it serves:
+
+::site-block{name="health-31b"}
+
+::source{value="health-recorded"}
 
 pip resolves its own versions around the engine.
 For exactly the versions decisio was measured with, install from a clone of the release with its lock file:
@@ -48,7 +56,7 @@ Name the model repository at a commit, so a later change to it cannot change you
 ::upstream{file="docs/running.md" section="Model repositories" block="1"}
 
 - The server checks the repository's settings against its own and refuses to start on a difference, naming what differs.
-- Give `--max-model-len` the same value on every card. The length served is part of what a certificate covers; `--max-model-len 32768` serves only what was measured.
+- Pin `--max-model-len 32768` unless you need longer texts: `--max-model-len 32768` serves only what was measured, and the same value on every card keeps one certificate valid on all of them, since the length served is part of what it covers.
 - After upgrading decisio, certify your tasks again ([Upgrade](/docs/upgrading/)).
 
 ## 4. Put it behind a proxy

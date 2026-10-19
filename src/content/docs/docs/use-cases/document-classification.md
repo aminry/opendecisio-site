@@ -5,10 +5,11 @@ description: Sort incoming documents by type, file the ones decisio can stand be
 
 <!-- Site-written: a use-case recipe. The question, the routing script and the registration are src/lib/use-cases.mjs. It is labelled a recipe: decisio is measured on short texts, and no run on long documents is published. -->
 
-Sort every incoming document by type, and file the ones decisio is sure of without a person.
 This script asks for the document's type and files it only on a certified answer:
 
 ::site-block{name="route-document-classification"}
+
+Until the task is certified (step 2), every answer goes to a person, as on the stand-in.
 
 :::fit
 - A fixed set of document types, and past documents sorted into them.
@@ -25,11 +26,13 @@ Send the document's text, or its first pages, as the text.
 
 ## 2. Teach it and certify it
 
-Teach the question from past documents and certify it at your error target:
+Teach the question from past documents and certify it at your error target.
+
+:value{name="floor-document-classification"}
 
 ::site-block{name="teach-document-classification"}
 
-[Teach a task](/docs/tasks/) and [Certify answers](/docs/tasks/certify/) have the steps and the fields.
+[Certify answers](/docs/tasks/certify/#2-teach-the-task-with-a-certificate) runs this call on a server, with its answer.
 
 ## 3. Route on the certificate
 

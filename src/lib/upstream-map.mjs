@@ -19,7 +19,24 @@ const ATTR = /(\w+)="([^"]*)"/g;
 const SITE_PAGES = {
 	'docs/comparison.md': { path: '/benchmarks/', anchor: 'compares' },
 	'docs/demos/README.md': { path: '/demos/', anchor: '' },
+	'docs/integrations.md': { path: '/docs/use-from/', anchor: 'use-a-framework' },
+	'docs/handoffs/tasks.md': { path: '/docs/tasks/', anchor: '' },
 };
+// The site's own pages outside the docs, by path, for a link's words.
+const SITE_TITLES = { '/benchmarks/': 'Benchmarks', '/demos/': 'Demos' };
+
+let titles;
+/** A site page's title, for the words of a link that lands on it: a docs page's front matter, or the site's own pages. */
+export function titleFor(path) {
+	if (!titles) {
+		titles = new Map(Object.entries(SITE_TITLES));
+		for (const file of walk(contentRoot)) {
+			const title = /^title:\s*(.+)$/m.exec(readFileSync(file, 'utf8'))?.[1]?.trim().replace(/^["']|["']$/g, '');
+			if (title) titles.set(routeOf(file), title);
+		}
+	}
+	return titles.get(path);
+}
 
 export function slugify(text) {
 	return new GithubSlugger().slug(text);

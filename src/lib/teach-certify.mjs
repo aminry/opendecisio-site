@@ -53,7 +53,7 @@ export function data() {
 	if (r) {
 		if (typeof r.released !== 'boolean' || r.version !== '0.16.0') fail(`release016 is for ${r.version}, released ${r.released}`);
 		if (r.jump.first_suspended - r.jump.jump_at <= 0 || r.clinc.wrong_before >= r.clinc.wrong_before_014 || r.false_suspensions !== 0 || r.served_path.max_shift !== 0) fail('release016 is not the result the page states');
-		if (r.clinc.wrong_before_014 !== d.drift.g31.wrong_before) fail('release016 compares with a 0.14.0 count the page does not show');
+		if (r.clinc.wrong_before_014 !== d.drift.g31.wrong_before) fail('release016 compares with another 0.14.0 count than the drift record');
 	}
 	const ib = d.inbox;
 	if (ib.messages.length % 8 !== 0) fail(`has ${ib.messages.length} inbox messages, not a multiple of eight`);
@@ -74,3 +74,27 @@ export function task(model, dataset, k = 10, draw = 1) {
 
 /** The four setups the page shows, at 10 examples per intent, draw 1: each base on each set. */
 export const SETUPS = [['g31', 'banking77'], ['g12', 'banking77'], ['g31', 'clinc150'], ['g12', 'clinc150']];
+
+/**
+ * The out-of-scope fix under the current monitor (oos_replay.json): the CLINC150 stream with out_of_scope taught,
+ * its recorded readouts replayed through the monitor of the release it names. Checked against the drift record it
+ * replays (the same stream), with the share of off-topic messages at the first pause read from the stream's ramp.
+ */
+export function oosReplay() {
+	const d = data();
+	const r = JSON.parse(readFileSync(join(siteRoot, 'src/data/teach-certify/oos_replay.json'), 'utf8'));
+	const no = (what) => { throw new Error(`teach-certify: oos_replay.json ${what}; revisit src/lib/teach-certify.mjs`); };
+	const f = d.fix;
+	if (r.schema !== 'oos_replay/1') no('is not oos_replay/1');
+	if (r.messages !== f.messages || r.options !== f.options) no('replays another stream or task than the fix record');
+	const p = r.with_pause;
+	if (!(p.first_paused_answer > f.start && p.first_paused_answer <= f.top)) no('pauses outside the stream\'s ramp');
+	if (r.seed_sweep.paused_in !== r.seed_sweep.seeds || r.no_drift_control.pause_episodes !== 0) no('no longer pauses on every seed, or pauses on the control');
+	if (!(p.wrong_certified_from_1001_to_end < r.alert_only.wrong_certified_from_1001_to_end)) no('no longer has the pause cut the wrong certified answers');
+	if (p.wrong_answers_whole_stream_if_all_served !== r.alert_only.wrong_answers_whole_stream_if_all_served) no('has two answer sets');
+	const rightTaught = 1 - p.wrong_answers_whole_stream_if_all_served / r.messages;
+	const rightUntaught = 1 - f.wrong_rate_before;
+	if (!(rightTaught > rightUntaught)) no('no longer has the taught task right more often');
+	const shareAtPause = f.top_share * (p.first_alert_after_message - f.start) / (f.top - f.start);
+	return { ...r, rightTaught, rightUntaught, shareAtPause, untaught: d.release016.clinc };
+}

@@ -14,10 +14,10 @@ With no flag the server serves Gemma 4 31B:
 
 ## 1. Pick by your machine
 
-| Model | `--base` | Weights in memory | Runs on | Choose it for |
+| Model | `--base` | Weights on an NVIDIA card | Runs on | Choose it for |
 | --- | --- | --- | --- | --- |
 | Gemma 4 31B, the default | `gemma-4-31b` | 30.6 GiB, FP8 | an NVIDIA card with 96 GB, or an 80 GB H100; a 64 GB Mac, or a 48 GB one from its 4-bit build | accuracy |
-| Qwen3.6-35B-A3B | `qwen3.6-35b-a3b` | 33.3 GiB, FP8 | an NVIDIA card with 96 GB | speed on long new texts, and answers that repeat across sessions |
+| Qwen3.6-35B-A3B | `qwen3.6-35b-a3b` | 33.3 GiB, FP8 | an NVIDIA card with 96 GB | speed on long new texts, and the same probabilities every time on one server |
 | Gemma 4 12B | `gemma-4-12b` | 22.8 GiB, bf16 | an NVIDIA card with 96 GB; a 32 GB Mac; a 16 GB laptop with Ollama | smaller machines |
 
 [Requirements and limits](/docs/limits/) has each machine's memory and longest text; [Benchmarks](/benchmarks/) compares the three.
@@ -37,6 +37,7 @@ With no flag the server serves Gemma 4 31B:
 | Gemma 4 12B | `google/gemma-4-12B-it`, from Google |
 
 Each is an official checkpoint at a pinned revision, with no training or fine-tuning by us.
+The weights are under Apache-2.0: Alibaba's Qwen3.6-35B-A3B and Google's Gemma 4 12B and 31B, and the `tachara-ai/decisio-*` repositories redistribute them with their licence and provenance files.
 
 ## What next
 

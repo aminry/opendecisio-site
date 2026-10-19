@@ -7,6 +7,7 @@
 // marks must appear on no page.
 import { certificate, session } from '../lib/recorded.mjs';
 import { recordedResponse } from '../lib/figures/core.mjs';
+import { oosReplay } from '../lib/teach-certify.mjs';
 
 // The first recorded decision's routing answer as pages print it (three places): with its text, it marks a page that shows
 // the recorded answer, not one that only sends the same text as an example (Scale, the FAQ).
@@ -46,6 +47,14 @@ export const recordedOutputs = [
 		card,
 		date: () => session().date,
 		reviews: reviews.certificate,
+	},
+	{
+		name: 'the out-of-scope fix, replayed through the monitor (Teach and certify, Demos)',
+		version: () => oosReplay().decisio,
+		marker: 'Out of scope taught',
+		card,
+		date: () => oosReplay().date,
+		reviews: {},
 	},
 ];
 

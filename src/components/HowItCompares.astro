@@ -29,7 +29,6 @@ const groups = c.groups.filter((g) => !/^Hosted/i.test(g.title));
 		</div>
 		<IndexChart />
 		<HeadlineTables />
-		<p class="pcard__foot">The context lengths are those of the versions measured; from decisio 0.14.0 a Gemma base serves what the card holds (What you get, above).</p>
 	</div>
 
 	<div class="pcard tile">
@@ -37,16 +36,20 @@ const groups = c.groups.filter((g) => !/^Hosted/i.test(g.title));
 			<h3 class="pcard__title" id="compares-every">Every index benchmark</h3>
 			<p class="pcard__meta">one row per benchmark, by area, as of 2026-10-05</p>
 		</div>
-		<div class="disc__body" data-table-notes>{c.everyIntro.map((p) => <p set:html={p} />)}</div>
-		{groups.map((g) => (
-			<details class="disc">
-				<summary>{g.title} <span class="disc__n">{g.table!.rows.length} rows</span></summary>
-				<div class="disc__body">
-					{g.intro.map((p) => <p set:html={p} />)}
-					<CompareTable head={g.table!.head} rows={g.table!.rows} caption={g.title} />
-				</div>
-			</details>
-		))}
+		<details class="disc">
+			<summary>Every benchmark, by area <span class="disc__n">{groups.reduce((n, g) => n + g.table!.rows.length, 0)} rows</span></summary>
+			<div class="disc__body">
+				<div data-table-notes>{c.everyIntro.map((p) => <p set:html={p} />)}</div>
+				<p>These are the values the index counts, so a few differ from the base table above: within 0.001 on the 12B, except GPQA Diamond (two of 196 items).</p>
+				{groups.map((g) => (
+					<>
+						<h4 class="compares__area">{g.title}</h4>
+						{g.intro.map((p) => <p set:html={p} />)}
+						<CompareTable head={g.table!.head} rows={g.table!.rows} caption={g.title} />
+					</>
+				))}
+			</div>
+		</details>
 		<p class="pcard__foot">Each value and interval is in <Source record="runs/2026-10-05_comparison/" label="runs/2026-10-05_comparison/" />; Jev's values are the board's, as <a href="/docs/evaluation-card/#81-where-jev-leads">the evaluation card, section 8.1</a>, reads them. No figure here comes from a call of ours to TypeSafe's API.</p>
 	</div>
 </div>

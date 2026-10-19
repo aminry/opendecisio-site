@@ -29,6 +29,9 @@ import { siteBlock } from './site-blocks.mjs';
 import { diagram } from './diagrams.mjs';
 import { docsFigure, recordedLabel } from './docs-figures.mjs';
 import { example5Table } from './recorded.mjs';
+import { glossaryTerms, linkFirstUses } from './glossary.mjs';
+import { sourceNote } from './source-notes.mjs';
+import { runOf } from './bench-page.mjs';
 import { splitParagraph } from './sentences.mjs';
 import { integrationsTable } from './figures/use-from.mjs';
 import { taskGains } from './teach.mjs';
@@ -169,7 +172,9 @@ export default function remarkUpstream(options = {}) {
 		// ::integrations-table: the checked integrations, one row each (src/data/integrations.json).
 		visit(tree, 'leafDirective', (node, index, parent) => {
 			if (node.name !== 'integrations-table') return;
-			parent.children.splice(index, 1, { type: 'html', value: integrationsTable() });
+			// It holds no code block, so the runner that collects blocks (annotate off) skips it: a release bump runs
+			// that before verification/integrations.json is written again for the new release.
+			parent.children.splice(index, 1, { type: 'html', value: annotate ? integrationsTable() : '' });
 			return index + 1;
 		});
 		// ::teach-gains: what teaching did on the default model, one row per intent set (src/lib/teach.mjs checks each
@@ -177,7 +182,7 @@ export default function remarkUpstream(options = {}) {
 		visit(tree, 'leafDirective', (node, index, parent) => {
 			if (node.name !== 'teach-gains') return;
 			const heads = ['Intent set', 'Right, untaught', 'Right, taught', 'Measured on'];
-			const rows = taskGains().map((g) => [`${g.name}, ${g.options} intents`, `${(g.plain * 100).toFixed(1)}%`, `<b>${(g.taught * 100).toFixed(1)}%</b>`, `${g.per} labelled examples per intent; ${g.items} test messages; mean of ${g.draws} draws; taught in ${g.seconds} s`]);
+			const rows = taskGains().map((g) => [`${g.name}, ${g.options} intents`, `${(g.plain * 100).toFixed(1)}%`, `<b>${(g.taught * 100).toFixed(1)}%</b>`, `${g.per} labelled examples per intent; ${g.items} test messages; mean of ${g.draws} draws; taught in ${g.seconds} s; ${runOf('gemma-4-31b')}`]);
 			const html = `<div class="table-wrap"><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 			parent.children.splice(index, 1, { type: 'html', value: html });
 			return index + 1;
@@ -235,6 +240,22 @@ export default function remarkUpstream(options = {}) {
 			if (node.name !== 'recorded-label') return;
 			parent.children.splice(index, 1, { type: 'html', value: recordedLabel(node.attributes?.shows) });
 			return index + 1;
+		});
+		// ::source[Measured on decisio 0.11.1, one RTX PRO 6000 at 600 W, 2026-10-11.]: a number's source note, the one place a
+		// page names the release, card and date it was measured on (docs/STYLE_GUIDE.md, "Numbers"); :::sources wraps a block
+		// of them, such as a table of what was measured on what. scripts/checks/versions.mjs reads class src-note.
+		visit(tree, 'leafDirective', (node) => {
+			if (node.name !== 'source') return;
+			// ::source{name="..."}: a note built from the site's data (src/lib/source-notes.mjs), not typed.
+			if (node.attributes?.name) node.children = [{ type: 'text', value: sourceNote(node.attributes.name) }];
+			// ::source{value="..."}: a recorded output's label, from the values the pages state (src/lib/recorded.mjs).
+			if (node.attributes?.value) node.children = [{ type: 'text', value: value(node.attributes.value) }];
+			if (!node.children?.length) throw new Error(`upstream: ::source with no text in ${vfile.path}`);
+			node.data = { ...node.data, hName: 'p', hProperties: { className: ['src-note'] } };
+		});
+		visit(tree, 'containerDirective', (node) => {
+			if (node.name !== 'sources') return;
+			node.data = { ...node.data, hName: 'div', hProperties: { className: ['src-note'] } };
 		});
 		// :::glossary: a short table of the terms a page uses, set apart from the text around it.
 		visit(tree, 'containerDirective', (node) => {
@@ -306,6 +327,16 @@ export default function remarkUpstream(options = {}) {
 				return index + 2;
 			});
 		}
+		// ::glossary-table: the glossary's words, each in a row with its own anchor (src/lib/glossary.mjs).
+		visit(tree, 'leafDirective', (node, index, parent) => {
+			if (node.name !== 'glossary-table') return;
+			const md = (t) => t.replace(/`([^`]+)`/g, '<code>$1</code>');
+			const rows = glossaryTerms().map((g) => `<tr id="${g.anchor}"><th scope="row">${g.word}</th><td data-label="What it means">${md(g.means)}</td></tr>`).join('');
+			parent.children.splice(index, 1, { type: 'html', value: `<div class="table-wrap"><table class="docs-table glossary-table"><thead><tr><th scope="col">Word</th><th scope="col">What it means</th></tr></thead><tbody>${rows}</tbody></table></div>` });
+			return index + 1;
+		});
+		// A glossary word's first use on a docs page links to its meaning (not on the glossary itself).
+		if (annotate && !/docs\/glossary\.md$/.test(vfile.path ?? '')) linkFirstUses(tree);
 		// Source comments (SPDX headers, notes on site-written blocks) are not shipped.
 		visit(tree, 'html', (node, index, parent) => {
 			if (/^<!--[\s\S]*-->$/.test(node.value.trim())) {

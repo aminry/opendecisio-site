@@ -5,7 +5,7 @@
 // then the axes card (the sealed items, the axes and every number).
 import AxisByAxis from './AxisByAxis.astro';
 import JevbenchChart from './home/JevbenchChart.astro';
-import { BOARD_URL, fixed, jevbench, refuse, stable } from '../lib/launch.mjs';
+import { BOARD_URL, jevbench, refuse, stable } from '../lib/launch.mjs';
 
 const j = jevbench();
 const prose = (names: string[]) => names.join(', ').replace(/, ([^,]*)$/, ' and $1');
@@ -21,7 +21,7 @@ const file = `JevBench ${j.revision}, the board's file, read ${read}`;
 		<div class="section__head">
 			<p class="kicker">Public boards</p>
 			<h2 id="jevbench">The JevBench <em class="hl">board</em></h2>
-			<p>JevBench is an outside board that sends decision questions to each system and scores its answers on intelligence (right answers, on open questions and on sealed ones it never published), calibration, speed and cost, and on a composite of them. Its 31B row is decisio v0.8.0 on Gemma 4 31B, an earlier release of the same model; systems are in alphabetical order, and <a href={BOARD_URL}>the live board</a> has today's standings.</p>
+			<p>JevBench is an outside board that sends decision questions to each system and scores its answers on intelligence (right answers, on open questions and on sealed ones it never published), calibration, speed and cost, and on a composite of them. Systems are in alphabetical order, and <a href={BOARD_URL}>the live board</a> has today's standings.</p>
 		</div>
 		<ul class="plain-list jb__claims" data-claims data-table-notes>
 			{claims.map((t) => <li>{t}</li>)}
@@ -33,37 +33,8 @@ const file = `JevBench ${j.revision}, the board's file, read ${read}`;
 				<p class="pcard__meta">{file}</p>
 			</div>
 			<JevbenchChart />
-			<details class="disc">
-				<summary>Every row for decisio and the systems beside it <span class="disc__n">{j.rows.length} rows</span></summary>
-				<div class="disc__body">
-					<div class="table-scroll">
-						<table class="data-table data-table--stack">
-							<caption class="sr-only">JevBench: decisio, Jev and the rows beside them in the board's file, in alphabetical order</caption>
-							<thead>
-								<tr>
-									<th scope="col">System</th>
-									<th scope="col" class="num">Score</th>
-									<th scope="col" class="num">95% interval</th>
-									<th scope="col" class="num">Items answered</th>
-								</tr>
-							</thead>
-							<tbody>
-								{j.rows.map((r) => (
-									<tr class:list={[r.base, { 'row--ours': r.ours }]}>
-										<th scope="row">{r.name}</th>
-										<td class="num" data-label="Score"><span>{fixed(r.score)}</span></td>
-										<td class="num" data-label="95% interval"><span>{fixed(r.lo)} to {fixed(r.hi)}</span></td>
-										<td class="num" data-label="Items answered"><span>{r.answered.toLocaleString('en-US')} of {r.of.toLocaleString('en-US')}</span></td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
-					<div data-table-notes>
-						<p>The 12B rows' intervals are wide on the low side. Our temperatures were not fitted on JevBench, but we have read its published items (<a href="/docs/evaluation-card/#74-what-was-fitted-on-what">the evaluation card</a>, section 7.4).</p>
-					</div>
-				</div>
-			</details>
+			<p class="pcard__foot">The 12B rows' intervals are wide on the low side. Our temperatures were not fitted on JevBench, but we have read its published items (<a href="/docs/evaluation-card/#74-what-was-fitted-on-what">the evaluation card</a>, section 7.4).</p>
+			<p class="pcard__foot src-note">Decisio's rows as the board ran them: {j.releases.map((r) => `${r.name} on decisio ${r.release}`).join('; ')}.</p>
 		</div>
 
 		<AxisByAxis />

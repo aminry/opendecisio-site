@@ -1,0 +1,63 @@
+{
+	"schema": "oos_replay/1",
+	"note": "The CLINC150 drift stream with out_of_scope taught as a 151st option, Gemma 4 31B FP8: its readouts as recorded on decisio 0.14.0 (one RTX PRO 6000 Blackwell), replayed offline through the monitor of decisio 0.18.0 with its default pause settings. A replay of recorded readouts, not a card run of 0.18.0.",
+	"date": "2026-10-19",
+	"decisio": "0.18.0",
+	"monitor_py_sha256": "e1d7f490cae21af0462ef8752db23b53bdaede5f9d10952c8a9d2f0a34436569",
+	"recorded_on": "0.14.0",
+	"inputs_sha256": {
+		"drift_oos.jsonl.gz": "b2b17ff29b6a429ae19a27ba7942b1d1f3d999ab84f3b851989dd12084267a7b",
+		"clinc150oos_k10_d1_calibration.jsonl.gz": "056a83f3c535b68d42f69ac995837a5b5007223a40d353c8ac1031e9e2bd5518",
+		"clinc150oos_k10_d1_register.done": "ff2c237d9a102f0238f9b2247cd5a1852932ef2cd579c138dd9bd1a056b0c015",
+		"stream_oos.npz": "ed7a485005863f53e15334945f9797446f91d6e492dffe31824077f5a42a5cdb"
+	},
+	"options": 151,
+	"messages": 5363,
+	"out_of_scope_messages": 863,
+	"certificate_threshold": 0.07152111887876399,
+	"with_pause": {
+		"first_alert_after_message": 2600,
+		"signals_at_first_alert": [
+			"answer_mix"
+		],
+		"first_paused_answer": 2601,
+		"pause_episodes": 2,
+		"wrong_certified_messages_1_to_1000": 54,
+		"wrong_certified_from_1001_to_before_first_pause": 113,
+		"wrong_certified_from_1001_to_end": 138,
+		"certified_answers_total": 3000,
+		"share_certified_whole_stream": 0.5594,
+		"wrong_among_certified_whole_stream": 0.064,
+		"wrong_answers_whole_stream_if_all_served": 448
+	},
+	"alert_only": {
+		"first_alert_after_message": 2600,
+		"certified_answers_total": 5363,
+		"wrong_certified_from_1001_to_end": 394,
+		"wrong_among_certified_whole_stream": 0.0835,
+		"wrong_answers_whole_stream_if_all_served": 448
+	},
+	"no_drift_control": {
+		"first_alert_after_message": null,
+		"first_paused_answer": null,
+		"pause_episodes": 0,
+		"share_certified_whole_stream": 1.0
+	},
+	"seed_sweep": {
+		"seeds": 40,
+		"paused_in": 40,
+		"first_paused_answer": {
+			"min": 2601,
+			"median": 2601,
+			"max": 3301
+		},
+		"wrong_certified_before_pause": {
+			"min": 113,
+			"max": 166
+		},
+		"share_certified_whole_stream": {
+			"min": 0.5594,
+			"max": 0.6153
+		}
+	}
+}

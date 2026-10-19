@@ -21,6 +21,12 @@ The first start downloads the model, about 1.2 GB, once.
 
 ## 2. Send it a request
 
+It is ready when `/health` answers:
+
+```bash
+curl -s http://127.0.0.1:8000/health
+```
+
 The request from [Get started](/docs/#3-ask-your-first-question) works as it is; only the numbers in the answer differ.
 [Call it from your code](/docs/use-from/) has the same request from Python, JavaScript and TypeScript.
 

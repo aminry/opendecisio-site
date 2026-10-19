@@ -8,7 +8,7 @@ description: Know when live traffic stops looking like the examples a task was c
 ::covers{links="docs/tasks.md#the-monitor"}
 
 A certified task watches its own traffic with three checks that need no labels.
-From decisio 0.16.0, certification is suspended while the confidence alarm is on, so a shift does not quietly fill your queue with wrong certified answers:
+Certification is suspended while the confidence alarm is on, so a shift does not quietly fill your queue with wrong certified answers:
 
 ::figure{name="drift-replay"}
 
@@ -27,11 +27,23 @@ From decisio 0.16.0, certification is suspended while the confidence alarm is on
 ## 2. Read the status
 
 `GET /v1/tasks/{id}` gives a task's `status`: `ok`, `suspended` with what changed, or `traffic_changed` with the signals that alerted.
+For the task [Certify answers](/docs/tasks/certify/#2-teach-the-task-with-a-certificate) registers:
+
+```bash
+curl -s http://127.0.0.1:8000/v1/tasks/ticket-routing \
+  | uv run python -c 'import json, sys; s = json.load(sys.stdin)["status"]; print(json.dumps({k: s.get(k) for k in ("state", "text")}, indent=1))'
+```
+
 `GET /v1/tasks` lists every task's status.
 
 ## 3. Alert on it
 
 `GET /metrics` serves Prometheus text for certified tasks:
+
+```bash
+curl -s http://127.0.0.1:8000/metrics | grep '^decisio_task_'
+```
+
 
 | Metric | What it counts |
 | --- | --- |
@@ -49,7 +61,6 @@ The only direct check that the promise holds on live traffic is to label a sampl
 
 - **Give the task an "other" option.** A message that fits none of the options gets a wrong answer, and the checks only notice once enough of them arrive.
 - **To report without suspending**, certify with `"suspend_on_alert": false` in the `certify` block.
-- **A task certified before decisio 0.16.0** has no confidence check until it is certified again.
 
 ## What next
 

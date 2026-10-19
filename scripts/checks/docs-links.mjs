@@ -16,7 +16,9 @@ let total = 0;
 for (const file of walk('dist')) {
 	const route = `/${relative('dist', file).replace(/index\.html$/, '')}`;
 	if (/^\/(articles|news)\//.test(route)) continue; // published posts stay as published
-	const links = [...readFileSync(file, 'utf8').matchAll(DOC)].map((m) => m[1]);
+	// A page's footer says where the page comes from (its own source, decisio's files at the release, the contributing
+	// guide): provenance, not documentation the reader is sent to, so only the page above it is read.
+	const links = [...readFileSync(file, 'utf8').replace(/<footer[\s\S]*?<\/footer>/g, '').matchAll(DOC)].map((m) => m[1]);
 	total += links.length;
 	const allowed = baseline[route] ?? 0;
 	if (links.length > allowed) problems.push(`${route}: ${links.length} links to decisio's docs on GitHub (${allowed} allowed): ${[...new Set(links)].slice(0, 4).join(', ')}`);

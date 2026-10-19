@@ -67,12 +67,19 @@ Internals (the readout, the probabilities, repeatability) live on one page: How 
 | abstain | decisio declines to answer when no option is likely enough |
 | serving setup | the model, the engine, the GPU and the settings a certificate was made on |
 
+## The latest release only
+
+- The site documents the pinned decisio release: its behaviour, stated plainly, with no "from 0.16.0" and no "before 0.12.0".
+- No page describes an older release's behaviour, bugs or fixes, or certificates made on older releases; version history lives on Release notes only, with decisio's upgrade notes and changelog.
+- A release is named in a source note, in code (an install command), or on Release notes; the versions check fails any other mention, and lists those in decisio's own included text for decisio to trim.
+- "Certify your tasks again after any upgrade" is current advice and stays.
+
 ## Numbers
 
 - Every number traces to a record: the site's data files (launch facts, the demos' data) or decisio's text at the pinned release.
 - The build checks that a number still matches its source; a page never types a measured number by hand.
 - Each figure appears once per page (the content check); a figure on a chart may repeat a table's.
-- A number carries its conditions beside it once: the model, the card or Mac, the date.
+- A measured number carries a short source note in its source line, not in the prose: "Measured on" (or "Recorded on") the release, the card and the date (`::source` on a docs page, class `src-note` elsewhere).
 - A recorded output (a decision, a run's table, a certificate) carries one label naming the release, the card and the date it ran on.
 - It stays when the pin moves on, unless a later release changed what it shows; that is decided from each release's notes and written in `src/config/recorded-outputs.mjs`, and the recorded-output check enforces both.
 - No GPU is rented to verify the site: a recording is made again only when a training box is already up.

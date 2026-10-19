@@ -3,7 +3,7 @@
 // from the records the page carries, with the same drawing code as the build (src/lib/tc-charts.mjs). A moved message
 // slides to its new place (only transforms set through the CSSOM, as the CSP requires); under reduced motion it moves
 // at once. Without scripts the page keeps its first view.
-import { driftChart, pc, scatter } from '../lib/tc-charts.mjs';
+import { pc, scatter } from '../lib/tc-charts.mjs';
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $$ = <T extends Element>(s: string, r: ParentNode = document) => [...r.querySelectorAll<T>(s)];
@@ -75,18 +75,3 @@ if (rs) {
 	alphas.forEach((b) => b.addEventListener('click', () => { alpha = b.dataset.alpha!; press(alphas, b); draw(); }));
 }
 
-// --- The drift replay -----------------------------------------------------------------------------------------------------
-const dr = document.querySelector<HTMLElement>('[data-tc-drift]');
-if (dr) {
-	const data = JSON.parse(dr.dataset.tcDrift!) as Record<string, Parameters<typeof driftChart>[0] & { label: string; threshold: number; certified_share: number; wrong_before: number; wrong_after: number }>;
-	const bases = $$<HTMLButtonElement>('[data-base]', dr);
-	bases.forEach((b) => b.addEventListener('click', () => {
-		press(bases, b);
-		const x = data[b.dataset.base!];
-		dr.querySelector('[data-tc-driftchart]')!.innerHTML = driftChart(x, x.label);
-		dr.querySelector('[data-drift="threshold"]')!.textContent = x.threshold.toFixed(2);
-		dr.querySelector('[data-drift="share"]')!.textContent = `${pc(x.certified_share)} of the stream certified`;
-		dr.querySelector('[data-drift="before"]')!.textContent = n(x.wrong_before);
-		dr.querySelector('[data-drift="after"]')!.textContent = n(x.wrong_after);
-	}));
-}

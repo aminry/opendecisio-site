@@ -24,7 +24,7 @@ if (!size) throw new Error(`Clip: ${name} is not in src/data/media.json; run npm
 			tabindex="-1"
 			aria-describedby={`clip-${name}`}
 		></video>
-		<img class="clip__poster" src={`/posters/${name}.webp`} width={size.width} height={size.height} loading="lazy" decoding="async" alt="" />
+		<img class="clip__poster" src={`/posters/${name}.webp`} width={size.width} height={size.height} loading="lazy" decoding="async" alt={`First frame of the recorded run: ${caption.replace(/<[^>]+>/g, '')}`} />
 	</div>
 	<div class="clip__bar">
 		<button class="clip__toggle" type="button" aria-pressed="false" data-label-play="Play clip" data-label-pause="Pause clip" aria-label="Play clip">

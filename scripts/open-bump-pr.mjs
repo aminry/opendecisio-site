@@ -4,12 +4,12 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const { BUMP_TAG: tag, BUMP_BRANCH: branch, VERIFY_OUTCOME: outcome, RUN_URL: runUrl, GITHUB_REPOSITORY: repo } = process.env;
+const { BUMP_TAG: tag, BUMP_BRANCH: branch, VERIFY_OUTCOME: outcome, INTEGRATIONS_OUTCOME: integrationsOutcome, RUN_URL: runUrl, GITHUB_REPOSITORY: repo } = process.env;
 const gh = (...args) => execFileSync('gh', args, { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
 const git = (...args) => execFileSync('git', args, { encoding: 'utf8' });
 
 const base = git('rev-parse', 'HEAD').trim();
-const changes = git('status', '--porcelain', '--untracked-files=all', '--', 'upstream.json', 'src/data/media.json', 'public/posters', 'verification/commands.json')
+const changes = git('status', '--porcelain', '--untracked-files=all', '--', 'upstream.json', 'src/data/media.json', 'public/posters', 'verification/commands.json', 'verification/integrations.json')
 	.split('\n')
 	.filter(Boolean)
 	.map((line) => ({ status: line.slice(0, 2).trim(), path: line.slice(3) }));
@@ -21,7 +21,7 @@ const deletions = changes.filter((c) => c.status === 'D').map((c) => ({ path: c.
 gh('api', `repos/${repo}/git/refs`, '-f', `ref=refs/heads/${branch}`, '-f', `sha=${base}`);
 
 const headline = `chore: build the site from decisio ${tag}`;
-const body = 'The pin, the clips and posters, and the record of every published command run again on the CPU stand-in.';
+const body = 'The pin, the clips and posters, and the records of every published command and of the integration checks, run again on the CPU stand-in.';
 const query = `mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }`;
 const input = { branch: { repositoryNameWithOwner: repo, branchName: branch }, message: { headline, body }, expectedHeadOid: base, fileChanges: { additions, deletions } };
 writeFileSync('/tmp/bump-commit.json', JSON.stringify({ query, variables: { input } }));
@@ -34,6 +34,9 @@ const prBody = [
 	verified
 		? 'Every published command the CPU stand-in can serve ran again from a fresh clone of the release, and `verification/commands.json` records the run.'
 		: `**The command check failed**, so \`verification/commands.json\` still records the previous release and the build will refuse to start. The log is in the [run](${runUrl}) (artifact \`verify-log\`).`,
+	integrationsOutcome === 'success'
+		? "decisio-examples' integration checks ran again on the CPU stand-in, and `verification/integrations.json` records the run."
+		: `**The integration checks failed**, so \`verification/integrations.json\` still records the previous release and the build will refuse to start. The log is in the [run](${runUrl}) (artifact \`integrations-log\`).`,
 	'',
 	'Review before merging:',
 	'- the preview deployment, page by page, against the release notes;',

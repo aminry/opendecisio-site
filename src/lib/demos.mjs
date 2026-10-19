@@ -10,6 +10,9 @@ const FILE = 'docs/demos/README.md';
 const OUR_PLAYER = /^(Decisio, )?(Qwen3\.6-35B-A3B|Gemma 4 12B|Gemma 4 31B)( base)?$/;
 // A sentence about another player: the demos page shows decisio's own runs, and the other players are on Benchmarks.
 const OTHER = /Cygnet|Jev\b|Gemini|Luna|Haiku|GPT|OpenRouter|hosted/i;
+// Sentences on how teaching behaved on decisio v0.6.0 (which correction it kept, and why the gain was small): the triage
+// card's tiles carry the result, and teaching today is the teach-and-certify page's.
+const OLD_TEACHING = /cross-validation|kept the head only|kept both the intent head|the lift is small|reads the model's hidden state/i;
 const clipOf = (html) => html.match(/\/media\/upstream\/([^"]+)\.mp4/)?.[1];
 
 /** The opening paragraphs, under the page's title, each as paragraphs of at most three sentences. */
@@ -160,7 +163,7 @@ export function demoCards() {
 function ours(blocks) {
 	const keep = (html) => html
 		.replace(/, (\d+ \(\d+%\) for Gemma 4 31B) and \d+ \(\d+%\) for Cygnet\./, ' and $1.')
-		.split(/(?<=\.)\s+(?=[A-Z])/).filter((x) => !OTHER.test(plainText(x))).join(' ');
+		.split(/(?<=\.)\s+(?=[A-Z])/).filter((x) => !OTHER.test(plainText(x)) && !OLD_TEACHING.test(plainText(x))).join(' ');
 	return blocks.flatMap((b) => {
 		if (b.kind === 'table') {
 			const rows = b.rows.filter((r) => OUR_PLAYER.test(plainText(r[0])));

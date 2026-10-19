@@ -7,7 +7,6 @@ description: Send a text and your questions; decisio reads the text once and giv
 
 ::covers{links="README.md#how-it-works"}
 
-Send one request with a text and your questions, and get a probability for every option back, with no text generated.
 A support ticket and three questions about it:
 
 ::site-block{name="first-decision-request"}
@@ -37,13 +36,15 @@ The probabilities add up to 1, and three things shape them:
 | Your task's correction | learned from your labelled examples, and kept only when it helps |
 | The certified threshold | set when you certify a task: answers at or above it are certified |
 
-A task's correction makes the probabilities more honest: on six held-out tasks, 20 labelled examples each lowered the calibration error from 0.058 to 0.037.
+A task's correction makes the probabilities more honest: on six held-out tasks, 20 labelled examples each lowered the calibration error from 0.058 to 0.037 (the Qwen model, 900 test items, 2026-09-29).
 
 ## 3. Teach, then certify, then route
 
 ::figure{name="teach-flow-all"}
 
-On the support inbox, :value{name="inbox-certified-5"} of the messages were answered on their own at a 5% error target ([Certify answers](/docs/tasks/certify/)).
+On the support inbox, :value{name="inbox-certified-5"} of the messages were answered on their own at a 5% error target (BANKING77, Gemma 4 31B; [Certify answers](/docs/tasks/certify/)).
+
+::source{name="teach-certify"}
 
 - After upgrading decisio, certify your tasks again.
 - A certificate covers one task on one serving setup. Certify again when you change either.
@@ -60,12 +61,12 @@ On the support inbox, :value{name="inbox-certified-5"} of the messages were answ
 | Gemma 4 12B | a first read and a cached read can differ, by up to 0.113 | the same choice; probabilities within 0.035 | not promised |
 | Qwen3.6-35B-A3B | the same probabilities every time | the same probabilities as each question on its own | an earlier record matched in most starts measured |
 
-The top answer is stable; exact numbers repeat only on one running server.
+The top answer rarely moves: on the 12B, one choice of 60 changed between a first and a cached read. Exact numbers repeat only on one running server.
 
 ## Under the hood
 
 - decisio runs on stock vLLM 0.31.0: a plugin registers its model classes, and no patch is needed.
-- Every model is an official checkpoint, frozen: no training, no fine-tuning, no adapter.
+- Every model is an official checkpoint, frozen: no training, no fine-tuning, no adapter unless you serve one with `--adapter`.
 - A taught task's intent head reads the model's internal representation of the text at the answer position.
 - On a Mac, the MLX engine answers each question on its own from one shared read of the text.
 

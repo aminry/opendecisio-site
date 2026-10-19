@@ -8,6 +8,22 @@
 //   system, with the same footnote letters.
 import { baseOfName } from '../config/bases.mjs';
 import { comparison, markOf } from './comparison.mjs';
+import { readUpstream } from './upstream.mjs';
+
+// The longest prompt each base serves at the pinned release, from docs/cli.md's --max-model-len row: the comparison's
+// context row was measured on 2026-10-05, before the Gemma bases served what the card holds, and the site documents
+// the pinned release only.
+function servedLength() {
+	const cli = readUpstream('docs/cli.md');
+	const head = /^\| Flag \| `qwen3\.6-35b-a3b` \| `gemma-4-12b` \| `gemma-4-31b` \|/m.test(cli);
+	const row = /^\| `--max-model-len` \| ([^|]+) \| ([^|]+) \| ([^|]+) \|/m.exec(cli);
+	if (!head || !row) throw new Error("headline: docs/cli.md no longer gives --max-model-len per base in its flags table");
+	const say = (v) => {
+		const t = v.trim().replace(/(\d)(\d{3})\b/g, '$1,$2');
+		return /^[\d,]+$/.test(t) ? `${t} tokens per prompt` : `${t} tokens per prompt`.replace(/^the largest that fits the card, /, 'the largest the card holds, ');
+	};
+	return { 'qwen3.6-35b-a3b': say(row[1]), 'gemma-4-12b': say(row[2]), 'gemma-4-31b': say(row[3]) };
+}
 
 const plain = (html) => html.replace(/<[^>]+>/g, '').replace(/&#x26;/g, '&').replace(/&#x27;|&#39;/g, "'").trim();
 const ours = (head) => baseOfName(plain(head).replace(/^decisio\s*·\s*/i, ''));
@@ -75,6 +91,7 @@ export function headline() {
 				const label = plain(r[0]);
 				// Latency and price are quantities; context and what it is are sentences.
 				if (/^(Latency|Price)/.test(label)) return { ...quantity(r[c.i], extra) };
+				if (/^Context length/.test(label) && c.base) return { html: servedLength()[c.base] ?? r[c.i] };
 				return { html: r[c.i] };
 			}),
 		})),

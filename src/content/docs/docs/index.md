@@ -59,10 +59,6 @@ A choice gives its likeliest option and the probability of every option, so you 
 
 ::figure{name="first-decision"}
 
-::site-block{name="first-decision-response"}
-
-::recorded-label
-
 Good to know:
 
 - A request the server cannot read gets status 422, with a `detail` that names what is wrong.

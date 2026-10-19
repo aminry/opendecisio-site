@@ -1,28 +1,26 @@
 ---
-// A docs page's foot: where it comes from and how to change it (decisio's own file on GitHub for a page built from
-// decisio's docs; a new issue for a page the site writes, since the site's repository is private), the page as Markdown,
-// the previous and next pages, then the statement and the release every page carries.
+// A docs page's foot: how to change it (its own file in the site's repository), decisio's files it renders at the pinned
+// release, the page as Markdown, the previous and next pages, then the statement and the release every page carries.
 import Pagination from 'virtual:starlight/components/Pagination';
 import { independence, site } from '../../config/site';
 import { sourceLinks } from '../../lib/docs-meta.mjs';
 import { pin } from '../../lib/upstream.mjs';
 
 const { entry } = Astro.locals.starlightRoute;
-const { files, suggest } = sourceLinks(entry);
+const { edit, files } = sourceLinks(entry);
 const slug = entry.id.replace(/\/index$/, '').replace(/^index$/, '');
 const isDoc = entry.id !== '404';
 const markdown = `/docs/${slug.replace(/^docs\/?/, '')}${slug.replace(/^docs\/?/, '') ? '/' : ''}index.md`;
 ---
 <footer class="site-foot">
 	{isDoc && <ul class="site-foot__actions">
-		{files.length > 0
-			? files.map((f) => <li><a href={f.href}>Edit on GitHub: {f.file}</a></li>)
-			: <li><a href={suggest}>Suggest an edit</a></li>}
+		<li><a href={edit}>Edit this page on GitHub</a></li>
+		{files.map((f) => <li><a href={f.href}>From decisio's {f.file}, {pin.tag}</a></li>)}
 		<li><a href={markdown}>View as Markdown</a></li>
 	</ul>}
 	<Pagination />
 	<div class="site-foot__legal">
 		<p>{independence}</p>
-		<p>{site.licence}. This page is built from <a href={`${site.repository}/tree/${pin.tag}`}>{site.name} {pin.tag}</a>. <a href="/privacy/">Privacy</a>.</p>
+		<p>{site.licence}. This page is built from <a href={`${site.repository}/tree/${pin.tag}`}>{site.name} {pin.tag}</a>. <a href={`${site.repository}/blob/${pin.tag}/CONTRIBUTING.md`}>Contributing</a>. <a href="/privacy/">Privacy</a>.</p>
 	</div>
 </footer>

@@ -61,16 +61,16 @@ const read = (text, re, what) => {
 export function macBuilds() {
 	const run = readUpstream('docs/running.md');
 	const [w31] = read(run, /\(26\.1 GB to download, ([\d.]+) GB of weights in memory\)/, "the 31B 6-bit build's weights");
-	const [, , p31] = read(run, /It peaks at ([\d.]+), ([\d.]+) and ([\d.]+) GB at about 8k, 16k and 32k tokens of state, against/, "the 31B 6-bit build's peaks");
+	const [, p31] = read(run, /It peaks at ([\d.]+), ([\d.]+) and ([\d.]+) GB at about 8k, 16k and 32k tokens of state, against/, "the 31B 6-bit build's peaks");
 	const [w31q] = read(run, /group size 32, ([\d.]+) GB of weights/, "the 31B 4-bit build's weights");
-	const [, , p31q] = read(run, /The 4-bit conversion peaks at ([\d.]+), ([\d.]+) and ([\d.]+) GB/, "the 31B 4-bit build's peaks");
+	const [, p31q] = read(run, /The 4-bit conversion peaks at ([\d.]+), ([\d.]+) and ([\d.]+) GB/, "the 31B 4-bit build's peaks");
 	const [w12, p12] = read(run, /holds ([\d.]+) GB of weights and peaks at ([\d.]+) GB at 32,687 tokens/, "the 12B 6-bit build's weights and peak");
 	const [pOl] = read(run, /a [\d.]+ GB download and takes ([\d.]+) GB in Ollama/, "the Ollama listing's memory");
 	return [
-		{ mac: 64, build: 'Gemma 4 31B, 6-bit', weights: w31, peak: p31, at: 'at about 32k tokens' },
-		{ mac: 48, build: 'Gemma 4 31B, 4-bit', weights: w31q, peak: p31q, at: 'at about 32k tokens, read on 64 GB' },
+		{ mac: 64, build: 'Gemma 4 31B, 6-bit', weights: w31, peak: p31, at: 'at about 16k tokens, its longest' },
+		{ mac: 48, build: 'Gemma 4 31B, 4-bit', weights: w31q, peak: p31q, at: 'at about 16k tokens, its longest, read on 64 GB' },
 		{ mac: 32, build: 'Gemma 4 12B, 6-bit', weights: w12, peak: p12, at: 'at 32,687 tokens' },
-		{ mac: 16, build: 'Gemma 4 12B on Ollama', weights: null, peak: pOl, at: 'in Ollama, at 8,192 tokens' },
+		{ mac: 16, build: 'Gemma 4 12B on Ollama', weights: null, peak: pOl, at: 'in Ollama, at 8,192 tokens, read on 64 GB' },
 	];
 }
 
@@ -89,7 +89,7 @@ ${r.weights ? `<rect class="f-bar" x="${x0}" y="${y}" width="${Number(r.weights)
 <text class="ft ft-s" x="${x0}" y="${y + 40}">${r.weights ? `${r.weights} GB of weights; ` : ''}${r.peak} GB at its peak, ${esc(r.at)}</text>`;
 	}).join('\n') + `\n<text class="ft ft-d" x="${x0}" y="20">The Mac's memory, to scale</text>`);
 	return panel({
-		name: 'mac-memory', label: 'Memory on a Mac', title: 'Each build fits the Mac it is for, with room left for the system.',
+		name: 'mac-memory', label: 'Memory on a Mac', title: 'Each build against the Mac it is for, at its peak on the longest text it serves; only the 64 GB Mac was measured.',
 		desc: rows.map((r) => `${r.mac} GB Mac, ${r.build}: ${r.weights ? `${r.weights} GB of weights, ` : ''}${r.peak} GB at its peak ${r.at}.`).join(' '),
 		body, legend: 'The accent part is the weights, the grey part the rest of the peak while reading a long text, and the track the Mac\'s whole memory. Measured on one Apple M5 Pro with 64 GB.',
 		source: 'Source: docs/running.md of the pinned release.',
