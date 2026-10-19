@@ -1,7 +1,7 @@
-// The figures of the Guides: many questions about one text, latency, teaching it a question, using the probability,
-// long documents and many options, and images. Each draws only what a record at the pinned release or the
+// The figures of the Guides: many questions about one text, latency, long documents and many options, and images, and
+// the intent-head rows the teaching pages read (the Teach and trust figures are in tasks.mjs). Each draws only what a record at the pinned release or the
 // launch_facts.public.json states, and stops the build when a record stops saying it.
-import { batchTotals, facts, need2, protoData, speedRatios } from '../launch.mjs';
+import { batchTotals, facts, need2, speedRatios } from '../launch.mjs';
 import { readUpstream } from '../upstream.mjs';
 import { esc, panel } from './core.mjs';
 
@@ -109,20 +109,7 @@ function latencyChart() {
 	});
 }
 
-// --- Teaching it a question ---------------------------------------------------------------------------------------------
-
-/** The triage demo's table at the pinned release: each base's accuracy on 400 held-out tickets, plain and after registering 200. */
-export function triageRows() {
-	const demos = readUpstream('docs/demos/README.md');
-	const section = demos.slice(demos.indexOf('### Triage (400 held-out tickets over 20 queues)'));
-	const rows = [...section.slice(0, section.indexOf('Registration was repeated')).matchAll(/^\| (Qwen3\.6-35B-A3B|Gemma 4 12B|Gemma 4 31B) \| (\d+\.\d)% \[[^\]]+\] \| (\d+\.\d)% \[[^\]]+\] \| ([+-]\d+\.\d) points \[([^\]]+)\]; (\d+)(?: answers?)? fixed, (\d+) broken \| /gm)];
-	if (rows.length !== 3) throw new Error('docs-figures: docs/demos/README.md no longer has its triage table');
-	const secs = /Registration was repeated on each base and took (\d+) s, (\d+) s and (\d+) s\./.exec(section);
-	if (!secs) throw new Error('docs-figures: the triage section no longer says how long registration took');
-	const kept = /On the Qwen base it kept both the intent head and the calibration; on the Gemma bases it kept the head only/.test(section);
-	if (!kept) throw new Error('docs-figures: the triage section no longer says what each base kept');
-	return rows.map((m, i) => ({ base: m[1], plain: Number(m[2]), registered: Number(m[3]), diff: m[4], interval: m[5], fixed: Number(m[6]), broken: Number(m[7]), seconds: Number(secs[i + 1]), kept: i === 0 ? 'the intent head and the calibration' : 'the intent head' }));
-}
+// --- The intent heads ---------------------------------------------------------------------------------------------------
 
 /** The 31B's intent heads against the plain readout on the same items, and the Qwen base's with their intervals. */
 export function intentRows() {
@@ -141,71 +128,6 @@ export function intentRows() {
 		],
 		qwen: q.map((x) => ({ name: x[1], plain: x[3], head: x[4], gain: x[5], lo: x[6], hi: x[7] })),
 	};
-}
-
-function teachIt() {
-	const rows = triageRows();
-	const { sets, qwen } = intentRows();
-	const ix = (v) => ((v - 0.7) / 0.3) * 250;
-	const lead = sets.map((x, i) => {
-		const y = 138 + i * 62;
-		return `<text class="ft ft-s" x="8" y="${y + 12}">${esc(x.name)}, ${x.options} options</text>
-<rect class="f-rail" x="190" y="${y}" width="250" height="12" rx="6"/>
-<rect class="f-bar f-bar--grey f-grow fd-6" x="190" y="${y}" width="${ix(x.plain).toFixed(1)}" height="12" rx="6"/>
-<text class="ft ft-d ft-xs f-pop fd-7" x="${(190 + ix(x.plain) + 8).toFixed(1)}" y="${y + 10}">${x.plain.toFixed(3)}</text>
-<rect class="f-rail" x="190" y="${y + 18}" width="250" height="12" rx="6"/>
-<rect class="f-bar f-grow fd-${7 + i}" x="190" y="${y + 18}" width="${ix(x.head).toFixed(1)}" height="12" rx="6"/>
-<text class="ft ft-n ft-xs f-pop fd-${8 + i}" x="${(190 + ix(x.head) + 8).toFixed(1)}" y="${y + 28}">${x.head.toFixed(3)}</text>`;
-	}).join('');
-	const small = rows.map((r, i) => {
-		const y = 138 + i * 44;
-		const w = (v) => ((v - 85) / 15) * 150;
-		return `<text class="ft ft-s ft-xs" x="478" y="${y + 10}">${esc(r.base)}</text>
-<rect class="f-rail" x="478" y="${y + 16}" width="150" height="8" rx="4"/><rect class="f-bar f-bar--grey f-grow fd-9" x="478" y="${y + 16}" width="${w(r.plain).toFixed(1)}" height="8" rx="4"/>
-<rect class="f-bar f-grow fd-10" x="478" y="${y + 26}" width="${w(r.registered).toFixed(1)}" height="8" rx="4"/>
-<text class="ft ft-d ft-xs f-pop fd-9" x="636" y="${y + 24}">${r.plain.toFixed(1)}</text><text class="ft ft-n ft-xs f-pop fd-10" x="636" y="${y + 36}">${r.registered.toFixed(1)}</text>`;
-	}).join('');
-	const body = `<svg class="fig__svg" viewBox="0 0 720 308" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-<rect class="f-node fd-0" x="8" y="8" width="150" height="82" rx="12"/>
-<text class="ft ft-k" x="22" y="30">Your examples</text>
-<text class="ft ft-s f-pop fd-0" x="22" y="52">10 labelled per</text><text class="ft ft-s f-pop fd-0" x="22" y="72">intent</text>
-<path class="f-line fd-1" d="M158 49L214 49" pathLength="1"/>
-<rect class="f-node f-node--on fd-2" x="214" y="8" width="150" height="82" rx="12"/>
-<text class="ft ft-k" x="228" y="30">The server fits</text>
-<text class="ft ft-s f-pop fd-2" x="228" y="52">a calibration and</text><text class="ft ft-s f-pop fd-2" x="228" y="72">an intent head</text>
-<path class="f-line fd-3" d="M364 49L420 49" pathLength="1"/>
-<rect class="f-node fd-4" x="420" y="8" width="292" height="82" rx="12"/>
-<text class="ft ft-k" x="434" y="30">Cross-validation decides</text>
-<text class="ft ft-s f-pop fd-4" x="434" y="52">each is kept only if it helps;</text><text class="ft ft-n f-pop fd-5" x="434" y="72">the weights never change</text>
-<text class="ft ft-k" x="8" y="122">Gemma 4 31B, accuracy on many-option intent sets</text>
-${lead}
-<text class="ft ft-d ft-xs" x="8" y="296">Grey: the plain readout on the same items. Blue: with the intent head, or after registering. Bars start at 0.70 (left) and 85 percent (right).</text>
-<text class="ft ft-k" x="478" y="122">Plain answer already good</text>
-${small}
-</svg>`;
-	return panel({
-		name: 'teach-it', label: 'Teaching it a question', title: 'Examples go in; on a long list of intents the head lifts accuracy, and a correction stays only if cross-validation shows a gain.',
-		desc: `Registering labelled examples on the Gemma 4 31B base: ${sets.map((x) => `${x.name} (${x.options} options) accuracy goes from ${x.plain.toFixed(3)} with the plain readout to ${x.head.toFixed(3)} with an intent head`).join('; ')}, means of three draws. Where the plain answer is already good, on triage over 20 queues, the lift is small: ${rows.map((r) => `${r.base} ${r.plain.toFixed(1)}% to ${r.registered.toFixed(1)}%`).join('; ')}.`,
-		body, live: 10, legend: `Intent heads: means of three draws from 10 labelled examples per intent; registration took ${sets.map((x) => `${x.seconds} s`).join(' and ')}. On the Qwen base the heads added ${qwen.map((x) => `+${x.gain} points on ${x.name} [+${x.lo}, +${x.hi}]`).join(' and ')}, over six draws. Triage (right, in percent, 400 held-out tickets): ${rows.map((r) => `${r.diff} points on ${r.base}`).join(', ')}; registration took ${rows.map((r) => `${r.seconds} s`).join(', ')}.`,
-		source: 'Source: the 31B\'s intent-head row of EVAL_CARD.md section 7.2 (also the README\'s Benchmarks table), the tasks table of docs/tasks.md, and the triage table of docs/demos/README.md at the pinned release. The 31B\'s three draws have no published interval.',
-	});
-}
-
-// --- Using the probability ----------------------------------------------------------------------------------------------
-
-function threshold() {
-	const R = protoData().routing;
-	const body = `<div class="th" data-th data-d="${esc(JSON.stringify(R))}"><label class="th__l" for="th-in">Keep answers at or above</label>
-<input id="th-in" class="th__in" type="range" min="0" max="${R.sweep.length - 1}" step="1" value="3" aria-describedby="th-out">
-<div class="th__ticks" aria-hidden="true">${R.sweep.map((x) => `<span>${x.at}</span>`).join('')}</div>
-<svg class="th__svg" viewBox="0 0 640 56" aria-hidden="true"><rect class="f-rail" x="0" y="8" width="640" height="24" rx="6"/><text class="ft ft-d" x="0" y="52">kept</text><text class="ft ft-d" x="640" y="52" text-anchor="end">escalated</text><rect class="th__kept" data-th-kept x="0" y="8" width="${(640 * (1 - R.sweep[3].share)).toFixed(1)}" height="24" rx="6"/></svg>
-<p id="th-out" class="th__out" data-th-out aria-live="polite">Keep answers at or above ${R.sweep[3].at}: ${fmt(R.sweep[3].escalated)} of ${fmt(R.questions)} questions escalated (${(R.sweep[3].share * 100).toFixed(1)}%); ${(R.sweep[3].accuracy * 100).toFixed(1)}% right on the rest; ${R.sweep[3].caught} of ${R.wrong} wrong answers escalated; ${R.sweep[3].confident} confidently wrong and kept.</p></div>`;
-	return panel({
-		name: 'threshold', label: 'Using the probability', title: 'Set the line; the answers under it go to a person or a larger model.',
-		desc: `A worked example of ${fmt(R.questions)} questions: at each of six thresholds from ${R.sweep[0].at} to ${R.sweep.at(-1).at}, how many answers are escalated and how accurate the rest are. ${R.sweep.map((x) => `At ${x.at}, ${x.escalated} escalated, ${(x.accuracy * 100).toFixed(1)}% right on the rest`).join('; ')}.`,
-		body, interactive: true, legend: 'Each stop is a measured threshold, not an interpolation.',
-		source: `Source: figures.routing_example5 of launch_facts.public.json: ${esc(R.what)}.`,
-	});
 }
 
 // --- Long documents and many options ------------------------------------------------------------------------------------
@@ -261,8 +183,6 @@ function images() {
 export const guidesFigures = {
 	'many-questions': manyQuestions,
 	'latency-chart': latencyChart,
-	'teach-it': teachIt,
-	threshold,
 	'long-and-wide': longAndWide,
 	images,
 };

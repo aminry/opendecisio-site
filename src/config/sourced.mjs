@@ -9,6 +9,7 @@ const operating = 'docs/operating.md';
 const readme = 'README.md';
 const card = 'EVAL_CARD.md';
 const upgrading = 'docs/upgrading.md';
+const tasksDoc = 'docs/tasks.md';
 
 // Facts of one page, as [says, file, source] rows.
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
@@ -129,5 +130,58 @@ export const sourced = [
 		['no set has a text over 32,768 tokens', running, 'no suite here has a state over 32,768 tokens'],
 		["The 31B's 6-bit Mac build on MMLU-Pro, and its server times", running, "The 6-bit conversion's MMLU-Pro was not measured."],
 		['Ollama builds its own prompt and applies no calibration', running, 'Ollama builds its own prompt and applies no calibration'],
+	]),
+	// Teach a task
+	...fromPage('/docs/tasks/', [
+		['At least 10 labelled examples', tasksDoc, 'at least 10 examples, below which the server declines to fit'],
+		['A question with 10 or more options, and at least 5 examples of each; 10 is better', tasksDoc, 'a question with 10 or more options, and at least 5 examples of every option. The measured gains below used 10 per option, which is what we recommend.'],
+		['scoring each fifth of them with a fit made on the other four', tasksDoc, 'the server split your examples into five parts and scored each part with a correction fitted on the other four'],
+		['up to 20 for the correction or 10 per option for the head', tasksDoc, 'add examples, up to 20 for calibration or 10 per option for the head'],
+		['Registering the same id again replaces the task.', tasksDoc, 'Registering the same `id` again replaces the task.'],
+		['x-decisio-tasks: ticket-routing', tasksDoc, 'The response header `x-decisio-tasks: ticket-routing` says the question matched the registered task'],
+		['start every server with --tasks-file tasks.json', tasksDoc, 'start each server with `--tasks-file tasks.json`'],
+		['A task applies only under the model and rendering it was taught on', tasksDoc, 'A task is valid only for the model and rendering it was fitted under'],
+		['a correction costs nothing extra', tasksDoc, 'Calibration and questions without a task cost nothing extra.'],
+		['reads the text\'s internal representation in extra engine requests', tasksDoc, 'because the hidden state is read in three extra requests'],
+		['The server declines the correction and says so', tasksDoc, 'A clear, well-calibrated question gains nothing, and the server says so.'],
+	]),
+	// Certify answers
+	...fromPage('/docs/tasks/certify/', [
+		['With probability at least 90% by default, at most your error target of the certified answers are wrong', tasksDoc, '**with probability at least 1 - `delta` over the draw of your examples (90% by default), at most `alpha` of the answers marked certified are wrong (5% by default)'],
+		['one certified answer can still be wrong', tasksDoc, 'a single certified answer can still be wrong'],
+		['The server holds back half the examples', tasksDoc, 'It **sets aside some of your labelled examples** (half by default)'],
+		['at least 0.9863 are certified: 169 of the 200 held-back tickets, 17 of them wrong', tasksDoc, 'Answers whose top probability is at least 0.9863 are certified: on the 200 held-out examples that is 84% of the answers, 17 of 169 wrong.'],
+		['a three-queue ticket question on the Gemma 4 12B on a Mac, at an error target of 15%', tasksDoc, 'the Gemma 4 12B (6-bit, MLX) on a Mac, on a three-queue ticket question'],
+		['threshold is null and the task works as before', tasksDoc, '`certificate.threshold` is `null`, and the task works exactly as before'],
+		['2% 149', tasksDoc, '| 0.02 | 149 | 183 |'],
+		['5% 59', tasksDoc, '| 0.05 | 59 | 72 |'],
+		['10% 29', tasksDoc, '| 0.1 | 29 | 36 |'],
+		['20% 14', tasksDoc, '| 0.2 | 14 | 17 |'],
+		['With 75 examples, four of five test tasks certified nothing at 5% or 10%', tasksDoc, 'With 75 examples the bounded procedure certified nothing on four of the five tasks at `alpha` 0.05 or 0.1'],
+		['certify.min_examples', tasksDoc, 'Set `certify.min_examples` above the floor'],
+		['The server warns when a choice task has no such option', tasksDoc, 'Registration says so in the certificate (`warnings`, and its summary) when a choice task has no option whose key says it.'],
+		['every answer of the task is certified: false with the reason serving_stack_changed', tasksDoc, 'every answer of the task is `certified: false` with the reason `serving_stack_changed`'],
+		['POST /v1/tasks/{id}/certify, on new labelled examples', tasksDoc, 'Re-certify with an explicit call, `POST /v1/tasks/{id}/certify`, on new labelled examples'],
+		['choice and yes/no questions on text, asked in one order', tasksDoc, 'Choice and yes/no questions, on text requests, in the single-order form the certificate was made on'],
+		['Score questions and requests with images carry no certificate', tasksDoc, 'Score questions are not certified'],
+		['so it does not share the read of the text with the other questions of its request', tasksDoc, 'This costs the request\'s certified questions the shared-prefix saving'],
+		['start the server with --abstain-option to add one', 'docs/cli.md', '--abstain-option'],
+		['POST /v1/abstention/tasks', api, '`POST /v1/abstention/tasks` registers a threshold on an abstain option\'s probability, fitted from labelled examples that include unanswerable ones'],
+		['the server abstains when the option\'s probability is over the threshold, and otherwise answers the best of the other options', api, 'The server then abstains when that option\'s probability exceeds the threshold, and otherwise answers the best of the other options'],
+		['Register the task first and its abstention threshold second, and register both again together.', tasksDoc, 'Register the readout task first and the abstention task second; if you register the readout task again, register its abstention task again too.'],
+	]),
+	// Watch for drift
+	...fromPage('/docs/tasks/drift/', [
+		["falls below the certification examples' 5th percentile", tasksDoc, "falls below the 5th percentile of the certification examples'"],
+		['suspends certification at once: serving_stack_changed', tasksDoc, '**The serving-stack fingerprint**, above: any change suspends the certificate.'],
+		['in the last 500 answers, checked every 100', tasksDoc, 'how often each option was chosen in the last 500 answers, as counts only, and compares the mix with the certification examples\' every 100 answers'],
+		['about 300 answers', tasksDoc, 'about 300 normal answers after the traffic returns'],
+		['the answers themselves do not change', tasksDoc, 'the answers themselves do not change'],
+		['The answer mix is weak on a task with many options', tasksDoc, 'It is weak on a task with many options, where a shift spread over them barely moves the mix'],
+		['decisio_task_confidence_statistic, _limit, _alerts_total', tasksDoc, '`decisio_task_confidence_statistic`, `_limit` and `_alerts_total`'],
+		['The counters live in memory and start again when the server does.', tasksDoc, 'The counters are in memory and start again with the server.'],
+		['label a sample of it and certify again', tasksDoc, 'The only direct check that the promise holds on live traffic is to label some of it and certify again.'],
+		['"suspend_on_alert": false', tasksDoc, 'A certify block with `"suspend_on_alert": false` only reports.'],
+		['A task certified before decisio 0.16.0 has no confidence check until it is certified again', upgrading, 'A task certified before 0.16.0 has no confidence statistic, so it gets no drift protection until it is certified again.'],
 	]),
 ];

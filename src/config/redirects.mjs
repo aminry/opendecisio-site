@@ -14,4 +14,5 @@ export const redirects = [
 	{ from: '/docs/quickstart/mac-mlx/', to: '/docs/deploy/mac/', why: 'Mac with MLX merged into On a Mac or a laptop (docs rewrite, batch 3)' },
 	{ from: '/docs/quickstart/ollama/', to: '/docs/deploy/mac/#on-a-laptop-with-ollama', why: 'Ollama merged into On a Mac or a laptop (docs rewrite, batch 3)' },
 	{ from: '/docs/quickstart/cpu-stand-in/', to: '/docs/deploy/development/', why: 'CPU stand-in became For development (docs rewrite, batch 3)' },
+	{ from: '/docs/guides/probability/', to: '/docs/tasks/certify/#pick-a-line-by-hand', why: 'Use the probability merged into Certify answers (docs rewrite, batch 4)' },
 ];

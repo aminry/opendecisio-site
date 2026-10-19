@@ -47,7 +47,7 @@ The `model` field does not choose a model, and fields the server does not know a
 ## 3. Is it the tasks?
 
 No `x-decisio-tasks` header on a question you registered means it matched no task: ask it exactly as registered.
-A server that prints `WARNING: tasks fitted under another model or rendering are not applied` at start was given tasks fitted under something else; register them again from their examples ([Teach it your question](/docs/tasks/)).
+A server that prints `WARNING: tasks fitted under another model or rendering are not applied` at start was given tasks fitted under something else; register them again from their examples ([Teach a task](/docs/tasks/)).
 
 ## 4. Is it the answer?
 

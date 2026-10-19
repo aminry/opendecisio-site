@@ -25,5 +25,5 @@ Every word the docs use that has a meaning of its own here, in plain terms.
 
 ## What next
 
-- [Teach it your question](/docs/tasks/): tasks, certified answers and drift, in practice.
+- [Teach a task](/docs/tasks/): tasks, certified answers and drift, in practice.
 - [The HTTP API](/docs/api/): every field of a request and an answer.

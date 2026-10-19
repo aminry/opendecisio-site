@@ -30,7 +30,9 @@ Every page, its route, and where its content comes from.
 | `/docs/bases/` | Choosing a base | Upstream README "Choosing a base", with each base's provenance |
 | `/docs/api/` | Asking questions: the HTTP API | Upstream docs/api.md |
 | `/docs/flags/` | Flags and options | Upstream README "Options", then docs/cli.md |
-| `/docs/tasks/` | Teaching it a task | Upstream docs/tasks.md |
+| `/docs/tasks/` | Teach a task | Site-written steps around docs/tasks.md's walk-through blocks; what teaching did on the 31B from EVAL_CARD.md section 7.2 (`src/lib/teach.mjs`) |
+| `/docs/tasks/certify/` | Certify answers | Site-written: the certify slider on the support inbox (`src/data/teach-certify/`), docs/tasks.md's worked example, the floor table, the setup steps, the threshold picked by hand and abstention; `/docs/guides/probability/` redirects here |
+| `/docs/tasks/drift/` | Watch for drift | Site-written: the three checks, the status and the metrics, from docs/tasks.md "The monitor"; the drift replay chart from runs/2026-10-17_drift-monitor/ |
 | `/docs/migrating/` | Move from System One | Site-written steps around docs/migrating.md's two blocks; the differences from docs/api.md "Where this route differs from System One" (`src/config/sourced.mjs`) |
 | `/docs/operating/` | Deploying and operating | Upstream docs/running.md "Checking a server" and "When the engine dies" (from the release after v0.7.1), docs/api.md "GET /health", SECURITY.md, and deploy/ when the tag has it |
 | `/docs/upgrading/` | Upgrading | Upstream docs/upgrading.md, whole (what changes for a running deployment from one release to the next; from v0.10.0) |
@@ -49,6 +51,6 @@ Every page, its route, and where its content comes from.
 
 ## Docs groups
 
-The sidebar, `llms.txt` and `llms-full.txt` share `src/config/docs-groups.mjs`, grouped as the docs rewrite's structure has them: Get started (Get started, Call it from your code, Move from System One); How-to guides (the four deploy guides, Teach it your question, the guides, Deploying and operating, Health and monitoring, Upgrading, Troubleshooting); Reference (HTTP API, Flags, Bases, Requirements and limits, Glossary, Releases, the evaluation card, How Decisio compares, Questions); How it works (How it works, What the probability means, Repeatability, Demos). Use cases joins when its first page does.
+The sidebar, `llms.txt` and `llms-full.txt` share `src/config/docs-groups.mjs`, grouped as the docs rewrite's structure has them: Get started (Get started, Call it from your code, Move from System One); How-to guides (the four deploy guides, Teach a task, Certify answers, Watch for drift, the guides, Deploying and operating, Health and monitoring, Upgrading, Troubleshooting); Reference (HTTP API, Flags, Bases, Requirements and limits, Glossary, Releases, the evaluation card, How Decisio compares, Questions); How it works (How it works, What the probability means, Repeatability, Demos). Use cases joins when its first page does.
 Reference pages (the API, the flags) render from decisio's own docs folder with `::upstream`, so decisio's changes there reach the site on the next bump; each page's footer links its source file on GitHub.
 `llms.txt` and `llms-full.txt` are written after the build by `scripts/llms.mjs` from the built pages and checked by `scripts/checks/llms.mjs`.

@@ -86,4 +86,4 @@ To teach and certify tasks, run a decisio server.
 
 - [Get started](/docs/#3-ask-your-first-question): send your first question and read the answer.
 - [Requirements and limits](/docs/limits/): every machine, the context length and what was measured on what.
-- [Teach it your question](/docs/tasks/): teach a question you ask again and again, and certify its answers.
+- [Teach a task](/docs/tasks/): teach a question you ask again and again, and certify its answers.

@@ -112,5 +112,5 @@ Across restarts and machines, answers are not promised to repeat.
 ## What next
 
 - [The evaluation card](/docs/evaluation-card/): every measurement, with its record.
-- [Teach it your question](/docs/tasks/): certify a task, and what its certificate covers.
+- [Certify answers](/docs/tasks/certify/): certify a task, and what its certificate covers.
 - [Upgrading](/docs/upgrading/): what changes from one release to the next.

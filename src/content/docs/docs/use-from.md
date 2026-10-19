@@ -130,5 +130,5 @@ Each program below asks two questions about one ticket and prints the answers.
 ## What next
 
 - [Move from System One](/docs/migrating/): point a client you already have at decisio, and what changes.
-- [Teach it your question](/docs/tasks/): teach a question you ask again and again, and certify its answers.
+- [Teach a task](/docs/tasks/): teach a question you ask again and again, and certify its answers.
 - [The HTTP API](/docs/api/): every route, request field and response field.

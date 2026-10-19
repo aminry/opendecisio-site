@@ -30,6 +30,7 @@ import { diagram } from './diagrams.mjs';
 import { docsFigure, recordedLabel } from './docs-figures.mjs';
 import { splitParagraph } from './sentences.mjs';
 import { integrationsTable } from './figures/use-from.mjs';
+import { taskGains } from './teach.mjs';
 
 const parser = unified().use(remarkParse).use(remarkGfm);
 const cache = new Map();
@@ -166,6 +167,16 @@ export default function remarkUpstream(options = {}) {
 		visit(tree, 'leafDirective', (node, index, parent) => {
 			if (node.name !== 'integrations-table') return;
 			parent.children.splice(index, 1, { type: 'html', value: integrationsTable() });
+			return index + 1;
+		});
+		// ::teach-gains: what teaching did on the default model, one row per intent set (src/lib/teach.mjs checks each
+		// number against the release's evaluation card).
+		visit(tree, 'leafDirective', (node, index, parent) => {
+			if (node.name !== 'teach-gains') return;
+			const heads = ['Intent set', 'Right, untaught', 'Right, taught', 'Measured on'];
+			const rows = taskGains().map((g) => [`${g.name}, ${g.options} intents`, `${(g.plain * 100).toFixed(1)}%`, `<b>${(g.taught * 100).toFixed(1)}%</b>`, `${g.per} labelled examples per intent; ${g.items} test messages; mean of ${g.draws} draws; taught in ${g.seconds} s`]);
+			const html = `<div class="table-wrap"><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+			parent.children.splice(index, 1, { type: 'html', value: html });
 			return index + 1;
 		});
 		// ::recorded-label: the line that says which recorded decision, on which box, an answer on the page came from.

@@ -73,16 +73,16 @@ The figure's ECE values are on JevBench's standard and hard tiers, which are not
 
 :::caution[Common mistake]
 A probability is calibrated on the questions it was measured on.
-For your own question, the plain probabilities can be off; registering a task fits a correction from your examples and keeps it only if cross-validation shows a gain ([Teach it your question](/docs/tasks/)).
+For your own question, the plain probabilities can be off; registering a task fits a correction from your examples and keeps it only if cross-validation shows a gain ([Teach a task](/docs/tasks/)).
 :::
 
 ## 3. Per-task calibration
 
 On six other held-out tasks, registering from 20 labelled examples lowered the pooled ECE, and on a question the model already answers well it declines and leaves the answers unchanged.
-The numbers and what each was measured on are in [Teach it your question](/docs/tasks/#what-you-get).
+The numbers and what each was measured on are in [Teach a task](/docs/tasks/#what-it-does).
 
 ## What next
 
-- [Use the probability](/docs/guides/probability/): set a threshold on it.
+- [Certify answers](/docs/tasks/certify/): set a threshold on it, with a promise.
 - [Repeatability](/docs/repeatability/): what repeats, and what can move.
 - [The evaluation card](/docs/evaluation-card/): section 4, what was fitted on what.
