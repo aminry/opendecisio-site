@@ -13,7 +13,7 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import { demoCards, sectionParts, setupLine } from '../lib/demos.mjs';
 import { breadcrumbs } from '../lib/jsonld.mjs';
 import { pin } from '../lib/upstream.mjs';
-import { baseName, data as teachCertify, datasetName } from '../lib/teach-certify.mjs';
+import { baseName, data as teachCertify, datasetName, oosReplay } from '../lib/teach-certify.mjs';
 
 const cards = demoCards();
 const setup = setupLine();
@@ -32,12 +32,13 @@ const ib = tc.inbox;
 const at5 = ib.targets['0.05'];
 const gk = tc.gatekeeper;
 const r16 = tc.release016;
+const oos = oosReplay();
 if (!r16?.released || !gk) throw new Error('demos: the teach-and-certify records lack the gatekeeper or the drift pause');
 const results = [
 	{ n: pc(at5.covered / ib.test_n), l: `of a support inbox answered on its own at most 5% wrong; ${pc(at5.errors / at5.covered)} of those were wrong`, meta: `${datasetName(ib.dataset)}, ${baseName(ib.model)}, decisio ${tc.decisio}`, href: '/demos/teach-and-certify/#inbox' },
 	{ n: `${pc(gk.at5.share[0], 0)} to ${pc(gk.at5.share[1], 0)}`, l: "of a coding agent's shell commands decided on their own at most 5% wrong", meta: `${gk.rules.length} rules, ${baseName(gk.model)} on a Mac, decisio ${gk.decisio}`, href: '/demos/teach-and-certify/#gatekeeper' },
 	{ n: String(r16.clinc.wrong_before), l: 'wrong answers certified before certification paused on drifting traffic', meta: `${datasetName('clinc150')}, ${baseName('g31')}, decisio ${r16.version} release candidate`, href: '/demos/teach-and-certify/#drift' },
-	{ n: String(r16.jump.first_suspended - r16.jump.jump_at), l: `messages after a jump in traffic, certification paused; it resumed ${r16.jump.resumed_after} messages after the traffic returned`, meta: `${baseName('g31')}, decisio ${r16.version} release candidate`, href: '/demos/teach-and-certify/#drift' },
+	{ n: `${pc(oos.rightUntaught)} to ${pc(oos.rightTaught)}`, l: 'right over a drifting stream, once the task was taught to say none of these, with the pause on', meta: `${datasetName('clinc150')} with off-topic traffic, ${baseName('g31')}, replayed through the decisio ${oos.decisio} monitor`, href: '/demos/teach-and-certify/#fix' },
 ];
 ---
 <SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Demos', path: '/demos/' }])} title={`Demos: ${site.name}`} description="Certified answers on real tasks, then Pong, a driving simulator, a browser agent and ticket triage on each of decisio's three models, every decision checked where it can be.">

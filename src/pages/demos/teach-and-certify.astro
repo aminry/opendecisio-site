@@ -11,7 +11,7 @@ import SiteLayout from '../../layouts/SiteLayout.astro';
 import { site } from '../../config/site';
 import { breadcrumbs } from '../../lib/jsonld.mjs';
 import { drawsChart, pc, scatter, sharesChart } from '../../lib/tc-charts.mjs';
-import { ALPHAS, SETUPS, baseClass, baseName, data, datasetName, task } from '../../lib/teach-certify.mjs';
+import { ALPHAS, SETUPS, baseClass, baseName, data, datasetName, oosReplay, task } from '../../lib/teach-certify.mjs';
 import '../../styles/teach-certify.css';
 
 const d = data();
@@ -44,6 +44,7 @@ const c12 = task('g12', 'clinc150'), c31 = task('g31', 'clinc150');
 // The drift stream, on the 31B.
 const dr0 = d.drift.g31;
 const fix = d.fix;
+const oos = oosReplay();
 const gk = d.gatekeeper;
 // decisio 0.16.0's alarm and served-path certificate.
 const r16 = d.release016?.released ? d.release016 : null;
@@ -187,7 +188,23 @@ const oneIn = gk ? Math.round(gk.unsafe.certified / gk.unsafe.unsafe) : 0;
 			<div class="pcard tile tc-fix" id="fix">
 				<h3 class="tc-h3">The fix: teach it to say none of these</h3>
 				<p class="tc-read">Give the task one more option, out of scope, taught from {fix.oos_taught} off-topic examples, and certify it on held-out examples that include {fix.cert_oos} off-topic ones. An off-topic message then has a right answer, and the certificate counts it.</p>
-				<p class="tc-read">The promise covers traffic like the examples; the alarm flags when traffic shifts away from them.</p>
+				<div class="table-scroll tc-compare">
+					<table class="data-table">
+						<caption>The same drift stream, off-topic rising from 0 at message {n(fix.start)} to {pc(fix.top_share, 0)} at {n(fix.top)}, with the alarm pausing certification, the default.</caption>
+						<thead><tr><th scope="col"></th><th scope="col">No out-of-scope option</th><th scope="col">Out of scope taught</th></tr></thead>
+						<tbody>
+							<tr><th scope="row">First paused answer</th><td>{n(oos.untaught.first_suspended)}</td><td>{n(oos.with_pause.first_paused_answer)}</td></tr>
+							<tr><th scope="row">Right, over the whole stream</th><td>{pc(oos.rightUntaught)}</td><td>{pc(oos.rightTaught)}</td></tr>
+						</tbody>
+					</table>
+				</div>
+				<ul class="tc-promise" data-table-notes>
+					<li>Without the option, the confidence alarm pauses the task sooner: at answer {n(oos.untaught.first_suspended)}, after {oos.untaught.wrong_before} wrong certified answers.</li>
+					<li>With the option taught, the answer mix pauses it at answer {n(oos.with_pause.first_paused_answer)}, when about {pc(oos.shareAtPause, 0)} of the messages are off-topic. Over the stream, {pc(oos.with_pause.wrong_among_certified_whole_stream)} of its certified answers are wrong, against {pc(oos.alert_only.wrong_among_certified_whole_stream)} with an alarm that only reports, and {n(oos.with_pause.wrong_certified_from_1001_to_end)} wrong answers go out certified from message {n(fix.start + 1)} on, against {n(oos.alert_only.wrong_certified_from_1001_to_end)}.</li>
+					<li>It paused on all {oos.seed_sweep.seeds} seeds of the monitor's sampling, and never on the same stream without its off-topic messages.</li>
+				</ul>
+				<p class="tc-read">So teach an "other" option and rely on the pause: the option makes the answers right more often, and the pause caps what a shift costs.</p>
+				<p class="tc-src src-note">Out of scope taught: a replay of recorded readouts through the decisio {oos.decisio} monitor, {baseName('g31')} FP8 on {d.models.g31.machine.replace(/ \(.*\)$/, '')}, replayed {oos.date}; the readouts were recorded on decisio {oos.recorded_on}. No out-of-scope option: the pause measured on the decisio {r16.version} release candidate.</p>
 			</div>
 
 		</div>

@@ -669,3 +669,15 @@
 .tc-keep b {
 	color: var(--h-ink);
 }
+
+.tc-compare {
+	margin-top: 16px;
+}
+
+.tc-compare caption {
+	caption-side: bottom;
+	padding-top: 8px;
+	text-align: left;
+	color: var(--h-dim);
+	font-size: 12.5px;
+}
