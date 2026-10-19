@@ -1,0 +1,34 @@
+---
+// The Decision Index 0.2.1 values of the comparison's headline (indexValues() in src/lib/bench-page.mjs, as of 2026-10-05),
+// as bars on one scale from zero: decisio's bases in their colours, Jev in violet, the other entries in grey, in a board
+// chart's order (alphabetical, Jev last). Static; its title and description carry every value.
+import { colourOf } from '../config/bases.mjs';
+import { indexValues } from '../lib/bench-page.mjs';
+const rows = indexValues();
+const W = 720;
+const X0 = 230;
+const X1 = 640;
+const ROW = 34;
+const H = 12 + rows.length * ROW + 30;
+const x = (v: number) => X0 + (v / 100) * (X1 - X0);
+const ticks = [0, 25, 50, 75, 100];
+const cls = (r: (typeof rows)[number]) => (r.base ? `ic-ours ${colourOf(r.base)}` : r.jev ? 'ic-jev' : 'ic-other');
+const desc = rows.map((r) => `${r.name} ${r.value.toFixed(2)}`).join('; ');
+---
+<figure class="ic">
+	<svg class="ic__svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="ic-t ic-d" xmlns="http://www.w3.org/2000/svg">
+		<title id="ic-t">Decision Index 0.2.1, 0 to 100, as of 2026-10-05; decisio's values are our own runs</title>
+		<desc id="ic-d">{desc}.</desc>
+		<g class="ic-grid">{ticks.map((t) => <g><line x1={x(t)} x2={x(t)} y1="6" y2={H - 26} /><text x={x(t)} y={H - 8} text-anchor="middle">{t}</text></g>)}</g>
+		{rows.map((r, i) => {
+			const y = 12 + i * ROW;
+			return (
+				<g class={cls(r)}>
+					<text class="ic-l" x={X0 - 12} y={y + 15} text-anchor="end">{r.name}</text>
+					<rect class="ic-bar" x={X0} y={y + 2} width={x(r.value) - X0} height="18" rx="3" />
+					<text class="ic-v" x={x(r.value) + 8} y={y + 16}>{r.value.toFixed(2)}</text>
+				</g>
+			);
+		})}
+	</svg>
+</figure>

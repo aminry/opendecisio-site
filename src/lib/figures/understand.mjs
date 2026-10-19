@@ -4,10 +4,8 @@
 // build when one is no longer there.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { comparison } from '../comparison.mjs';
 import { slugify } from '../upstream-map.mjs';
 import { readUpstream, siteRoot } from '../upstream.mjs';
-import { stable } from '../launch.mjs';
 import { esc, p2, panel, recorded, sourceLine } from './core.mjs';
 
 const text = (file) => readUpstream(file);
@@ -57,34 +55,6 @@ ${rows}
 	});
 }
 
-// --- How it compares -------------------------------------------------------------------------------------------------------
-
-function compareHeadline() {
-	const c = comparison();
-	if (!c) throw new Error('docs-figures: the pinned release has no docs/comparison.md');
-	const row = c.headline.rows.find((r) => /Decision Index 0\.2\.1/.test(r[0].replace(/<[^>]+>/g, '')));
-	if (!row) throw new Error('docs-figures: the comparison\'s headline no longer has its Decision Index row');
-	const names = c.headline.head.slice(1).map((h) => h.replace(/<[^>]+>/g, '').replace(/^decisio · /, ''));
-	const cells = row.slice(1).map((x) => x.replace(/<[^>]+>/g, '').trim());
-	const parsed = cells.map((x, i) => ({ name: names[i], value: Number(/(\d+\.\d+)/.exec(x)?.[1]), }));
-	if (parsed.some((p) => !Number.isFinite(p.value))) throw new Error('docs-figures: a headline cell is not a number');
-	// The 31B's value, said in the title as the launch facts' stable claim says it (launch_facts.public.json stable_claims.decision_index_021).
-	const ours31 = parsed.find((p) => /31B/.test(p.name));
-	if (!ours31 || !stable('decision_index_021').text.includes(`scored ${ours31.value.toFixed(2)}`)) throw new Error('docs-figures: the comparison\'s Decision Index value for the 31B is not the one in launch_facts.public.json stable_claims.decision_index_021');
-	const rows = parsed.map((p, i) => {
-		const y = 10 + i * 34;
-		const ours = i < 3;
-		return `<text class="ft ft-s" x="8" y="${y + 14}">${esc(p.name)}</text><rect class="f-rail" x="250" y="${y}" width="360" height="18" rx="9"/><rect class="f-bar${ours ? '' : ' f-bar--grey'} f-grow fd-${Math.min(i + 1, 10)}" x="250" y="${y}" width="${((p.value / 100) * 360).toFixed(1)}" height="18" rx="9"/><text class="ft ft-n f-pop fd-${Math.min(i + 2, 10)}" x="620" y="${y + 14}">${p.value.toFixed(2)}</text>`;
-	}).join('');
-	const body = `<svg class="fig__svg" viewBox="0 0 720 ${10 + parsed.length * 34 + 8}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${rows}</svg>`;
-	return panel({
-		name: 'compare-headline', label: 'Decision Index 0.2.1', title: `On the Decision Index 0.2.1, our own run of Decisio 31B scored ${ours31.value.toFixed(2)} (a self-run, not a board score).`,
-		desc: `Decision Index 0.2.1, 0 to 100: ${parsed.map((p) => `${p.name} ${p.value.toFixed(2)}`).join('; ')}.`,
-		body, live: 6, legend: 'Values and intervals; our values are our own runs on the Decision Index 0.2.1; the others come from the public boards as of 2026-10-05.',
-		source: 'Source: docs/comparison.md at the pinned release (runs/2026-10-05_comparison/).',
-	});
-}
-
 // --- Questions and releases -------------------------------------------------------------------------------------------------
 
 function faqMap() {
@@ -95,7 +65,7 @@ function faqMap() {
 	return panel({
 		name: 'faq-map', label: 'Questions', title: `${qs.length} questions newcomers ask; each answer rests on the documentation it links to.`,
 		desc: `The questions on this page: ${qs.join(' ')}`,
-		body, live: 5, interactive: true, legend: 'Each question links to its answer below.', source: 'Source: this page; every answer is a pointer or a section of the pinned release.',
+		body, interactive: true, legend: 'Each question links to its answer below.', source: 'Source: this page; every answer is a pointer or a section of the pinned release.',
 	});
 }
 
@@ -114,7 +84,6 @@ function releaseTimeline() {
 
 export const understandFigures = {
 	'one-pass': onePass,
-	'compare-headline': compareHeadline,
 	'faq-map': faqMap,
 	'release-timeline': releaseTimeline,
 };

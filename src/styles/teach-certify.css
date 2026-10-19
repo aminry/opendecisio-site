@@ -1,7 +1,3 @@
-/* The teach-and-certify demo page (src/pages/demos/teach-and-certify.astro), in round 6's system. Each base keeps its
-   colour (--base, from .base-g12 and .base-g31); off-topic traffic is the neutral grey; an alert or a missed promise is
-   drawn in ink, not in a colour, so the accent stays the site's. */
-
 /* Controls: a row of chip groups over each figure. */
 .tc-controls {
 	display: flex;
@@ -288,19 +284,6 @@
 	margin-bottom: 22px;
 }
 
-.tc-pending {
-	margin: 16px 0 0;
-	padding: 12px 14px;
-	border: 1px dashed var(--h-line-2);
-	border-radius: var(--d-radius-control);
-	color: var(--h-dim);
-	font-size: 14.5px;
-}
-
-.tc-pending b {
-	color: var(--h-ink);
-}
-
 /* The figures. */
 .tc-chart {
 	margin-top: 8px;
@@ -509,7 +492,6 @@
 .tc-key__wrong {
 	background: var(--base);
 }
-
 
 /* On a narrow screen the answer takes its own line, whole: it is what the message is about. */
 @media (max-width: 44rem) {

@@ -8,6 +8,7 @@ import { comparison } from '../lib/comparison.mjs';
 import BuyerTable from './BuyerTable.astro';
 import CompareTable from './CompareTable.astro';
 import HeadlineTables from './HeadlineTables.astro';
+import IndexChart from './IndexChart.astro';
 import Source from './Source.astro';
 const c = comparison()!;
 const groups = c.groups.filter((g) => !/^Hosted/i.test(g.title));
@@ -26,6 +27,7 @@ const groups = c.groups.filter((g) => !/^Hosted/i.test(g.title));
 			<h3 class="pcard__title" id="compares-headline">The headline</h3>
 			<p class="pcard__meta">as of 2026-10-05; each cell a value with its 95% interval where there is one</p>
 		</div>
+		<IndexChart />
 		<HeadlineTables />
 		<p class="pcard__foot">The context lengths are those of the versions measured; from decisio 0.14.0 a Gemma base serves what the card holds (What you get, above).</p>
 	</div>

@@ -11,7 +11,7 @@ const issue = `${site.repository}/issues/new?title=${encodeURIComponent('Privacy
 	<PageHero label="Privacy" lede="This site counts visits, without cookies, and nothing else.">Visits counted, <em class="hl">nothing else</em></PageHero>
 	<section class="section psec" aria-label="The privacy notice">
 		<div class="wrap">
-			<ul class="ptiles privacy" data-reveal>
+			<ul class="ptiles privacy">
 				<li class="ptile tile">
 					<h2 id="who">Who runs this site</h2>
 					<p>Tachara LLC operates opendecisio.com.</p>
@@ -40,6 +40,3 @@ const issue = `${site.repository}/issues/new?title=${encodeURIComponent('Privacy
 		</div>
 	</section>
 </SiteLayout>
-<script>
-	import '../scripts/reveal.ts';
-</script>

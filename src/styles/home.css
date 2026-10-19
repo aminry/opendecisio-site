@@ -19,9 +19,6 @@ body.home {
 	--t-base: 240ms;
 	--t-slow: 480ms;
 	--e-out: cubic-bezier(0.16, 1, 0.3, 1);
-	--race-once: var(--d-accent-line);
-	--race-cache: var(--d-other-2);
-	--race-again: var(--d-other);
 	background: var(--h-bg);
 	font-size: 17px;
 	line-height: 1.6;
@@ -203,22 +200,6 @@ body.home {
 	border-radius: 99px;
 }
 
-.home .hero__claim {
-	font-size: 17px;
-	font-weight: 600;
-	margin-top: 0;
-}
-
-.home .hero__claim a {
-	color: var(--h-ink);
-}
-
-.home .hero__qualifiers {
-	color: var(--h-dim);
-	font-size: 14px;
-	margin-top: var(--d-space-2);
-}
-
 .home .lede {
 	font-size: clamp(18px, 1.6vw, 20px);
 	color: var(--h-dim);
@@ -254,57 +235,7 @@ body.home {
 	color: var(--d-accent);
 }
 
-/* Install tabs: a command with a copy button, a small offset shadow under it. */
-.install {
-	display: flex;
-	align-items: center;
-	max-width: 40rem;
-	border: 1px solid var(--h-line-2);
-	background: var(--d-code-bg);
-	border-radius: 12px;
-	overflow: hidden;
-	box-shadow: 5px 5px 0 var(--h-ink-shadow);
-}
-
-.install__tabs {
-	display: flex;
-	flex: none;
-	border-right: 1px solid var(--h-line);
-}
-
-.install__tabs button {
-	font: 500 13px var(--h-mono, 'Geist Mono Site', monospace);
-	color: color-mix(in srgb, var(--d-code-ink) 60%, transparent);
-	background: none;
-	border: 0;
-	padding: 14px 12px;
-	cursor: pointer;
-	transition: color var(--t-fast);
-}
-
-.install__tabs button:hover {
-	color: var(--d-code-ink);
-}
-
-.install__tabs button[aria-selected='true'] {
-	color: var(--d-code-accent);
-	box-shadow: inset 0 -2px 0 var(--d-code-accent);
-}
-
-.install__cmd {
-	flex: 1;
-	min-width: 0;
-	padding: 0 14px;
-	font: 14px var(--h-mono, 'Geist Mono Site', monospace);
-	color: var(--d-code-ink);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.install__p {
-	color: var(--d-code-accent);
-}
+/* The copy button on a code box. */
 
 .install__copy {
 	margin: 6px;
@@ -345,15 +276,6 @@ body.home {
 	border-color: var(--h-dim);
 }
 
-.home .hero__independence {
-	margin-top: 24px;
-	color: var(--h-dim);
-	font-size: 13px;
-	max-width: 36rem;
-	border-top: 1px solid var(--h-line);
-	padding-top: var(--d-space-3);
-}
-
 /* Frosted panel. */
 .glass {
 	background: var(--h-glass);
@@ -383,9 +305,7 @@ body.home {
 	border-color: var(--d-accent);
 }
 
-.chip:focus-visible,
-.install button:focus-visible,
-.steps2__tab:focus-visible {
+.chip:focus-visible {
 	outline: 2px solid var(--d-focus);
 	outline-offset: 2px;
 }
@@ -565,191 +485,13 @@ body.home {
 	margin-top: 10px;
 }
 
-.demo__time {
-	font: 12px/1.4 var(--h-mono, 'Geist Mono Site', monospace);
-	color: var(--h-dim);
-}
-
-.demo__time span {
-	color: var(--h-ink);
-	font-size: 15px;
-}
-
-.demo__time small {
-	display: block;
-	font-size: 11px;
-}
-
 .demo__ctl {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 6px;
 }
 
-/* Count-up chips and scroll reveals: below the fold only, and only when scripts run and motion is welcome. */
-@media (prefers-reduced-motion: no-preference) {
-	.js [data-reveal]:not(.in) {
-		opacity: 0;
-		transform: translateY(14px);
-	}
-
-	.js [data-reveal] {
-		transition: opacity var(--t-slow) var(--e-out), transform var(--t-slow) var(--e-out);
-	}
-}
-
-/* How it works: three scenes, one on show. */
-.steps2__tabs {
-	display: none;
-	gap: 6px;
-	flex-wrap: wrap;
-}
-
-.js .steps2__tabs {
-	display: flex;
-}
-
-.steps2__tab {
-	font: inherit;
-	font-size: 14px;
-	color: var(--h-dim);
-	background: transparent;
-	border: 1px solid var(--h-line-2);
-	border-radius: 99px;
-	padding: 6px 14px;
-	cursor: pointer;
-	transition: border-color var(--t-fast), color var(--t-fast);
-}
-
-.steps2__tab b {
-	font: 500 12px var(--h-mono, 'Geist Mono Site', monospace);
-	color: var(--d-accent);
-	margin-right: 4px;
-}
-
-.steps2__tab[aria-selected='true'] {
-	color: var(--h-ink);
-	border-color: var(--d-accent);
-	background: color-mix(in srgb, var(--d-accent) 14%, transparent);
-}
-
-.steps2__panel {
-	margin-top: var(--d-space-4);
-	padding: 18px;
-	border: 1px solid var(--h-line-2);
-	border-radius: 14px;
-	background: var(--h-glass);
-	box-shadow: 0 24px 70px -40px var(--h-glow);
-}
-
-.js .steps2__panel:not(.on) {
-	display: none;
-}
-
-.steps2__text {
-	color: var(--h-dim);
-	margin-bottom: var(--d-space-3);
-}
-
-.scene {
-	display: block;
-	width: 100%;
-	height: auto;
-}
-
-.sc-node {
-	fill: var(--d-surface);
-	stroke: var(--h-line-2);
-	stroke-width: 1.5;
-}
-
-.sc-node.sc-hot {
-	fill: color-mix(in srgb, var(--d-accent) 16%, var(--d-surface));
-	stroke: var(--d-accent);
-}
-
-.sc-t {
-	fill: var(--h-ink);
-	font: 13px var(--d-font-body, 'Geist Site', sans-serif);
-}
-
-.sc-dim {
-	fill: var(--h-dim);
-}
-
-.sc-hot-t {
-	fill: var(--d-accent);
-	font: 500 14px var(--h-mono, 'Geist Mono Site', monospace);
-}
-
-.sc-line {
-	fill: none;
-	stroke: var(--h-dim);
-	stroke-width: 2;
-}
-
-.sc-head {
-	fill: var(--h-dim);
-}
-
-.sc-rail {
-	fill: var(--d-rail);
-}
-
-.sc-grow {
-	fill: var(--d-accent-line);
-	transform-box: fill-box;
-	transform-origin: left center;
-}
-
-.sc-bar.sc-read {
-	fill: var(--d-accent-line);
-	transform-box: fill-box;
-	transform-origin: left center;
-}
-
-.sc-bar.sc-cached {
-	fill: color-mix(in srgb, var(--d-accent) 40%, transparent);
-	stroke: var(--d-accent);
-	transform-box: fill-box;
-	transform-origin: center;
-}
-
-.sc-kept {
-	fill: var(--d-accent-line);
-	transition: width var(--t-slow) var(--e-out);
-}
-
-.sc-esc {
-	fill: var(--race-again);
-	transition: x var(--t-slow) var(--e-out), width var(--t-slow) var(--e-out);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	.steps2__panel.on .sc-line {
-		stroke-dasharray: 1;
-		animation: draw 480ms var(--e-out) backwards;
-	}
-
-	.steps2__panel.on .sc-line[data-d='0'] { animation-delay: 80ms; }
-	.steps2__panel.on .sc-line[data-d='1'] { animation-delay: 360ms; }
-	.steps2__panel.on .sc-line[data-d='2'] { animation-delay: 640ms; }
-
-	.steps2__panel.on .sc-grow {
-		animation: grow 480ms var(--e-out) 760ms backwards;
-	}
-
-	.steps2__panel.on .sc-bar.sc-read {
-		animation: grow 900ms var(--e-out) 120ms backwards;
-	}
-
-	.steps2__panel.on .sc-bar.sc-cached {
-		animation: pop 240ms var(--e-out) backwards;
-	}
-
-	/* The later request pops in after the fifty-question bar (1.08 s, grown over its own time) has finished. */
-	.steps2__panel.on .sc-cached[data-pop='0'] { animation-delay: 1400ms; }
-}
+/* A line that draws in (pages.css). */
 
 @keyframes draw {
 	from {
@@ -757,197 +499,7 @@ body.home {
 	}
 }
 
-@keyframes grow {
-	from {
-		transform: scaleX(0);
-	}
-}
-
-@keyframes pop {
-	from {
-		transform: scaleX(0);
-		opacity: 0;
-	}
-}
-
-.steps2__ctl {
-	margin-top: var(--d-space-3);
-}
-
-.js .steps2__ctl {
-	display: block;
-}
-
-.steps2__ctl {
-	display: none;
-}
-
-/* The race, the length slider, the routing slider, the grid. */
-.race__ctl {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 10px 22px;
-}
-
-.race__grp {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 6px;
-}
-
-.race__lg {
-	color: var(--h-dim);
-	font-size: 13px;
-	margin-right: 4px;
-}
-
-.race__clock {
-	margin-left: auto;
-	font: 13px var(--h-mono, 'Geist Mono Site', monospace);
-	color: var(--h-dim);
-}
-
-.race__rows,
-.len__rows {
-	display: grid;
-	gap: 12px;
-	margin: 20px 0 0;
-	padding: 0;
-	list-style: none;
-}
-
-.race__row {
-	display: grid;
-	grid-template-columns: 10.5rem minmax(0, 1fr) 8rem;
-	align-items: center;
-	gap: 12px;
-}
-
-.race__name {
-	font-size: 14px;
-}
-
-.race__track {
-	display: block;
-	height: 10px;
-	border-radius: 99px;
-	background: var(--d-rail);
-	overflow: hidden;
-}
-
-.race__bar {
-	display: block;
-	height: 100%;
-	border-radius: 99px;
-	transform-origin: left center;
-	background: var(--race-once);
-}
-
-.race__cache .race__bar {
-	background: var(--race-cache);
-}
-
-.race__again .race__bar {
-	background: var(--race-again);
-}
-
-.race__val {
-	font: 12.5px var(--h-mono, 'Geist Mono Site', monospace);
-	color: var(--h-dim);
-}
-
-.race__note {
-	margin-top: 14px;
-	color: var(--h-dim);
-	font-size: 13px;
-}
-
-@media (max-width: 42rem) {
-	.race__row {
-		grid-template-columns: minmax(0, 1fr) auto;
-	}
-
-	.race__track {
-		grid-column: 1 / -1;
-		order: 3;
-	}
-}
-
-.len__title {
-	font-size: 17px;
-}
-
-.len__ctl {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 10px;
-	margin-top: 10px;
-	font-size: 14px;
-}
-
-.len__ctl input,
-.route__ctl input {
-	flex: 1 1 14rem;
-	accent-color: var(--d-accent);
-}
-
-.len__row {
-	display: grid;
-	grid-template-columns: 10.5rem minmax(0, 1fr);
-	gap: 12px;
-	font-size: 13.5px;
-}
-
-.len__row.is-out .len__state {
-	color: var(--h-dim);
-	text-decoration: line-through;
-	text-decoration-color: var(--h-line-2);
-}
-
-.mq__facts {
-	margin-top: var(--d-space-5);
-	max-width: 52rem;
-	color: var(--h-dim);
-	font-size: 14px;
-}
-
-.mq__facts p + p {
-	margin-top: var(--d-space-2);
-}
-
-.route__ctl {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 12px;
-	font-size: 14px;
-}
-
-.route__track {
-	display: block;
-	height: 12px;
-	margin-top: 16px;
-	border-radius: 99px;
-	background: var(--race-again);
-	overflow: hidden;
-}
-
-.route__kept {
-	display: block;
-	height: 100%;
-	background: var(--d-accent-line);
-	transform-origin: left center;
-	transition: transform var(--t-slow) var(--e-out);
-}
-
-.route__out {
-	margin-top: 12px;
-	min-height: 3.4em;
-	font-size: 15px;
-}
+/* A disclosure below a section. */
 
 .more {
 	margin-top: var(--d-space-5);
@@ -959,134 +511,7 @@ body.home {
 	font-size: 14px;
 }
 
-@media (prefers-reduced-motion: reduce) {
-	.route__kept,
-	.sc-kept,
-	.sc-esc {
-		transition: none;
-	}
-}
-
-.grid__sort {
-	display: block;
-	margin-top: var(--d-space-4);
-	color: var(--h-dim);
-	font-size: 13px;
-}
-
-.grid__sort select {
-	font: inherit;
-	font-size: 14px;
-	color: var(--h-ink);
-	background: color-mix(in srgb, var(--d-surface) 80%, transparent);
-	color-scheme: dark;
-	border: 1px solid var(--h-line-2);
-	border-radius: 8px;
-	padding: 5px 10px;
-	margin-left: 6px;
-}
-
-:root[data-theme='light'] .grid__sort select {
-	color-scheme: light;
-	background: #fff;
-}
-
-.grid {
-	overflow-x: auto;
-}
-
-.grid__t {
-	width: 100%;
-	border-collapse: separate;
-	border-spacing: 0 3px;
-	font-size: 14px;
-	font-variant-numeric: tabular-nums;
-}
-
-.grid__t th,
-.grid__t td {
-	padding: 0.42rem 0.5rem;
-}
-
-.grid__t thead th {
-	text-align: center;
-	font-weight: 600;
-	vertical-align: bottom;
-}
-
-.grid__t thead th:first-child {
-	text-align: left;
-}
-
-.grid__t small {
-	display: block;
-	font-weight: 400;
-	color: var(--h-dim);
-	font-size: 11.5px;
-}
-
-.grid__t tbody th[scope='row'] {
-	text-align: left;
-	font-weight: 500;
-	white-space: nowrap;
-}
-
-.grid__t .rk {
-	text-align: center;
-}
-
-.sh10 { background: color-mix(in srgb, var(--d-accent-fill) 34%, transparent); }
-.sh9 { background: color-mix(in srgb, var(--d-accent-fill) 29%, transparent); }
-.sh8 { background: color-mix(in srgb, var(--d-accent-fill) 25%, transparent); }
-.sh7 { background: color-mix(in srgb, var(--d-accent-fill) 21%, transparent); }
-.sh6 { background: color-mix(in srgb, var(--d-accent-fill) 17%, transparent); }
-.sh5 { background: color-mix(in srgb, var(--d-accent-fill) 14%, transparent); }
-.sh4 { background: color-mix(in srgb, var(--d-accent-fill) 11%, transparent); }
-.sh3 { background: color-mix(in srgb, var(--d-accent-fill) 8%, transparent); }
-.sh2 { background: color-mix(in srgb, var(--d-accent-fill) 6%, transparent); }
-.sh1 { background: color-mix(in srgb, var(--d-accent-fill) 4%, transparent); }
-.sh0 { background: color-mix(in srgb, var(--d-accent-fill) 2%, transparent); }
-
 /* The Decisio rows: one continuous band (top and bottom lines run across the row, the ends close it). */
-@media (min-width: 64rem) {
-	.grid__t tr.is-ours > * {
-		box-shadow: inset 0 2px 0 var(--d-accent), inset 0 -2px 0 var(--d-accent);
-	}
-
-	.grid__t tr.is-ours > :first-child {
-		box-shadow: inset 0 2px 0 var(--d-accent), inset 0 -2px 0 var(--d-accent), inset 2px 0 0 var(--d-accent);
-		border-radius: 8px 0 0 8px;
-		background: color-mix(in srgb, var(--d-accent) 12%, transparent);
-	}
-
-	.grid__t tr.is-ours > :last-child {
-		box-shadow: inset 0 2px 0 var(--d-accent), inset 0 -2px 0 var(--d-accent), inset -2px 0 0 var(--d-accent);
-		border-radius: 0 8px 8px 0;
-	}
-}
-
-@media (max-width: 63.99rem) {
-	.grid__t tbody tr {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 4px;
-		padding-block: var(--d-space-3);
-	}
-
-	.grid__t tbody th[scope='row'] {
-		grid-column: 1 / -1;
-		white-space: normal;
-	}
-
-	.grid__t tr.is-ours {
-		background: color-mix(in srgb, var(--d-accent) 10%, transparent);
-		border-radius: 8px;
-		padding-inline: 8px;
-	}
-
-	.grid__t td::before {
-		font-size: 11px;
-	}
-}
 
 .axes__bullets {
 	max-width: 46rem;
@@ -1106,67 +531,7 @@ body.home {
 	font-size: 13.5px;
 }
 
-/* Why Decisio: compact cards. */
-.home .why {
-	padding-block: 112px;
-	border-top: 1px solid var(--h-line);
-	background: var(--h-band);
-}
-
-.home .why__title {
-	font-size: clamp(28px, 2.9vw, 42px);
-}
-
-.home .why__list {
-	gap: 12px;
-}
-
-.home .why__item {
-	padding: 14px 16px;
-}
-
-.home .why__head {
-	font-size: 15px;
-}
-
-.home .why__text {
-	font-size: 13.5px;
-}
-
-/* The reel: the chapters in one row that scrolls, the video at its own shape. */
-.home .reel__video {
-	aspect-ratio: auto;
-	height: auto;
-	border-radius: 14px;
-}
-
-.reel__scroll {
-	overflow-x: auto;
-	margin-top: 12px;
-	padding-bottom: 6px;
-	scroll-snap-type: x proximity;
-	scrollbar-width: thin;
-}
-
-.reel__chapters {
-	display: flex;
-	flex-wrap: nowrap;
-	gap: 6px;
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	width: max-content;
-}
-
-.reel__chapters li {
-	flex: none;
-	scroll-snap-align: start;
-}
-
 /* Try it, Get it. */
-.home .steps__title {
-	font-size: 17px;
-}
 
 .home .clips {
 	display: grid;
@@ -1178,16 +543,14 @@ body.home {
 	border-top: 1px solid var(--h-line);
 }
 
-/* Accent words in the headlines, and the big count-up cards. */
+/* Accent words in the headlines, and the big number cards. */
 .home h2 .hl,
 .home h1 .hl {
 	font-style: normal;
 	color: var(--d-accent);
 }
 
-.home .section__head .kicker,
-.home .why .kicker,
-.home .reel .kicker {
+.home .section__head .kicker {
 	margin: 0 0 10px;
 }
 
@@ -1222,10 +585,6 @@ body.home {
 .card3__l {
 	color: var(--h-dim);
 	font-size: 14px;
-}
-
-.mq__facts {
-	margin-top: var(--d-space-4);
 }
 
 .home .jb {
@@ -1286,18 +645,7 @@ body.home {
 		min-height: 40px;
 	}
 }
-
-/* Round 3. */
-/* Proof: three big cards, and the board behind a disclosure. */
-.board {
-	margin-top: var(--d-space-5);
-}
-
-.board summary {
-	cursor: pointer;
-	font-weight: 600;
-	color: var(--d-accent);
-}
+/* On the board: the claim beside its chart. */
 
 .board__claim {
 	margin: var(--d-space-4) 0;
@@ -1309,19 +657,12 @@ body.home {
 	color: var(--h-ink);
 }
 
-.board .board__lim {
-	margin-left: 8px;
-	font-size: 13px;
-	font-weight: 400;
-	color: var(--h-dim);
-}
-
 .jb__src {
 	margin-top: var(--d-space-3);
 	color: var(--h-dim);
 }
 
-/* The board chart: our own SVG, in the page's font, rows that draw in when it scrolls into view. */
+/* The JevBench board chart (benchmarks): our own SVG, in the page's font. */
 .bc {
 	display: block;
 	width: 100%;
@@ -1394,29 +735,6 @@ body.home {
 	fill: var(--d-accent-line);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-	.board[open] .bc-ci {
-		stroke-dasharray: 1;
-		animation: draw 480ms var(--e-out) backwards;
-	}
-
-	.board[open] .bc-dot {
-		animation: fade 240ms var(--e-out) backwards;
-	}
-
-	.board[open] .bc-row:nth-child(1) * { animation-delay: 80ms; }
-	.board[open] .bc-row:nth-child(2) * { animation-delay: 160ms; }
-	.board[open] .bc-row:nth-child(3) * { animation-delay: 240ms; }
-	.board[open] .bc-row:nth-child(4) * { animation-delay: 320ms; }
-	.board[open] .bc-row:nth-child(5) * { animation-delay: 400ms; }
-	.board[open] .bc-row:nth-child(6) * { animation-delay: 480ms; }
-	.board[open] .bc-row:nth-child(7) * { animation-delay: 560ms; }
-	.board[open] .bc-row:nth-child(8) * { animation-delay: 640ms; }
-	.board[open] .bc-row:nth-child(9) * { animation-delay: 720ms; }
-	.board[open] .bc-row:nth-child(10) * { animation-delay: 800ms; }
-	.board[open] .bc-row:nth-child(11) * { animation-delay: 880ms; }
-}
-
 @keyframes fade {
 	from {
 		opacity: 0;
@@ -1439,32 +757,6 @@ body.home {
 	.jb__fallback {
 		display: block;
 	}
-}
-
-/* Limits: cards, one line each. */
-.limits {
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-@media (max-width: 64rem) {
-	.limits {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-}
-
-@media (max-width: 40rem) {
-	.limits {
-		grid-template-columns: minmax(0, 1fr);
-	}
-}
-
-.card3__t {
-	font-weight: 600;
-	font-size: 16px;
-}
-
-.limits .card3__l {
-	font-size: 14px;
 }
 
 /* Get started: one tabbed code block. */
@@ -1532,109 +824,6 @@ html:not(.js) .gs__panel {
 .gs .small {
 	margin-top: var(--d-space-3);
 	color: var(--h-dim);
-}
-
-/* Why Decisio: compact cards, each with a small graphic. */
-.wi {
-	display: block;
-	width: 100%;
-	max-width: 160px;
-	height: 48px;
-	margin-bottom: 8px;
-}
-
-.wi-rail {
-	fill: var(--d-rail);
-}
-
-.wi-grow {
-	transform-box: fill-box;
-	transform-origin: left center;
-}
-
-.wi-hot {
-	fill: var(--d-accent-line);
-}
-
-.wi-dim {
-	fill: var(--h-dim);
-}
-
-.wi-line {
-	fill: none;
-	stroke: var(--h-dim);
-	stroke-width: 2;
-	stroke-linecap: round;
-}
-
-.wi-hot-s {
-	stroke: var(--d-accent);
-}
-
-.wi-tick {
-	stroke: var(--h-bg);
-	stroke-width: 2;
-}
-
-.wi-pop {
-	transform-box: fill-box;
-	transform-origin: center;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	.why__list.in .wi-grow {
-		animation: grow 480ms var(--e-out) 120ms backwards;
-	}
-
-	.why__list.in .wi-line {
-		stroke-dasharray: 1;
-		animation: draw 480ms var(--e-out) 200ms backwards;
-	}
-
-	.why__list.in .wi-pop {
-		animation: pop 240ms var(--e-out) backwards;
-	}
-}
-
-/* How it works: an icon in each tab, moving when the tab is on. */
-.ti {
-	width: 28px;
-	height: 14px;
-	vertical-align: -2px;
-	margin-right: 6px;
-}
-
-.ti-line {
-	fill: none;
-	stroke: var(--d-accent);
-	stroke-width: 2;
-	stroke-linecap: round;
-}
-
-.ti-rail {
-	fill: var(--d-rail);
-}
-
-.ti-grow,
-.ti-pop {
-	fill: var(--d-accent-line);
-	transform-box: fill-box;
-	transform-origin: left center;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	.steps2__tab[aria-selected='true'] .ti-grow {
-		animation: grow 480ms var(--e-out) backwards;
-	}
-
-	.steps2__tab[aria-selected='true'] .ti-pop {
-		animation: pop 240ms var(--e-out) 300ms backwards;
-	}
-
-	.steps2__tab[aria-selected='true'] .ti-line {
-		stroke-dasharray: 1;
-		animation: draw 480ms var(--e-out) backwards;
-	}
 }
 
 /* The demo as a flow. */
@@ -1739,110 +928,7 @@ html:not(.js) .gs__panel {
 	color: var(--h-dim);
 }
 
-/* Document length: bars that grow with the document and stop at each system's limit. */
-.len__row {
-	display: grid;
-	grid-template-columns: 10.5rem minmax(0, 1fr) 15rem;
-	align-items: center;
-	gap: 12px;
-	font-size: 13.5px;
-}
-
-.len__track {
-	position: relative;
-	display: block;
-	height: 10px;
-	border-radius: 99px;
-	background: var(--d-rail);
-}
-
-.len__bar {
-	display: block;
-	height: 100%;
-	border-radius: 99px;
-	background: var(--race-once);
-	transform-origin: left center;
-	transition: transform var(--t-base) var(--e-out);
-}
-
-.race__cache .len__bar {
-	background: var(--race-cache);
-}
-
-.race__again .len__bar {
-	background: var(--race-again);
-}
-
-.len__over {
-	position: absolute;
-	top: 0;
-	height: 100%;
-	background: repeating-linear-gradient(135deg, var(--h-line-2) 0 4px, transparent 4px 8px);
-	border-radius: 0 99px 99px 0;
-	transition: width var(--t-base) var(--e-out);
-}
-
-.len__lim {
-	position: absolute;
-	top: -4px;
-	width: 2px;
-	height: 18px;
-	background: var(--h-ink);
-	opacity: 0.8;
-}
-
-@media (max-width: 52rem) {
-	.len__row {
-		grid-template-columns: minmax(0, 1fr);
-		gap: 4px;
-	}
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.len__bar,
-	.len__over {
-		transition: none;
-	}
-}
-
-.len__row.is-out .len__state {
-	text-decoration: none;
-	color: var(--h-dim);
-}
-
-/* The reel: the controls stay away until it is played. */
-.reel__box {
-	position: relative;
-}
-
-.reel__play {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	width: 72px;
-	height: 72px;
-	margin: -36px 0 0 -36px;
-	display: grid;
-	place-items: center;
-	color: var(--d-on-accent);
-	background: var(--d-accent-fill);
-	border: 0;
-	border-radius: 50%;
-	cursor: pointer;
-	box-shadow: 0 10px 40px -10px var(--h-glow), 4px 4px 0 var(--h-ink-shadow);
-	transition: transform var(--t-base) var(--e-out);
-}
-
-.reel__play:hover {
-	transform: scale(1.06);
-}
-
-.reel__play:focus-visible {
-	outline: 2px solid var(--d-focus);
-	outline-offset: 3px;
-}
-
-/* The hero is bare: headline, one sentence, pills, install, buttons. */
+/* The hero is bare: headline, one sentence, numbers, buttons. */
 .home .hero h1 {
 	margin-top: 8px;
 }
@@ -1852,13 +938,9 @@ html:not(.js) .demo__pick,
 html:not(.js) .demo__ctl {
 	visibility: hidden;
 }
-
-/* Round 4. */
 /* One label style for every section: small accent mono. */
 .home .kicker,
-.home .section__head .kicker,
-.home .why .kicker,
-.home .reel .kicker {
+.home .section__head .kicker {
 	font: 500 12px/1 var(--h-mono, 'Geist Mono Site', monospace);
 	letter-spacing: 0.14em;
 	text-transform: uppercase;
@@ -1872,12 +954,6 @@ html:not(.js) .demo__ctl {
 
 .home .hero h1 {
 	margin-top: 14px;
-}
-
-.proof__line {
-	margin-top: var(--d-space-3);
-	color: var(--h-dim);
-	font-size: 14px;
 }
 
 /* The demo, tighter: the three likeliest options and a count of the rest, so the panel ends with the left column. */
@@ -1945,84 +1021,7 @@ html:not(.js) .demo__ctl {
 	margin-top: 8px;
 }
 
-/* Why Decisio: three cards with larger graphics. */
-.home .why__list {
-	grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-	gap: 14px;
-}
-
-.home .why__item {
-	padding: 18px 20px 20px;
-}
-
-.home .why__head {
-	font-size: 17px;
-	margin-top: 4px;
-}
-
-.home .why__text {
-	font-size: 14.5px;
-}
-
-.wi {
-	max-width: none;
-	height: 96px;
-	margin-bottom: 14px;
-}
-
-.wi-doc {
-	fill: var(--d-surface);
-	stroke: var(--h-line-2);
-	stroke-width: 1.5;
-}
-
-.wi-dimline {
-	stroke: var(--h-dim);
-	opacity: 0.7;
-}
-
-.wi-dot {
-	fill: var(--h-dim);
-	opacity: 0.55;
-}
-
-.wi-dot:nth-child(7n) {
-	fill: var(--d-accent-line);
-	opacity: 1;
-}
-
-.wi-chip {
-	fill: var(--d-surface);
-	stroke: var(--h-line-2);
-	stroke-width: 1.5;
-}
-
-.wi-core {
-	fill: var(--d-accent-line);
-}
-
-.wi-coin {
-	fill: none;
-	stroke: var(--h-dim);
-	stroke-width: 2;
-}
-
-.wi-strike {
-	stroke: var(--h-ink);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	.why__list.in .wi-dot {
-		animation: pop 240ms var(--e-out) backwards;
-	}
-
-	.why__list.in .wi-dot:nth-child(4n) { animation-delay: 300ms; }
-	.why__list.in .wi-dot:nth-child(4n + 1) { animation-delay: 420ms; }
-	.why__list.in .wi-dot:nth-child(4n + 2) { animation-delay: 540ms; }
-	.why__list.in .wi-dot:nth-child(4n + 3) { animation-delay: 660ms; }
-}
-
-/* Get started: the box is as wide as its lines, set like the hero's install block. */
+/* Get started: the box is as wide as its lines. */
 .gs {
 	margin-top: 0;
 }
@@ -2075,7 +1074,7 @@ html:not(.js) .demo__ctl {
 	border-bottom: 0;
 }
 
-/* The closing band: one headline, the install line, two buttons. */
+/* The closing band: one headline, two buttons. */
 .cta {
 	padding-block: 120px 128px;
 	border-top: 1px solid var(--h-line);
@@ -2096,11 +1095,6 @@ html:not(.js) .demo__ctl {
 	font-size: clamp(32px, 4.2vw, 58px);
 	max-width: 18ch;
 	margin-inline: auto;
-}
-
-.install--cta {
-	width: min(100%, 40rem);
-	max-width: 100%;
 }
 
 .cta .actions {
@@ -2130,8 +1124,7 @@ html:not(.js) .demo__ctl {
 }
 
 .home h2,
-.home .section__head h2,
-.home .why__title {
+.home .section__head h2 {
 	font-size: clamp(30px, 3.6vw, 48px);
 	line-height: 1.04;
 }
@@ -2173,12 +1166,10 @@ html:not(.js) .demo__ctl {
 	pointer-events: none;
 	background: radial-gradient(closest-side, var(--h-glow), transparent);
 	filter: blur(10px);
-	transform: translate3d(0, var(--py, 0px), 0);
 }
 
-/* Raised panels: the demo, the scenes, the race, the sliders, the grid, the board and the code. */
+/* Raised panels: the demo, the board chart and the code. */
 .home .glass,
-.home .steps2__panel,
 .home .jb,
 .home .gs__box {
 	border: 1px solid var(--d-line-strong);
@@ -2199,10 +1190,6 @@ html:not(.js) .demo__ctl {
 	gap: 24px;
 }
 
-.home .why__list {
-	gap: 24px;
-}
-
 @media (max-width: 44rem) {
 	.home .cards3 {
 		grid-template-columns: minmax(0, 1fr);
@@ -2214,66 +1201,11 @@ html:not(.js) .demo__ctl {
 }
 
 /* Lists of tiles come in one after another, 60ms apart. */
-@media (prefers-reduced-motion: no-preference) {
-	.js ul[data-reveal]:not(.in) {
-		opacity: 1;
-		transform: none;
-	}
-
-	.js ul[data-reveal]:not(.in) > li {
-		opacity: 0;
-	}
-
-	/* An animation, not a transition, so the delays do not linger on the tiles' hover. */
-	.js ul[data-reveal].in > li {
-		animation: rise var(--t-slow) var(--e-out) backwards;
-	}
-
-	.js ul[data-reveal].in > li:nth-child(2) { animation-delay: 60ms; }
-	.js ul[data-reveal].in > li:nth-child(3) { animation-delay: 120ms; }
-	.js ul[data-reveal].in > li:nth-child(4) { animation-delay: 180ms; }
-	.js ul[data-reveal].in > li:nth-child(5) { animation-delay: 240ms; }
-	.js ul[data-reveal].in > li:nth-child(n + 6) { animation-delay: 300ms; }
-}
 
 @keyframes rise {
 	from {
 		opacity: 0;
 		transform: translateY(18px);
-	}
-}
-
-/* Bars grow in a gradient of their own colour; Decisio's glow. */
-.race__bar {
-	background: linear-gradient(90deg, color-mix(in srgb, var(--race-once) 45%, transparent), var(--race-once));
-	box-shadow: 0 0 16px color-mix(in srgb, var(--race-once) 40%, transparent);
-}
-
-.race__cache .race__bar,
-.race__again .race__bar {
-	background: linear-gradient(90deg, color-mix(in srgb, var(--race-again) 55%, transparent), var(--race-again));
-	box-shadow: none;
-}
-
-.race__cache .race__bar {
-	background: linear-gradient(90deg, color-mix(in srgb, var(--race-cache) 55%, transparent), var(--race-cache));
-}
-
-/* Jev, in the grid: its name in violet with a violet edge, the one row in that colour. */
-.grid__t tr.is-jev > th {
-	color: var(--d-jev);
-	box-shadow: inset 3px 0 0 var(--d-jev);
-}
-
-/* The request scene's travelling dots. */
-.sc-dot {
-	fill: var(--d-accent-line);
-	filter: drop-shadow(0 0 5px color-mix(in srgb, var(--d-accent-fill) 80%, transparent));
-}
-
-@media (prefers-reduced-motion: reduce) {
-	.sc-dot {
-		display: none;
 	}
 }
 

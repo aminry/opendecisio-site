@@ -4,6 +4,8 @@
 import { BOARD_URL, refuse, stable } from './launch.mjs';
 import { benchmarks } from './home.mjs';
 import { results } from './demos.mjs';
+import { comparison } from './comparison.mjs';
+import { baseOfName } from '../config/bases.mjs';
 import { readUpstream } from './upstream.mjs';
 
 const fail = (what) => { throw new Error(`bench-page: ${what}`); };
@@ -103,4 +105,24 @@ export function demoPlayers() {
 	// The table's model IDs and routes, less the padding flag, which says nothing to a reader.
 	const rows = players.rows.map((r) => r.map((c) => c.replace(/ \(<code>--base [^<]*<\/code>\)/, '')));
 	return { head: players.head, rows, games, dates };
+}
+
+/**
+ * The Decision Index 0.2.1 value of each system in the comparison's headline (docs/comparison.md, as of 2026-10-05), in a
+ * board chart's order: alphabetical, Jev last. decisio's values are our own runs; the 31B's must be the launch facts' stable
+ * claim.
+ */
+export function indexValues() {
+	const c = comparison() ?? fail('the pinned release has no docs/comparison.md');
+	const row = c.headline.rows.find((r) => /Decision Index 0\.2\.1/.test(plain(r[0]))) ?? fail("the comparison's headline has no Decision Index row");
+	const names = c.headline.head.slice(1).map((h) => plain(h).replace(/^decisio\s*·\s*/i, ''));
+	const rows = row.slice(1).map((x, i) => {
+		const value = Number(/(\d+\.\d+)/.exec(plain(x))?.[1]);
+		if (!Number.isFinite(value)) fail(`the headline's ${names[i]} cell is not a number`);
+		const base = baseOfName(names[i]);
+		return { name: base ? `Decisio ${names[i]}` : names[i], base, jev: /^Jev\b/.test(names[i]), value };
+	});
+	const ours31 = rows.find((r) => /31B/.test(r.name) && r.base);
+	if (!ours31 || !stable('decision_index_021').text.includes(`scored ${ours31.value.toFixed(2)}`)) fail("the comparison's Decision Index value for the 31B is not launch_facts.public.json's stable_claims.decision_index_021");
+	return rows.sort((a, b) => (a.jev - b.jev) || a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
 }

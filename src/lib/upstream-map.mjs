@@ -15,6 +15,11 @@ const DIRECTIVE = /^:{2,3}upstream(?:-or)?\{([^}]*)\}\s*$/gm;
 // sections of decisio's docs, so links to them land here (at the anchor after "=", if one is given). It renders nothing.
 const COVERS = /^::covers\{links="([^"]*)"\}\s*$/gm;
 const ATTR = /(\w+)="([^"]*)"/g;
+// decisio files the site's own pages (not the docs collection) replace whole: a link to any part of them lands there.
+const SITE_PAGES = {
+	'docs/comparison.md': { path: '/benchmarks/', anchor: 'compares' },
+	'docs/demos/README.md': { path: '/demos/', anchor: '' },
+};
 
 export function slugify(text) {
 	return new GithubSlugger().slug(text);
@@ -90,7 +95,7 @@ export function inclusionMap() {
 			const alias = aliases.get(file)?.get(anchor ?? '');
 			if (alias) return alias;
 			const entry = anchors.get(file);
-			if (!entry) return undefined;
+			if (!entry) return SITE_PAGES[file];
 			if (anchor && entry.table.has(anchor)) return entry.table.get(anchor);
 			if (entry.whole) return { path: entry.whole.path, anchor: anchor ?? '' };
 			return undefined;

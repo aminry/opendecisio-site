@@ -8,7 +8,7 @@ interface Props { label: string; lede: string; links?: { href: string; text: str
 const { label, lede, links = [] } = Astro.props;
 ---
 <section class="hero page-hero">
-	<div class="hero__glow" data-parallax aria-hidden="true"></div>
+	<div class="hero__glow" aria-hidden="true"></div>
 	<div class="wrap">
 		<p class="kicker">{label}</p>
 		<h1><slot /></h1>

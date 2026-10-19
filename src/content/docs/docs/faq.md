@@ -52,7 +52,7 @@ It serves TypeSafe's published System One wire format, so a System One client ca
 ## Can it reason, or answer knowledge questions as a chat model does?
 
 Each question is one forward pass with no text generated, so nothing is worked out step by step.
-[How it compares](/benchmarks/#compares) shows what that costs on hard knowledge questions, and [Pong's limit](/docs/demos/#pongs-limit) shows it in a game.
+[How it compares](/benchmarks/#compares) shows what that costs on hard knowledge questions, and [the Pong demo](/demos/#pong) shows it in a game.
 
 ## Are the benchmark figures board scores?
 
