@@ -25,7 +25,7 @@ body {
 	margin: 0;
 	background: var(--d-bg);
 	color: var(--d-ink);
-	font-family: var(--d-font-body);
+	font-family: var(--d-font-body, 'Geist Site', sans-serif);
 	font-size: var(--d-step-0);
 	line-height: 1.6;
 	font-kerning: normal;
@@ -62,7 +62,7 @@ a:hover {
 
 code,
 pre {
-	font-family: var(--d-font-mono);
+	font-family: var(--d-font-mono, 'Geist Mono Site', monospace);
 	font-size: 0.875em;
 	font-variant-ligatures: none;
 }
@@ -70,7 +70,7 @@ pre {
 h1,
 h2,
 h3 {
-	font-family: var(--d-font-display);
+	font-family: var(--d-font-display, 'Geist Site', sans-serif);
 	line-height: 1.15;
 	margin: 0;
 	text-wrap: balance;
@@ -120,7 +120,7 @@ p {
 	align-items: center;
 	gap: 0.55rem;
 	color: var(--d-ink);
-	font-family: var(--d-font-display);
+	font-family: var(--d-font-display, 'Geist Site', sans-serif);
 	font-weight: var(--d-brand-weight, 650);
 	font-size: 1.15rem;
 	text-decoration: none;
@@ -281,7 +281,7 @@ p {
 	grid-template-columns: 4.75rem 1fr 2.75rem;
 	align-items: center;
 	gap: var(--d-space-3);
-	font-family: var(--d-font-mono);
+	font-family: var(--d-font-mono, 'Geist Mono Site', monospace);
 	font-size: 0.8125rem;
 	color: var(--d-muted);
 }
@@ -682,7 +682,7 @@ td .src {
 }
 
 .flag__line {
-	font-family: var(--d-font-mono);
+	font-family: var(--d-font-mono, 'Geist Mono Site', monospace);
 	font-size: var(--d-step-flag);
 	font-weight: 500;
 	letter-spacing: -0.03em;
@@ -705,7 +705,7 @@ td .src {
 	padding: 0.1rem 0.5rem;
 	border: 1px solid var(--d-line-strong);
 	border-radius: 999px;
-	font-family: var(--d-font-body);
+	font-family: var(--d-font-body, 'Geist Site', sans-serif);
 	font-size: var(--d-step--2);
 	font-weight: 500;
 	letter-spacing: 0;
@@ -820,7 +820,7 @@ td .src {
 .time__axisrow text {
 	fill: var(--d-muted);
 	font-size: 11px;
-	font-family: var(--d-font-mono);
+	font-family: var(--d-font-mono, 'Geist Mono Site', monospace);
 }
 
 
@@ -988,7 +988,7 @@ main code {
 	padding-bottom: var(--d-space-4);
 	margin-bottom: var(--d-space-5);
 	border-bottom: 1px solid var(--d-line);
-	font-family: var(--d-font-mono);
+	font-family: var(--d-font-mono, 'Geist Mono Site', monospace);
 	font-size: 0.8125rem;
 	color: var(--d-muted);
 }

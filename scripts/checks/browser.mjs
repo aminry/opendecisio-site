@@ -330,23 +330,33 @@ try {
 							return box.width < 0.5 || box.height < 0.5;
 						})
 						.map((el) => `${el.id ? '#' + el.id : el.tagName} in ${el.closest('svg').getAttribute('aria-label')?.slice(0, 40) ?? 'a figure'}`),
-					styled: getComputedStyle(document.body).fontFamily.includes('Geist'),
+					// The site's font, at every width and in both themes: the body's first family is Geist (Astro's face, named
+					// "Geist-<hash>", or the site's own "Geist Site" fallback), and code's first family is Geist Mono.
+					styled: /^["']?Geist(-| Site)/.test(getComputedStyle(document.body).fontFamily),
+					monoStyled: [...document.querySelectorAll('main code')].slice(0, 1).every((c) => /^["']?Geist Mono/.test(getComputedStyle(c).fontFamily)),
 				}));
 				const own = ownProblems(engineName, browser, state.csp, state.cspSelect, errors, route);
 				for (const c of own.csp) report(engineName, route, v.name, `CSP violation: ${c}`);
 				for (const f of failed) report(engineName, route, v.name, `request failed: ${f}`);
 				// The 404 answers with its own status, which the browser logs; that one line is the page working.
 				for (const e of own.errors) if (!(route === '/404/' && /status of 404/.test(e))) report(engineName, route, v.name, `console error: ${e}`);
-				if (!state.styled) {
-					// What the page had loaded when it was measured, so a failure says why.
+				if (!state.styled || !state.monoStyled) {
+					// What the page had loaded when it was measured, so a failure says why: the font variables as computed on
+					// :root and on the body, and each inline <style> (Astro's fonts define --font-geist in one of them).
 					const why = await page.evaluate(() => ({
 						readyState: document.readyState,
 						fonts: document.fonts.status,
 						bodyFont: getComputedStyle(document.body).fontFamily,
+						codeFont: document.querySelector('main code') ? getComputedStyle(document.querySelector('main code')).fontFamily : null,
+						vars: Object.fromEntries(['--font-geist', '--font-geist-mono', '--d-font-body', '--d-font-mono', '--sl-font'].flatMap((v) => [
+							[`${v} on :root`, getComputedStyle(document.documentElement).getPropertyValue(v).trim() || '(none)'],
+							[`${v} on body`, getComputedStyle(document.body).getPropertyValue(v).trim() || '(none)'],
+						])),
+						inlineStyles: [...document.querySelectorAll('head style')].map((st) => `${st.textContent.slice(0, 40)}: ${st.sheet ? `${st.sheet.cssRules.length} rules` : 'NO SHEET'}`),
 						sheets: [...document.querySelectorAll('link[rel=stylesheet]')].map((l) => `${l.getAttribute('href')} ${l.sheet ? 'applied' : 'NOT APPLIED'}`),
 						css: performance.getEntriesByType('resource').filter((e) => /\.css/.test(e.name)).map((e) => `${e.name.split('/').pop()} ${Math.round(e.duration)} ms, status ${e.responseStatus ?? '?'}`),
 					}));
-					report(engineName, route, v.name, `the page is not in the site's font: its styles or fonts did not load (${JSON.stringify(why)})`);
+					report(engineName, route, v.name, `the page is not in the site's font${state.styled ? ' (its code is not in Geist Mono)' : ''}: ${JSON.stringify(why)}`);
 				}
 				const shifted = [];
 				if (state.cls !== null && state.cls > SHIFT_LIMIT) shifted.push(`layout shift ${state.cls.toFixed(4)} (limit ${SHIFT_LIMIT}): ${state.shifts.join('; ')}`);
