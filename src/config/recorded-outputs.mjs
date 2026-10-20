@@ -17,10 +17,11 @@ const firstAnswer = () => { const q = Object.values(recordedResponse().answers).
 const card = () => session().card.replace(/^NVIDIA /, '').replace(/ Blackwell.*$/, '');
 const textRoute018 = "0.18.0's changes are adapters (their temperatures and fingerprint), generated reference docs, the image count and the image engines' shares, and W4A16 checkpoints' engine stream; it has no upgrade notes, and none of these touches a text request to the FP8 31B with no adapter";
 const recertify0181 = "0.18.1 changes how a re-certification derives its minimum examples, and help text and docs; a text request, an escalation sweep, a first certification and the monitor are as 0.18.0 had them";
+const headers0190 = "0.19.0 stops reading the earlier spellings of the debug and route request headers; no recorded request sent them, and nothing else changed";
 const reviews = {
-	decisions: { 'v0.18.0': { changed: false, why: textRoute018 }, 'v0.18.1': { changed: false, why: recertify0181 } },
-	example5: { 'v0.18.0': { changed: false, why: textRoute018 }, 'v0.18.1': { changed: false, why: recertify0181 } },
-	certificate: { 'v0.18.0': { changed: false, why: `${textRoute018}; a server with no adapter keeps its certificates as before (docs/running.md), though any release change suspends a certificate until it is made again` }, 'v0.18.1': { changed: false, why: `${recertify0181}; the worked certificate is a first certification, not a re-certification` } },
+	decisions: { 'v0.18.0': { changed: false, why: textRoute018 }, 'v0.18.1': { changed: false, why: recertify0181 }, 'v0.19.0': { changed: false, why: headers0190 } },
+	example5: { 'v0.18.0': { changed: false, why: textRoute018 }, 'v0.18.1': { changed: false, why: recertify0181 }, 'v0.19.0': { changed: false, why: headers0190 } },
+	certificate: { 'v0.18.0': { changed: false, why: `${textRoute018}; a server with no adapter keeps its certificates as before (docs/running.md), though any release change suspends a certificate until it is made again` }, 'v0.18.1': { changed: false, why: `${recertify0181}; the worked certificate is a first certification, not a re-certification` }, 'v0.19.0': { changed: false, why: headers0190 } },
 };
 
 export const recordedOutputs = [
@@ -55,7 +56,7 @@ export const recordedOutputs = [
 		marker: 'Out of scope taught',
 		card,
 		date: () => oosReplay().date,
-		reviews: { 'v0.18.1': { changed: false, why: `${recertify0181}; the monitor (monitor.py) is unchanged since 0.18.0` } },
+		reviews: { 'v0.18.1': { changed: false, why: `${recertify0181}; the monitor (monitor.py) is unchanged since 0.18.0` }, 'v0.19.0': { changed: false, why: `${headers0190}; the replay sends no request` } },
 	},
 ];
 
