@@ -6,18 +6,6 @@
 /** Exact edits, by file: the text to find, what replaces it, and why. */
 export const edits = [
 	{
-		file: 'docs/api.md',
-		find: 'The `x-rlcd-route` and `x-rlcd-debug` headers are honoured as aliases.\n',
-		replace: '',
-		why: 'legacy header names carrying the private repository name; clients use the x-decisio-* headers',
-	},
-	{
-		file: 'EVAL_CARD.md',
-		find: 'The records keep the wire names they were written with (`x-rlcd-*`, `rlcd-*/1`, the served name `rlcd-qwen3.6-35b-a3b-letters`); decisio reads both spellings (`decisio.names`).\n',
-		replace: '',
-		why: 'old wire names carrying the private repository name; nothing a reader sends or reads today',
-	},
-	{
 		file: 'EVAL_CARD.md',
 		find: ' (a stage C comparison of 2026-10-05, recorded in our private records)',
 		replace: '',
