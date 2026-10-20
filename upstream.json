@@ -1,6 +1,6 @@
 {
   "repository": "aminry/decisio",
-  "tag": "v0.20.0",
-  "commit": "f5e5743e15ca8cf0cc7107ff0feec34892d72b05",
-  "image": "ghcr.io/aminry/decisio@sha256:df3cb3165d963593075e765fad570477c9caf2f2bf913365777756983972abd2"
+  "tag": "v0.21.2",
+  "commit": "908f838a86b1a132cbd39b966f226893714a91b9",
+  "image": "ghcr.io/aminry/decisio@sha256:95880b9251b87e37c6b3eb9ef1c2e38777012895dcd522eeb2d993607e7b036d"
 }
