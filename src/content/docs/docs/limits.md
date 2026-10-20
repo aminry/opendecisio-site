@@ -80,6 +80,9 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 3. **A certificate covers one task on one serving setup.** The setup is the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length and the serving flags. When any of it changes, the task's answers stop being certified until you certify again.
 4. **Keep the cache type you certified on.** `--kv-cache-dtype fp8` suspends a certificate made without it.
 5. **On a Mac, run one model server at a time.** Two servers can add up to more memory than the Mac has.
+6. **Think when unsure on a card only.** It needs the vLLM engine; the Mac build refuses `--think` at start.
+7. **Size a thinking server for its slowest request.** A thinking request holds the server for its whole call, so other requests wait behind it: use thinking where requests arrive one at a time, or run more servers.
+8. **Certify with the think setting you serve with.** A certificate made with thinking off is suspended on a server that thinks (`think_mode_changed`), and the other way round, until you certify again.
 
 ## 4. What was measured on what
 

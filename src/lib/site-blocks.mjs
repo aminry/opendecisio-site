@@ -120,6 +120,16 @@ const adapterHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python
 // decisio's fit line, broken before its flags so it fits the page.
 const adapterFit = () => lineOf(adapterBlocks().find((b) => b.includes(' fit --reads')) ?? '', ' fit --reads').replace(/ (--out|--data) /g, ' \\\n  $1 ');
 
+// Think when unsure: the start with thinking on, a request that asks for it, and the server's setting in /health.
+const thinkStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --think`;
+const thinkAsk = () => `curl -s http://127.0.0.1:8000/v1/systemone -H 'Content-Type: application/json' -d '{
+  "state": "Our invoice shows two seats, but we removed the second user last month.",
+  "think": true,
+  "questions": {"queue": {"type": "choice", "instructions": "Which team should handle this ticket?",
+    "criteria": {"billing": "Invoices and charges", "access": "Logins and seats", "bug": "The product misbehaves"}}}
+}' | python3 -c 'import json, sys; r = json.load(sys.stdin); print(json.dumps({"thinking": r.get("thinking"), "thinking_tokens": r["usage"].get("thinking_tokens")}, indent=1))'`;
+const thinkHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["systemone"]["think"], indent=1))'`;
+
 // The recorded answers as the comment lines a client prints: one per question, its likeliest option and probability.
 const printed = () => Object.entries(recordedResponse().answers).map(([name, a]) => {
 	if (a.type === 'noul') return `${name} ${a.noul}`;
@@ -225,6 +235,9 @@ export const siteBlocks = {
 	get 'adapter-ask'() { return { lang: 'bash', text: adapterAsk() }; },
 	get 'adapter-health'() { return { lang: 'bash', text: adapterHealth() }; },
 	get 'adapter-fit'() { return { lang: 'bash', text: adapterFit() }; },
+	get 'think-start'() { return { lang: 'bash', text: thinkStart() }; },
+	get 'think-ask'() { return { lang: 'bash', text: thinkAsk() }; },
+	get 'think-health'() { return { lang: 'bash', text: thinkHealth() }; },
 	get 'images-start'() { return { lang: 'bash', text: `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b --image-model Qwen/Qwen3.6-35B-A3B-FP8` }; },
 	get 'mac-install'() { return { lang: 'bash', text: `${clone()}\nuv sync --extra mlx` }; },
 	get 'mac-31b-6bit'() { return { lang: 'bash', text: macStart('gemma-4-31b-it-6bit') }; },
