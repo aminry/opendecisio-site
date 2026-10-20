@@ -1,68 +1,68 @@
 {
-	"tag": "v0.19.0",
-	"commit": "89201b8f2a3dfca91f3da4f1b9c3d86777e68fd3",
+	"tag": "v0.20.0",
+	"commit": "f5e5743e15ca8cf0cc7107ff0feec34892d72b05",
 	"date": "2026-10-20",
 	"runner": "linux-x64",
 	"blocks": {
-		"1345da8f767de84e": {
+		"57adec514f047f99": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"note": "the clone is the pinned release, as the check has it; the install and the server start"
 		},
 		"8f11af2eabc6bbfe": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "{\n \"ok\": true,\n \"base\": \"qwen3.6-35b-a3b\"\n}",
 			"trimmed": true
 		},
 		"25a39b2b77f85c16": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"note": "the answers are the stand-in's, not the default model's"
 		},
 		"557f6a5c8e48778a": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
-			"stdout": "{\"models\":[{\"name\":\"decisio-qwen3.6-35b-a3b-letters\",\"description\":\"letters readout, served default\",\"release_date\":\"2026-09-27\"}]}\n{\"ok\":true,\"engine\":\"hf_letters (CPU stand-in, not for measurement)\",\"transformers\":\"5.17.0\",\"torch\":\"2.13.0+cu130\",\"model\":\"Qwen/Qwen3-0.6B-Base\",\"mode\":\"separate\",\"block_size\":64,\"pad_unit\":64,\"pad_where\":\"front\",\"adapters\":[],\"prompt_format\":{\"tail\":\"spaced\",\"slot\":\"prefill\",\"variants\":\"single\"},\"base\":\"qwen3.6-35b-a3b\",\"profile\":{\"base\":\"qwen3.6-35b-a3b\",\"checkpoint\":\"Qwen/Qwen3-0.6B-Base\",\"revision\":null,\"quantization_on_load\":null,\"engine_process\":null,\"temperatures\":{\"choice\":1.37,\"noul\":1.506,\"score\":1.506},\"prompt\":{\"tail\":\"spaced\",\"slot\":\"prefill\",\"variants\":\"single\",\"system_prompt\":false,\"noul_rendering\":\"letters-keys\",\"describe_options\":true,\"multi_question\":\"sequential\",\"register_boundary\":null,\"pad_policy\":\"always\",\"pad_unit\":64}},\"systemone\":{\"hide_index_keys\":true,\"desnake_labels\":true,\"describe_options\":true,\"noul_rendering\":\"letters-keys\",\"noul_commit\":false,\"abstention\":true,\"abstention_tasks\":{},\"orders\":1,\"abstain_option\":null,\"tasks\":true,\"debug_readout\":false,\"temperature\":1.506,\"temperatures\":{\"choice\":1.37},\"adapter_temperatures\":{},\"readout_tasks\":{}},\"head_engine\":{\"engine\":\"hf hidden (CPU stand-in, not for measurement)\",\"pad_unit\":64,\"route\":\"reserved logit columns (emulated)\"}}\n{\"model\":\"decisio-qwen3.6-35b-a3b-letters\",\"answers\":{\"category\":{\"type\":\"choice\",\"choice\":\"access\",\"confidence\":0.2509270225867806,\"probabilities\":{\"billing\":0.36257096361403285,\"access\":0.5006180150578537,\"bug\":0.13681102132811349}}},\"usage\":{\"input_tokens\":43,\"output_tokens\":1}}"
+			"stdout": "{\"models\":[{\"name\":\"decisio-qwen3.6-35b-a3b-letters\",\"description\":\"letters readout, served default\",\"release_date\":\"2026-09-27\"}]}\n{\"ok\":true,\"engine\":\"hf_letters (CPU stand-in, not for measurement)\",\"transformers\":\"5.17.0\",\"torch\":\"2.13.0+cu130\",\"model\":\"Qwen/Qwen3-0.6B-Base\",\"mode\":\"separate\",\"block_size\":64,\"pad_unit\":64,\"pad_where\":\"front\",\"adapters\":[],\"prompt_format\":{\"tail\":\"spaced\",\"slot\":\"prefill\",\"variants\":\"single\"},\"base\":\"qwen3.6-35b-a3b\",\"profile\":{\"base\":\"qwen3.6-35b-a3b\",\"checkpoint\":\"Qwen/Qwen3-0.6B-Base\",\"revision\":null,\"quantization_on_load\":null,\"engine_process\":null,\"temperatures\":{\"choice\":1.37,\"noul\":1.506,\"score\":1.506},\"prompt\":{\"tail\":\"spaced\",\"slot\":\"prefill\",\"variants\":\"single\",\"system_prompt\":false,\"noul_rendering\":\"letters-keys\",\"describe_options\":true,\"multi_question\":\"sequential\",\"register_boundary\":null,\"pad_policy\":\"always\",\"pad_unit\":64}},\"systemone\":{\"hide_index_keys\":true,\"desnake_labels\":true,\"describe_options\":true,\"noul_rendering\":\"letters-keys\",\"noul_commit\":false,\"over_limit\":{\"mode\":\"refuse\",\"prompt_limit\":null,\"requests\":0,\"largest_state_tokens\":0},\"abstention\":true,\"abstention_tasks\":{},\"orders\":1,\"abstain_option\":null,\"tasks\":true,\"debug_readout\":false,\"temperature\":1.506,\"temperatures\":{\"choice\":1.37},\"choice_bands\":{},\"repository_defaults\":null,\"adapter_temperatures\":{},\"readout_tasks\":{}},\"head_engine\":{\"engine\":\"hf hidden (CPU stand-in, not for measurement)\",\"pad_unit\":64,\"route\":\"reserved logit columns (emulated)\"}}\n{\"model\":\"decisio-qwen3.6-35b-a3b-letters\",\"answers\":{\"category\":{\"type\":\"choice\",\"choice\":\"access\",\"confidence\":0.25092346099283586,\"probabilities\":{\"billing\":0.3625722726465573,\"access\":0.5006156406618906,\"bug\":0.13681208669155218}}},\"usage\":{\"input_tokens\":43,\"output_tokens\":1}}"
 		},
 		"b8e39aa5af896e09": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"note": "the answers are the stand-in's, not the default model's"
 		},
 		"e52a4af57e3dc356": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names"
 		},
 		"f6cbcd5a9fc3dc60": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"runtime": "node v22.23.3",
 			"note": "the answers are the stand-in's, not the default model's"
 		},
 		"d04086a256fe44c4": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"runtime": "node v22.23.3",
 			"note": "the answers are the stand-in's, not the default model's"
 		},
 		"4a4acf27add92e82": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20"
 		},
 		"b8b87bd11208dbf6": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"note": "with langchain-typesafe 0.0.1a3, the version the page names"
 		},
@@ -80,31 +80,31 @@
 		},
 		"4d1a31105a234994": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"note": "with pipecat-ai 1.12.0, the version the page names"
 		},
 		"3c0166dc27189fc1": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
-			"stdout": "answers: 50\nserver ms: 34664.6"
+			"stdout": "answers: 50\nserver ms: 38237.2"
 		},
 		"72182c644904351a": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "options answered: 120"
 		},
 		"020e37d4612cef85": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
-			"stdout": "first question: 695.2 ms\na different question about the same text: 687.8 ms"
+			"stdout": "first question: 770.4 ms\na different question about the same text: 760.1 ms"
 		},
 		"f88514bde0c31e5b": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "{\n \"id\": \"ticket-routing\",\n \"n_examples\": 120,\n \"calibration\": {\n  \"applied\": true,\n  \"reason\": \"cross-validated gain\"\n },\n \"head\": {\n  \"applied\": true,\n  \"reason\": \"cross-validated gain\"\n }\n}",
 			"trimmed": true
@@ -112,13 +112,13 @@
 		"2ff925cb132e6d1a": {
 			"status": "example"
 		},
-		"05ea86a46d9fca44": {
+		"63fc0b27ebd90142": {
 			"status": "shown",
 			"why": "it needs Linux with one NVIDIA card, which this check does not have"
 		},
 		"53daf25f6439f92e": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "to a person, billing suggested"
 		},
@@ -127,7 +127,7 @@
 		},
 		"4ab4885308afc452": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "ask"
 		},
@@ -136,7 +136,7 @@
 		},
 		"d605aed6a046cf59": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "to a maintainer, bug suggested"
 		},
@@ -145,7 +145,7 @@
 		},
 		"745149404c69bd19": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "to a moderator"
 		},
@@ -154,7 +154,7 @@
 		},
 		"78f3e7d3a4062286": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "to a larger model or a person"
 		},
@@ -163,7 +163,7 @@
 		},
 		"fb58b89fe0fb1a2c": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "to a person"
 		},
@@ -172,32 +172,32 @@
 		},
 		"f6db6123f6c620a4": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20"
 		},
 		"886fa7f7cc2d6a6c": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
-			"stdout": "x-decisio-server-ms: 670.1\nx-decisio-route: text\nx-decisio-stages: prepare=0.6;warm=0.0;engine=669.7;wait=0.0",
+			"stdout": "x-decisio-server-ms: 743.7\nx-decisio-route: text\nx-decisio-stages: prepare=0.7;warm=0.0;engine=743.2;wait=0.0",
 			"trimmed": true
 		},
 		"cebbdb4a5cd60b45": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
-			"stdout": "200\n{\"enabled\":true,\"head_engine\":true,\"fingerprint\":\"{\\\"desnake_labels\\\": true, \\\"hide_index_keys\\\": true, \\\"model\\\": \\\"Qwen3-0.6B-Base\\\", \\\"pad_to\\\": \\\"block\\\", \\\"pad_where\\\": \\\"front\\\", \\\"prompt_format\\\": {\\\"slot\\\": \\\"prefill\\\", \\\"tail\\\": \\\"spaced\\\", \\\"variants\\\": \\\"single\\\"}, \\\"served_name\\\": \\\"decisio-qwen3.6-35b-a3b-letters\\\"}\",\"tasks\":[{\"format\":\"decisio-task/1\",\"id\":\"ticket-routing\",\"key\":\"090e8cdb70d68b239d07a0dda892976980e4bc669a722b37a24ecfd58fa94368\",\"type\":\"choice\",\"options\":[\"billing\",\"refund\",\"payment_failed\",\"login\",\"password_reset\",\"account_closure\",\"bug\",\"feature_request\",\"performance\",\"data_export\",\"integration\",\"device_delivery\"],\"fingerprint\":\"{\\\"desnake_labels\\\": true, \\\"hide_index_keys\\\": true, \\\"model\\\": \\\"Qwen3-0.6B-Base\\\", \\\"pad_to\\\": \\\"block\\\", \\\"pad_where\\\": \\\"front\\\", \\\"prompt_format\\\": {\\\"slot\\\": \\\"prefill\\\", \\\"tail\\\": \\\"spaced\\\", \\\"variants\\\": \\\"single\\\"}, \\\"served_name\\\": \\\"decisio-qwen3.6-35b-a3b-letters\\\"}\",\"calibration\":{\"format\":\"decisio-task-prior/1\",\"task_id\":\"ticket-routing\",\"fingerprint\":\"{\\\"desnake_labels\\\": true, \\\"hide_index_keys\\\": true, \\\"model\\\": \\\"Qwen3-0.6B-Base\\\", \\\"pad_to\\\": \\\"block\\\", \\\"pad_where\\\": \\\"front\\\", \\\"prompt_format\\\": {\\\"slot\\\": \\\"prefill\\\", \\\"tail\\\": \\\"spaced\\\", \\\"variants\\\": \\\"single\\\"}, \\\"served_name\\\": \\\"decisio-qwen3.6-35b-a3b-letters\\\"}\",\"K\":12,\"n_examples\":120,\"bias\":[0.180587,0.001957,0.253523,0.005244,-0.166792,0.01471,0.279972,-0.293541,-0.106626,-0.175816,0.183685,-0.176904],\"applied\":true,\"cv_logloss_plain\":2.42554,\"cv_logloss_fitted\":2.35643,\"cv_acc_plain\":0.2667,\"cv_acc_fitted\":0.2917,\"cv_t\":-4.231,\"lambda\":0.1,\"reason\":\"cross-validated gain\",\"inputs_sha256\":\"0ad18e58d2e00c87c61bd8cd5e96b7e295c266c073764d594f06b63def5c6f1a\"},\"head\":{\"format\":\"decisio-intent-head/1\",\"task_id\":\"ticket-routing\",\"fingerprint\":\"{\\\"desnake_labels\\\": true, \\\"hide_index_keys\\\": true, \\\"model\\\": \\\"Qwen3-0.6B-Base\\\", \\\"pad_to\\\": \\\"block\\\", \\\"pad_where\\\": \\\"front\\\", \\\"prompt_format\\\": {\\\"slot\\\": \\\"prefill\\\", \\\"tail\\\": \\\"spaced\\\", \\\"variants\\\": \\\"single\\\"}, \\\"served_name\\\": \\\"decisio-qwen3.6-35b-a3b-letters\\\"}\",\"K\":12,\"options\":[\"billing\",\"refund\",\"payment_failed\",\"login\",\"password_reset\",\"account_closure\",\"bug\",\"feature_request\",\"performance\",\"data_export\",\"integration\",\"device_delivery\"],\"options_sha256\":\"c1cc9a5d741840dd23eeb3146aa445f21e69a31bdc98652e24b614499129229e\",\"n_examples\":120,\"min_per_option\":10,\"applied\":true,\"cv_logloss\":{\"none\":2.42554,\"100.0\":2.42214,\"10.0\":2.39179,\"1.0\":2.11252,\"0.1\":1.00911,\"0.01\":0.45439,\"0.001\":0.28943,\"0.0001\":0.23453},\"temperature\":0.766388,\"temperature_cv\":{\"n\":120,\"log_loss\":{\"without\":0.23453,\"with\":0.22105},\"ece\":{\"without\":0.01955,\"with\":0.02235}},\"lambda\":0.0001,\"reason\":\"cross-validated gain\",\"A\":{\"shape\":[1024,12]},\"c\":{\"shape\":[12]},\"inputs_sha256\":\"d1dcbc42847fd88f6e114981aab6416aa9859a3cbf4cc4ac76a2c1675c0359ba\"},\"n_examples\":120,\"per_option_min\":10}]}"
+			"stdout": "200\n{\"enabled\":true,\"head_engine\":true,\"fingerprint\":\"{\\\"desnake_labels\\\": true, \\\"hide_index_keys\\\": true, \\\"model\\\": \\\"Qwen3-0.6B-Base\\\", \\\"pad_to\\\": \\\"block\\\", \\\"pad_where\\\": \\\"front\\\", \\\"prompt_format\\\": {\\\"slot\\\": \\\"prefill\\\", \\\"tail\\\": \\\"spaced\\\", \\\"variants\\\": \\\"single\\\"}, \\\"served_name\\\": \\\"decisio-qwen3.6-35b-a3b-letters\\\"}\",\"tasks\":[{\"format\":\"decisio-task/1\",\"id\":\"ticket-routing\",\"key\":\"090e8cdb70d68b239d07a0dda892976980e4bc669a722b37a24ecfd58fa94368\",\"type\":\"choice\",\"options\":[\"billing\",\"refund\",\"payment_failed\",\"login\",\"password_reset\",\"account_closure\",\"bug\",\"feature_request\",\"performance\",\"data_export\",\"integration\",\"device_delivery\"],\"fingerprint\":\"{\\\"desnake_labels\\\": true, \\\"hide_index_keys\\\": true, \\\"model\\\": \\\"Qwen3-0.6B-Base\\\", \\\"pad_to\\\": \\\"block\\\", \\\"pad_where\\\": \\\"front\\\", \\\"prompt_format\\\": {\\\"slot\\\": \\\"prefill\\\", \\\"tail\\\": \\\"spaced\\\", \\\"variants\\\": \\\"single\\\"}, \\\"served_name\\\": \\\"decisio-qwen3.6-35b-a3b-letters\\\"}\",\"calibration\":{\"format\":\"decisio-task-prior/1\",\"task_id\":\"ticket-routing\",\"fingerprint\":\"{\\\"desnake_labels\\\": true, \\\"hide_index_keys\\\": true, \\\"model\\\": \\\"Qwen3-0.6B-Base\\\", \\\"pad_to\\\": \\\"block\\\", \\\"pad_where\\\": \\\"front\\\", \\\"prompt_format\\\": {\\\"slot\\\": \\\"prefill\\\", \\\"tail\\\": \\\"spaced\\\", \\\"variants\\\": \\\"single\\\"}, \\\"served_name\\\": \\\"decisio-qwen3.6-35b-a3b-letters\\\"}\",\"K\":12,\"n_examples\":120,\"bias\":[0.180587,0.001957,0.253523,0.005244,-0.166792,0.01471,0.279972,-0.293541,-0.106625,-0.175816,0.183685,-0.176904],\"applied\":true,\"cv_logloss_plain\":2.42554,\"cv_logloss_fitted\":2.35643,\"cv_acc_plain\":0.2667,\"cv_acc_fitted\":0.2917,\"cv_t\":-4.231,\"lambda\":0.1,\"reason\":\"cross-validated gain\",\"inputs_sha256\":\"d1e93377654df574e4826f636b9aac4693cc94059a06f0b97b05f15b2fb17f5a\"},\"head\":{\"format\":\"decisio-intent-head/1\",\"task_id\":\"ticket-routing\",\"fingerprint\":\"{\\\"desnake_labels\\\": true, \\\"hide_index_keys\\\": true, \\\"model\\\": \\\"Qwen3-0.6B-Base\\\", \\\"pad_to\\\": \\\"block\\\", \\\"pad_where\\\": \\\"front\\\", \\\"prompt_format\\\": {\\\"slot\\\": \\\"prefill\\\", \\\"tail\\\": \\\"spaced\\\", \\\"variants\\\": \\\"single\\\"}, \\\"served_name\\\": \\\"decisio-qwen3.6-35b-a3b-letters\\\"}\",\"K\":12,\"options\":[\"billing\",\"refund\",\"payment_failed\",\"login\",\"password_reset\",\"account_closure\",\"bug\",\"feature_request\",\"performance\",\"data_export\",\"integration\",\"device_delivery\"],\"options_sha256\":\"c1cc9a5d741840dd23eeb3146aa445f21e69a31bdc98652e24b614499129229e\",\"n_examples\":120,\"min_per_option\":10,\"applied\":true,\"cv_logloss\":{\"none\":2.42554,\"100.0\":2.42214,\"10.0\":2.39179,\"1.0\":2.11252,\"0.1\":1.00911,\"0.01\":0.45439,\"0.001\":0.28943,\"0.0001\":0.23452},\"temperature\":0.766382,\"temperature_cv\":{\"n\":120,\"log_loss\":{\"without\":0.23452,\"with\":0.22105},\"ece\":{\"without\":0.01955,\"with\":0.02235}},\"lambda\":0.0001,\"reason\":\"cross-validated gain\",\"A\":{\"shape\":[1024,12]},\"c\":{\"shape\":[12]},\"inputs_sha256\":\"d8f21b2c08ffec9c307d318889fd63aa48d81fbdca4ebed8b527ae4c6683b728\"},\"n_examples\":120,\"per_option_min\":10}]}"
 		},
 		"643e9b3102b8e77e": {
 			"status": "output"
 		},
 		"9c604218bbea81c7": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "{\n \"temperatures\": {\n  \"choice\": 2.141,\n  \"noul\": 3.075,\n  \"score\": 4.185\n },\n \"choice_bands\": {\n  \"2-10\": 1.9,\n  \"11-26\": 2.6,\n  \"27-255\": 3.1\n },\n \"fit\": null,\n \"file\": \"decisio_adapter.json\"\n}"
 		},
-		"71a55c9f8853d321": {
+		"edd96addd890e4f1": {
 			"status": "shown",
 			"why": "it needs Linux with one NVIDIA card and a LoRA adapter, which this check does not have"
 		},
@@ -215,33 +215,33 @@
 		},
 		"8d3fec404adc4b9c": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
-			"stdout": "0.19.0"
+			"stdout": "0.20.0"
 		},
 		"b1b57b2e75a2a8d6": {
 			"status": "example"
 		},
 		"8c2a5b518155ccb3": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
-			"stdout": "120 examples, 12 labels, 10 to 10 per label\ntask 'ticket-routing': 120 examples, 12 options, at least 10 per option, registered in 320 s\n  calibration: applied (cross-validated gain); cross-validated log loss 2.42554 -> 2.35643, accuracy 0.2667 -> 0.2917\n  head: applied (cross-validated gain); penalty 0.0001; cross-validated log loss by penalty {\"none\": 2.42554, \"100.0\": 2.42214, \"10.0\": 2.39179, \"1.0\": 2.11252, \"0.1\": 1.00911, \"0.01\": 0.45439, \"0.001\": 0.28943, \"0.0001\": 0.23453}"
+			"stdout": "120 examples, 12 labels, 10 to 10 per label\ntask 'ticket-routing': 120 examples, 12 options, at least 10 per option, registered in 348 s\n  calibration: applied (cross-validated gain); cross-validated log loss 2.42554 -> 2.35643, accuracy 0.2667 -> 0.2917\n  head: applied (cross-validated gain); penalty 0.0001; cross-validated log loss by penalty {\"none\": 2.42554, \"100.0\": 2.42214, \"10.0\": 2.39179, \"1.0\": 2.11252, \"0.1\": 1.00911, \"0.01\": 0.45439, \"0.001\": 0.28943, \"0.0001\": 0.23452}"
 		},
 		"065093b062639c13": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
-			"stdout": "My card keeps getting declined when I renew.\n  choice payment_failed; x-decisio-tasks: ticket-routing; route text, 1355.9 ms\n  payment_failed 1.000, bug 0.000, billing 0.000"
+			"stdout": "My card keeps getting declined when I renew.\n  choice payment_failed; x-decisio-tasks: ticket-routing; route text, 1455.8 ms\n  payment_failed 1.000, bug 0.000, billing 0.000"
 		},
 		"3ef7d4649178b987": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20"
 		},
 		"4748d632bd74918c": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "{\n \"alpha\": 0.05,\n \"n\": 60,\n \"threshold\": null,\n \"certified_n\": 0,\n \"errors_at_threshold\": null,\n \"summary\": \"Nothing is certified: on the 60 held-out examples no confidence threshold keeps the wrong answers above it at 5% or fewer with probability 90%. The task works as before, and every answer carries certified: false. (Without the bound, 0% of the examples would have met 5% on these examples themselves; that is not a promise.) Warning: This task has no option for a message that fits none of its labels (such as 'other' or 'out of scope'), so such a message gets a wrong answer that can be certified. Add one, or rely on the traffic monitor, which watches the answer mix and the confidences.\"\n}"
 		},
@@ -253,49 +253,49 @@
 		},
 		"ef2912eee837d05a": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "escalate: the likeliest is access at 0.509"
 		},
 		"bb17b0196b886334": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "{\n \"state\": \"ok\",\n \"text\": \"ok\"\n}"
 		},
 		"dbc9e6843b4e4fdd": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
-			"stdout": "decisio_task_state{task=\"ticket-routing\",state=\"ok\"} 1\ndecisio_task_state{task=\"ticket-routing\",state=\"traffic_changed\"} 0\ndecisio_task_state{task=\"ticket-routing\",state=\"suspended\"} 0\ndecisio_task_answers_total{task=\"ticket-routing\"} 0\ndecisio_task_certified_answers_total{task=\"ticket-routing\"} 0\ndecisio_task_mix_alerts_total{task=\"ticket-routing\"} 0\ndecisio_task_window_answers{task=\"ticket-routing\"} 0\ndecisio_task_mix_line{task=\"ticket-routing\"} 0.24466866666666665\ndecisio_task_confidence_statistic{task=\"ticket-routing\"} 0.0\ndecisio_task_confidence_limit{task=\"ticket-routing\"} 8.663302868327452\ndecisio_task_confidence_alerts_total{task=\"ticket-routing\"} 0",
+			"stdout": "decisio_task_state{task=\"ticket-routing\",state=\"ok\"} 1\ndecisio_task_state{task=\"ticket-routing\",state=\"traffic_changed\"} 0\ndecisio_task_state{task=\"ticket-routing\",state=\"suspended\"} 0\ndecisio_task_answers_total{task=\"ticket-routing\"} 0\ndecisio_task_certified_answers_total{task=\"ticket-routing\"} 0\ndecisio_task_mix_alerts_total{task=\"ticket-routing\"} 0\ndecisio_task_window_answers{task=\"ticket-routing\"} 0\ndecisio_task_mix_line{task=\"ticket-routing\"} 0.2366673333333333\ndecisio_task_confidence_statistic{task=\"ticket-routing\"} 0.0\ndecisio_task_confidence_limit{task=\"ticket-routing\"} 8.796741498408512\ndecisio_task_confidence_alerts_total{task=\"ticket-routing\"} 0",
 			"trimmed": true
 		},
 		"c8ce725f58ac4f6f": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20"
 		},
 		"f88fa3df9b1a592f": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "48 examples, 12 labels, 4 to 4 per label\n{\n \"alpha\": 0.1,\n \"n\": 48,\n \"threshold\": null,\n \"certified_n\": 0\n}"
 		},
 		"19ca27e30a6dc573": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "{\n \"id\": \"ticket-routing\",\n \"status\": {\n  \"state\": \"ok\",\n  \"text\": \"ok\"\n }\n}",
 			"trimmed": true
 		},
-		"d2c1b01adf70f7f1": {
+		"ce492ea36951c4c9": {
 			"status": "shown",
 			"why": "it needs Linux with one NVIDIA card, which this check does not have; decisio's README timed the same install, of decisio 0.11.0, on 2026-10-09"
 		},
 		"0a2e2a3655848d65": {
 			"status": "output"
 		},
-		"e7a95f5b4d46ca23": {
+		"2197f531052d25bc": {
 			"status": "shown",
 			"why": "it needs Linux with one NVIDIA card, which this check does not have"
 		},
@@ -307,24 +307,24 @@
 			"status": "shown",
 			"why": "decisio wrote it for its docs and has not run it; the options are systemd's documented ones"
 		},
-		"fb4e8e5b516a29e5": {
+		"87837fe47324bb68": {
 			"status": "shown",
 			"why": "decisio wrote it for its docs, with the release image in place of its placeholder, and has not run it; the probes read /health as measured"
 		},
-		"d70f8f65b9bdcc49": {
+		"8af77c400b1009a8": {
 			"status": "shown",
 			"why": "it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have"
 		},
-		"37905394983cbfe4": {
+		"7070bd724a9b9c92": {
 			"status": "shown",
 			"why": "decisio's compose.yaml, with the release image in place of its local build; not run at this release (an image built from decisio's main came up with the file on a card on 2026-10-01)",
 			"record": "runs/2026-10-01_docker-first-gpu-start/"
 		},
-		"fbc6c8d59d8ba9bd": {
+		"5bb46bcfcaf1260e": {
 			"status": "shown",
 			"why": "it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have"
 		},
-		"0b6b791ac9a0c2a2": {
+		"e3a5b3e118188182": {
 			"status": "shown",
 			"why": "it needs a Mac with Apple silicon, which this check does not have"
 		},
@@ -369,24 +369,24 @@
 		},
 		"fe30a8fa5922e73e": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"note": "sets the variables the SDK reads"
 		},
 		"ae09613642196a2f": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"note": "with TypeSafe's Python SDK 0.7.2, the version the page names",
-			"stdout": "access 0.31542890111724287"
+			"stdout": "access 0.3154285637293386"
 		},
 		"ebacf4f532e09ea5": {
 			"status": "cpu",
-			"tag": "v0.19.0",
+			"tag": "v0.20.0",
 			"date": "2026-10-20",
 			"stdout": "{\n \"models\": [\n  {\n   \"name\": \"decisio-qwen3.6-35b-a3b-letters\",\n   \"description\": \"letters readout, served default\",\n   \"release_date\": \"2026-09-27\"\n  }\n ]\n}"
 		},
-		"a61ae950f7c4995a": {
+		"cab7e51cfeec5f88": {
 			"status": "shown",
 			"why": "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model"
 		}
