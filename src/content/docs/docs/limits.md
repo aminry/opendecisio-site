@@ -5,7 +5,7 @@ description: What decisio needs to run each model, how long a text it reads, the
 
 <!-- Site-written: the one page of requirements and limits. Every number is EVAL_CARD.md's, docs/running.md's, docs/api.md's or docs/tasks.md's at the pinned release (src/config/sourced.mjs checks them); the research detail behind them stays in the evaluation card. -->
 
-::covers{links="docs/running.md#the-context-length=2-how-long-a-text-and-how-many-options"}
+::covers{links="docs/running.md#the-context-length=2-how-long-a-text-and-how-many-options docs/running.md#states-over-the-limit=2-how-long-a-text-and-how-many-options"}
 
 Your own server says which model it serves and how long a text it accepts.
 
@@ -62,6 +62,10 @@ Each request holds:
 - up to 255 options per question; a request with more gets 422;
 - as many images as the context holds, up to the image engine's `--max-images` (128 unless set), PNG, JPEG or WebP, 20 MB each;
 - a prompt up to the length above; a longer one gets 422.
+
+To answer a text over the length instead, start the server with `--over-limit truncate`, or send `"over_limit": "truncate"` in one request.
+The server keeps the start of the text and drops the rest, never a question, and the response says what was cut (`state_truncated`).
+Nothing cut is certified; a question over the length on its own, or a request with images, still gets 422.
 
 A long text takes longer to read the first time: on the 31B, 3,370 ms at 16,000 tokens and 8,880 ms at 32,000.
 

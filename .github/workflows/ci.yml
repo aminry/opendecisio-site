@@ -196,11 +196,16 @@ jobs:
         with:
           name: site
           path: dist
+      # A browser build links the runner's system libraries, so the cache is per runner image (ubuntu-latest moved from
+      # 24.04 to 26.04 on 2026-10-20 and the 24.04 WebKit could not start).
+      - name: The runner image
+        id: image
+        run: echo "os=${ImageOS:-unknown}" >> "$GITHUB_OUTPUT"
       - name: The browser for the checks
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ matrix.engine }}-${{ hashFiles('package-lock.json') }}
+          key: playwright-${{ matrix.engine }}-${{ steps.image.outputs.os }}-${{ hashFiles('package-lock.json') }}
       - run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: WCAG 2.2 AA, CSP, failed requests, layout shift, keyboard reach, media, search (phone, tablet, desktop; light, dark)
         run: node scripts/checks/browser.mjs
