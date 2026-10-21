@@ -2,9 +2,9 @@
 	"_note": "Links from a page to decisio's documentation on GitHub, by page, when the docs rewrite began (2026-10-18). The rewrite brings every guide on-site, so these counts may only fall; a page not listed may have none. Lower a count when a batch removes links; the check fails while a count is higher than the page has.",
 	"pages": {
 		"/docs/evaluation-card/": 2,
-		"/docs/releases/": 1
+		"/docs/releases/": 2
 	},
 	"_why": {
-		"/docs/releases/": "decisio's upgrade notes link running.md's \"Shipping a tuned model\", which is for people building a tuned repository; the site documents serving, so that one link stays on GitHub (2026-10-20)"
+		"/docs/releases/": "decisio's upgrade notes link running.md's \"Shipping a tuned model\" (from two entries since 0.23.0), which is for people building a tuned repository; the site documents serving, so those links stay on GitHub"
 	}
 }
