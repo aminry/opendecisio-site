@@ -225,6 +225,17 @@ export const plan = [
 	{ page: '/docs/how-it-works/', n: 2, mode: 'output', expect: '{\n  "answers": {' },
 	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
+	// Think when unsure: the server's think setting read from /health on the stand-in (thinking off, its default); the start
+	// and a thinking request need the vLLM engine, which writes the reasoning.
+	{ page: '/docs/think/', n: 1, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
+	{ page: '/docs/think/', n: 2, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/systemone', why: "it needs a server that thinks; the CPU stand-in cannot write reasoning, only the vLLM engine on a card can" },
+	{
+		page: '/docs/think/', n: 3, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health \\', show: asPrinted,
+		assert(stdout) {
+			const t = json(stdout);
+			if (t.default !== false || t.factor !== 1 || t.budget !== 512) throw new Error('/health does not show thinking off with factor 1 and budget 512');
+		},
+	},
 	// Serve your own adapter: decisio's adapter file checked by decisio's own tool on the CPU (what it printed is shown); the
 	// start, a question with the adapter and the /health read need a card, and the fit needs an adapter's readouts.
 	{

@@ -5,6 +5,7 @@
 const migrating = 'docs/migrating.md';
 const api = 'docs/api.md';
 const running = 'docs/running.md';
+const thinkPy = 'src/decisio/serve/think.py';
 const operating = 'docs/operating.md';
 const readme = 'README.md';
 const card = 'EVAL_CARD.md';
@@ -17,6 +18,31 @@ const cli = 'docs/cli.md';
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
 
 export const sourced = [
+	// Think when unsure
+	...fromPage('/docs/think/', [
+		['each of them is read again after the served model writes its reasoning', running, 'An unsure question is sent again with'],
+		['a sure question is still answered from one read, in milliseconds', running, 'a thinking question costs seconds where a single read costs milliseconds'],
+		['It follows the procedure of Chon (Apache-2.0)', running, 'turns on the procedure of Chon (github.com/xoai/chon, Apache-2.0)'],
+		['Thinking is off by default, on every base: a request is one read, as fast and as repeatable as before.', running, 'Off by default: a request is one read, as fast and as repeatable as before.'],
+		['--no-think turns it off, including when a tuned model\'s repository turns it on in its defaults.think', cli, 'a tuned repository\'s `defaults.think` turns it on, and `--no-think` turns that off'],
+		['A request decides for itself with "think": true or "think": false; without the field, the server\'s setting applies.', api, 'Absent or `null`, the server\'s setting'],
+		['0.75 for a choice, 0.92 for yes/no, 0.70 for a score', running, "below the type's threshold times `--think-factor`: 0.75 for a choice, 0.92 for a yes/no, 0.70 for a score"],
+		['--think-factor scales the three thresholds, 1 by default; a lower factor thinks on fewer questions', 'docs/reference/flags.md', 'the factor on the think thresholds (default 1; a tuned repository\'s defaults state theirs): a lower factor thinks on fewer questions'],
+		['--think-budget caps the reasoning at 512 tokens per question by default', 'docs/reference/flags.md', 'the most tokens of reasoning a thinking question may write (default 512)'],
+		['from 16 to 4,096', thinkPy, 'not 16 <= value <= MAX_BUDGET'],
+		['from 16 to 4,096', thinkPy, 'MAX_BUDGET = 4096'],
+		['It is set on the server only.', api, '**`think` (optional, decisio\'s extension).** `true` or `false`'],
+		['All the unsure questions of a request go to the model in one call.', running, 'All the unsure questions of a request go in one call.'],
+		['how many questions thought, the reasoning tokens and the time', api, '"thinking": {"questions": n, "of": m, "tokens": t, "ms": ms'],
+		['and for each question whether it thought, or why not', api, '{"thought": false, "why": ...}'],
+		['usage.thinking_tokens counts the reasoning tokens, and usage.output_tokens includes them', api, '`usage.output_tokens` is then one per question plus the reasoning tokens'],
+		['The headers x-decisio-think-ms and x-decisio-think-tokens carry the time and the tokens.', api, '`x-decisio-think-ms`, `x-decisio-think-tokens`: the milliseconds spent on reasoning and the second reads, and the reasoning tokens generated'],
+		['how many questions have thought, are in /health', running, '`/health` counts them under `systemone.think`'],
+		['A question with more than 16 options.', running, 'a question with more than 16 options'],
+		['A question a registered task answers: its correction and certificate were fitted on one read.', running, 'a question a registered task answers (its calibration and certificate are fitted on one read'],
+		['Every question of a request with images, an abstention option or two orders.', running, 'every question of a request of two orders, an abstention option or the image route'],
+		['The response says why a question did not think.', api, 'stays at one read and the response says why'],
+	]),
 	// Serve your own adapter
 	...fromPage('/docs/deploy/adapter/', [
 		['An adapter changes the scale of the model\'s readout', running, 'an adapter changes the scale of the readout'],
@@ -203,6 +229,10 @@ export const sourced = [
 		['The server keeps the start of the text and drops the rest, never a question', running, '**The state is cut, never a question.**'],
 		['the response says what was cut (state_truncated)', running, '`state_truncated` in the body'],
 		['Nothing cut is certified', running, '**Nothing cut is certified.**'],
+		['It needs the vLLM engine; the Mac build refuses --think at start.', running, 'Thinking needs the vLLM engine; the MLX build cannot write reasoning, and `--think` there is refused at start.'],
+		['A thinking request holds the server for its whole call, so other requests wait behind it', running, "The server's lock is held for the whole call, so another request waits behind a thinking one"],
+		['use thinking where requests arrive one at a time', running, 'use it where requests arrive one at a time, or size for that'],
+		['A certificate made with thinking off is suspended on a server that thinks (think_mode_changed), and the other way round', tasksDoc, 'a certificate made one-pass is `certified: false` with the reason `think_mode_changed` on a server that thinks, and the other way round'],
 		['a question over the length on its own, or a request with images, still gets 422', running, '**A question over the ceiling alone is still a 422**, and so is an image request'],
 		['as many images as the context holds, up to the image engine\'s --max-images (128 unless set)', card, 'as many images per request as the context holds (up to `--max-images`, 128 by default)'],
 		['PNG, JPEG or WebP, 20 MB each', card, '(PNG, JPEG or WebP, up to 20 MB each)'],

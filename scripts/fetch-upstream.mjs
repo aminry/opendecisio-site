@@ -26,6 +26,8 @@ const marker = join(dest, '.complete');
 // Paths the site reads; everything else in the archive is skipped.
 const KEEP = [
 	/^[^/]+\.md$/, /^docs\//, /^examples\/tasks\//, /^deploy\//, /^runs\/[^/]+\/(manifest\.json|summary\.md)$/,
+	// The think budget's range, which decisio states in its code only (the site's Think when unsure page cites it).
+	/^src\/decisio\/serve\/think\.py$/,
 	// The certified-answers run behind the home page's teaching section: its README and the Mac run's certificate and answers.
 	/^runs\/2026-10-14_certified-answers\/(README\.md|results\/mac_mlx\/first_start_(answers|sample_answers|task_response)\.json)$/,
 ];
