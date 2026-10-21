@@ -5,7 +5,7 @@ description: What decisio needs to run each model, how long a text it reads, the
 
 <!-- Site-written: the one page of requirements and limits. Every number is EVAL_CARD.md's, docs/running.md's, docs/api.md's or docs/tasks.md's at the pinned release (src/config/sourced.mjs checks them); the research detail behind them stays in the evaluation card. -->
 
-::covers{links="docs/running.md#the-context-length=2-how-long-a-text-and-how-many-options docs/running.md#states-over-the-limit=2-how-long-a-text-and-how-many-options"}
+::covers{links="docs/running.md#the-context-length=2-how-long-a-text-and-how-many-options docs/running.md#states-over-the-limit=2-how-long-a-text-and-how-many-options docs/running.md#concurrency=3-set-up-for-production"}
 
 Your own server says which model it serves and how long a text it accepts.
 

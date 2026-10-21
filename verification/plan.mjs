@@ -225,15 +225,6 @@ export const plan = [
 	{ page: '/docs/how-it-works/', n: 2, mode: 'output', expect: '{\n  "answers": {' },
 	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
-	// Batch concurrent requests: the server's mode read from /health on the stand-in (serial, the default); the batched
-	// start is decisio's command on a card.
-	{
-		page: '/docs/concurrency/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health \\', show: asPrinted,
-		assert(stdout) {
-			if (json(stdout).mode !== 'serial') throw new Error('/health does not report the serial mode, the default');
-		},
-	},
-	{ page: '/docs/concurrency/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
 	// Think when unsure: the server's think setting read from /health on the stand-in (thinking off, its default); the start
 	// and a thinking request need the vLLM engine, which writes the reasoning.
 	{ page: '/docs/think/', n: 1, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
