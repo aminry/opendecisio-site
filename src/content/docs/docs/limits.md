@@ -83,6 +83,9 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 6. **Think when unsure on a card only.** It needs the vLLM engine; the Mac build refuses `--think` at start.
 7. **Size a thinking server for its slowest request.** A thinking request holds the server for its whole call, so other requests wait behind it: use thinking where requests arrive one at a time, or run more servers.
 8. **Certify with the think setting you serve with.** A certificate made with thinking off is suspended on a server that thinks (`think_mode_changed`), and the other way round, until you certify again.
+9. **Batch concurrent requests on a card or the CPU stand-in.** `--concurrency batched` needs the vLLM engine or the stand-in in separate mode; the Mac build and `--mode packed` refuse it at start.
+10. **Certify on the mode you serve with.** A certificate made on a serial server is suspended on a batching one (`concurrency_changed`), and the other way round, until you certify again.
+11. **Expect requests in arrival order.** Under load a request waits for the requests that arrived before it, first come, first served, on every server.
 
 ## 4. What was measured on what
 
