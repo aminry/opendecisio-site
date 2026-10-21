@@ -21,10 +21,11 @@ const headers0190 = "0.19.0 stops reading the earlier spellings of the debug and
 const tuned0200 = "0.20.0 adds what a tuned model's repository can carry (served defaults, the FP8 merge) and an opt-in --over-limit truncate; the base repositories keep decision_config/1 and --over-limit stays refuse, so a plain request to the base is served as before";
 const think0210 = "0.21.0 adds thinking when unsure, off by default; the base repositories keep decision_config/1 with no defaults.think, so a request to the base is one read, as before";
 const ci0212 = "0.21.1 and 0.21.2 change only how the release image is built and scanned; the served code is 0.21.0's";
+const hub0220 = "0.22.0 changes only the tools that build a tuned model's repository (a 12B one, and what its defaults record); serving is 0.21.2's";
 const reviews = {
-	decisions: { 'v0.18.0': { changed: false, why: textRoute018 }, 'v0.18.1': { changed: false, why: recertify0181 }, 'v0.19.0': { changed: false, why: headers0190 }, 'v0.20.0': { changed: false, why: tuned0200 }, 'v0.21.0': { changed: false, why: think0210 }, 'v0.21.1': { changed: false, why: ci0212 }, 'v0.21.2': { changed: false, why: ci0212 } },
-	example5: { 'v0.18.0': { changed: false, why: textRoute018 }, 'v0.18.1': { changed: false, why: recertify0181 }, 'v0.19.0': { changed: false, why: headers0190 }, 'v0.20.0': { changed: false, why: tuned0200 }, 'v0.21.0': { changed: false, why: think0210 }, 'v0.21.1': { changed: false, why: ci0212 }, 'v0.21.2': { changed: false, why: ci0212 } },
-	certificate: { 'v0.18.0': { changed: false, why: `${textRoute018}; a server with no adapter keeps its certificates as before (docs/running.md), though any release change suspends a certificate until it is made again` }, 'v0.18.1': { changed: false, why: `${recertify0181}; the worked certificate is a first certification, not a re-certification` }, 'v0.19.0': { changed: false, why: headers0190 }, 'v0.20.0': { changed: false, why: tuned0200 }, 'v0.21.0': { changed: false, why: think0210 }, 'v0.21.1': { changed: false, why: ci0212 }, 'v0.21.2': { changed: false, why: ci0212 } },
+	decisions: { 'v0.18.0': { changed: false, why: textRoute018 }, 'v0.18.1': { changed: false, why: recertify0181 }, 'v0.19.0': { changed: false, why: headers0190 }, 'v0.20.0': { changed: false, why: tuned0200 }, 'v0.21.0': { changed: false, why: think0210 }, 'v0.21.1': { changed: false, why: ci0212 }, 'v0.21.2': { changed: false, why: ci0212 }, 'v0.22.0': { changed: false, why: hub0220 } },
+	example5: { 'v0.18.0': { changed: false, why: textRoute018 }, 'v0.18.1': { changed: false, why: recertify0181 }, 'v0.19.0': { changed: false, why: headers0190 }, 'v0.20.0': { changed: false, why: tuned0200 }, 'v0.21.0': { changed: false, why: think0210 }, 'v0.21.1': { changed: false, why: ci0212 }, 'v0.21.2': { changed: false, why: ci0212 }, 'v0.22.0': { changed: false, why: hub0220 } },
+	certificate: { 'v0.18.0': { changed: false, why: `${textRoute018}; a server with no adapter keeps its certificates as before (docs/running.md), though any release change suspends a certificate until it is made again` }, 'v0.18.1': { changed: false, why: `${recertify0181}; the worked certificate is a first certification, not a re-certification` }, 'v0.19.0': { changed: false, why: headers0190 }, 'v0.20.0': { changed: false, why: tuned0200 }, 'v0.21.0': { changed: false, why: think0210 }, 'v0.21.1': { changed: false, why: ci0212 }, 'v0.21.2': { changed: false, why: ci0212 }, 'v0.22.0': { changed: false, why: hub0220 } },
 };
 
 export const recordedOutputs = [
@@ -59,7 +60,7 @@ export const recordedOutputs = [
 		marker: 'Out of scope taught',
 		card,
 		date: () => oosReplay().date,
-		reviews: { 'v0.18.1': { changed: false, why: `${recertify0181}; the monitor (monitor.py) is unchanged since 0.18.0` }, 'v0.19.0': { changed: false, why: `${headers0190}; the replay sends no request` }, 'v0.20.0': { changed: false, why: `${tuned0200}; the monitor is unchanged` }, 'v0.21.0': { changed: false, why: `${think0210}; the monitor is unchanged` }, 'v0.21.1': { changed: false, why: ci0212 }, 'v0.21.2': { changed: false, why: ci0212 } },
+		reviews: { 'v0.18.1': { changed: false, why: `${recertify0181}; the monitor (monitor.py) is unchanged since 0.18.0` }, 'v0.19.0': { changed: false, why: `${headers0190}; the replay sends no request` }, 'v0.20.0': { changed: false, why: `${tuned0200}; the monitor is unchanged` }, 'v0.21.0': { changed: false, why: `${think0210}; the monitor is unchanged` }, 'v0.21.1': { changed: false, why: ci0212 }, 'v0.21.2': { changed: false, why: ci0212 }, 'v0.22.0': { changed: false, why: hub0220 } },
 	},
 ];
 
