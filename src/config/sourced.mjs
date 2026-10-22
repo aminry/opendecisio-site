@@ -18,6 +18,45 @@ const cli = 'docs/cli.md';
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
 
 export const sourced = [
+	// Batch concurrent requests
+	...fromPage('/docs/concurrency/', [
+		['it scores every request waiting for the engine together, in one call, so concurrent requests share the model\'s forward passes', running, 'scores all their rows in one engine call, so concurrent requests share forward passes'],
+		['A request that arrives at an idle server is still scored at once, alone, and gets the serial answer bit for bit', running, 'a request that arrives at an idle server is scored at once, alone, by the same engine call a serial server makes'],
+		['and gets the serial answer bit for bit', running, 'and its answer is the serial answer bit for bit (200 of 200 requests on the FP8 and the bf16 12B, RTX 5090, vLLM 0.31.0'],
+		['one request at a time through the engine, and the same request gives the same answer whatever else arrives', running, 'the same request gives the same bytes whatever else the server is sent at the time'],
+		['--batch-max-requests caps one call at 16 requests by default, counted in requests, not questions. The oldest waiting request is always taken.', running, 'up to `--batch-max-requests` (16, counted in requests, not rows; the oldest waiting request is always taken)'],
+		['Under concurrent load it answers more requests a second', running, '`--concurrency batched` trades that for throughput under concurrent load'],
+		['the Gemma 4 12B in FP8 answered 8.9 and 9.2 requests a second at 8 and 16 clients, against 7.2 one at a time', running, 'the FP8 12B batched did 8.9 and 9.2 requests a second at 8 and 16 clients against 7.2 serial'],
+		['on requests about new texts of about 1,000 tokens', running, 'With every request about a new state of about 1,000 tokens'],
+		['The gain depends on the card, the model and how often texts repeat, so measure it on your own traffic.', running, 'Measure on your own traffic: the gain depends on the card, the base and how often states repeat.'],
+		['vLLM 0.31.0', running, 'Throughput, measured on one RTX 5090 (vLLM 0.31.0)'],
+		['Only the 12B in FP8 has a published batched throughput figure', running, 'the FP8 12B batched did 8.9 and 9.2 requests a second'],
+		['One call holds the requests of one adapter, or of the base alone.', running, 'A call holds the requests of one adapter (or of the weights as loaded) only'],
+		["A certified task's questions, and every task registration and certification read, take the serial path on a batched server too.", upgrading, "On a batched server a certified task's questions and every task registration and certification read still take the serial path"],
+		["A thinking request, an image request and a request a task's intent head answers take the engine alone.", running, 'A thinking request (`--think`), an image request and a request a task with an intent head answers take the engine alone'],
+		['So certified answers are made and served on the reads a serial server would make.', running, 'So a certificate made on a batching server is made and served on the reads a serial server would make'],
+		['An answer no certified task covers can differ slightly when it is scored beside other requests, because the engine\'s arithmetic follows the shape of the batch.', running, "because the engine's kernels choose their tiling and reduction order by the shape of the batch"],
+		['such as two benchmark runs you compare request by request', running, 'what makes two runs of a benchmark comparable request by request'],
+		['x-decisio-batch says, when a request shared a call, with how many requests and questions: requests=N; rows=M. It is absent when the request was scored alone.', api, '`x-decisio-batch`: `requests=N; rows=M` when the server batches concurrent requests'],
+		['wait= in x-decisio-stages is the time the request waited for its call', running, '`wait=` in `x-decisio-stages` is the time it waited for the call'],
+		['/health reports the mode under concurrency, and in batched mode the calls made and the requests each call held', running, '`/health` reports the mode under `concurrency`, and in batched mode the calls made, the requests in them'],
+		['A request that fails on its own, such as a text over the length, fails alone; the call\'s other requests are scored again without it.', running, "A request that fails for itself (a state over the context, a malformed question) fails alone: the call's other requests are scored again without it."],
+	]),
+	// Choosing a model: the 12B in FP8
+	...fromPage('/docs/bases/', [
+		['12.74 GiB, FP8', readme, '12.13 GiB as a stored conversion, 12.74 GiB in memory on vLLM 0.31.0'],
+		['an NVIDIA card with 32 GB, at its full 65,536 tokens', running, 'on a 32 GB RTX 5090 at the default share the FP8 12B serves its full 65,536 tokens'],
+		['google/gemma-4-12B-it, quantized to FP8 as it loads', running, '`--base gemma-4-12b-fp8` alone serves `google/gemma-4-12B-it` at its pinned revision and quantizes it on load.'],
+		['or tachara-ai/decisio-gemma-4-12b-fp8, the same conversion stored', running, 'The repository `tachara-ai/decisio-gemma-4-12b-fp8` holds it, at the revision this release pins'],
+		['The Gemma 4 12B in FP8 is a second precision of the 12B, from the same checkpoint, for a smaller footprint.', running, 'FP8 is a second base beside it, for a smaller footprint'],
+		['where the 12B in bf16 starts only at 4,096 tokens', running, 'where the bf16 12B does not start at 32,768 and starts at 0.95 of the card only at 4,096'],
+		["it read one question in 0.64 times the bf16 12B's server time", running, "its server time for one question was 0.64 times the bf16 12B's"],
+		["On 200 questions its top answer was the bf16 12B's on 96%, the largest probability difference 0.438.", running, "the top answer was the bf16 12B's on 96% of them (8 changed), the largest probability difference 0.438"],
+		['It has its own served name, task fingerprint and serving stack: register and certify your tasks again on it.', running, 'The FP8 12B has its own served name (`decisio-gemma-4-12b-it-fp8-letters`), task fingerprint and serving stack'],
+		["Its temperatures are the bf16 12B's until they are refitted on FP8 reads.", running, "**The temperatures** are the bf16 12B's (3.592 for every question type) until they are refitted on FP8 reads."],
+		["A Mac does not serve it: on a Mac, serve the bf16 12B's MLX conversion.", running, '`--backend mlx` refuses the FP8 base; on a Mac, serve an MLX conversion of the bf16 12B'],
+		['both precisions at 4,096 tokens and 0.95 of the card', running, 'both at 4,096 tokens and 0.95 of the card, 200 single-question requests'],
+	]),
 	// Think when unsure
 	...fromPage('/docs/think/', [
 		['each of them is read again after the served model writes its reasoning', running, 'An unsure question is sent again with'],
@@ -42,6 +81,7 @@ export const sourced = [
 		['A question a registered task answers: its correction and certificate were fitted on one read.', running, 'a question a registered task answers (its calibration and certificate are fitted on one read'],
 		['Every question of a request with images, an abstention option or two orders.', running, 'every question of a request of two orders, an abstention option or the image route'],
 		['The response says why a question did not think.', api, 'stays at one read and the response says why'],
+		['A question whose reasoning comes back unusable is answered from its one read, marked thinking: unavailable with the reason; the request does not fail.', upgrading, 'A question whose reasoning comes back unusable (mostly reserved ids) is answered at its single pass, marked `thinking: unavailable` with the reason in the response, logged, and counted in `/health` under `systemone.think.unavailable`; the request does not fail.'],
 	]),
 	// Serve your own adapter
 	...fromPage('/docs/deploy/adapter/', [
@@ -231,8 +271,14 @@ export const sourced = [
 		['Nothing cut is certified', running, '**Nothing cut is certified.**'],
 		['--concurrency batched needs the vLLM engine or the stand-in in separate mode; the Mac build and --mode packed refuse it at start', running, 'Batched mode needs the vLLM engine or the CPU stand-in, in separate mode; MLX and `--mode packed` refuse it at start.'],
 		['A certificate made on a serial server is suspended on a batching one (concurrency_changed), and the other way round', running, 'a certificate made on a serial server is `certified: false` with the reason `concurrency_changed` on a batching server, and the other way round, until the task is certified again where it is served'],
+		['the Gemma 4 12B in FP8 answered 8.9 and 9.2 requests a second batched, at 8 and 16 clients, against 7.2 one at a time', running, 'the FP8 12B batched did 8.9 and 9.2 requests a second at 8 and 16 clients against 7.2 serial'],
+		['a request that arrives alone is answered as on a serial server', running, '**A lone request is scored as on a serial server.**'],
+		['The gain depends on the card, the base and how often states repeat.', running, 'the gain depends on the card, the base and how often states repeat'],
 		['Under load a request waits for the requests that arrived before it, first come, first served, on every server.', upgrading, 'under load a request waits for the requests that arrived before it, in order'],
-		['It needs the vLLM engine; the Mac build refuses --think at start.', running, 'Thinking needs the vLLM engine; the MLX build cannot write reasoning, and `--think` there is refused at start.'],
+		['It needs the vLLM engine and the default --engine-process in; the Mac build and --engine-process separate refuse --think at start.', running, 'Thinking needs the vLLM engine; the MLX build cannot write reasoning, and `--think` there is refused at start.'],
+		['--engine-process separate refuse --think at start', running, '`--think` with another engine process is refused at start'],
+		['Thinking now writes reasoning on a default server, so thinking answers change, and are usually faster', upgrading, 'Thinking answers change: the reasoning is text now, usually shorter than the budget, so they are also faster'],
+		['check your --think-factor against measured answers, and certify again the tasks you certify under thinking', upgrading, 'Check your factor against measured answers; certify tasks again if you certify under thinking'],
 		['A thinking request holds the server for its whole call, so other requests wait behind it', running, "The server's lock is held for the whole call, so another request waits behind a thinking one"],
 		['use thinking where requests arrive one at a time', running, 'use it where requests arrive one at a time, or size for that'],
 		['A certificate made with thinking off is suspended on a server that thinks (think_mode_changed), and the other way round', tasksDoc, 'a certificate made one-pass is `certified: false` with the reason `think_mode_changed` on a server that thinks, and the other way round'],
@@ -316,6 +362,7 @@ export const sourced = [
 		['anything but 200: alert; 503 means the engine has died', api, 'Alert on anything but 200.'],
 		['a growing wait is requests queueing behind the one engine', api, 'A `wait` that grows is requests queueing behind the engine.'],
 		['concurrent requests queue behind it and are answered in turn', api, 'so concurrent requests queue behind it and are answered in turn; there is no queue limit'],
+		['scores the waiting ones together instead', api, 'With `--concurrency batched` the requests waiting for the engine are scored together in one call instead'],
 		['first come, first served, with no queue limit', upgrading, "**The engine's lock is first come, first served** on the vLLM engine and the CPU stand-in, on every server"],
 		['There are no engine metrics and no structured log', api, 'the server exposes no Prometheus metrics for the engine'],
 		['{"ok": false, "engine": "dead", "reason": "...", "exit_code": 70}', running, '`/health` answers 503 with `{"ok": false, "engine": "dead", "reason": "...", "exit_code": 70}`'],

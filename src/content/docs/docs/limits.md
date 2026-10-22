@@ -5,7 +5,7 @@ description: What decisio needs to run each model, how long a text it reads, the
 
 <!-- Site-written: the one page of requirements and limits. Every number is EVAL_CARD.md's, docs/running.md's, docs/api.md's or docs/tasks.md's at the pinned release (src/config/sourced.mjs checks them); the research detail behind them stays in the evaluation card. -->
 
-::covers{links="docs/running.md#the-context-length=2-how-long-a-text-and-how-many-options docs/running.md#states-over-the-limit=2-how-long-a-text-and-how-many-options docs/running.md#concurrency=3-set-up-for-production"}
+::covers{links="docs/running.md#the-context-length=2-how-long-a-text-and-how-many-options docs/running.md#states-over-the-limit=2-how-long-a-text-and-how-many-options"}
 
 Your own server says which model it serves and how long a text it accepts.
 
@@ -29,6 +29,7 @@ curl -s http://127.0.0.1:8000/health
 | NVIDIA, 80 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights; 43.28 GiB of cache at the default share | 65,536 tokens at the default share | yes, an H100 PCIe |
 | NVIDIA, 96 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights | up to 65,536 tokens | yes |
 | NVIDIA, 32 GB | Gemma 4 12B, bf16 | does not start on vLLM's defaults | none | simulated on the 96 GB card |
+| NVIDIA, 32 GB | Gemma 4 12B, FP8 | 12.74 GiB of weights | 65,536 tokens at the default share | yes, an RTX 5090 |
 | NVIDIA, 96 GB | Qwen3.6-35B-A3B, FP8 | 33.3 GiB of weights | 32,768 tokens | yes |
 | Mac, 64 GB | Gemma 4 31B, 6-bit MLX | 24.9 GB of weights; 33.7 GB at its peak | 16,383 tokens | yes, an Apple M5 Pro |
 | Mac, 48 GB | Gemma 4 31B, 4-bit MLX | 19.2 GB of weights; 28.0 GB at its peak | 16,383 tokens | read on the 64 GB Mac |
@@ -80,12 +81,14 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 3. **A certificate covers one task on one serving setup.** The setup is the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length and the serving flags. When any of it changes, the task's answers stop being certified until you certify again.
 4. **Keep the cache type you certified on.** `--kv-cache-dtype fp8` suspends a certificate made without it.
 5. **On a Mac, run one model server at a time.** Two servers can add up to more memory than the Mac has.
-6. **Think when unsure on a card only.** It needs the vLLM engine; the Mac build refuses `--think` at start.
-7. **Size a thinking server for its slowest request.** A thinking request holds the server for its whole call, so other requests wait behind it: use thinking where requests arrive one at a time, or run more servers.
-8. **Certify with the think setting you serve with.** A certificate made with thinking off is suspended on a server that thinks (`think_mode_changed`), and the other way round, until you certify again.
-9. **Batch concurrent requests on a card or the CPU stand-in.** `--concurrency batched` needs the vLLM engine or the stand-in in separate mode; the Mac build and `--mode packed` refuse it at start.
-10. **Certify on the mode you serve with.** A certificate made on a serial server is suspended on a batching one (`concurrency_changed`), and the other way round, until you certify again.
-11. **Expect requests in arrival order.** Under load a request waits for the requests that arrived before it, first come, first served, on every server.
+6. **Think when unsure on a card only, with the engine in the server's process.** It needs the vLLM engine and the default `--engine-process in`; the Mac build and `--engine-process separate` refuse `--think` at start.
+7. **If you served with thinking on before upgrading, check its answers again.** Thinking now writes reasoning on a default server, so thinking answers change, and are usually faster: check your `--think-factor` against measured answers, and certify again the tasks you certify under thinking.
+8. **Size a thinking server for its slowest request.** A thinking request holds the server for its whole call, so other requests wait behind it: use thinking where requests arrive one at a time, or run more servers.
+9. **Certify with the think setting you serve with.** A certificate made with thinking off is suspended on a server that thinks (`think_mode_changed`), and the other way round, until you certify again.
+10. **Batch concurrent requests on a card or the CPU stand-in.** `--concurrency batched` needs the vLLM engine or the stand-in in separate mode; the Mac build and `--mode packed` refuse it at start.
+11. **Certify on the mode you serve with.** A certificate made on a serial server is suspended on a batching one (`concurrency_changed`), and the other way round, until you certify again.
+12. **Batch concurrent requests for throughput, and measure on your traffic.** On one RTX 5090 the Gemma 4 12B in FP8 answered 8.9 and 9.2 requests a second batched, at 8 and 16 clients, against 7.2 one at a time, on requests about new states of about 1,000 tokens; a request that arrives alone is answered as on a serial server. The gain depends on the card, the base and how often states repeat.
+13. **Expect requests in arrival order.** Under load a request waits for the requests that arrived before it, first come, first served, on every server.
 
 ## 4. What was measured on what
 
@@ -100,6 +103,7 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 | Context length against the card's share | Gemma 4 31B, FP8; Gemma 4 12B | one H100 PCIe, 80 GB | vLLM 0.31.0 | 2026-10-15 |
 | Mac memory | Gemma 4 31B and 12B, MLX builds | one Apple M5 Pro, 64 GB | MLX | 2026-10-05 to 2026-10-16 |
 | Ollama memory | Gemma 4 12B, `q4_k_m` | one Apple M5 Pro | Ollama 0.35.1 | 2026-10-07 |
+| Batched throughput | Gemma 4 12B, FP8 | one RTX 5090, 32 GB | vLLM 0.31.0, 0.95 of the card, 4,096 tokens, requests about new 1,000-token states, 8 and 16 clients | 2026-10-21 |
 :::
 
 - One card and one run per configuration.
