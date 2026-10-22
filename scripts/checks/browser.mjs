@@ -430,7 +430,19 @@ try {
 				// long (the evaluation card on a phone) is captured to its first 30,000.
 				const height = await page.evaluate(() => document.documentElement.scrollHeight);
 				const width = v.viewport.width;
-				await page.screenshot({ path: join(shots, `${shot}.png`), fullPage: true, ...(height > 30000 && { clip: { x: 0, y: 0, width, height: 30000 } }) });
+				// A full-page capture can stall on a busy runner (Chromium's headless shell once took over 30 s on one page,
+				// 2026-10-22): it is tried again with more time, and a page that still cannot be captured is reported by name
+				// rather than ending the run and losing every other result.
+				const full = { path: join(shots, `${shot}.png`), fullPage: true, ...(height > 30000 && { clip: { x: 0, y: 0, width, height: 30000 } }) };
+				try {
+					await page.screenshot(full);
+				} catch (first) {
+					try {
+						await page.screenshot({ ...full, timeout: 90000 });
+					} catch (second) {
+						report(engineName, route, v.name, `the full-page screenshot failed twice: ${String(second.message).split('\n')[0]}`);
+					}
+				}
 				await context.close();
 			}
 			process.stdout.write('.');
