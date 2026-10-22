@@ -131,6 +131,7 @@ A question can carry a "can't tell" option, and the server can decline to answer
 3. Read the answer: the server abstains when the option's probability is over the threshold, and otherwise answers the best of the other options.
 
 Register the task first and its abstention threshold second, and register both again together.
+A threshold applies only on the served name it was fitted for, so fit it on the model you serve.
 
 ## What next
 

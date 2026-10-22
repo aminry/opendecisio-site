@@ -77,7 +77,7 @@ On Kubernetes, one GPU, the weights on a volume, and `/health` as the startup an
 ::site-block{name="kubernetes"}
 
 - Each probe reads `/health`: 200 once the engine is loaded, 503 from the moment it has died.
-- Each replica is a separate server with its own registered tasks, which live in memory.
+- Each replica is a separate server: give it its own `--tasks-dir`, or share the replicas' tasks with `--task-store` ([Operate](/docs/operating/#4-keep-tasks-across-restarts-and-replicas)).
 
 ## What next
 

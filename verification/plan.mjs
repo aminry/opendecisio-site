@@ -282,8 +282,16 @@ export const plan = [
 			if (!/x-decisio-tasks: ticket-routing/.test(stdout)) throw new Error('the question did not match the registered task');
 		},
 	},
+	// decisio's start with a task directory, which needs a card and a volume; then where this server saves its tasks.
+	{ page: '/docs/tasks/', n: 5, mode: 'shown', expect: 'python -m decisio.serve.vllm_engine --tasks-dir', why: "it is the start of a server on a card, with a directory on a volume; its other flags are the reader's" },
 	{
-		page: '/docs/tasks/', n: 5, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/tasks',
+		page: '/docs/tasks/', n: 6, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health \\', show: asPrinted,
+		assert(stdout) {
+			if (!('saved_to' in json(stdout))) throw new Error('/health does not say where the server saves its tasks');
+		},
+	},
+	{
+		page: '/docs/tasks/', n: 7, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/tasks',
 		async assert(stdout, ctx) {
 			const tasks = await (await fetch('http://127.0.0.1:8000/v1/tasks')).json();
 			if (JSON.stringify(tasks).includes('"ticket-routing"')) throw new Error('the task is still registered after the delete');
