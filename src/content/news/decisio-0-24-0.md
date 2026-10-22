@@ -1,6 +1,6 @@
 ---
 title: "decisio 0.24.0: the 12B on a 32 GB card, batched serving, and thinking that reasons"
-summary: "0.23.0 and 0.24.0 add the Gemma 4 12B in FP8, which serves its full 65,536 tokens on a 32 GB card, an opt-in batched mode that answers more requests a second under load, and a fix that makes think-when-unsure reason on a default server."
+summary: "0.24.0 adds the Gemma 4 12B in FP8 (full 65,536 tokens on a 32 GB card), faster opt-in batched serving, and a fix so think-when-unsure reasons."
 date: 2026-10-22
 tags: [release]
 ---
