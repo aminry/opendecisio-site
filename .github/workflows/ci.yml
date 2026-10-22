@@ -178,7 +178,10 @@ jobs:
     # and on demand (the `changes` job).
     needs: [build, changes]
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # The checks take up to about 15 minutes a shard; installing a browser's system packages took 4 minutes on most
+    # days and 22 to 30 on 2026-10-22 (a slow mirror), which ran shards out of a 30-minute limit before they checked
+    # anything. The install has a limit of its own, so a stuck mirror still fails, and says so.
+    timeout-minutes: 55
     strategy:
       fail-fast: false
       matrix:
@@ -206,7 +209,9 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ matrix.engine }}-${{ steps.image.outputs.os }}-${{ hashFiles('package-lock.json') }}
-      - run: npx playwright install --with-deps ${{ matrix.engine }}
+      - name: The browser and its system packages
+        timeout-minutes: 35
+        run: npx playwright install --with-deps ${{ matrix.engine }}
       - name: WCAG 2.2 AA, CSP, failed requests, layout shift, keyboard reach, media, search (phone, tablet, desktop; light, dark)
         run: node scripts/checks/browser.mjs
         env:
