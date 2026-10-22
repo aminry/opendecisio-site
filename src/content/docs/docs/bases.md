@@ -36,7 +36,7 @@ With no flag the server serves Gemma 4 31B:
 | Gemma 4 31B | `tachara-ai/decisio-gemma-4-31b`: Google's `google/gemma-4-31B-it`, stored as FP8 |
 | Qwen3.6-35B-A3B | `Qwen/Qwen3.6-35B-A3B-FP8`, from Alibaba's Qwen team |
 | Gemma 4 12B | `google/gemma-4-12B-it`, from Google |
-| Gemma 4 12B in FP8 | `google/gemma-4-12B-it`, quantized to FP8 as it loads, or `tachara-ai/decisio-gemma-4-12b-fp8`, the same conversion stored |
+| Gemma 4 12B in FP8 | `google/gemma-4-12B-it`, quantized to FP8 as it loads |
 
 Each is an official checkpoint at a pinned revision, with no training or fine-tuning by us.
 The weights are under Apache-2.0: Alibaba's Qwen3.6-35B-A3B and Google's Gemma 4 12B and 31B, and the `tachara-ai/decisio-*` repositories redistribute them with their licence and provenance files.

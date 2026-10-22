@@ -46,7 +46,7 @@ export const sourced = [
 	...fromPage('/docs/bases/', [
 		['12.74 GiB, FP8', readme, '12.13 GiB as a stored conversion, 12.74 GiB in memory on vLLM 0.31.0'],
 		['an NVIDIA card with 32 GB, at its full 65,536 tokens', running, 'on a 32 GB RTX 5090 at the default share the FP8 12B serves its full 65,536 tokens'],
-		['google/gemma-4-12B-it, quantized to FP8 as it loads, or tachara-ai/decisio-gemma-4-12b-fp8, the same conversion stored', running, 'The repository `tachara-ai/decisio-gemma-4-12b-fp8` holds it'],
+		['google/gemma-4-12B-it, quantized to FP8 as it loads', running, '`--base gemma-4-12b-fp8` alone serves `google/gemma-4-12B-it` at its pinned revision and quantizes it on load.'],
 		['The Gemma 4 12B in FP8 is a second precision of the 12B, from the same checkpoint, for a smaller footprint.', running, 'FP8 is a second base beside it, for a smaller footprint'],
 		['where the 12B in bf16 starts only at 4,096 tokens', running, 'where the bf16 12B does not start at 32,768 and starts at 0.95 of the card only at 4,096'],
 		["it read one question in 0.64 times the bf16 12B's server time", running, "its server time for one question was 0.64 times the bf16 12B's"],
@@ -276,6 +276,8 @@ export const sourced = [
 		['Under load a request waits for the requests that arrived before it, first come, first served, on every server.', upgrading, 'under load a request waits for the requests that arrived before it, in order'],
 		['It needs the vLLM engine and the default --engine-process in; the Mac build and --engine-process separate refuse --think at start.', running, 'Thinking needs the vLLM engine; the MLX build cannot write reasoning, and `--think` there is refused at start.'],
 		['--engine-process separate refuse --think at start', running, '`--think` with another engine process is refused at start'],
+		['Thinking now writes reasoning on a default server, so thinking answers change, and are usually faster', upgrading, 'Thinking answers change: the reasoning is text now, usually shorter than the budget, so they are also faster'],
+		['check your --think-factor against measured answers, and certify again the tasks you certify under thinking', upgrading, 'Check your factor against measured answers; certify tasks again if you certify under thinking'],
 		['A thinking request holds the server for its whole call, so other requests wait behind it', running, "The server's lock is held for the whole call, so another request waits behind a thinking one"],
 		['use thinking where requests arrive one at a time', running, 'use it where requests arrive one at a time, or size for that'],
 		['A certificate made with thinking off is suspended on a server that thinks (think_mode_changed), and the other way round', tasksDoc, 'a certificate made one-pass is `certified: false` with the reason `think_mode_changed` on a server that thinks, and the other way round'],
