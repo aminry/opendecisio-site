@@ -41,7 +41,7 @@ Only the 12B in FP8 has been measured this way, and the gain depends on the card
 Think-when-unsure reads an unsure question again after the model writes its reasoning.
 On a default server, the releases since it arrived did not write reasoning, and every thinking question ran to its token budget on text that was not reasoning.
 0.24.0 fixes that: the reasoning is text now, usually shorter than the budget, so thinking answers change and are faster.
-It has been checked on five questions on one RTX 5090 so far, and a fuller check follows.
+It has been checked on one RTX 5090; the release notes give the details.
 If you serve with thinking on, upgrade, check your `--think-factor` against measured answers, and certify again the tasks you certify under thinking.
 Thinking with decisio's default model class now needs the engine in the server's process, the default; `--engine-process separate` with `--think` is refused at start.
 
