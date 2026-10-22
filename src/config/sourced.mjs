@@ -271,7 +271,7 @@ export const sourced = [
 		['Nothing cut is certified', running, '**Nothing cut is certified.**'],
 		['--concurrency batched needs the vLLM engine or the stand-in in separate mode; the Mac build and --mode packed refuse it at start', running, 'Batched mode needs the vLLM engine or the CPU stand-in, in separate mode; MLX and `--mode packed` refuse it at start.'],
 		['A certificate made on a serial server is suspended on a batching one (concurrency_changed), and the other way round', running, 'a certificate made on a serial server is `certified: false` with the reason `concurrency_changed` on a batching server, and the other way round, until the task is certified again where it is served'],
-		['FP8 12B batched 8.9 and 9.2 requests a second at 8 and 16 clients against 7.2 serial', running, 'the FP8 12B batched did 8.9 and 9.2 requests a second at 8 and 16 clients against 7.2 serial'],
+		['the Gemma 4 12B in FP8 answered 8.9 and 9.2 requests a second batched, at 8 and 16 clients, against 7.2 one at a time', running, 'the FP8 12B batched did 8.9 and 9.2 requests a second at 8 and 16 clients against 7.2 serial'],
 		['a request that arrives alone is answered as on a serial server', running, '**A lone request is scored as on a serial server.**'],
 		['The gain depends on the card, the base and how often states repeat.', running, 'the gain depends on the card, the base and how often states repeat'],
 		['Under load a request waits for the requests that arrived before it, first come, first served, on every server.', upgrading, 'under load a request waits for the requests that arrived before it, in order'],

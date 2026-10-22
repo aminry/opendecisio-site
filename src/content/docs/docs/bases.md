@@ -5,7 +5,7 @@ description: Which of the three models to serve, by your machine and what you ne
 
 <!-- Site-written: the Choosing a model reference. The start commands are the README's "Choosing a base" at the pinned release; the checkpoints, weights and reasons are the README's and docs/running.md's there (src/config/sourced.mjs checks them). The comparisons between the models are on Benchmarks. -->
 
-::covers{links="README.md#choosing-a-base"}
+::covers{links="README.md#choosing-a-base docs/running.md#the-12b-in-two-precisions=4-the-12b-in-fp8 docs/running.md#the-12b-in-two-precisions-bf16-and-fp8=4-the-12b-in-fp8"}
 
 Pick the model by your machine and what you need: one flag, `--base`, serves it with every setting it was measured with.
 With no flag the server serves Gemma 4 31B:
