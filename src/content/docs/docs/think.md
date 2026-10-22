@@ -40,6 +40,7 @@ Start the server with `--think`:
 - `thinking` in the response says how many questions thought, the reasoning tokens and the time, and for each question whether it thought, or why not.
 - `usage.thinking_tokens` counts the reasoning tokens, and `usage.output_tokens` includes them.
 - The headers `x-decisio-think-ms` and `x-decisio-think-tokens` carry the time and the tokens.
+- A question whose reasoning comes back unusable is answered from its one read, marked `thinking: unavailable` with the reason; the request does not fail.
 
 The server's setting, and how many questions have thought, are in `/health`:
 

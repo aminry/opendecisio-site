@@ -29,6 +29,7 @@ curl -s http://127.0.0.1:8000/health
 | NVIDIA, 80 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights; 43.28 GiB of cache at the default share | 65,536 tokens at the default share | yes, an H100 PCIe |
 | NVIDIA, 96 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights | up to 65,536 tokens | yes |
 | NVIDIA, 32 GB | Gemma 4 12B, bf16 | does not start on vLLM's defaults | none | simulated on the 96 GB card |
+| NVIDIA, 32 GB | Gemma 4 12B, FP8 | 12.74 GiB of weights | 65,536 tokens at the default share | yes, an RTX 5090 |
 | NVIDIA, 96 GB | Qwen3.6-35B-A3B, FP8 | 33.3 GiB of weights | 32,768 tokens | yes |
 | Mac, 64 GB | Gemma 4 31B, 6-bit MLX | 24.9 GB of weights; 33.7 GB at its peak | 16,383 tokens | yes, an Apple M5 Pro |
 | Mac, 48 GB | Gemma 4 31B, 4-bit MLX | 19.2 GB of weights; 28.0 GB at its peak | 16,383 tokens | read on the 64 GB Mac |
@@ -80,7 +81,7 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 3. **A certificate covers one task on one serving setup.** The setup is the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length and the serving flags. When any of it changes, the task's answers stop being certified until you certify again.
 4. **Keep the cache type you certified on.** `--kv-cache-dtype fp8` suspends a certificate made without it.
 5. **On a Mac, run one model server at a time.** Two servers can add up to more memory than the Mac has.
-6. **Think when unsure on a card only.** It needs the vLLM engine; the Mac build refuses `--think` at start.
+6. **Think when unsure on a card only, with the engine in the server's process.** It needs the vLLM engine and the default `--engine-process in`; the Mac build and `--engine-process separate` refuse `--think` at start.
 7. **Size a thinking server for its slowest request.** A thinking request holds the server for its whole call, so other requests wait behind it: use thinking where requests arrive one at a time, or run more servers.
 8. **Certify with the think setting you serve with.** A certificate made with thinking off is suspended on a server that thinks (`think_mode_changed`), and the other way round, until you certify again.
 9. **Batch concurrent requests on a card or the CPU stand-in.** `--concurrency batched` needs the vLLM engine or the stand-in in separate mode; the Mac build and `--mode packed` refuse it at start.

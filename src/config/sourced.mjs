@@ -42,6 +42,20 @@ export const sourced = [
 		['/health reports the mode under concurrency, and in batched mode the calls made and the requests each call held', running, '`/health` reports the mode under `concurrency`, and in batched mode the calls made, the requests in them'],
 		['A request that fails on its own, such as a text over the length, fails alone; the call\'s other requests are scored again without it.', running, "A request that fails for itself (a state over the context, a malformed question) fails alone: the call's other requests are scored again without it."],
 	]),
+	// Choosing a model: the 12B in FP8
+	...fromPage('/docs/bases/', [
+		['12.74 GiB, FP8', readme, '12.13 GiB as a stored conversion, 12.74 GiB in memory on vLLM 0.31.0'],
+		['an NVIDIA card with 32 GB, at its full 65,536 tokens', running, 'on a 32 GB RTX 5090 at the default share the FP8 12B serves its full 65,536 tokens'],
+		['google/gemma-4-12B-it, quantized to FP8 as it loads, or tachara-ai/decisio-gemma-4-12b-fp8, the same conversion stored', running, 'The repository `tachara-ai/decisio-gemma-4-12b-fp8` holds it'],
+		['The Gemma 4 12B in FP8 is a second precision of the 12B, from the same checkpoint, for a smaller footprint.', running, 'FP8 is a second base beside it, for a smaller footprint'],
+		['where the 12B in bf16 starts only at 4,096 tokens', running, 'where the bf16 12B does not start at 32,768 and starts at 0.95 of the card only at 4,096'],
+		["it read one question in 0.64 times the bf16 12B's server time", running, "its server time for one question was 0.64 times the bf16 12B's"],
+		["On 200 questions its top answer was the bf16 12B's on 96%, the largest probability difference 0.438.", running, "the top answer was the bf16 12B's on 96% of them (8 changed), the largest probability difference 0.438"],
+		['It has its own served name, task fingerprint and serving stack: register and certify your tasks again on it.', running, 'The FP8 12B has its own served name (`decisio-gemma-4-12b-it-fp8-letters`), task fingerprint and serving stack'],
+		["Its temperatures are the bf16 12B's until they are refitted on FP8 reads.", running, "**The temperatures** are the bf16 12B's (3.592 for every question type) until they are refitted on FP8 reads."],
+		["A Mac does not serve it: on a Mac, serve the bf16 12B's MLX conversion.", running, '`--backend mlx` refuses the FP8 base; on a Mac, serve an MLX conversion of the bf16 12B'],
+		['both precisions at 4,096 tokens and 0.95 of the card', running, 'both at 4,096 tokens and 0.95 of the card, 200 single-question requests'],
+	]),
 	// Think when unsure
 	...fromPage('/docs/think/', [
 		['each of them is read again after the served model writes its reasoning', running, 'An unsure question is sent again with'],
@@ -66,6 +80,7 @@ export const sourced = [
 		['A question a registered task answers: its correction and certificate were fitted on one read.', running, 'a question a registered task answers (its calibration and certificate are fitted on one read'],
 		['Every question of a request with images, an abstention option or two orders.', running, 'every question of a request of two orders, an abstention option or the image route'],
 		['The response says why a question did not think.', api, 'stays at one read and the response says why'],
+		['A question whose reasoning comes back unusable is answered from its one read, marked thinking: unavailable with the reason; the request does not fail.', upgrading, 'A question whose reasoning comes back unusable (mostly reserved ids) is answered at its single pass, marked `thinking: unavailable` with the reason in the response, logged, and counted in `/health` under `systemone.think.unavailable`; the request does not fail.'],
 	]),
 	// Serve your own adapter
 	...fromPage('/docs/deploy/adapter/', [
@@ -259,7 +274,8 @@ export const sourced = [
 		['a request that arrives alone is answered as on a serial server', running, '**A lone request is scored as on a serial server.**'],
 		['The gain depends on the card, the base and how often states repeat.', running, 'the gain depends on the card, the base and how often states repeat'],
 		['Under load a request waits for the requests that arrived before it, first come, first served, on every server.', upgrading, 'under load a request waits for the requests that arrived before it, in order'],
-		['It needs the vLLM engine; the Mac build refuses --think at start.', running, 'Thinking needs the vLLM engine; the MLX build cannot write reasoning, and `--think` there is refused at start.'],
+		['It needs the vLLM engine and the default --engine-process in; the Mac build and --engine-process separate refuse --think at start.', running, 'Thinking needs the vLLM engine; the MLX build cannot write reasoning, and `--think` there is refused at start.'],
+		['--engine-process separate refuse --think at start', running, '`--think` with another engine process is refused at start'],
 		['A thinking request holds the server for its whole call, so other requests wait behind it', running, "The server's lock is held for the whole call, so another request waits behind a thinking one"],
 		['use thinking where requests arrive one at a time', running, 'use it where requests arrive one at a time, or size for that'],
 		['A certificate made with thinking off is suspended on a server that thinks (think_mode_changed), and the other way round', tasksDoc, 'a certificate made one-pass is `certified: false` with the reason `think_mode_changed` on a server that thinks, and the other way round'],
