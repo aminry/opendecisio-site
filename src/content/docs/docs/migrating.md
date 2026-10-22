@@ -35,6 +35,7 @@ curl -s http://127.0.0.1:8000/v1/models
 | --- | --- |
 | Gemma 4 31B, the default | `decisio-gemma-4-31b-it-letters` |
 | Gemma 4 12B | `decisio-gemma-4-12b-it-letters` |
+| Gemma 4 12B in FP8 | `decisio-gemma-4-12b-it-fp8-letters` |
 | Qwen3.6-35B-A3B | `decisio-qwen3.6-35b-a3b-letters` |
 
 ## 3. Check what answers

@@ -42,6 +42,18 @@ export const sourced = [
 		['/health reports the mode under concurrency, and in batched mode the calls made and the requests each call held', running, '`/health` reports the mode under `concurrency`, and in batched mode the calls made, the requests in them'],
 		['A request that fails on its own, such as a text over the length, fails alone; the call\'s other requests are scored again without it.', running, "A request that fails for itself (a state over the context, a malformed question) fails alone: the call's other requests are scored again without it."],
 	]),
+	// The 12B in FP8 beside the other models, on the deploy guide and in the served names
+	...fromPage('/docs/deploy/cloud-gpu/', [
+		['12.74 GiB, FP8', readme, '12.74 GiB in memory on vLLM 0.31.0'],
+		['one 32 GB RTX 5090, at its full context', running, 'on a 32 GB RTX 5090 at the default share the FP8 12B serves its full 65,536 tokens'],
+	]),
+	...fromPage('/docs/migrating/', [
+		['decisio-gemma-4-12b-it-fp8-letters', cli, "except `--served-name` (`decisio-gemma-4-12b-it-fp8-letters`)"],
+	]),
+	...fromPage('/docs/limits/', [
+		['Gemma 4 12B in FP8 the largest that fits the card, 32,768 to 65,536 tokens 65,536', cli, 'it takes every value of the `gemma-4-12b` column below'],
+		["its answers were compared with the bf16 12B's on 200 questions only, and its temperatures are the bf16 12B's", cli, "none of them measured on FP8 yet (its temperatures are the bf16 12B's until they are refitted)"],
+	]),
 	// Choosing a model: the 12B in FP8
 	...fromPage('/docs/bases/', [
 		['12.74 GiB, FP8', readme, '12.13 GiB as a stored conversion, 12.74 GiB in memory on vLLM 0.31.0'],
@@ -254,7 +266,7 @@ export const sourced = [
 		['43.28 GiB of cache at the default share', running, 'On the same 80 GB card the 12B served its ceiling of 65,536 at the default share (43.28 GiB of KV cache)'],
 		['98,304 tokens at the default share; 49,152 at 0.85', running, '| 0.85 | 29.9 GiB | 53,696 | 49,152 |'],
 		["does not start on vLLM's defaults", card, "The Gemma base does not fit a 32 GB card on vLLM's defaults."],
-		['simulated on the 96 GB card', card, 'Simulated on the 96 GB card'],
+		['4,096 tokens, at 0.95 of the card', running, 'where the bf16 12B does not start at 32,768 and starts at 0.95 of the card only at 4,096'],
 		['24.9 GB of weights; 33.7 GB at its peak', running, 'It peaks at 29.6, 31.1 and 33.7 GB'],
 		['19.2 GB of weights; 28.0 GB at its peak', running, 'peaks at 23.9, 25.3 and 28.0 GB'],
 		['9.7 GB of weights; 15.1 GB at its peak', running, 'holds 9.7 GB of weights and peaks at 15.1 GB at 32,687 tokens of state'],

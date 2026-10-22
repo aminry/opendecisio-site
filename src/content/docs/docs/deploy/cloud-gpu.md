@@ -19,9 +19,10 @@ Install it from PyPI and start it: it serves the default model, Gemma 4 31B, on 
 | --- | --- | --- | --- |
 | Gemma 4 31B, the default | 30.6 GiB, FP8; about 31 GB to download | one 96 GB card; also starts and answers on one 80 GB H100 PCIe | the largest that fits, 32,768 to 98,304 tokens |
 | Gemma 4 12B | 22.8 GiB, bf16 | one 96 GB card; served 65,536 tokens on the same H100 | 32,768 to 65,536 tokens |
+| Gemma 4 12B in FP8 | 12.74 GiB, FP8 | one 32 GB RTX 5090, at its full context | 32,768 to 65,536 tokens |
 | Qwen3.6-35B-A3B | 33.3 GiB, FP8; about 36 GB to download | one 96 GB card | 32,768 tokens |
 
-Start another model with `--base gemma-4-12b` or `--base qwen3.6-35b-a3b`.
+Start another model with `--base gemma-4-12b`, `--base gemma-4-12b-fp8` or `--base qwen3.6-35b-a3b`.
 [Choosing a model](/docs/bases/) compares them; [Requirements and limits](/docs/limits/) has every machine.
 
 | Part | What you need |
