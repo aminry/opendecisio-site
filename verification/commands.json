@@ -88,7 +88,7 @@
 			"status": "cpu",
 			"tag": "v0.24.0",
 			"date": "2026-10-22",
-			"stdout": "answers: 50\nserver ms: 23883.0"
+			"stdout": "answers: 50\nserver ms: 24957.4"
 		},
 		"72182c644904351a": {
 			"status": "cpu",
@@ -100,7 +100,7 @@
 			"status": "cpu",
 			"tag": "v0.24.0",
 			"date": "2026-10-22",
-			"stdout": "first question: 476.3 ms\na different question about the same text: 470.4 ms"
+			"stdout": "first question: 503.2 ms\na different question about the same text: 501.4 ms"
 		},
 		"f88514bde0c31e5b": {
 			"status": "cpu",
@@ -179,7 +179,7 @@
 			"status": "cpu",
 			"tag": "v0.24.0",
 			"date": "2026-10-22",
-			"stdout": "x-decisio-server-ms: 442.4\nx-decisio-route: text\nx-decisio-stages: prepare=0.7;warm=0.0;engine=441.9;wait=0.0",
+			"stdout": "x-decisio-server-ms: 473.9\nx-decisio-route: text\nx-decisio-stages: prepare=0.7;warm=0.0;engine=473.4;wait=0.0",
 			"trimmed": true
 		},
 		"cebbdb4a5cd60b45": {
@@ -190,6 +190,16 @@
 		},
 		"643e9b3102b8e77e": {
 			"status": "output"
+		},
+		"3208b474e79319f8": {
+			"status": "cpu",
+			"tag": "v0.24.0",
+			"date": "2026-10-22",
+			"stdout": "{\n \"mode\": \"serial\"\n}"
+		},
+		"629215ece9efa728": {
+			"status": "shown",
+			"why": "it needs Linux with one NVIDIA card, which this check does not have"
 		},
 		"5c9913a346915d8c": {
 			"status": "shown",
@@ -240,13 +250,13 @@
 			"status": "cpu",
 			"tag": "v0.24.0",
 			"date": "2026-10-22",
-			"stdout": "120 examples, 12 labels, 10 to 10 per label\ntask 'ticket-routing': 120 examples, 12 options, at least 10 per option, registered in 218 s\n  calibration: applied (cross-validated gain); cross-validated log loss 2.42554 -> 2.35643, accuracy 0.2667 -> 0.2917\n  head: applied (cross-validated gain); penalty 0.0001; cross-validated log loss by penalty {\"none\": 2.42554, \"100.0\": 2.42214, \"10.0\": 2.39179, \"1.0\": 2.11252, \"0.1\": 1.00911, \"0.01\": 0.45438, \"0.001\": 0.28943, \"0.0001\": 0.23452}"
+			"stdout": "120 examples, 12 labels, 10 to 10 per label\ntask 'ticket-routing': 120 examples, 12 options, at least 10 per option, registered in 227 s\n  calibration: applied (cross-validated gain); cross-validated log loss 2.42554 -> 2.35643, accuracy 0.2667 -> 0.2917\n  head: applied (cross-validated gain); penalty 0.0001; cross-validated log loss by penalty {\"none\": 2.42554, \"100.0\": 2.42214, \"10.0\": 2.39179, \"1.0\": 2.11252, \"0.1\": 1.00911, \"0.01\": 0.45438, \"0.001\": 0.28943, \"0.0001\": 0.23452}"
 		},
 		"065093b062639c13": {
 			"status": "cpu",
 			"tag": "v0.24.0",
 			"date": "2026-10-22",
-			"stdout": "My card keeps getting declined when I renew.\n  choice payment_failed; x-decisio-tasks: ticket-routing; route text, 1000.9 ms\n  payment_failed 1.000, bug 0.000, billing 0.000"
+			"stdout": "My card keeps getting declined when I renew.\n  choice payment_failed; x-decisio-tasks: ticket-routing; route text, 948.8 ms\n  payment_failed 1.000, bug 0.000, billing 0.000"
 		},
 		"3ef7d4649178b987": {
 			"status": "cpu",
