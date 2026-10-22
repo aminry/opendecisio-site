@@ -85,7 +85,8 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 8. **Certify with the think setting you serve with.** A certificate made with thinking off is suspended on a server that thinks (`think_mode_changed`), and the other way round, until you certify again.
 9. **Batch concurrent requests on a card or the CPU stand-in.** `--concurrency batched` needs the vLLM engine or the stand-in in separate mode; the Mac build and `--mode packed` refuse it at start.
 10. **Certify on the mode you serve with.** A certificate made on a serial server is suspended on a batching one (`concurrency_changed`), and the other way round, until you certify again.
-11. **Expect requests in arrival order.** Under load a request waits for the requests that arrived before it, first come, first served, on every server.
+11. **Batch concurrent requests for throughput, and measure on your traffic.** On one RTX 5090 the Gemma 4 12B in FP8 answered 8.9 and 9.2 requests a second batched, at 8 and 16 clients, against 7.2 one at a time, on requests about new states of about 1,000 tokens; a request that arrives alone is answered as on a serial server. The gain depends on the card, the base and how often states repeat.
+12. **Expect requests in arrival order.** Under load a request waits for the requests that arrived before it, first come, first served, on every server.
 
 ## 4. What was measured on what
 
@@ -100,6 +101,7 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 | Context length against the card's share | Gemma 4 31B, FP8; Gemma 4 12B | one H100 PCIe, 80 GB | vLLM 0.31.0 | 2026-10-15 |
 | Mac memory | Gemma 4 31B and 12B, MLX builds | one Apple M5 Pro, 64 GB | MLX | 2026-10-05 to 2026-10-16 |
 | Ollama memory | Gemma 4 12B, `q4_k_m` | one Apple M5 Pro | Ollama 0.35.1 | 2026-10-07 |
+| Batched throughput | Gemma 4 12B, FP8 | one RTX 5090, 32 GB | vLLM 0.31.0, 0.95 of the card, 4,096 tokens, requests about new 1,000-token states, 8 and 16 clients | 2026-10-21 |
 :::
 
 - One card and one run per configuration.

@@ -18,6 +18,30 @@ const cli = 'docs/cli.md';
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
 
 export const sourced = [
+	// Batch concurrent requests
+	...fromPage('/docs/concurrency/', [
+		['it scores every request waiting for the engine together, in one call, so concurrent requests share the model\'s forward passes', running, 'scores all their rows in one engine call, so concurrent requests share forward passes'],
+		['A request that arrives at an idle server is still scored at once, alone, and gets the serial answer bit for bit', running, 'a request that arrives at an idle server is scored at once, alone, by the same engine call a serial server makes'],
+		['and gets the serial answer bit for bit', running, 'and its answer is the serial answer bit for bit (200 of 200 requests on the FP8 and the bf16 12B, RTX 5090, vLLM 0.31.0'],
+		['one request at a time through the engine, and the same request gives the same answer whatever else arrives', running, 'the same request gives the same bytes whatever else the server is sent at the time'],
+		['--batch-max-requests caps one call at 16 requests by default, counted in requests, not questions. The oldest waiting request is always taken.', running, 'up to `--batch-max-requests` (16, counted in requests, not rows; the oldest waiting request is always taken)'],
+		['Under concurrent load it answers more requests a second', running, '`--concurrency batched` trades that for throughput under concurrent load'],
+		['the Gemma 4 12B in FP8 answered 8.9 and 9.2 requests a second at 8 and 16 clients, against 7.2 one at a time', running, 'the FP8 12B batched did 8.9 and 9.2 requests a second at 8 and 16 clients against 7.2 serial'],
+		['on requests about new texts of about 1,000 tokens', running, 'With every request about a new state of about 1,000 tokens'],
+		['The gain depends on the card, the model and how often texts repeat, so measure it on your own traffic.', running, 'Measure on your own traffic: the gain depends on the card, the base and how often states repeat.'],
+		['vLLM 0.31.0', running, 'Throughput, measured on one RTX 5090 (vLLM 0.31.0)'],
+		['Only the 12B in FP8 has a published batched throughput figure', running, 'the FP8 12B batched did 8.9 and 9.2 requests a second'],
+		['One call holds the requests of one adapter, or of the base alone.', running, 'A call holds the requests of one adapter (or of the weights as loaded) only'],
+		["A certified task's questions, and every task registration and certification read, take the serial path on a batched server too.", upgrading, "On a batched server a certified task's questions and every task registration and certification read still take the serial path"],
+		["A thinking request, an image request and a request a task's intent head answers take the engine alone.", running, 'A thinking request (`--think`), an image request and a request a task with an intent head answers take the engine alone'],
+		['So certified answers are made and served on the reads a serial server would make.', running, 'So a certificate made on a batching server is made and served on the reads a serial server would make'],
+		['An answer no certified task covers can differ slightly when it is scored beside other requests, because the engine\'s arithmetic follows the shape of the batch.', running, "because the engine's kernels choose their tiling and reduction order by the shape of the batch"],
+		['such as two benchmark runs you compare request by request', running, 'what makes two runs of a benchmark comparable request by request'],
+		['x-decisio-batch says, when a request shared a call, with how many requests and questions: requests=N; rows=M. It is absent when the request was scored alone.', api, '`x-decisio-batch`: `requests=N; rows=M` when the server batches concurrent requests'],
+		['wait= in x-decisio-stages is the time the request waited for its call', running, '`wait=` in `x-decisio-stages` is the time it waited for the call'],
+		['/health reports the mode under concurrency, and in batched mode the calls made and the requests each call held', running, '`/health` reports the mode under `concurrency`, and in batched mode the calls made, the requests in them'],
+		['A request that fails on its own, such as a text over the length, fails alone; the call\'s other requests are scored again without it.', running, "A request that fails for itself (a state over the context, a malformed question) fails alone: the call's other requests are scored again without it."],
+	]),
 	// Think when unsure
 	...fromPage('/docs/think/', [
 		['each of them is read again after the served model writes its reasoning', running, 'An unsure question is sent again with'],
@@ -231,6 +255,9 @@ export const sourced = [
 		['Nothing cut is certified', running, '**Nothing cut is certified.**'],
 		['--concurrency batched needs the vLLM engine or the stand-in in separate mode; the Mac build and --mode packed refuse it at start', running, 'Batched mode needs the vLLM engine or the CPU stand-in, in separate mode; MLX and `--mode packed` refuse it at start.'],
 		['A certificate made on a serial server is suspended on a batching one (concurrency_changed), and the other way round', running, 'a certificate made on a serial server is `certified: false` with the reason `concurrency_changed` on a batching server, and the other way round, until the task is certified again where it is served'],
+		['FP8 12B batched 8.9 and 9.2 requests a second at 8 and 16 clients against 7.2 serial', running, 'the FP8 12B batched did 8.9 and 9.2 requests a second at 8 and 16 clients against 7.2 serial'],
+		['a request that arrives alone is answered as on a serial server', running, '**A lone request is scored as on a serial server.**'],
+		['The gain depends on the card, the base and how often states repeat.', running, 'the gain depends on the card, the base and how often states repeat'],
 		['Under load a request waits for the requests that arrived before it, first come, first served, on every server.', upgrading, 'under load a request waits for the requests that arrived before it, in order'],
 		['It needs the vLLM engine; the Mac build refuses --think at start.', running, 'Thinking needs the vLLM engine; the MLX build cannot write reasoning, and `--think` there is refused at start.'],
 		['A thinking request holds the server for its whole call, so other requests wait behind it', running, "The server's lock is held for the whole call, so another request waits behind a thinking one"],
@@ -316,6 +343,7 @@ export const sourced = [
 		['anything but 200: alert; 503 means the engine has died', api, 'Alert on anything but 200.'],
 		['a growing wait is requests queueing behind the one engine', api, 'A `wait` that grows is requests queueing behind the engine.'],
 		['concurrent requests queue behind it and are answered in turn', api, 'so concurrent requests queue behind it and are answered in turn; there is no queue limit'],
+		['scores the waiting ones together instead', api, 'With `--concurrency batched` the requests waiting for the engine are scored together in one call instead'],
 		['first come, first served, with no queue limit', upgrading, "**The engine's lock is first come, first served** on the vLLM engine and the CPU stand-in, on every server"],
 		['There are no engine metrics and no structured log', api, 'the server exposes no Prometheus metrics for the engine'],
 		['{"ok": false, "engine": "dead", "reason": "...", "exit_code": 70}', running, '`/health` answers 503 with `{"ok": false, "engine": "dead", "reason": "...", "exit_code": 70}`'],

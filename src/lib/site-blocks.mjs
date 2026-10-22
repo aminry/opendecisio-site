@@ -130,6 +130,10 @@ const thinkAsk = () => `curl -s http://127.0.0.1:8000/v1/systemone -H 'Content-T
 }' | python3 -c 'import json, sys; r = json.load(sys.stdin); print(json.dumps({"thinking": r.get("thinking"), "thinking_tokens": r["usage"].get("thinking_tokens")}, indent=1))'`;
 const thinkHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["systemone"]["think"], indent=1))'`;
 
+// Batch concurrent requests: the start in batched mode, and the server's mode in /health.
+const concurrencyStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --concurrency batched`;
+const concurrencyHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["concurrency"], indent=1))'`;
+
 // The recorded answers as the comment lines a client prints: one per question, its likeliest option and probability.
 const printed = () => Object.entries(recordedResponse().answers).map(([name, a]) => {
 	if (a.type === 'noul') return `${name} ${a.noul}`;
@@ -238,6 +242,8 @@ export const siteBlocks = {
 	get 'think-start'() { return { lang: 'bash', text: thinkStart() }; },
 	get 'think-ask'() { return { lang: 'bash', text: thinkAsk() }; },
 	get 'think-health'() { return { lang: 'bash', text: thinkHealth() }; },
+	get 'concurrency-start'() { return { lang: 'bash', text: concurrencyStart() }; },
+	get 'concurrency-health'() { return { lang: 'bash', text: concurrencyHealth() }; },
 	get 'images-start'() { return { lang: 'bash', text: `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b --image-model Qwen/Qwen3.6-35B-A3B-FP8` }; },
 	get 'mac-install'() { return { lang: 'bash', text: `${clone()}\nuv sync --extra mlx` }; },
 	get 'mac-31b-6bit'() { return { lang: 'bash', text: macStart('gemma-4-31b-it-6bit') }; },

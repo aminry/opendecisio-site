@@ -50,7 +50,7 @@ curl -s -D - -o /dev/null http://127.0.0.1:8000/v1/systemone \
   | grep -i '^x-decisio'
 ```
 
-- The server runs one engine; concurrent requests queue behind it and are answered in turn, first come, first served, with no queue limit.
+- The server runs one engine; concurrent requests queue behind it and are answered in turn, first come, first served, with no queue limit. [Batch concurrent requests](/docs/concurrency/) scores the waiting ones together instead.
 - There are no engine metrics and no structured log: take latency and queueing from the headers, in your client or your proxy's log.
 - After a deploy, read `/health` for the model, its checkpoint and revision, and `max_model_len` with its source.
 
