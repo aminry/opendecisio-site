@@ -140,6 +140,7 @@ print("a different question about the same text:", server_ms({"type": "noul", "i
 
 ## What next
 
+- [Batch concurrent requests](/docs/concurrency/): more requests a second when many clients send at once.
 - [Operate](/docs/operating/): watch the server time and the queue in production.
 - [Requirements and limits](/docs/limits/): every model's memory and longest text, and what was measured on what.
 - [Choosing a model](/docs/bases/): which model is faster on what.

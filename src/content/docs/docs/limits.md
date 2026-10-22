@@ -28,7 +28,7 @@ curl -s http://127.0.0.1:8000/health
 | NVIDIA, 80 GB | Gemma 4 31B, FP8 | 30.6 GiB of weights; 33.85 GiB of cache at the default share | 98,304 tokens at the default share; 49,152 at 0.85 | it starts and answers, an H100 PCIe; the full measurements are the 96 GB card's |
 | NVIDIA, 80 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights; 43.28 GiB of cache at the default share | 65,536 tokens at the default share | yes, an H100 PCIe |
 | NVIDIA, 96 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights | up to 65,536 tokens | yes |
-| NVIDIA, 32 GB | Gemma 4 12B, bf16 | does not start on vLLM's defaults | none | simulated on the 96 GB card |
+| NVIDIA, 32 GB | Gemma 4 12B, bf16 | does not start on vLLM's defaults | 4,096 tokens, at 0.95 of the card | yes, an RTX 5090 |
 | NVIDIA, 32 GB | Gemma 4 12B, FP8 | 12.74 GiB of weights | 65,536 tokens at the default share | yes, an RTX 5090 |
 | NVIDIA, 96 GB | Qwen3.6-35B-A3B, FP8 | 33.3 GiB of weights | 32,768 tokens | yes |
 | Mac, 64 GB | Gemma 4 31B, 6-bit MLX | 24.9 GB of weights; 33.7 GB at its peak | 16,383 tokens | yes, an Apple M5 Pro |
@@ -52,6 +52,7 @@ The guides have the commands: [on a cloud GPU](/docs/deploy/cloud-gpu/), [with D
 | --- | --- | --- |
 | Gemma 4 31B | the largest that fits the card, 32,768 to 98,304 tokens | 98,304 |
 | Gemma 4 12B | the largest that fits the card, 32,768 to 65,536 tokens | 65,536 |
+| Gemma 4 12B in FP8 | the largest that fits the card, 32,768 to 65,536 tokens | 65,536 |
 | Qwen3.6-35B-A3B | 32,768 tokens | 32,768 |
 
 - At start, the server asks the engine for the longest request that fits the card, and serves the largest multiple of 8,192 under it and under the ceiling.
@@ -103,6 +104,7 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 | Context length against the card's share | Gemma 4 31B, FP8; Gemma 4 12B | one H100 PCIe, 80 GB | vLLM 0.31.0 | 2026-10-15 |
 | Mac memory | Gemma 4 31B and 12B, MLX builds | one Apple M5 Pro, 64 GB | MLX | 2026-10-05 to 2026-10-16 |
 | Ollama memory | Gemma 4 12B, `q4_k_m` | one Apple M5 Pro | Ollama 0.35.1 | 2026-10-07 |
+| The 12B in FP8 against bf16, and on a 32 GB card | Gemma 4 12B, FP8 and bf16 | one RTX 5090, 32 GB | vLLM 0.31.0, 4,096 tokens, 0.95 of the card | 2026-10-21 |
 | Batched throughput | Gemma 4 12B, FP8 | one RTX 5090, 32 GB | vLLM 0.31.0, 0.95 of the card, 4,096 tokens, requests about new 1,000-token states, 8 and 16 clients | 2026-10-21 |
 :::
 
@@ -123,7 +125,8 @@ Across restarts and machines, answers are not promised to repeat.
 
 - The image route on either Gemma model; a Mac does not serve images.
 - A 48 GB or 32 GB Mac, or a 16 GB laptop, as machines: their figures are read on a 64 GB Mac.
-- NVIDIA cards other than the RTX PRO 6000 Blackwell and the H100 PCIe.
+- NVIDIA cards other than the RTX PRO 6000 Blackwell and the H100 PCIe, and, for the 12B, the RTX 5090.
+- The 12B in FP8's accuracy and calibration: its answers were compared with the bf16 12B's on 200 questions only, and its temperatures are the bf16 12B's.
 - Accuracy at long length on a full test set: no set has a text over 32,768 tokens.
 - The 31B's 6-bit Mac build on MMLU-Pro, and its server times.
 - Latency with the intent head on a second engine.
