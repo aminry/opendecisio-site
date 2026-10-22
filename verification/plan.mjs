@@ -69,6 +69,9 @@ const fields = (...keys) => (stdout) => {
 // What a script printed, as it printed it.
 const asPrinted = (stdout) => stdout;
 
+// The directory the stand-in saves taught tasks to, from Teach a task's first step on.
+const TASKS_DIR = '/tmp/decisio-tasks';
+
 export const plan = [
 	// Get started, on the stand-in, the path every machine can take: the recorded support ticket (src/lib/site-blocks.mjs).
 	{
@@ -148,7 +151,9 @@ export const plan = [
 		},
 	},
 	{
+		// From here on the stand-in saves its tasks, as Teach a task's step 6 starts a server.
 		page: '/docs/tasks/', n: 1, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/tasks', trimmed: true,
+		restart: `rm -rf ${TASKS_DIR} && uv run python -m decisio.serve.vllm_engine --backend hf --model Qwen/Qwen3-0.6B-Base --tasks-dir ${TASKS_DIR}`,
 		show: (stdout) => { const t = json(stdout); return JSON.stringify({ id: t.id, n_examples: t.n_examples, calibration: { applied: t.calibration?.applied, reason: t.calibration?.reason }, head: { applied: t.head?.applied, reason: t.head?.reason } }, null, 1); },
 		assert(stdout) {
 			if (json(stdout).id !== 'ticket-routing') throw new Error('the registration did not answer with the task');
@@ -286,8 +291,10 @@ export const plan = [
 	{ page: '/docs/tasks/', n: 5, mode: 'shown', expect: 'python -m decisio.serve.vllm_engine --tasks-dir', why: "it is the start of a server on a card, with a directory on a volume; its other flags are the reader's" },
 	{
 		page: '/docs/tasks/', n: 6, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health \\', show: asPrinted,
+		note: `on the stand-in started with --tasks-dir ${TASKS_DIR}, after the task above was registered`,
 		assert(stdout) {
-			if (!('saved_to' in json(stdout))) throw new Error('/health does not say where the server saves its tasks');
+			const t = json(stdout);
+			if (t.saved_to !== TASKS_DIR || !(t.readout?.loaded >= 1)) throw new Error(`/health does not show the tasks saved to ${TASKS_DIR} with the task registered`);
 		},
 	},
 	{
