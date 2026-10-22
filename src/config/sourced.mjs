@@ -47,6 +47,7 @@ export const sourced = [
 		['12.74 GiB, FP8', readme, '12.13 GiB as a stored conversion, 12.74 GiB in memory on vLLM 0.31.0'],
 		['an NVIDIA card with 32 GB, at its full 65,536 tokens', running, 'on a 32 GB RTX 5090 at the default share the FP8 12B serves its full 65,536 tokens'],
 		['google/gemma-4-12B-it, quantized to FP8 as it loads', running, '`--base gemma-4-12b-fp8` alone serves `google/gemma-4-12B-it` at its pinned revision and quantizes it on load.'],
+		['or tachara-ai/decisio-gemma-4-12b-fp8, the same conversion stored', running, 'The repository `tachara-ai/decisio-gemma-4-12b-fp8` holds it, at the revision this release pins'],
 		['The Gemma 4 12B in FP8 is a second precision of the 12B, from the same checkpoint, for a smaller footprint.', running, 'FP8 is a second base beside it, for a smaller footprint'],
 		['where the 12B in bf16 starts only at 4,096 tokens', running, 'where the bf16 12B does not start at 32,768 and starts at 0.95 of the card only at 4,096'],
 		["it read one question in 0.64 times the bf16 12B's server time", running, "its server time for one question was 0.64 times the bf16 12B's"],
