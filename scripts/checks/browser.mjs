@@ -19,6 +19,15 @@ import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
+
+// axe findings accepted on one element each, with the reason; every other element is still held to the rule.
+// - label-content-name-mismatch on Starlight's search button: its label is "Search", and the "Ctrl K" (or "⌘ K") beside
+//   it is a keyboard-shortcut hint, symbolic text that WCAG's Understanding 2.5.3 says is not part of the visible label;
+//   the shortcut is exposed through aria-keyshortcuts. axe 4.14 made the rule non-experimental and counts the hint;
+//   Starlight declined a change (withastro/starlight#4260), since aria-hidden does not clear it and naming the shortcut
+//   would announce it twice. Revisit when axe or the ACT rule for 2.5.3 settles.
+const AXE_ACCEPTED = [{ rule: 'label-content-name-mismatch', target: 'button[data-open-modal' }];
+const axeAccepted = (rule, node) => AXE_ACCEPTED.some((a) => a.rule === rule && node.target.length === 1 && String(node.target[0]).startsWith(a.target));
 import { chromium, firefox, webkit } from 'playwright';
 
 const engines = { chromium, webkit, firefox };
@@ -381,7 +390,9 @@ try {
 
 				const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
 				for (const violation of axe.violations) {
-					report(engineName, route, v.name, `axe ${violation.id} (${violation.impact}): ${violation.help}; ${violation.nodes.slice(0, 3).map((n) => n.target.join(' ')).join(', ')}`);
+					const nodes = violation.nodes.filter((n) => !axeAccepted(violation.id, n));
+					if (!nodes.length) continue;
+					report(engineName, route, v.name, `axe ${violation.id} (${violation.impact}): ${violation.help}; ${nodes.slice(0, 3).map((n) => n.target.join(' ')).join(', ')}`);
 				}
 
 				// Keyboard reach: from the top, the keyboard must reach every focusable element.
