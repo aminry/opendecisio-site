@@ -69,8 +69,9 @@ const fields = (...keys) => (stdout) => {
 // What a script printed, as it printed it.
 const asPrinted = (stdout) => stdout;
 
-// The directory the stand-in saves taught tasks to, from Teach a task's first step on.
-const TASKS_DIR = '/tmp/decisio-tasks';
+// The directory the stand-in saves taught tasks to, from Teach a task's first step on: a path that persists, not /tmp,
+// since the page is about tasks that survive a restart (relative to the clone, where the runner can write).
+const TASKS_DIR = 'decisio-tasks';
 
 export const plan = [
 	// Get started, on the stand-in, the path every machine can take: the recorded support ticket (src/lib/site-blocks.mjs).
@@ -294,7 +295,7 @@ export const plan = [
 		note: `on the stand-in started with --tasks-dir ${TASKS_DIR}, after the task above was registered`,
 		assert(stdout) {
 			const t = json(stdout);
-			if (t.saved_to !== TASKS_DIR || !(t.readout?.loaded >= 1)) throw new Error(`/health does not show the tasks saved to ${TASKS_DIR} with the task registered`);
+			if (t.saved_to?.backend !== 'dir' || t.saved_to?.path !== TASKS_DIR || !(t.readout?.loaded >= 1)) throw new Error(`/health does not show the tasks saved to ${TASKS_DIR} with the task registered`);
 		},
 	},
 	{
