@@ -5,7 +5,7 @@ description: Teach decisio a question you ask again and again, from your own lab
 
 <!-- Site-written: the first of the three Teach and trust guides, rewritten from decisio's docs/tasks.md at the pinned release, whose commands it shows (::upstream); what teaching did is EVAL_CARD.md section 7.2's, through src/lib/teach.mjs; the other facts are docs/tasks.md's (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/tasks.md README.md#teach-it-your-question docs/tasks.md#what-a-task-is=1-check-that-it-is-a-task docs/tasks.md#why-register-one=what-it-does docs/tasks.md#what-you-need=2-gather-your-examples docs/tasks.md#walk-through=3-register docs/tasks.md#3-read-the-response=4-read-what-it-kept docs/tasks.md#5-list-export-reload-delete=6-keep-it-across-restarts docs/tasks.md#what-you-get=what-it-does docs/tasks.md#when-it-helps-and-when-it-does-not=what-it-does docs/tasks.md#what-it-costs=what-it-costs"}
+::covers{links="docs/tasks.md README.md#teach-it-your-question docs/tasks.md#what-a-task-is=1-check-that-it-is-a-task docs/tasks.md#why-register-one=what-it-does docs/tasks.md#what-you-need=2-gather-your-examples docs/tasks.md#walk-through=3-register docs/tasks.md#3-read-the-response=4-read-what-it-kept docs/tasks.md#5-list-export-reload-delete=6-keep-it-across-restarts docs/tasks.md#saved-to-disk---tasks-dir=6-keep-it-across-restarts docs/tasks.md#what-you-get=what-it-does docs/tasks.md#when-it-helps-and-when-it-does-not=what-it-does docs/tasks.md#what-it-costs=what-it-costs"}
 
 Register the question once, with labelled examples, and every later request that asks it is answered with what the server learned.
 With the example task from decisio's repository, one request teaches it:
@@ -68,8 +68,19 @@ No header means the question matched no task: check that its question and option
 
 ## 6. Keep it across restarts
 
-A task lives in one server's memory: a restart, or a second server behind a load balancer, does not see it.
-Export it once, and start every server with `--tasks-file tasks.json`, or import it:
+Start the server with `--tasks-dir` and every task you teach is saved to disk before the server answers, and loaded again at the next start:
+
+::upstream{file="docs/tasks.md" section="Saved to disk (--tasks-dir)" block="1"}
+
+- Put the directory on a volume that outlives the server, and add `--require-tasks N`: a server that finds fewer than N usable tasks refuses to start, so a volume that failed to mount does not turn into untaught answers.
+- A save that fails fails the request with 500, and the task is not registered.
+- One directory belongs to one server. For several replicas, see [Operate](/docs/operating/#4-keep-tasks-across-restarts-and-replicas).
+
+`/health` says where the server saves its tasks, and how many it loaded and applies:
+
+::site-block{name="tasks-health"}
+
+To move a task to another machine, export it and import it there, or start the server with `--tasks-file tasks.json`:
 
 ::upstream{file="docs/tasks.md" section="5. List, export, reload, delete" block="1"}
 

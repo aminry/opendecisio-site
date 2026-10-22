@@ -69,6 +69,35 @@ export const sourced = [
 		["A Mac does not serve it: on a Mac, serve the bf16 12B's MLX conversion.", running, '`--backend mlx` refuses the FP8 base; on a Mac, serve an MLX conversion of the bf16 12B'],
 		['both precisions at 4,096 tokens and 0.95 of the card', running, 'both at 4,096 tokens and 0.95 of the card, 200 single-question requests'],
 	]),
+	// Taught tasks saved to disk and shared between replicas (0.25.0)
+	...fromPage('/docs/tasks/', [
+		['every task you teach is saved to disk before the server answers, and loaded again at the next start', upgrading, 'written through atomically before the response and loaded at start'],
+		['a server that finds fewer than N usable tasks refuses to start', tasksDoc, '**`--require-tasks N`** refuses to start unless at least N tasks apply to this server'],
+		['so a volume that failed to mount does not turn into untaught answers', tasksDoc, 'a store volume that failed to mount gives a server that starts, answers, and has forgotten everything'],
+		['A save that fails fails the request with 500, and the task is not registered.', tasksDoc, 'The response is a 500 saying the task was not saved and the change was not made; the task is not registered'],
+		['One directory belongs to one server.', tasksDoc, '**One server owns a directory.**'],
+		['/health says where the server saves its tasks, and how many it loaded and applies', tasksDoc, '`GET /v1/tasks`, `GET /v1/abstention/tasks` and `/health` (`systemone.task_store`) carry the same: `saved_to`, per kind `loaded`, `applied`'],
+	]),
+	...fromPage('/docs/operating/', [
+		['start it with --tasks-dir on a volume that outlives the container, and --require-tasks N', operating, 'put the directory on a volume that outlives the container, and start with `--require-tasks N`'],
+		['start every one with --task-store on object storage, such as s3://bucket/prefix', operating, 'For replicas, start every one with `--task-store'],
+		['A task taught on one replica reaches the others within --task-store-poll-seconds, 5 by default, as the same fitted record', operating, 'a task taught on one reaches the others within `--task-store-poll-seconds` (5), as the exact fitted record'],
+		['so every replica serves the same numbers', tasksDoc, 'nothing is scored again, so every replica serves identical numbers'],
+		['a second registration of the same task answers 409 instead of overwriting it', operating, 'a second registration of the same task is refused with a 409 rather than overwriting it'],
+		['start the others with --task-store-readonly and route the task-writing routes to that one', operating, 'mark all but one `--task-store-readonly` and route the task-writing paths to it'],
+		['replicas keep serving what they have, and teaching answers 503 until it is back', operating, 'a store outage stops teaching (503) and not serving'],
+		['/health says so under systemone.task_store', tasksDoc, '`/health` stays 200 and `systemone.task_store` says `ok: false`'],
+	]),
+	...fromPage('/docs/tasks/certify/', [
+		['A threshold applies only on the served name it was fitted for', upgrading, 'An abstention task now applies only on the served name it was fitted for'],
+	]),
+	...fromPage('/docs/limits/', [
+		['a certificate is suspended on a replica whose engine, card or settings differ, so a fleet with certified answers runs the same stack everywhere', tasksDoc, 'A fleet that wants certified answers everywhere runs one stack.'],
+		['The traffic monitors of a certified task are per replica, not shared: sum the decisio_task_* metrics across replicas.', tasksDoc, '**Monitors stay per replica.**'],
+		['They pick it up within the poll interval; a client that must read its own change asks the replica that made it.', tasksDoc, 'a client that must read its own write asks the replica that took it'],
+		['The shared store was checked on RustFS and SeaweedFS, not on AWS S3, R2, MinIO, GCS or Azure', tasksDoc, 'Not run against AWS S3, R2, MinIO, GCS or Azure'],
+		['a replica refuses to start on a store that does not enforce conditional writes', tasksDoc, 'or if the store does not enforce conditional writes'],
+	]),
 	// Think when unsure
 	...fromPage('/docs/think/', [
 		['each of them is read again after the served model writes its reasoning', running, 'An unsure question is sent again with'],
@@ -215,7 +244,7 @@ export const sourced = [
 		['--max-model-len 32768 serves only what was measured', running, 'to serve only what was measured, give `--max-model-len 32768`'],
 		['answers 503 and exits with code 70', running, 'the server stops its engine processes and exits with code 70'],
 		['200 once the engine is loaded, 503 from the moment it has died', operating, '`/health` answers 200 once the engine is loaded and 503'],
-		['its own registered tasks, which live in memory', operating, 'each replica is a separate server with its own registered tasks, which live in memory'],
+		['give it its own --tasks-dir, or share the replicas\' tasks with --task-store', upgrading, 'Give each its own directory, or start them all with `--task-store`'],
 	]),
 	// With Docker
 	...fromPage('/docs/deploy/docker/', [
@@ -322,7 +351,7 @@ export const sourced = [
 		['up to 20 for the correction or 10 per option for the head', tasksDoc, 'add examples, up to 20 for calibration or 10 per option for the head'],
 		['Registering the same id again replaces the task.', tasksDoc, 'Registering the same `id` again replaces the task.'],
 		['x-decisio-tasks: ticket-routing', tasksDoc, 'The response header `x-decisio-tasks: ticket-routing` says the question matched the registered task'],
-		['start every server with --tasks-file tasks.json', tasksDoc, 'start each server with `--tasks-file tasks.json`'],
+		['start the server with --tasks-file tasks.json', tasksDoc, 'start each server with `--tasks-file tasks.json`'],
 		['A task applies only under the model and the prompt layout it was taught on', tasksDoc, 'A task is valid only for the model and rendering it was fitted under'],
 		['a correction costs nothing extra', tasksDoc, 'Calibration and questions without a task cost nothing extra.'],
 		['A question the intent head answers takes extra work on the server', tasksDoc, 'because the hidden state is read in three extra requests'],

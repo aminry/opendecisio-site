@@ -90,6 +90,10 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 11. **Certify on the mode you serve with.** A certificate made on a serial server is suspended on a batching one (`concurrency_changed`), and the other way round, until you certify again.
 12. **Batch concurrent requests for throughput, and measure on your traffic.** On one RTX 5090 the Gemma 4 12B in FP8 answered 8.9 and 9.2 requests a second batched, at 8 and 16 clients, against 7.2 one at a time, on requests about new states of about 1,000 tokens; a request that arrives alone is answered as on a serial server. The gain depends on the card, the base and how often states repeat.
 13. **Expect requests in arrival order.** Under load a request waits for the requests that arrived before it, first come, first served, on every server.
+14. **Run one stack across replicas that certify.** With a shared task store, a certificate is suspended on a replica whose engine, card or settings differ, so a fleet with certified answers runs the same stack everywhere.
+15. **Watch each replica on its own.** The traffic monitors of a certified task are per replica, not shared: sum the `decisio_task_*` metrics across replicas.
+16. **Expect a taught task on the other replicas within seconds, not at once.** They pick it up within the poll interval; a client that must read its own change asks the replica that made it.
+17. **Check your object store at the first start.** The shared store was checked on RustFS and SeaweedFS, not on AWS S3, R2, MinIO, GCS or Azure; a replica refuses to start on a store that does not enforce conditional writes.
 
 ## 4. What was measured on what
 

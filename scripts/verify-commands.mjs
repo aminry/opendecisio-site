@@ -138,6 +138,8 @@ const shown = (step, stdout) => {
 for (const step of steps) {
 	const { block } = step;
 	const text = block.text.trim();
+	// A step can start the stand-in again with other flags first (`restart`): the steps after it run on that server.
+	if (step.restart) await startServer(step.restart);
 	switch (step.mode) {
 		case 'run': {
 			const stdout = run(text);

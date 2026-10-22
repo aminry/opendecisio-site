@@ -5,7 +5,7 @@ description: Keep a decisio server up, know at a glance when it is not, and secu
 
 <!-- Site-written: the Operate guide, merging Deploying and operating with Health and monitoring. Its facts are decisio's docs/running.md ("When the engine dies"), docs/api.md ("What to watch", the response headers), docs/operating.md and SECURITY.md at the pinned release (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/operating.md docs/running.md#when-the-engine-dies=3-know-what-happens-when-the-engine-dies docs/running.md#checking-a-server=2-watch-it docs/api.md#what-to-watch=2-watch-it SECURITY.md#deployment-notes=5-secure-it SECURITY.md#cross-site-requests-from-a-web-page=5-secure-it SECURITY.md#reporting-a-vulnerability=5-secure-it SECURITY.md=5-secure-it"}
+::covers{links="docs/operating.md docs/running.md#when-the-engine-dies=3-know-what-happens-when-the-engine-dies docs/running.md#checking-a-server=2-watch-it docs/api.md#what-to-watch=2-watch-it SECURITY.md#deployment-notes=5-secure-it SECURITY.md#cross-site-requests-from-a-web-page=5-secure-it SECURITY.md#reporting-a-vulnerability=5-secure-it SECURITY.md=5-secure-it docs/tasks.md#replicas-a-shared-store---task-store=4-keep-tasks-across-restarts-and-replicas"}
 
 Wait until a server is ready, then read what it serves:
 
@@ -63,11 +63,13 @@ Once the engine is dead, every request, and `/health`, answers at once with the 
 - A death between requests turns `/health` to 503 within a second, before any request arrives.
 - An error caused by the request itself, such as a 422, is answered and does not touch the engine.
 
-## 4. Keep tasks across restarts
+## 4. Keep tasks across restarts and replicas
 
-Taught tasks live in one server's memory.
-Export them once and start every server with `--tasks-file`, as [Teach a task](/docs/tasks/#6-keep-it-across-restarts) shows.
-With several replicas, each one is a separate server with its own tasks.
+- **One server:** start it with `--tasks-dir` on a volume that outlives the container, and `--require-tasks N`, as [Teach a task](/docs/tasks/#6-keep-it-across-restarts) shows. One directory belongs to one server.
+- **Replicas behind a load balancer:** start every one with `--task-store` on object storage, such as `s3://bucket/prefix`. A task taught on one replica reaches the others within `--task-store-poll-seconds`, 5 by default, as the same fitted record, so every replica serves the same numbers.
+- **Two teachers at once:** a second registration of the same task answers 409 instead of overwriting it; read the task again and send it again.
+- **Keep fitting on one replica:** start the others with `--task-store-readonly` and route the task-writing routes to that one.
+- **If the store goes away:** replicas keep serving what they have, and teaching answers 503 until it is back; `/health` says so under `systemone.task_store`.
 
 ## 5. Secure it
 
