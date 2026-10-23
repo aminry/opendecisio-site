@@ -91,7 +91,7 @@ export function recordedValues() {
 	const s = session();
 	const { certificate: c } = certificate();
 	const e = example5();
-	const box = `Gemma 4 31B from its FP8 checkpoint, decisio ${s.decisio}, one RTX PRO 6000 at ${s.powerW} W, ${s.date}`;
+	const box = `Gemma 4 31B from its FP8 checkpoint, decisio ${s.decisio}, one RTX PRO 6000 at ${s.powerW} W, ${s.date}, on the plain layout`;
 	return {
 		'certify-result': `answers with a top probability of at least ${c.threshold.toFixed(4)} are certified: ${c.certified_n} of the ${c.n} held-back tickets, ${c.errors_at_threshold} of them wrong`,
 		'certify-recorded': `Recorded on ${box}; the response is abridged.`,

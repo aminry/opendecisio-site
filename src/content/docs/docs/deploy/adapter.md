@@ -22,6 +22,7 @@ Start the server with `--adapter name=path`, once per adapter, and the adapter's
 - The adapter is a vLLM-format LoRA adapter, served unmerged, on the text route, in separate mode.
 - A Mac does not serve adapters.
 - A request uses the adapter only when it names it; every other request is answered by the base.
+- The server serves the [prompt layout](/docs/layout/) the adapter's file records, and plain when it records none: no adapter was measured under the header layout. Adapters that record different layouts cannot share a server.
 
 ## 2. Give it its own temperatures
 
@@ -37,6 +38,7 @@ Fit the file from the adapter's readouts on labelled items, one row per item (`{
 ::site-block{name="adapter-fit"}
 
 Fit on items that are not a benchmark's: a temperature holds for the kind of items it was fitted on.
+Fit on readouts taken under the layout you serve, and give `--layout` to the fit so the file records it.
 
 ## 3. Ask with it
 

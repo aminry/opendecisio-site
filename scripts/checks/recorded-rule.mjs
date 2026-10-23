@@ -2,7 +2,9 @@
 // (scripts/checks/recorded-selftest.mjs). docs/STYLE_GUIDE.md, "Numbers"; Amin, 2026-10-19: no GPU is rented to verify
 // the site, so a recorded output stays when the pin moves past the release that recorded it, as long as
 //   - every page that shows it labels it with that release, the card and the date, in one label, in that order; and
-//   - the release notes of every release since were read and the behaviour it shows did not change (`reviews`).
+//   - the release notes of every release since were read and the behaviour it shows did not change (`reviews`); or a release
+//     changed a default, a flag still serves what it shows, and every page's label says which (the review's `label`, for
+//     example the layout it was recorded on).
 // Re-recording happens only when a training box is already up.
 
 const minor = (v) => v.replace(/^v/, '').split('.').slice(0, 2).map(Number);
@@ -23,8 +25,11 @@ export function judge(recording, pinnedTag, pages) {
 	const { name, version, reviews = {} } = recording;
 	if (!older(minor(version), minor(pinnedTag))) return { problems, notes: [`${name}: decisio ${version}, the pinned minor`] };
 	const label = labelPattern(recording);
+	// What every label must add, from the reviews of the releases up to the pin.
+	const adds = Object.entries(reviews).filter(([tag, r]) => r.label && !older(minor(pinnedTag), minor(tag))).map(([, r]) => r.label);
 	for (const p of pages) {
 		if (!label.test(p.text)) problems.push(`${p.route}: shows ${name}, recorded on decisio ${version}, without one label naming that release, ${recording.card} and ${recording.date}`);
+		for (const a of adds) if (!new RegExp(`${label.source}[\\s\\S]{0,160}?${esc(a)}`).test(p.text)) problems.push(`${p.route}: shows ${name}; its label must also say "${a}"`);
 	}
 	const review = reviews[pinnedTag];
 	if (!review) problems.push(`${name}: recorded on decisio ${version}; read ${pinnedTag}'s release notes and add whether they change what it shows (src/config/recorded-outputs.mjs, reviews)`);
@@ -32,6 +37,6 @@ export function judge(recording, pinnedTag, pages) {
 		if (older(minor(pinnedTag), minor(tag)) && tag !== pinnedTag) continue;
 		if (r.changed) problems.push(`${name}: ${tag} changed what it shows (${r.why}); record it again, or take it off the pages`);
 	}
-	if (review && !review.changed) notes.push(`${name}: decisio ${version} (${recording.card}, ${recording.date}), labelled; ${pinnedTag} leaves it as shown: ${review.why}`);
+	if (review && !review.changed) notes.push(`${name}: decisio ${version} (${recording.card}, ${recording.date}), labelled${adds.length ? ` with "${adds.join('", "')}"` : ''}; ${pinnedTag} leaves it as shown: ${review.why}`);
 	return { problems, notes };
 }

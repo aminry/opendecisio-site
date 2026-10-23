@@ -41,7 +41,7 @@ export function heroStats() {
 			{ n: printed('3000'), l: `for 50 questions about a ${tokens('3000')} document` },
 			{ n: printed('32000'), l: `for 50 questions about a ${tokens('32000')} document` },
 		],
-		conditions: `Server time on Gemma 4 31B and one RTX PRO 6000: the first on decisio 0.8.1 at 585 W, on ${firstDate}; the other two on decisio ${release} at 600 W, on ${date}.`,
+		conditions: `Server time on Gemma 4 31B and one RTX PRO 6000, on the plain layout: the first on decisio 0.8.1 at 585 W, on ${firstDate}; the other two on decisio ${release} at 600 W, on ${date}.`,
 	};
 }
 

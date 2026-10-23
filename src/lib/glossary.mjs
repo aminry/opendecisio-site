@@ -22,6 +22,7 @@ export const GLOSSARY = [
 	{ word: 'drift', means: 'traffic moving away from the examples a task was certified on' },
 	{ word: 'base', means: 'the model decisio serves; Gemma 4 31B by default', link: false },
 	{ word: 'abstain', means: 'decisio declines to answer when no option is likely enough', forms: ['abstains', 'abstention'] },
+	{ word: 'prompt layout', means: "how the server writes a request into the model's prompt: the header layout lists the request's questions before the text (the Gemma models' default), the plain layout writes the text, then the question", forms: ['header layout', 'plain layout'] },
 	{ word: 'serving setup', means: 'the model, the engine, the GPU and the settings a certificate was made on' },
 	{ word: 'CPU stand-in', means: 'a small model decisio serves on any machine for development, with every route of the real server; its answers are not the default model\'s' },
 ];

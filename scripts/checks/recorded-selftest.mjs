@@ -17,6 +17,10 @@ const cases = [
 	['a change in an earlier reviewed release still fails', judge({ ...rec, reviews: { 'v0.18.0': { changed: true, why: 'x' }, 'v0.19.0': { changed: false, why: 'y' } } }, 'v0.19.0', page(label)), 1],
 	['a review written ahead of the pin is not used', judge({ ...rec, reviews: { 'v0.19.0': { changed: true, why: 'x' } } }, 'v0.18.0', page(label)), 1],
 	['shown on no page, reviewed', judge(rec, 'v0.18.0', []), 0],
+	['a review that asks the label for more, given', judge({ ...rec, reviews: { 'v0.18.0': { changed: false, why: 'x', label: 'plain layout' } } }, 'v0.18.0', page(`${label.replace('; abridged.', ', on the plain layout; abridged.')}`)), 0],
+	['a review that asks the label for more, missing', judge({ ...rec, reviews: { 'v0.18.0': { changed: false, why: 'x', label: 'plain layout' } } }, 'v0.18.0', page(label)), 1],
+	['the addition far from the label does not count', judge({ ...rec, reviews: { 'v0.18.0': { changed: false, why: 'x', label: 'plain layout' } } }, 'v0.18.0', page(`${label}${' filler'.repeat(40)} plain layout`)), 1],
+	['an earlier review\'s addition still holds', judge({ ...rec, reviews: { 'v0.18.0': { changed: false, why: 'x', label: 'plain layout' }, 'v0.19.0': { changed: false, why: 'y' } } }, 'v0.19.0', page(label)), 1],
 ];
 let bad = 0;
 for (const [what, r, want] of cases) {

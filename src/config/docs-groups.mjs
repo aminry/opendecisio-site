@@ -36,6 +36,7 @@ export const docsGroups = [
 			{ slug: 'docs/tasks/certify', label: 'Certify answers', shape: 'guide' },
 			{ slug: 'docs/tasks/drift', label: 'Watch for drift', shape: 'guide' },
 			{ slug: 'docs/scale', label: 'Scale', shape: 'guide' },
+			{ slug: 'docs/layout', label: 'Choose the prompt layout', shape: 'guide' },
 			{ slug: 'docs/think', label: 'Think when unsure', shape: 'guide' },
 			{ slug: 'docs/concurrency', label: 'Batch concurrent requests', shape: 'guide' },
 			{ slug: 'docs/operating', label: 'Operate', shape: 'guide' },

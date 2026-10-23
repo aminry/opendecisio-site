@@ -18,6 +18,34 @@ const cli = 'docs/cli.md';
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
 
 export const sourced = [
+	// Choose the prompt layout
+	...fromPage('/docs/layout/', [
+		["the prompt lists every question of the request, then the text, then the question being answered", running, '`--layout header` lists the request\'s questions before the state: `Questions that will be asked about the context:`, one `- <question>` line per question in the request\'s order, a blank line, then the state and the question exactly as the plain layout writes them'],
+		['The Qwen model keeps the plain layout, the text then the question.', running, 'The Qwen base, and everything that was fitted or trained on the earlier layout, keeps the plain one, the state then the question'],
+		['+5.03 [2.87, 6.94]', running, '| Decision Index sample, the kit\'s index (2,000 rows) | 55.41 | 60.44 | **+5.03** [2.87, 6.94] |'],
+		['+4.38 [2.32, 6.44]', running, '| H776, one question per request | 80.67 | 85.05 | **+4.38** [2.32, 6.44] |'],
+		['+7.44 [3.08, 11.79]', running, '| hard390 | 52.31 | 59.74 | **+7.44** [3.08, 11.79] |'],
+		['-0.40 [-3.0, 2.2]', running, '| dev500 | 67.40 | 67.00 | -0.40 [-3.0, 2.2]'],
+		['It was +3.84 on the Decision Index sample', running, '**+3.84 points** [1.83, 5.69]'],
+		['+3.60 on dev500 and +0.90 on H776, which is within noise', running, 'the gain there is +3.60 on dev500 and not distinguishable from 0 on H776'],
+		['it was +1.75 with an interval of [-0.77, 4.50], which crosses 0', running, 'it is +1.75 with an interval of [-0.77, 4.50], which crosses 0'],
+		['Single questions read 3 to 10% more input tokens, counted in usage.input_tokens', upgrading, '`usage.input_tokens` counts the header (3 to 10% more on single-question items)'],
+		["the 31B's median latency rose by 1 to 10%", running, 'Cost on those items: 3 to 10% more input tokens as counted, median latency +1 to +10%'],
+		["On the Decision Index sample the 31B's mean latency was 542 ms against 303.", running, 'on the Decision Index sample the mean latency was 542 ms against 303'],
+		['Two requests about the same text with different questions share only what comes before their first difference, so the second reads the text again.', running, "share only the text before the header's first difference, so the second one computes the state again"],
+		['On the 31B a later question about a 3,000-token text costs 485 ms instead of 41, and at 16,000 tokens 3,370 ms instead of 94.', running, 'on the 31B a later question about a 3,000-token state costs 485 ms instead of 41 ms, at 16,000 tokens 3,370 ms instead of 94'],
+		['A workload that asks the same questions of many texts, or one question per text, loses nothing under the header.', running, 'A workload that asks the same questions of many states, or one question per state, loses nothing.'],
+		['the mean prompt tokens the engine read per question, and the mean of them the cache served', api, 'the layout of the user turn, the mean prompt tokens the engine read per question, and the mean of them the prefix cache served'],
+		['A tuned model or an adapter is served on the layout it records, and on plain when it records none.', upgrading, 'A model is served on the layout it records, plain when it records none'],
+		['A header default is held at plain while tasks fitted under plain apply to the server, from a directory, a shared store or a file.', running, '**A default of header is held at plain while tasks fitted under plain apply to the server**'],
+		["LAYOUT plain (held at plain; this base's default is header)", running, "The start says `LAYOUT plain (held at plain; this base's default is header): ...`"],
+		['A task registered, and a certificate made, under one layout is not applied under the other.', upgrading, 'Tasks registered, and certificates made, under one layout are not applied under another'],
+		['A task is fitted one question at a time, so a request with several questions reads a longer header than the task was fitted on.', running, 'a request with several questions reads a longer header than the one the task was fitted on'],
+		['A request with images is read on the plain layout.', running, 'a request with images keeps the plain layout'],
+		['Only the vLLM engine was tested with the header; the HF and MLX engines build the same prompt.', running, 'only the vLLM path was tested with it'],
+		['Its figures were measured on the plain layout.', card, '**Every figure in this card was measured with the plain layout**'],
+		['That is why an adapter that records no layout is served plain.', running, 'The fine-tuned adapters have **not** been measured under the header: that is why they are served plain until their repository or file records otherwise.'],
+	]),
 	// Batch concurrent requests
 	...fromPage('/docs/concurrency/', [
 		['it scores every request waiting for the engine together, in one call, so concurrent requests share the model\'s forward passes', running, 'scores all their rows in one engine call, so concurrent requests share forward passes'],
