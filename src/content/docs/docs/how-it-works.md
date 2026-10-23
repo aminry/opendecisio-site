@@ -21,13 +21,14 @@ A support ticket and three questions about it:
 
 - The text is read once per request, and every question is answered from that read.
 - On the default model the questions are answered together; on the other two, one after another. Either way they pick the same options on every item measured.
-- A later request about the same text starts from what was read, so it is quick.
+- A later request about the same text starts from what was read, so it is quick, when it asks the same questions; under the plain layout, any question does.
 
 ## 2. One decision and its probabilities
 
 ::figure{name="one-pass"}
 
 Each question becomes one prompt that ends where the answer goes, and decisio reads the model's probability for each option at that point.
+On the Gemma models the prompt first lists every question of the request, then the text, then the question; the figure shows the plain layout, the text then the question, that it was recorded on ([Choose the prompt layout](/docs/layout/)).
 The probabilities add up to 1, and three things shape them:
 
 | What | Where it comes from |

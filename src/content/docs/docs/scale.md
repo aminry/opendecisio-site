@@ -8,6 +8,7 @@ description: Ask every question about a text for the price of one read, plan for
 ::covers{links="docs/running.md#first-question-latency-by-state-length=2-plan-for-the-first-read docs/running.md#a-later-question-about-the-same-state---register-boundary=5-set-the-flags-that-move-server-time"}
 
 Put every question about a text in one request: the server reads the text once and answers them all.
+On the Gemma models it matters more, because their default [prompt layout](/docs/layout/) lists the request's questions before the text, so a later request with other questions reads the text again.
 This script asks fifty questions about one ticket in a single request:
 
 ```python
@@ -39,7 +40,7 @@ with urllib.request.urlopen(request) as response:
 
 The 31B answered 50 questions about one 3,000-token text in 1.08 s.
 
-::source[Measured on decisio 0.11.1, one RTX PRO 6000 at 600 W, 2026-10-11.]
+::source[Measured on decisio 0.11.1, one RTX PRO 6000 at 600 W, 2026-10-11, on the plain layout.]
 
 | Model | How a request's questions are scored | Against each question on its own |
 | --- | --- | --- |
@@ -48,7 +49,8 @@ The 31B answered 50 questions about one 3,000-token text in 1.08 s.
 | Qwen3.6-35B-A3B | one at a time, from the one read | the same probabilities |
 
 A second engine changes this: with `--head-engine` or `--image-model` the engine runs in its own process, so the 31B scores the questions one at a time and serves texts of up to 32,768 tokens.
-A request has no cap on its questions, but the response grows with them: for thousands, send several requests about the same text, and the later ones read it from the cache.
+A request has no cap on its questions, but the response grows with them: for thousands, send several requests about the same text.
+Under the plain layout the later ones read the text from the cache; under the header layout each reads it again.
 
 ## 2. Plan for the first read
 
@@ -56,10 +58,13 @@ The first question about a new text pays for reading it, and that grows with its
 
 ::latency-table
 
-::source[The server's time, median of 10 new texts per length, on one RTX PRO 6000 Blackwell at 600 W, decisio 0.11.1 on vLLM 0.30.0.]
+::source[The server's time, median of 10 new texts per length, on one RTX PRO 6000 Blackwell at 600 W, decisio 0.11.1 on vLLM 0.30.0, on the plain layout.]
 
-A later, different question about the same text is read from the cache: under 165 ms at every length, on every model.
+Under the plain layout, a later, different question about the same text is read from the cache: under 165 ms at every length, on every model.
 On the Gemma models the server marks where each text ends, so that a later question finds the text in the cache; that is on by default.
+
+Under the header layout, the Gemma models' default, a later request with other questions pays for the first read again: on the 31B, 485 ms instead of 41 at 3,000 tokens.
+A client that asks a series of questions about one text wants `--layout plain` ([Choose the prompt layout](/docs/layout/#2-keep-plain-for-a-series-of-questions-about-one-text)).
 
 ## 3. Plan for long texts
 
@@ -103,6 +108,7 @@ print("options answered:", len(answer["probabilities"]))
 | `--register-boundary before` | the Gemma models' default: marks where a new text ends, ahead of its first question | +21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens |
 | `--register-boundary after` | marks it after the answer instead | the cost moves to throughput: the 31B kept 0.61 and 0.74 of it at 32 and 64 clients in the same run, so keep `before` on the 31B under load |
 | `--register-boundary off` | never marks it | a later question re-reads the text; for traffic that asks one question per text |
+| `--layout plain` | the text, then the question, as the Qwen model reads it | a later, different question about a text reads it from the cache; the Gemma models' default, `header`, answered more accurately on most of what was measured |
 | `--multi-question` | `warm`, the 31B's default, scores a request's questions in one batch; `sequential` scores them one at a time | see the table in step 1 |
 | `--head-engine` | answers a taught task's head questions from a second engine | a second copy of the weights on the card, and no image engine |
 
@@ -112,7 +118,7 @@ Every flag is in [Server flags](/docs/flags/).
 
 ## 6. Measure your own
 
-Every response carries `x-decisio-server-ms`, the server's time, and `x-decisio-stages`, where it went:
+Every response carries `x-decisio-server-ms`, the server's time, and `x-decisio-stages`, where it went; when the engine reports prompt sizes, `x-decisio-prompt` gives the prompt tokens read and how many the cache served:
 
 ```python
 import json
@@ -136,6 +142,7 @@ print("a different question about the same text:", server_ms({"type": "noul", "i
 ```
 
 - Send a few requests first: the first after a start warms the model.
+- Under the header layout, the different question costs about what the first did.
 - Time medians, and quote them with the host's CPU and the card's power limit (`nvidia-smi -q -d POWER`): both change server time.
 
 ## What next

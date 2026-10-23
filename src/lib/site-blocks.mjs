@@ -132,6 +132,8 @@ const thinkHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 
 
 // Batch concurrent requests: the start in batched mode, and the server's mode in /health.
 const concurrencyStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --concurrency batched`;
+const layoutStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --layout plain`;
+const layoutHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["systemone"]["layout"], indent=1))'`;
 const concurrencyHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["concurrency"], indent=1))'`;
 
 // Teach a task: where the server saves its tasks, from /health.
@@ -246,6 +248,8 @@ export const siteBlocks = {
 	get 'think-ask'() { return { lang: 'bash', text: thinkAsk() }; },
 	get 'think-health'() { return { lang: 'bash', text: thinkHealth() }; },
 	get 'concurrency-start'() { return { lang: 'bash', text: concurrencyStart() }; },
+	get 'layout-start'() { return { lang: 'bash', text: layoutStart() }; },
+	get 'layout-health'() { return { lang: 'bash', text: layoutHealth() }; },
 	get 'concurrency-health'() { return { lang: 'bash', text: concurrencyHealth() }; },
 	get 'tasks-health'() { return { lang: 'bash', text: tasksHealth() }; },
 	get 'images-start'() { return { lang: 'bash', text: `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b --image-model Qwen/Qwen3.6-35B-A3B-FP8` }; },

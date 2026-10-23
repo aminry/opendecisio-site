@@ -71,7 +71,7 @@ Set `certify.min_examples` above the floor to refuse a certificate that thin.
 ## 5. Keep it valid
 
 1. **Give the task an "other" option.** A message that fits none of the options gets a wrong answer, and that answer can be certified. The server warns when a choice task has no such option.
-2. **Certify again when the setup changes.** A certificate covers one task on one serving setup: the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length and the serving flags. When any of it changes, every answer of the task is `certified: false` with the reason `serving_stack_changed`. Certify again with `POST /v1/tasks/{id}/certify`, on new labelled examples.
+2. **Certify again when the setup changes.** A certificate covers one task on one serving setup: the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length, the [prompt layout](/docs/layout/) and the serving flags. When any of it changes, every answer of the task is `certified: false` with the reason `serving_stack_changed`. Certify again with `POST /v1/tasks/{id}/certify`, on new labelled examples.
 3. **After upgrading decisio, certify your tasks again.**
 4. **Expect a few answers near the threshold to change sides** between two fresh starts of the same server: judge the certificate by its rate over many answers, not by one.
 

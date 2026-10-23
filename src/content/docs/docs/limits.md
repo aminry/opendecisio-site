@@ -94,6 +94,8 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 15. **Watch each replica on its own.** The traffic monitors of a certified task are per replica, not shared: sum the `decisio_task_*` metrics across replicas.
 16. **Expect a taught task on the other replicas within seconds, not at once.** They pick it up within the poll interval; a client that must read its own change asks the replica that made it.
 17. **Check your object store at the first start.** The shared store was checked on RustFS and SeaweedFS, not on AWS S3, R2, MinIO, GCS or Azure; a replica refuses to start on a store that does not enforce conditional writes.
+18. **Certify on the layout you serve.** A task registered, and a certificate made, under one [prompt layout](/docs/layout/) is not applied under the other; a server that loads tasks fitted under plain holds plain and says so.
+19. **Keep the plain layout for a series of questions about one text.** Under the header layout, the Gemma models' default, a later request with other questions reads the text again; `--layout plain` reads it from the cache.
 
 ## 4. What was measured on what
 
@@ -110,9 +112,11 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 | Ollama memory | Gemma 4 12B, `q4_k_m` | one Apple M5 Pro | Ollama 0.35.1 | 2026-10-07 |
 | The 12B in FP8 against bf16, and on a 32 GB card | Gemma 4 12B, FP8 and bf16 | one RTX 5090, 32 GB | vLLM 0.31.0, 4,096 tokens, 0.95 of the card | 2026-10-21 |
 | Batched throughput | Gemma 4 12B, FP8 | one RTX 5090, 32 GB | vLLM 0.31.0, 0.95 of the card, 4,096 tokens, requests about new 1,000-token states, 8 and 16 clients | 2026-10-21 |
+| The header layout against the plain one | Gemma 4 31B, FP8 on load; Gemma 4 12B, FP8 | one RTX PRO 6000 Blackwell; one RTX 5090 | decisio's proxy sets and the Decision Index's public sample | before decisio 0.26.0 |
 :::
 
 - One card and one run per configuration.
+- Every figure above other than the layout comparison was measured on the plain layout, the text then the question; the Gemma models now serve the header layout by default.
 - Each model's default settings were tuned on decisio's own 1,400-item suite, so its calibration errors on that suite are a best case.
 - Latency depends on the host's CPU and the card's power limit, as well as the card.
 - Most published figures of the 31B were measured on Google's weights converted to FP8 as they load; the stored FP8 checkpoint it serves scores the same within noise: 213 of JevBench's 231 published questions right with each, and 162 of 200 suite requests (vLLM 0.31.0).
@@ -135,6 +139,9 @@ Across restarts and machines, answers are not promised to repeat.
 - The 31B's 6-bit Mac build on MMLU-Pro, and its server times.
 - Latency with the intent head on a second engine.
 - Ollama's answers: Ollama builds its own prompt and applies no calibration.
+- Fine-tuned adapters under the header layout, which is why one that records no layout is served plain.
+- The header layout on the HF and MLX engines, which build the same prompt; only the vLLM engine was tested with it.
+- A layout chosen per request: one server serves one layout.
 
 ## What next
 

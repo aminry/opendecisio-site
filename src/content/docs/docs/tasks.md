@@ -84,7 +84,8 @@ To move a task to another machine, export it and import it there, or start the s
 
 ::upstream{file="docs/tasks.md" section="5. List, export, reload, delete" block="1"}
 
-- A task applies only under the model and the prompt layout it was taught on; on another, the server does not apply it and says why.
+- A task applies only under the model and the [prompt layout](/docs/layout/) it was taught on; on another, the server does not apply it and says why.
+- A Gemma server that loads tasks taught under the plain layout keeps serving plain and says so, so the tasks keep applying.
 - Renaming, adding or reordering an option makes a new task: teach it again.
 - To reproduce a task exactly, export and import it rather than registering it again.
 

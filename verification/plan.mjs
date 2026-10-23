@@ -240,6 +240,16 @@ export const plan = [
 		},
 	},
 	{ page: '/docs/concurrency/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
+	// Choose the prompt layout: the layout read from /health on the stand-in (the Qwen model's default, plain); the start
+	// with --layout plain is decisio's command on a card.
+	{
+		page: '/docs/layout/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health \\', show: asPrinted,
+		assert(stdout) {
+			const l = json(stdout);
+			if (l.value !== 'plain' || l.default !== 'plain' || l.why !== 'the default of the base') throw new Error(`/health does not report the Qwen model's default layout, plain: ${stdout}`);
+		},
+	},
+	{ page: '/docs/layout/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
 	// Think when unsure: the server's think setting read from /health on the stand-in (thinking off, its default); the start
 	// and a thinking request need the vLLM engine, which writes the reasoning.
 	{ page: '/docs/think/', n: 1, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },

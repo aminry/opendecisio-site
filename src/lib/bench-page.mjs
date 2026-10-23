@@ -34,7 +34,7 @@ export function benchTiles() {
 	const cal = calibration().find((c) => c.base === 'g31');
 	const tiles = [
 		{ n: `${s.toFixed(2)} s`, text: 'for 50 questions about a 3,000-token document, Decisio 31B', date: `one box, ${sp.date}`, href: '#many-questions' },
-		{ n: cached, text: 'for one more question about a 1,000-token text already read, Gemma 4 31B', date: "decisio 0.8.1's defaults, 585 W", href: '#bases' },
+		{ n: cached, text: 'for one more question about a 1,000-token text already read, Gemma 4 31B on the plain layout', date: 'decisio 0.8.1, 585 W', href: '#bases' },
 		{ n: cal.standard.toFixed(3), text: `calibration error of Gemma 4 31B on JevBench's standard tier, lower is better; ${cal.hard.toFixed(3)} on its hard tier`, date: tableConditions().label, href: '#confidence' },
 	];
 	tiles.forEach((t) => refuse(t.text));

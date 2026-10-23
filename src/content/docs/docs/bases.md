@@ -26,6 +26,7 @@ With no flag the server serves Gemma 4 31B:
 ## 2. What `--base` sets
 
 - The model's checkpoint, at a pinned revision, and every setting it was measured with as one configuration.
+- The [prompt layout](/docs/layout/): the Gemma models list the request's questions before the text; Qwen reads the text, then the question.
 - A flag you give explicitly overrides the model's value.
 - A checkpoint named with `--model` and no `--base` brings the model its `config.json` declares.
 
