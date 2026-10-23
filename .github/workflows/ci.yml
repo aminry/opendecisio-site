@@ -209,9 +209,33 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ matrix.engine }}-${{ steps.image.outputs.os }}-${{ hashFiles('package-lock.json') }}
+      # The system packages' archives are kept beside the browser: the runner's Ubuntu mirror served 140 MB at about
+      # 65 KB/s on 2026-10-23 and ran the install out of its limit, so a run downloads them only when the image or
+      # Playwright changes.
+      - name: The system packages' archives
+        id: apt
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/apt-archives
+          key: apt-${{ matrix.engine }}-${{ steps.image.outputs.os }}-${{ hashFiles('package-lock.json') }}
       - name: The browser and its system packages
+        id: install
         timeout-minutes: 35
-        run: npx playwright install --with-deps ${{ matrix.engine }}
+        run: |
+          echo 'APT::Keep-Downloaded-Packages "true";' | sudo tee /etc/apt/apt.conf.d/99keep-archives >/dev/null
+          sudo rm -f /etc/apt/apt.conf.d/docker-clean
+          mkdir -p ~/apt-archives
+          if compgen -G ~/apt-archives/'*.deb' >/dev/null; then sudo cp ~/apt-archives/*.deb /var/cache/apt/archives/; fi
+          npx playwright install --with-deps ${{ matrix.engine }}
+          cp /var/cache/apt/archives/*.deb ~/apt-archives/ 2>/dev/null || true
+          echo "apt archives kept: $(ls ~/apt-archives | wc -l)"
+      # Saved as soon as the install has finished, so a failing check later in the job still keeps them.
+      - name: Keep the system packages' archives
+        if: steps.apt.outputs.cache-hit != 'true' && steps.install.outcome == 'success'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/apt-archives
+          key: ${{ steps.apt.outputs.cache-primary-key }}
       - name: WCAG 2.2 AA, CSP, failed requests, layout shift, keyboard reach, media, search (phone, tablet, desktop; light, dark)
         run: node scripts/checks/browser.mjs
         env:
