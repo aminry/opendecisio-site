@@ -282,7 +282,7 @@ export function manyQuestions(kind) {
 	const box = m.box.labelled.replace(/^measured by [^ ]+( [A-Z][\w.]*)* on/, 'Measured by us on');
 	const release = /^- (decisio v[\d.]+ on vLLM [\d.]+) \(the 31B and the 12B at their repositories' pins\)/m.exec(readUpstream('README.md'))?.[1];
 	need2(release, 'is beside a README that no longer names the decisio release of the same-box session');
-	return { sentences, qualifiers, chart: charts[kind], box, release: `The server was ${release}.` };
+	return { sentences, qualifiers, chart: charts[kind], box, release: `The server was ${release}, on the plain layout.` };
 }
 
 /**

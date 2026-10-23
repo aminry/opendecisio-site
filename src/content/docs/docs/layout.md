@@ -7,7 +7,7 @@ description: The Gemma models list a request's questions before its text, which 
 
 ::covers{links="docs/running.md#the-header-layout---layout"}
 
-The Gemma models read a request's questions before its text: the prompt lists every question of the request, then the text, then the question being answered.
+On the Gemma models the prompt lists every question of the request, then the text, then the question being answered.
 The model reads the text knowing what will be asked, and the 31B answered more accurately that way on most of what was measured.
 The Qwen model keeps the plain layout, the text then the question.
 
