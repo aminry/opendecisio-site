@@ -3,7 +3,7 @@
 // - an element marked data-launch (the board's claim, the chart, the benchmarks section)
 //   holds none of the words the file forbids, as whole words;
 // - the board's claim on the home page and the benchmarks section's are the launch facts' stable claims, word for word (no rank and
-//   no comparison in public, Amin, 2026-10-15; scripts/checks/claims.mjs reads every page for them);
+//   no comparison in public, decided 2026-10-15; scripts/checks/claims.mjs reads every page for them);
 // - the charts served from dist/launch/ are the pinned ones in the site's colours, nothing else changed.
 //   node scripts/checks/launch.mjs
 import { createHash } from 'node:crypto';
@@ -71,7 +71,7 @@ for (const [page, file] of [['/', 'dist/index.html'], ['/benchmarks/', 'dist/ben
 	}
 	const home = parse(readFileSync('dist/index.html', 'utf8'));
 	for (const sel of ['[data-launch="axes"]', '[data-launch="many-questions"]', '[data-launch="chart"]']) if (home.querySelector(sel)) bad(`/: carries ${sel}, a comparison that belongs on the benchmarks page`);
-	// The hero's heading is the file's tagline, once the file's tagline is one Amin's rule allows (no "Jev-level": a
+	// The hero's heading is the file's tagline, once the file's tagline is one the site's rule allows (no "Jev-level": a
 	// comparison); until the facts change it, the heading is the choice of 2026-10-15 and says no comparison.
 	const h1 = parse(readFileSync('dist/index.html', 'utf8')).querySelector('h1')?.structuredText.replace(/\s+/g, ' ').trim();
 	const tagline = String(claims.tagline?.allowed_text ?? '');

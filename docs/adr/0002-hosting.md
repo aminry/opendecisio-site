@@ -5,7 +5,7 @@ Status: accepted, 2026-10-05.
 ## Context
 
 The site is public and its repository private.
-The host must deploy from a private GitHub repository with access to that one repository only, build a preview for every PR, serve custom headers (a strict Content-Security-Policy, HSTS and the rest), and serve opendecisio.com with opendecisio.dev redirecting to it (opendecisio.ai waits; Amin, 2026-10-05).
+The host must deploy from a private GitHub repository with access to that one repository only, build a preview for every PR, serve custom headers (a strict Content-Security-Policy, HSTS and the rest), and serve opendecisio.com with opendecisio.dev redirecting to it (opendecisio.ai waits, 2026-10-05).
 The site is static: about 30 pages, 40 MB of demo clips, no server code.
 
 Facts checked on 2026-10-05:

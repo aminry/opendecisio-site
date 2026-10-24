@@ -42,7 +42,7 @@ const num = (x) => x.value;
 
 /**
  * A stable claim (launch_facts.public.json stable_claims): a dated measurement or a fact about Decisio that stands in for
- * a rank or a comparison (Amin, 2026-10-15: no ordinal rank and no relative comparison in public). Its text is used as
+ * a rank or a comparison (decided 2026-10-15: no ordinal rank and no relative comparison in public). Its text is used as
  * the file gives it; its values are there to format a number the same way.
  */
 export function stable(id) {
@@ -239,7 +239,7 @@ export function manyQuestions(kind) {
 	const m = facts().figures?.same_box_speed;
 	need2(m && m.allowed_sentences && m.charts && m.ratios_to_decisio_31b, 'has no figures.same_box_speed');
 	// Three sentences: the measured times, as the launch facts' stable claim states them with their box and date; the ratio beside
-	// them (Amin, 2026-10-15: the speed ratio stays, beside its two measured times and its date); and the first question.
+	// them (decided 2026-10-15: the speed ratio stays, beside its two measured times and its date); and the first question.
 	const ids = ['first_question_3000'];
 	const first = m.allowed_sentences.find((x) => x.id === ids[0]);
 	need2(first && first.holds === true && first.text, 'has no same_box_speed sentence first_question_3000 that holds');

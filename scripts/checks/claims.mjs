@@ -5,7 +5,7 @@
 // fact about Decisio itself, are what pages say instead (launch_facts.public.json stable_claims).
 // Not read: decisio's own text as the pinned release has it (the decisio repository changes it, and the claims scanner
 // reads it there), posted history marked data-history (a published title stays as it was published), code, and the page's controls.
-// A multiple ("about 44 times as long") is allowed only beside the times it is made of and their date (Amin's decision).
+// A multiple ("about 44 times as long") is allowed only beside the times it is made of and their date.
 //   node scripts/checks/claims.mjs
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, relative } from 'node:path';

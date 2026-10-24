@@ -42,7 +42,7 @@ Internals (the readout, the probabilities, repeatability) live on one page: How 
 - **Short sentences.** One idea per paragraph, at most about three lines.
 - **Bullets and tables over prose.** A list of settings is a table; steps are a numbered list.
 - **Plain words.** "Probabilities you can trust", not "calibration"; "the text", not "the state"; "the answers it can stand behind", not "coverage".
-- **"Probability", never "confidence".** The API has a `confidence` field that is a different number (System One's rescaled score); it appears only on the HTTP API page, in code, with one line saying what it is and that thresholds use the top probability (Amin, 2026-10-18).
+- **"Probability", never "confidence".** The API has a `confidence` field that is a different number (System One's rescaled score); it appears only on the HTTP API page, in code, with one line saying what it is and that thresholds use the top probability.
 - **The certificate's bound is written one way:** "nine times in ten".
 - **A small glossary** for the words that must stay (below), linked on first use on a page.
 - **Second person, present tense.** "You send a request", not "a request is sent".
@@ -82,7 +82,7 @@ Internals (the readout, the probabilities, repeatability) live on one page: How 
 - A measured number carries a short source note in its source line, not in the prose: "Measured on" (or "Recorded on") the release, the card and the date (`::source` on a docs page, class `src-note` elsewhere).
 - A recorded output (a decision, a run's table, a certificate) carries one label naming the release, the card and the date it ran on.
 - It stays when the pin moves on, unless a later release changed what it shows; that is decided from each release's notes and written in `src/config/recorded-outputs.mjs`, and the recorded-output check enforces both.
-- No GPU is rented to verify the site: a recording is made again only when a training box is already up.
+- A recording is not made again only to verify the site: it is made again alongside new measurements on a GPU.
 
 ## Visuals
 
