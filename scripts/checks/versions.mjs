@@ -37,6 +37,8 @@ const decisios = [];
 // dropped most); at v0.18.1 the seven history phrases 0.18.1 still has, which its next release drops (decisio #238).
 const DECISIO_HISTORY = {
 	'v0.18.0': null,
+	// decisio 0.27.0's evaluation card and cli.md still date the header layout ("since 0.26.0"); its next release drops them.
+	'v0.27.0': ['which decisio served for every base until 0.26.0', 'Since 0.26.0 the Gemma bases', 'the default of the Gemma bases since 0.26.0'],
 	'v0.18.1': ['before 0.12.0 a NaN', 'the default since 0.8.0', 'From decisio 0.14.0 the Gemma', 'In 0.8.1 a single question', 'default from 0.9.0 to 0.11.0', "keeps 0.8.1's order", "0.8.0's default"],
 };
 const pending = pin.tag in DECISIO_HISTORY;

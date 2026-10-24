@@ -18,6 +18,33 @@ const cli = 'docs/cli.md';
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
 
 export const sourced = [
+	// decisio 0.27.0: think temperatures, read twice, flavors, truncation under the header
+	...fromPage('/docs/think/', [
+		['On a tuned model, score answers that thought needed about twice the single-pass temperature.', running, "a tuned model's score answers that thought needed a temperature about twice the single-pass one"],
+		['Which questions think does not change: the unsure test still uses the single-pass temperature.', upgrading, 'and so is which questions think: the unsure test still reads the single-pass temperature'],
+		['A type with no think temperature keeps the single-pass one, so a server without them answers as before.', upgrading, 'A type with no think temperature keeps its single-pass temperature, so a repository or a server that does not set them answers exactly as before.'],
+		['a certificate made under other ones is suspended (think_mode_changed)', running, 'a certificate made under others is `think_mode_changed`'],
+	]),
+	...fromPage('/docs/layout/', [
+		['the second copy after Read the same input again before answering:', running, "each question's user turn is written twice, the second copy after `Read the same input again before answering:`"],
+		['the largest question count whose doubled request stays under about 900 ms', running, 'the largest question count whose doubled request at your N stays under about 900 ms'],
+		['N = 2,000 gained 1.8 points on the public multi-domain sample, at about 1.5 times the tokens and an estimated p80 of about 866 ms', running, '**about 2,000 gave +1.82 with p80 about 866 ms**'],
+		['that threshold was checked on the sample itself', running, 'Those were picked or checked on the sample itself.'],
+		['On our proxies it gained 3.24, the smallest threshold within 0.25 points of the best.', running, '**N = 2,000 is the measured choice: the smallest threshold within 0.25 points of the best.**'],
+		['On the 12B in FP8 it added nothing within noise.', running, 'On the 12B in FP8 the same step added nothing within noise'],
+		['short requests read up to about twice the input tokens', running, '1.5 to 2.0 times the counted input tokens on single-question items'],
+	]),
+	...fromPage('/docs/bases/', [
+		['Every flavor uses the header layout', running, '**Every flavor uses the header layout.**'],
+		['Decisio-31b-<flavor>, Decisio-12b-<flavor> or Decisio-12b-fp8-<flavor>', upgrading, 'named `Decisio-31b-<flavor>`, `Decisio-12b-<flavor>` or `Decisio-12b-fp8-<flavor>`'],
+		['read-enhanced serves the model\'s own temperatures and no question cap until its timing run', running, "`read-enhanced` serves the base's own temperatures until the calibrated ones exist and has no question cap until its timing run"],
+		['thinking-commit runs the default thinking settings, measured on our tuned models only', running, '`thinking-commit` runs the default factor and budget, measured on the tuned models only'],
+		['calibrated refuses to start until its temperatures are fitted', upgrading, '`calibrated` refuses to start until its temperatures are fitted'],
+		['The Qwen model and a tuned model refuse --flavor, and a server without it is what it was.', running, 'the Qwen base and a tuned repository refuse `--flavor`'],
+	]),
+	...fromPage('/docs/limits/', [
+		["Under the header layout the list of the request's questions takes room too, so the text keeps what the longest prompt leaves.", running, 'Under the header layout a row also holds the list of every question of the request, so the room for the state is smaller by that list'],
+	]),
 	// Choose the prompt layout
 	...fromPage('/docs/layout/', [
 		["the prompt lists every question of the request, then the text, then the question being answered", running, '`--layout header` lists the request\'s questions before the state: `Questions that will be asked about the context:`, one `- <question>` line per question in the request\'s order, a blank line, then the state and the question exactly as the plain layout writes them'],
@@ -26,12 +53,12 @@ export const sourced = [
 		['+4.38 [2.32, 6.44]', running, '| H776, one question per request | 80.67 | 85.05 | **+4.38** [2.32, 6.44] |'],
 		['+7.44 [3.08, 11.79]', running, '| hard390 | 52.31 | 59.74 | **+7.44** [3.08, 11.79] |'],
 		['-0.40 [-3.0, 2.2]', running, '| dev500 | 67.40 | 67.00 | -0.40 [-3.0, 2.2]'],
-		['It was +3.84 on the Decision Index sample', running, '**+3.84 points** [1.83, 5.69]'],
+		['It was +3.84 on the multi-domain sample', running, '**+3.84 points** [1.83, 5.69]'],
 		['+3.60 on dev500 and +0.90 on H776, which is within noise', running, 'the gain there is +3.60 on dev500 and not distinguishable from 0 on H776'],
 		['it was +1.75 with an interval of [-0.77, 4.50], which crosses 0', running, 'it is +1.75 with an interval of [-0.77, 4.50], which crosses 0'],
 		['Single questions read 3 to 10% more input tokens, counted in usage.input_tokens', upgrading, '`usage.input_tokens` counts the header (3 to 10% more on single-question items)'],
 		["the 31B's median latency rose by 1 to 10%", running, 'Cost on those items: 3 to 10% more input tokens as counted, median latency +1 to +10%'],
-		["On the Decision Index sample the 31B's mean latency was 542 ms against 303.", running, 'on the Decision Index sample the mean latency was 542 ms against 303'],
+		["On the multi-domain sample the 31B's mean latency was 542 ms against 303.", running, 'on the Decision Index sample the mean latency was 542 ms against 303'],
 		['Two requests about the same text with different questions share only what comes before their first difference, so the second reads the text again.', running, "share only the text before the header's first difference, so the second one computes the state again"],
 		['On the 31B a later question about a 3,000-token text costs 485 ms instead of 41, and at 16,000 tokens 3,370 ms instead of 94.', running, 'on the 31B a later question about a 3,000-token state costs 485 ms instead of 41 ms, at 16,000 tokens 3,370 ms instead of 94'],
 		['A workload that asks the same questions of many texts, or one question per text, loses nothing under the header.', running, 'A workload that asks the same questions of many states, or one question per state, loses nothing.'],

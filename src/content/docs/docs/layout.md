@@ -3,9 +3,9 @@ title: Choose the prompt layout
 description: The Gemma models list a request's questions before its text, which answered more accurately on most of what was measured; keep the plain layout for a series of questions about one text.
 ---
 
-<!-- Site-written: the Choose the prompt layout guide. Its facts are decisio's docs/running.md ("The header layout"), docs/upgrading.md, docs/cli.md, docs/api.md and EVAL_CARD.md at the pinned release (src/config/sourced.mjs checks them). The 31B's figures are decisio's A/B on one RTX PRO 6000 and the 12B's its pre-registered A/B on one RTX 5090, as running.md states them. No board is linked or named beyond the Decision Index's public sample. -->
+<!-- Site-written: the Choose the prompt layout guide. Its facts are decisio's docs/running.md ("The header layout"), docs/upgrading.md, docs/cli.md, docs/api.md and EVAL_CARD.md at the pinned release (src/config/sourced.mjs checks them). The 31B's figures are decisio's A/B on one RTX PRO 6000 and the 12B's its pre-registered A/B on one RTX 5090, as running.md states them. No board is named or linked; the public sample is described, not named. -->
 
-::covers{links="docs/running.md#the-header-layout---layout"}
+::covers{links="docs/running.md#the-header-layout---layout docs/running.md#refitting-the-bases-temperatures-for-a-layout=4-know-what-is-kept-per-layout docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r-for-decision-index-runs=6-read-short-requests-twice"}
 
 On the Gemma models the prompt lists every question of the request, then the text, then the question being answered.
 The model reads the text knowing what will be asked, and the 31B answered more accurately that way on most of what was measured.
@@ -29,16 +29,16 @@ On the 31B, against the plain layout, on the same items:
 
 | Set | Plain | Header | Header minus plain (95% interval) |
 | --- | ---: | ---: | --- |
-| Decision Index public sample, 2,000 rows | 55.41 | 60.44 | +5.03 [2.87, 6.94] |
+| A public multi-domain sample, 2,000 rows | 55.41 | 60.44 | +5.03 [2.87, 6.94] |
 | H776, one question per request | 80.67 | 85.05 | +4.38 [2.32, 6.44] |
 | hard390 | 52.31 | 59.74 | +7.44 [3.08, 11.79] |
 | dev500 | 67.40 | 67.00 | -0.40 [-3.0, 2.2] |
 
-::source[Measured by decisio on one RTX PRO 6000, the 31B in FP8 on load, on the commit that added the header layout, as decisio 0.26.0's docs/running.md states it. The Decision Index sample is scored by its kit; H776, hard390 and dev500 are decisio's own proxy sets.]
+::source[Measured by decisio on one RTX PRO 6000, the 31B in FP8 on load, on the commit that added the header layout, as decisio 0.26.0's docs/running.md states it. The multi-domain sample is scored by its own kit; H776, hard390 and dev500 are decisio's own proxy sets.]
 
-- **On the 12B the gain was smaller.** It was +3.84 on the Decision Index sample, mostly in requests that ask many questions about one text, +3.60 on dev500 and +0.90 on H776, which is within noise. Weighting each of the sample's 41 families equally, it was +1.75 with an interval of [-0.77, 4.50], which crosses 0.
+- **On the 12B the gain was smaller.** It was +3.84 on the multi-domain sample, mostly in requests that ask many questions about one text, +3.60 on dev500 and +0.90 on H776, which is within noise. Weighting each of the sample's 41 families equally, it was +1.75 with an interval of [-0.77, 4.50], which crosses 0.
 - **The header costs tokens.** Single questions read 3 to 10% more input tokens, counted in `usage.input_tokens`, and the 31B's median latency rose by 1 to 10%.
-- **Many questions per request read it on every question.** On the Decision Index sample the 31B's mean latency was 542 ms against 303.
+- **Many questions per request read it on every question.** On the multi-domain sample the 31B's mean latency was 542 ms against 303.
 
 ::source[The 12B: decisio's pre-registered A/B on one RTX 5090, the 12B in FP8, decisio 0.25.0's readout, one request at a time, as decisio 0.26.0's docs/running.md states it.]
 
@@ -84,6 +84,20 @@ To move a taught deployment to the header, export its tasks if you want the reco
 - **A layout per request.** A request cannot choose its layout yet; one server serves one.
 - **Other engines.** Only the vLLM engine was tested with the header; the HF and MLX engines build the same prompt.
 - **The Evaluation card.** Its figures were measured on the plain layout.
+
+## 6. Read short requests twice
+
+`--read-twice-under N` writes each question's prompt twice when a request is short, the second copy after `Read the same input again before answering:`, for more accuracy at more tokens.
+It is off by default.
+
+- **Short** means at most N counted input tokens read once: the header, the text and each question's own text, as `usage.input_tokens` counts them.
+- **`--read-twice-max-questions R`** reads a request with more than R questions once, because a doubled request costs more with every question. Set R from a timing run on your card: the largest question count whose doubled request stays under about 900 ms.
+- **On the 31B with the header,** N = 2,000 gained 1.8 points on the public multi-domain sample, at about 1.5 times the tokens and an estimated p80 of about 866 ms; that threshold was checked on the sample itself. On our proxies it gained 3.24, the smallest threshold within 0.25 points of the best.
+- **On the 12B in FP8** it added nothing within noise.
+- **It costs tokens:** short requests read up to about twice the input tokens, and `usage.input_tokens` counts both copies, so it is off by default.
+- **Tasks and certificates are per setting:** a task registered under one N and R is not applied under another.
+
+::source[Measured by decisio on one RTX PRO 6000, the 31B with the header layout, as decisio 0.27.0's docs/running.md states it.]
 
 ## What next
 
