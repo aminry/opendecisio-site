@@ -39,8 +39,6 @@ A tuned model's repository can carry separate temperatures for answers that thou
 
 ## Install
 
-```bash
-docker run -d --gpus all --shm-size 8g -p 127.0.0.1:8000:8000 -v decisio-data:/data ghcr.io/aminry/decisio@sha256:f7126db4f1714b7ab3a07d5c91f350528ff7f6ba1e404434e73d764fcbd5e7cf
-```
+Install it with `pip install "decisio[serve]==0.27.0"`, or run the release image, `ghcr.io/aminry/decisio@sha256:f7126db4f1714b7ab3a07d5c91f350528ff7f6ba1e404434e73d764fcbd5e7cf`, as [With Docker](/docs/deploy/docker/) shows.
 
 [Choosing a model](/docs/bases/#5-serve-a-flavor) has the flavors, [Choose the prompt layout](/docs/layout/#6-read-twice-for-decision-index-runs) has read twice, [Think when unsure](/docs/think/#4-give-thought-answers-their-own-temperature) has the think temperatures, and [Release notes](/docs/releases/) has every change.
