@@ -11,7 +11,7 @@ A server that uses none of them answers as 0.26.0 did.
 ## The fix: truncation under the header layout
 
 In 0.26.0, a Gemma server with `--over-limit truncate` could refuse a request it should have answered.
-The cut left room for the text but not for the list of questions the header layout adds, so a request whose list was longer than a small margin came out a few tokens over the context and got a 422.
+The cut left room for the text but not for the list of questions the header layout adds, so a request whose list was longer than 32 tokens came out a few tokens over the context and got a 422.
 In one test that was 27 of 60 long documents on the 12B, at a 65,536-token context.
 
 The cut now counts the question list, so those requests are answered from a text shortened by the list's length.
@@ -20,7 +20,7 @@ The default, which refuses a text over the length, and the plain layout were not
 ## Flavors
 
 `--flavor` serves a named configuration of a Gemma model for one job: `calibrated`, `thinking-commit` for JevBench, or `read-enhanced` for the Decision Index.
-The server is named for it, such as `Decisio-31b-read-enhanced`, and a flag you give still wins and is recorded as an override.
+The server is named for it, such as `Decisio-31b-read-enhanced`, and a flag you give still applies and is recorded as an override.
 
 Not every flavor is finished, and each says so.
 `calibrated` refuses to start until its temperatures are fitted.
