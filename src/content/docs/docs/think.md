@@ -46,7 +46,18 @@ The server's setting, and how many questions have thought, are in `/health`:
 
 ::site-block{name="think-health"}
 
-## 4. Know what stays at one read
+## 4. Give thought answers their own temperature
+
+A thought answer mixes two reads and comes out sharper than a single read, so a temperature fitted on single reads can leave it over-confident.
+On a tuned model, score answers that thought needed about twice the single-pass temperature.
+
+- `--think-temperature-choice`, `--think-temperature-noul` and `--think-temperature-score` set a temperature per type for the answers that thought, and for those only. A tuned model's repository or an adapter's file can carry them; a flag wins.
+- Which questions think does not change: the unsure test still uses the single-pass temperature.
+- A type with no think temperature keeps the single-pass one, so a server without them answers as before.
+- `/health` shows them under `systemone.think_temperatures`, and a certificate made under other ones is suspended (`think_mode_changed`).
+- `python -m decisio.serve.adapter_temperatures fit-think` fits them from labelled answers that thought.
+
+## 5. Know what stays at one read
 
 - A question with more than 16 options.
 - A question a registered task answers: its correction and certificate were fitted on one read.
@@ -58,5 +69,5 @@ Where it runs, how it shares the server and what it does to certificates are in 
 ## What next
 
 - [Requirements and limits](/docs/limits/#3-set-up-for-production): thinking in production.
-- [Server flags](/docs/flags/#every-flag): `--think`, `--think-factor` and `--think-budget` in full.
+- [Server flags](/docs/flags/#every-flag): `--think`, `--think-factor`, `--think-budget` and the think temperatures in full.
 - [The HTTP API](/docs/api/): the `think` field and the `thinking` answer.

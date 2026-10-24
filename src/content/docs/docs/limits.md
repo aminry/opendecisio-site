@@ -67,6 +67,8 @@ Each request holds:
 
 To answer a text over the length instead, start the server with `--over-limit truncate`, or send `"over_limit": "truncate"` in one request.
 The server keeps the start of the text and drops the rest, never a question, and the response says what was cut (`state_truncated`).
+
+Under the header layout the list of the request's questions takes room too, so the text keeps what the longest prompt leaves.
 Nothing cut is certified; a question over the length on its own, or a request with images, still gets 422.
 
 A long text takes longer to read the first time: on the 31B, 3,370 ms at 16,000 tokens and 8,880 ms at 32,000.
@@ -96,6 +98,7 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 17. **Check your object store at the first start.** The shared store was checked on RustFS and SeaweedFS, not on AWS S3, R2, MinIO, GCS or Azure; a replica refuses to start on a store that does not enforce conditional writes.
 18. **Certify on the layout you serve.** A task registered, and a certificate made, under one [prompt layout](/docs/layout/) is not applied under the other; a server that loads tasks fitted under plain holds plain and says so.
 19. **Keep the plain layout for a series of questions about one text.** Under the header layout, the Gemma models' default, a later request with other questions reads the text again; `--layout plain` reads it from the cache.
+20. **Certify on the flavor and the read-twice setting you serve.** A task registered, or a certificate made, under one flavor or one `--read-twice-under` setting is not applied under another.
 
 ## 4. What was measured on what
 

@@ -5,7 +5,7 @@ description: The Gemma models list a request's questions before its text, which 
 
 <!-- Site-written: the Choose the prompt layout guide. Its facts are decisio's docs/running.md ("The header layout"), docs/upgrading.md, docs/cli.md, docs/api.md and EVAL_CARD.md at the pinned release (src/config/sourced.mjs checks them). The 31B's figures are decisio's A/B on one RTX PRO 6000 and the 12B's its pre-registered A/B on one RTX 5090, as running.md states them. No board is linked or named beyond the Decision Index's public sample. -->
 
-::covers{links="docs/running.md#the-header-layout---layout"}
+::covers{links="docs/running.md#the-header-layout---layout docs/running.md#refitting-the-bases-temperatures-for-a-layout=4-know-what-is-kept-per-layout docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r-for-decision-index-runs=6-read-twice-for-decision-index-runs"}
 
 On the Gemma models the prompt lists every question of the request, then the text, then the question being answered.
 The model reads the text knowing what will be asked, and the 31B answered more accurately that way on most of what was measured.
@@ -84,6 +84,20 @@ To move a taught deployment to the header, export its tasks if you want the reco
 - **A layout per request.** A request cannot choose its layout yet; one server serves one.
 - **Other engines.** Only the vLLM engine was tested with the header; the HF and MLX engines build the same prompt.
 - **The Evaluation card.** Its figures were measured on the plain layout.
+
+## 6. Read twice, for Decision Index runs
+
+`--read-twice-under N` writes each question's prompt twice when a request is short, the second copy after `Read the same input again before answering:`.
+It is off by default, and never the default.
+
+- **Short** means at most N counted input tokens read once: the header, the text and each question's own text, as `usage.input_tokens` counts them.
+- **`--read-twice-max-questions R`** reads a request with more than R questions once, because a doubled request costs more with every question. Set R from a timing run on your card: the largest question count whose doubled request stays under about 900 ms.
+- **On the 31B with the header,** N = 2,000 gained 1.8 points on the Decision Index public sample, with p80 latency about 866 ms; that threshold was checked on the sample itself. On our proxies it gained 3.24, the smallest threshold within 0.25 points of the best.
+- **On the 12B in FP8** it added nothing within noise.
+- **It costs tokens:** about 1.5 times as many, and `usage.input_tokens` counts both copies, which puts a JevBench run over that board's cost cap.
+- **Tasks and certificates are per setting:** a task registered under one N and R is not applied under another.
+
+::source[Measured by decisio on one RTX PRO 6000, the 31B with the header layout, as decisio 0.27.0's docs/running.md states it.]
 
 ## What next
 

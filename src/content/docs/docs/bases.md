@@ -5,7 +5,7 @@ description: Which of the three models to serve, by your machine and what you ne
 
 <!-- Site-written: the Choosing a model reference. The start commands are the README's "Choosing a base" at the pinned release; the checkpoints, weights and reasons are the README's and docs/running.md's there (src/config/sourced.mjs checks them). The comparisons between the models are on Benchmarks. -->
 
-::covers{links="README.md#choosing-a-base docs/running.md#the-12b-in-two-precisions=4-the-12b-in-fp8 docs/running.md#the-12b-in-two-precisions-bf16-and-fp8=4-the-12b-in-fp8"}
+::covers{links="README.md#choosing-a-base docs/running.md#flavors=5-serve-a-flavor docs/running.md#the-12b-in-two-precisions=4-the-12b-in-fp8 docs/running.md#the-12b-in-two-precisions-bf16-and-fp8=4-the-12b-in-fp8"}
 
 Pick the model by your machine and what you need: one flag, `--base`, serves it with every setting it was measured with.
 With no flag the server serves Gemma 4 31B:
@@ -53,6 +53,21 @@ On a 32 GB card it serves its full 65,536 tokens at the default share, where the
 - **A Mac does not serve it**: on a Mac, serve the bf16 12B's MLX conversion.
 
 ::source[Measured on one RTX 5090, vLLM 0.31.0, both precisions at 4,096 tokens and 0.95 of the card for the answers and speed, 2026-10-21.]
+
+## 5. Serve a flavor
+
+A flavor is a named configuration of a Gemma model's weights for one job, started with `--flavor`:
+
+| Flavor | For | Sets |
+| --- | --- | --- |
+| `calibrated` | probabilities you can take at their word | calibrated temperatures for every type, yes/no included; no thinking, no commit rule, no read twice |
+| `thinking-commit` | JevBench | [thinking when unsure](/docs/think/) and the commit rule |
+| `read-enhanced` | the Decision Index | [read twice](/docs/layout/#6-read-twice-for-decision-index-runs) under 2,000 tokens, no thinking |
+
+- **Every flavor uses the header layout**, and the server is named for it: `Decisio-31b-<flavor>`, `Decisio-12b-<flavor>` or `Decisio-12b-fp8-<flavor>`, in `GET /v1/models` and every response.
+- **A flag you give wins** and is recorded as an override: at start, in `/health` under `systemone.flavor.overrides`, in the `x-decisio-flavor` header and in the serving-stack fingerprint.
+- **Two flavors are not finished.** `read-enhanced` serves the model's own temperatures and no question cap until its timing run, and `thinking-commit` runs the default thinking settings, measured on our tuned models only; both say `pending` wherever the flavor is reported. `calibrated` refuses to start until its temperatures are fitted.
+- **Tasks and certificates are per flavor.** The Qwen model and a tuned model refuse `--flavor`, and a server without it is what it was.
 
 ## What next
 
