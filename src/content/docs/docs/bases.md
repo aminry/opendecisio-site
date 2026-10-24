@@ -58,9 +58,9 @@ On a 32 GB card it serves its full 65,536 tokens at the default share, where the
 
 A flavor is a named configuration of a Gemma model's weights for one job, started with `--flavor`:
 
-- **`calibrated`**, for probabilities you can take at their word: calibrated temperatures for every type, yes/no included, and no thinking, commit rule or read twice.
-- **`thinking-commit`**, for JevBench: [thinking when unsure](/docs/think/) and the commit rule.
-- **`read-enhanced`**, for the Decision Index: [read twice](/docs/layout/#6-read-twice-for-decision-index-runs) under 2,000 tokens, and no thinking.
+- **`calibrated`** gives honest probabilities: calibrated temperatures for every type, yes/no included, and no thinking, commit rule or read twice.
+- **`thinking-commit`** [thinks when unsure](/docs/think/) and commits yes/no answers.
+- **`read-enhanced`** [reads short requests twice](/docs/layout/#6-read-short-requests-twice), under 2,000 tokens, for accuracy at more tokens, and does not think.
 
 How a flavor is served:
 

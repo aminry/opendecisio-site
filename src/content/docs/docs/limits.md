@@ -115,7 +115,7 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 | Ollama memory | Gemma 4 12B, `q4_k_m` | one Apple M5 Pro | Ollama 0.35.1 | 2026-10-07 |
 | The 12B in FP8 against bf16, and on a 32 GB card | Gemma 4 12B, FP8 and bf16 | one RTX 5090, 32 GB | vLLM 0.31.0, 4,096 tokens, 0.95 of the card | 2026-10-21 |
 | Batched throughput | Gemma 4 12B, FP8 | one RTX 5090, 32 GB | vLLM 0.31.0, 0.95 of the card, 4,096 tokens, requests about new 1,000-token states, 8 and 16 clients | 2026-10-21 |
-| The header layout against the plain one | Gemma 4 31B, FP8 on load; Gemma 4 12B, FP8 | one RTX PRO 6000 Blackwell; one RTX 5090 | decisio's proxy sets and the Decision Index's public sample | before decisio 0.26.0 |
+| The header layout against the plain one | Gemma 4 31B, FP8 on load; Gemma 4 12B, FP8 | one RTX PRO 6000 Blackwell; one RTX 5090 | decisio's proxy sets and a public multi-domain sample | before decisio 0.26.0 |
 :::
 
 - One card and one run per configuration.

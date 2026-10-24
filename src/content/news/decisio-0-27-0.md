@@ -1,6 +1,6 @@
 ---
 title: "decisio 0.27.0: truncation fixed under the header layout, and opt-in flavors"
-summary: "0.27.0 fixes --over-limit truncate under the header layout, and adds flavors, read twice for Decision Index runs and think temperatures, all off unless you ask for them."
+summary: "0.27.0 fixes --over-limit truncate under the header layout, and adds flavors, reading short requests twice and think temperatures, all off unless you ask for them."
 date: 2026-10-24
 tags: [release]
 ---
@@ -19,18 +19,18 @@ The default, which refuses a text over the length, and the plain layout were not
 
 ## Flavors
 
-`--flavor` serves a named configuration of a Gemma model for one job: `calibrated`, `thinking-commit` for JevBench, or `read-enhanced` for the Decision Index.
+`--flavor` serves a named configuration of a Gemma model: `calibrated` gives honest probabilities, `thinking-commit` thinks when unsure and commits yes/no answers, and `read-enhanced` reads short requests twice for accuracy at more tokens.
 The server is named for it, such as `Decisio-31b-read-enhanced`, and a flag you give still applies and is recorded as an override.
 
 Not every flavor is finished, and each says so.
 `calibrated` refuses to start until its temperatures are fitted.
 `read-enhanced` runs without its question cap and with the model's own temperatures, and `thinking-commit` uses the default thinking settings, measured on our tuned models only; both are marked `pending` wherever the flavor is reported.
 
-## Read twice, for Decision Index runs
+## Read short requests twice
 
 `--read-twice-under N` writes each question's prompt twice when a request read once is at most N tokens.
-On the 31B, N = 2,000 gained 1.8 points on a public sample of the Decision Index, with p80 latency about 866 ms, at about 1.5 times the tokens.
-It added nothing on the 12B, and the extra tokens put a JevBench run over that board's cost cap, so it is never the default.
+On the 31B, N = 2,000 gained 1.8 points on a public multi-domain sample, at about 1.5 times the tokens and an estimated p80 of about 866 ms; it added nothing on the 12B.
+It reads up to about twice the input tokens on short requests, so it is off by default.
 
 ## Temperatures
 
@@ -41,4 +41,4 @@ A tuned model's repository can carry separate temperatures for answers that thou
 
 Install it with `pip install "decisio[serve]==0.27.0"`, or run the release image, `ghcr.io/aminry/decisio@sha256:f7126db4f1714b7ab3a07d5c91f350528ff7f6ba1e404434e73d764fcbd5e7cf`, as [With Docker](/docs/deploy/docker/) shows.
 
-[Choosing a model](/docs/bases/#5-serve-a-flavor) has the flavors, [Choose the prompt layout](/docs/layout/#6-read-twice-for-decision-index-runs) has read twice, [Think when unsure](/docs/think/#4-give-thought-answers-their-own-temperature) has the think temperatures, and [Release notes](/docs/releases/) has every change.
+[Choosing a model](/docs/bases/#5-serve-a-flavor) has the flavors, [Choose the prompt layout](/docs/layout/#6-read-short-requests-twice) has read twice, [Think when unsure](/docs/think/#4-give-thought-answers-their-own-temperature) has the think temperatures, and [Release notes](/docs/releases/) has every change.
