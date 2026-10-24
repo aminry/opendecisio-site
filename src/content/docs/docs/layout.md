@@ -5,7 +5,7 @@ description: The Gemma models list a request's questions before its text, which 
 
 <!-- Site-written: the Choose the prompt layout guide. Its facts are decisio's docs/running.md ("The header layout"), docs/upgrading.md, docs/cli.md, docs/api.md and EVAL_CARD.md at the pinned release (src/config/sourced.mjs checks them). The 31B's figures are decisio's A/B on one RTX PRO 6000 and the 12B's its pre-registered A/B on one RTX 5090, as running.md states them. No board is named or linked; the public sample is described, not named. -->
 
-::covers{links="docs/running.md#the-header-layout---layout docs/running.md#refitting-the-bases-temperatures-for-a-layout=4-know-what-is-kept-per-layout docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r-for-decision-index-runs=6-read-short-requests-twice"}
+::covers{links="docs/running.md#the-header-layout---layout docs/running.md#refitting-the-bases-temperatures-for-a-layout=4-know-what-is-kept-per-layout docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r=6-read-short-requests-twice docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r-for-decision-index-runs=6-read-short-requests-twice"}
 
 On the Gemma models the prompt lists every question of the request, then the text, then the question being answered.
 The model reads the text knowing what will be asked, and the 31B answered more accurately that way on most of what was measured.
