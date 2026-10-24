@@ -6,28 +6,16 @@
 /** Exact edits, by file: the text to find, what replaces it, and why. */
 export const edits = [
 	{
-		file: 'EVAL_CARD.md',
-		find: ' (a stage C comparison of 2026-10-05, recorded in our private records)',
-		replace: '',
-		why: 'an internal stage name and a private record',
-	},
-	{
 		file: 'docs/demos/README.md',
 		find: 'These tests ran on the Qwen base in the first round, before the bases session; they were not repeated on the Gemma bases.',
 		replace: 'These tests ran on the Qwen base; they were not repeated on the Gemma bases.',
 		why: 'an internal session name',
 	},
 	{
-		file: 'EVAL_CARD.md',
-		find: 'the serving gate G2 bounded',
-		replace: 'a serving check bounded',
-		why: 'an internal gate number',
-	},
-	{
-		file: 'docs/comparison.md',
-		find: 'what the card for our runs cost on vast.ai',
-		replace: 'the hourly price of the card the runs used',
-		why: 'how the project rents its cards',
+		file: 'CHANGELOG.md',
+		find: '--read-twice-under N, an opt-in for Decision Index runs (never the default)',
+		replace: '--read-twice-under N, an opt-in that reads short requests twice (never the default)',
+		why: "a feature described by a benchmark it was measured on, not by what it does; as decisio's edited release notes word it",
 	},
 ];
 
