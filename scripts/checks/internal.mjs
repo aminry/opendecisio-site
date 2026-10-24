@@ -14,7 +14,7 @@ const MARKERS = [
 	// "bases session" and internal stage letters.
 	['a session label', /\b[Ss]ession [A-Z]\b|(?<![A-Za-z0-9])s\d{1,2}-session\b|\d{4}-\d{2}-\d{2}_s\d{1,2}-|\bbases session\b|\b[Ss]tage [A-Z]\b/],
 	['an internal working group', /\bLab [0-9]\b|\bTrack [0-9]+\b|\bAdvocacy's\b|\bServe's\b|\b(Site|Serve|Data|Records|Throughput|Advocacy) track\b|\bServe (is|will|owns|drops|rewords)\b/],
-	// The project's own agents and tools, how it runs its work, and who decided what (Amin, 2026-10-24: the public site and
+	// The project's own agents and tools, how it runs its work, and who decided what (a rule since 2026-10-24: the public site and
 	// repository describe the product, not the process behind it).
 	['an internal agent or tool', /\bBrain\b|\bCommand Center\b|\bcc-task\b|\bside session\b|\bpaseo\b|\bsubagents?\b|\binternal teacher\b/],
 	['an internal run code', /\bN1[FP]?\b|\bR300\b|\b[Aa]rm [A-H][0-9]?\b|\bgate G?[0-9]+\b/],
