@@ -58,11 +58,11 @@ On a 32 GB card it serves its full 65,536 tokens at the default share, where the
 
 A flavor is a named configuration of a Gemma model's weights for one job, started with `--flavor`:
 
-| Flavor | For | Sets |
-| --- | --- | --- |
-| `calibrated` | probabilities you can take at their word | calibrated temperatures for every type, yes/no included; no thinking, no commit rule, no read twice |
-| `thinking-commit` | JevBench | [thinking when unsure](/docs/think/) and the commit rule |
-| `read-enhanced` | the Decision Index | [read twice](/docs/layout/#6-read-twice-for-decision-index-runs) under 2,000 tokens, no thinking |
+- **`calibrated`**, for probabilities you can take at their word: calibrated temperatures for every type, yes/no included, and no thinking, commit rule or read twice.
+- **`thinking-commit`**, for JevBench: [thinking when unsure](/docs/think/) and the commit rule.
+- **`read-enhanced`**, for the Decision Index: [read twice](/docs/layout/#6-read-twice-for-decision-index-runs) under 2,000 tokens, and no thinking.
+
+How a flavor is served:
 
 - **Every flavor uses the header layout**, and the server is named for it: `Decisio-31b-<flavor>`, `Decisio-12b-<flavor>` or `Decisio-12b-fp8-<flavor>`, in `GET /v1/models` and every response.
 - **A flag you give wins** and is recorded as an override: at start, in `/health` under `systemone.flavor.overrides`, in the `x-decisio-flavor` header and in the serving-stack fingerprint.

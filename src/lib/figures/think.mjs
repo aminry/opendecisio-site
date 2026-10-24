@@ -19,10 +19,10 @@ export function thinkFacts() {
 }
 
 const STEPS = (f) => [
-	{ title: '1. Read once', lines: ['every question, as always,', 'at its type\'s temperature'] },
-	{ title: '2. Unsure?', lines: [`top probability under choice ${f.choice},`, `yes/no ${f.noul}, score ${f.score}`, `(times the factor, ${f.factor} by default)`] },
-	{ title: '3. Reason, read again', lines: ['the served model writes', `up to ${f.budget} tokens, then the`, 'options are read again'] },
-	{ title: '4. Mix', lines: ['the two reads, in log space,', 'at the type\'s think', 'temperature, if it has one'] },
+	{ title: '1. Read once', lines: ['every question,', 'as always, at its', 'type\'s temperature'] },
+	{ title: '2. Unsure?', lines: ['top probability under', `choice ${f.choice.toFixed(2)}, yes/no`, `${f.noul.toFixed(2)}, score ${f.score.toFixed(2)}, times`, `the factor (default ${f.factor})`] },
+	{ title: '3. Reason, read again', lines: ['the served model', `writes up to ${f.budget}`, 'tokens, then the', 'options are read again'] },
+	{ title: '4. Mix', lines: ['the two reads, in log', 'space, at the type\'s', 'think temperature,', 'if it has one'] },
 ];
 
 function thinkFlow() {
@@ -32,7 +32,7 @@ function thinkFlow() {
 		const x = 8 + i * 178;
 		return `<rect class="f-node${i === 2 ? ' f-node--on' : ''}" x="${x}" y="12" width="160" height="112" rx="12"/>
 <text class="ft ft-b" x="${x + 12}" y="38">${esc(s.title)}</text>
-${s.lines.map((l, j) => `<text class="ft ft-s" x="${x + 12}" y="${62 + j * 18}">${esc(l)}</text>`).join('')}
+${s.lines.map((l, j) => `<text class="ft ft-s" x="${x + 12}" y="${60 + j * 17}">${esc(l)}</text>`).join('')}
 ${i < steps.length - 1 ? `<path class="f-line" d="M${x + 160} 68L${x + 178} 68" pathLength="1" marker-end="url(#th)"/>` : ''}`;
 	};
 	const sure = `<path class="f-frame" d="M266 124L266 150L80 150L80 124"/><text class="ft ft-s" x="96" y="168">sure: answered from the one read, in milliseconds</text>`;
