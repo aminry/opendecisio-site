@@ -57,7 +57,7 @@
 	--d-radius-panel: 10px;
 	--d-radius-control: 8px;
 
-	/* Colour, dark: a near-black base with deep navy surfaces and one warm amber (round 6, after shad0w's palette;
+	/* Colour, dark: a near-black base with deep navy surfaces and one warm amber (after shad0w's palette;
 	   NOTICE). The accent has three jobs: text and links (--d-accent, 4.5:1), lines, bars and marks (--d-accent-line,
 	   3:1) and fills behind dark text (--d-accent-fill, with --d-on-accent); in dark one amber does all three. */
 	--d-bg: #03050a;

@@ -1,7 +1,7 @@
 # The Decisio mark: Fork
 
 A path reaches a fork and takes one branch, which ends in an arrow, while the other stops short: a decision as a route taken.
-Chosen by Amin on 2026-10-06 from five candidates (Peak, Fork, Bubbles, Dial, Tick); the four not chosen are in this folder's history.
+Chosen on 2026-10-06 from five candidates (Peak, Fork, Bubbles, Dial, Tick); the four not chosen are in this folder's history.
 
 - `assets/`: the mark, a horizontal lockup and a stacked lockup, each in `-light`, `-dark` and `-mono` (single colour, `currentColor`).
 - `review/index.html` and `review/0*.png`: the mark in the site header at desktop and phone width, the favicon at 16 and 32 px, the GitHub avatar, the README header, the 1280x640 social preview and the Ollama avatar, in light and dark; `review/raster/` holds the PNGs.
@@ -11,7 +11,7 @@ Chosen by Amin on 2026-10-06 from five candidates (Peak, Fork, Bubbles, Dial, Ti
 ## How it is drawn
 
 - Vector, on a 32-unit grid, with no gradient, shadow or effect: the taken path is a 4-unit stroke ending in a filled arrowhead, the other branch a 3.5-unit stroke that stops short.
-- Colours from the site's tokens since round 6 (2026-10-14, amber chosen by Amin): the accent's line colour (`#b86a00` light, `#fba41c` dark) for the taken path, the grey of other systems (`#808898`, `#7c8799`) for the other branch, ink (`#0e1a2b`, `#e6e8ec`) for the word.
+- Colours from the site's tokens (the amber palette of 2026-10-14): the accent's line colour (`#b86a00` light, `#fba41c` dark) for the taken path, the grey of other systems (`#808898`, `#7c8799`) for the other branch, ink (`#0e1a2b`, `#e6e8ec`) for the word.
 - In one colour the taken branch still reads, by its weight and its arrowhead.
 - It uses no letter, so it does not depend on the name.
 - The word in the lockups is Geist (Vercel) at 600, under the SIL Open Font License 1.1, converted to outlines.

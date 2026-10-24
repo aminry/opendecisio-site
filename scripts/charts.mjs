@@ -1,5 +1,5 @@
 // the board charts in public/launch/ are pinned by sha256 to the records in launch_facts.public.json, so they stay exactly as
-// they were drawn. This step writes the site's copy of each into dist/launch/ in the site's colours (round 6): Decisio
+// they were drawn. This step writes the site's copy of each into dist/launch/ in the site's colours: Decisio
 // in the accent, Jev in violet, every other system in grey, and the page's own surfaces, lines and inks. Only colour
 // values change. The step fails if anything else in a chart would differ, and scripts/checks/launch.mjs checks the
 // copies in dist/ against the pinned files the same way.

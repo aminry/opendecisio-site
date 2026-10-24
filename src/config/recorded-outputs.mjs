@@ -1,8 +1,8 @@
 // Outputs the site shows as recorded from a decisio server, with the release, card and date that recorded them
-// (docs/STYLE_GUIDE.md, "Numbers"; Amin, 2026-10-18 and 2026-10-19). scripts/checks/recorded.mjs finds every page that
+// (docs/STYLE_GUIDE.md, "Numbers"). scripts/checks/recorded.mjs finds every page that
 // shows one (by its marker text) and applies scripts/checks/recorded-rule.mjs: an output older than the pinned minor
 // stays if each page labels it with its release, card and date, and if every release since was read for a change to what
-// it shows (`reviews`, from the release notes). No GPU is rented to re-record; that happens when a training box is up.
+// it shows (`reviews`, from the release notes). A recording is made again alongside new measurements on a GPU, not only to verify the site.
 // All three were recorded again on decisio 0.17.0 (src/lib/recorded.mjs), so the earlier recordings are retired: their
 // marks must appear on no page.
 import { certificate, session } from '../lib/recorded.mjs';

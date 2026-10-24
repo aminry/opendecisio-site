@@ -1,9 +1,9 @@
-// The site documents the pinned decisio release only (Amin, 2026-10-19): no page's prose names another decisio release.
+// The site documents the pinned decisio release only (a site rule since 2026-10-19): no page's prose names another decisio release.
 // A version may appear in a source note (the "measured on" or "recorded on" line of a number, a figure's source, a
 // checked block's line), in code (install commands, requests, files), and on Release notes, where the history lives.
 // A version is a decisio release when the pinned CHANGELOG has it; one written after another product's name (vLLM 0.31.0,
 // Ollama 0.35.1, typesafe-sdk==0.7.2) is that product's.
-// decisio's own text, included as it is, is held to the same rule (Amin, 2026-10-19), with one allowance: the evaluation
+// decisio's own text, included as it is, is held to the same rule, with one allowance: the evaluation
 // card names each measurement's release as its condition ("on decisio 0.8.1", "at v0.6.0, 2026-10-05"), which passes there;
 // history in it ("the default since 0.8.0", "before 0.12.0") does not. decisio's docs drop their history in the release
 // after the pin a list names; at that pin, the named phrases in decisio's own text are listed, not failed, and every
@@ -47,7 +47,7 @@ const named = (context) => allowed === null || (allowed ?? []).some((p) => conte
 const PENDING_PAGES = ['/docs/api/', '/docs/flags/', '/docs/evaluation-card/'];
 // History words just before a release ("since 0.10.0", "before 0.12.0 it", "default from 0.9.0"), or "X to Y" after it.
 // Wording that reads like history but states how a measurement was run ("the same server was started again from v0.6.0"):
-// a condition (Amin, 2026-10-19).
+// a condition.
 const CONDITION_BEFORE = /\bstarted again from\s+v?$/i;
 const HISTORY_BEFORE = /\b(since|before|until|from|after|earlier|later|default|defaults|in|up to|as of|prior to)\s+(decisio\s+)?v?$/i;
 const HISTORY_AFTER = /^(\s+to\s+v?\d+\.\d+\.\d+|\s+(it|the server|such|there)\b|'s (default|order))/i;
@@ -81,7 +81,7 @@ for (const file of walk(root)) {
 			|| (PENDING_PAGES.includes(route) && near.some((w) => w.includes(' ') && upstreamText.includes(w)));
 		const history = !CONDITION_BEFORE.test(before) && (HISTORY_BEFORE.test(before) || HISTORY_AFTER.test(after));
 		// A measurement's condition in decisio's own text (its evaluation card, its README's tables) passes; history in
-		// it is listed on the pages Serve is cleaning while the pin's list names it; site prose never passes.
+		// it is listed on the pages whose decisio text is pending its cleanup while the pin's list names it; site prose never passes.
 		if ((route === '/docs/evaluation-card/' || decisioText) && !history) continue;
 		if (pending && decisioText && PENDING_PAGES.includes(route) && named(text.slice(Math.max(0, m.index - 60), m.index + 40))) decisios.push(where);
 		else problems.push(where);

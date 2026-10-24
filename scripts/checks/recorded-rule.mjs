@@ -1,11 +1,11 @@
 // The rule of the recorded-output check (scripts/checks/recorded.mjs), apart from the pages so its self-test can run it
-// (scripts/checks/recorded-selftest.mjs). docs/STYLE_GUIDE.md, "Numbers"; Amin, 2026-10-19: no GPU is rented to verify
+// (scripts/checks/recorded-selftest.mjs). docs/STYLE_GUIDE.md, "Numbers": a recording is not made again only to verify
 // the site, so a recorded output stays when the pin moves past the release that recorded it, as long as
 //   - every page that shows it labels it with that release, the card and the date, in one label, in that order; and
 //   - the release notes of every release since were read and the behaviour it shows did not change (`reviews`); or a release
 //     changed a default, a flag still serves what it shows, and every page's label says which (the review's `label`, for
 //     example the layout it was recorded on).
-// Re-recording happens only when a training box is already up.
+// A recording is made again alongside new measurements on a GPU.
 
 const minor = (v) => v.replace(/^v/, '').split('.').slice(0, 2).map(Number);
 const older = (a, b) => a[0] < b[0] || (a[0] === b[0] && a[1] < b[1]);

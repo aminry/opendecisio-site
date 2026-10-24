@@ -1,6 +1,6 @@
 // Text in decisio's files at the pinned release that shows internal labels: session codes in run-folder names, the
 // private repository's name, internal stage and session names. The site renders decisio's files with these edits, so
-// no reader sees them (Amin, 2026-10-18); scripts/checks/internal.mjs fails the build where any such name survives, so
+// no reader sees them; scripts/checks/internal.mjs fails the build where any such name survives, so
 // an edit that stops matching at a later tag is caught there. Applied by readUpstream (src/lib/upstream.mjs).
 
 /** Exact edits, by file: the text to find, what replaces it, and why. */
@@ -16,6 +16,18 @@ export const edits = [
 		find: 'These tests ran on the Qwen base in the first round, before the bases session; they were not repeated on the Gemma bases.',
 		replace: 'These tests ran on the Qwen base; they were not repeated on the Gemma bases.',
 		why: 'an internal session name',
+	},
+	{
+		file: 'EVAL_CARD.md',
+		find: 'the serving gate G2 bounded',
+		replace: 'a serving check bounded',
+		why: 'an internal gate number',
+	},
+	{
+		file: 'docs/comparison.md',
+		find: 'what the card for our runs cost on vast.ai',
+		replace: 'the hourly price of the card the runs used',
+		why: 'how the project rents its cards',
 	},
 ];
 

@@ -11,15 +11,21 @@ import { parse } from 'node-html-parser';
 const MARKERS = [
 	['a private repository', /\bRLCD\b|\brlcd[\w-]*/i],
 	// Session codes and labels from the project's internal runs: "session A", run folders such as runs/2026-10-15_s12-session,
-	// "bases session" and internal stage letters (Amin, 2026-10-18).
+	// "bases session" and internal stage letters.
 	['a session label', /\b[Ss]ession [A-Z]\b|(?<![A-Za-z0-9])s\d{1,2}-session\b|\d{4}-\d{2}-\d{2}_s\d{1,2}-|\bbases session\b|\b[Ss]tage [A-Z]\b/],
-	['an internal working group', /\bLab [0-9]\b|\bTrack [0-9]+\b|\bAdvocacy's\b|\bServe's\b/],
+	['an internal working group', /\bLab [0-9]\b|\bTrack [0-9]+\b|\bAdvocacy's\b|\bServe's\b|\b(Site|Serve|Data|Records|Throughput|Advocacy) track\b|\bServe (is|will|owns|drops|rewords)\b/],
+	// The project's own agents and tools, how it runs its work, and who decided what (Amin, 2026-10-24: the public site and
+	// repository describe the product, not the process behind it).
+	['an internal agent or tool', /\bBrain\b|\bCommand Center\b|\bcc-task\b|\bside session\b|\bpaseo\b|\bsubagents?\b|\binternal teacher\b/],
+	['an internal run code', /\bN1[FP]?\b|\bR300\b|\b[Aa]rm [A-H][0-9]?\b|\bgate G?[0-9]+\b/],
+	['a decision note', /\(Amin[,;]|\bAmin's (rule|decision|word)\b|\bchosen by Amin\b/],
+	['how cards are rented', /\btraining box\b|\brented box\b|\bvast\.ai\b/],
 	['an internal records path', /\bexperiments\/20\d\d-\d\d-\d\d_/],
 	['a local path', /\/Users\/[a-z]|\/home\/[a-z]+\/|~\/\.claude\b/],
 	['an email address', /\b[\w.+-]+@(?!example\.)[\w-]+\.(com|org|net|io|dev|ai)\b/],
 	['a token', /\b(ghp|gho|github_pat|hf)_[A-Za-z0-9_]{16,}|\bsk-[A-Za-z0-9]{20,}/],
 ];
-const SKIP = /(^|\/)package-lock\.json$|\.(png|jpe?g|webp|gif|mp4|webm|woff2?|ico|pdf)$/;
+const SKIP = /(^|\/)package-lock\.json$|\.(png|jpe?g|webp|gif|mp4|webm|woff2?|ico|pdf|gz)$/;
 const dist = process.argv.includes('--dist');
 const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : /\.(html|md|txt|svg)$/.test(e.name) ? [join(d, e.name)] : []));
 const files = dist ? walk('dist') : execFileSync('git', ['ls-files'], { encoding: 'utf8' }).split('\n').filter((f) => f && !SKIP.test(f) && f !== 'scripts/checks/internal.mjs' && f !== 'src/config/upstream-redactions.mjs');
