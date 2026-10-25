@@ -34,7 +34,7 @@ A score is the share of items where the model's likeliest answer is the right on
 - **On yes/no questions it is no worse, and probably a little better:** the interval touches zero.
 - **Against the untrained 12B in the plain layout, the gains are larger:** +8.4 points (+4.9 to +12.0) on hard decisions.
 - **It changes a few answers the untrained model had right with high confidence,** about 1.6% of them in our monitoring; each difference above is the net effect.
-- **The FP8 versions lose about a point** against bf16 and are not part of these figures.
+- **Figures are for the bf16 weights.**
 - **"Held-out" means screened against our own training data;** the items do not come from a third party's benchmark.
 
 ## Every way to run it
@@ -44,6 +44,8 @@ The repository brings its weights and its settings, so no other flag is needed, 
 [Serve the tuned 12B](/docs/deploy/tuned-12b/) has the whole setup.
 
 TODO(Amin): Mac (MLX) and Ollama versions are not built; say "coming" or leave this line out.
+
+TODO(Amin): the FP8 repositories (Decisio-12b-tuned-fp8-calibrated and -fp8-commit) and their measured difference from bf16, once checked.
 
 ## Data and licence
 
