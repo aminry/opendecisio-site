@@ -5,7 +5,7 @@ description: Load a LoRA adapter you trained on the base, give it its own temper
 
 <!-- Site-written: the Serve your own adapter guide. Its facts are decisio's docs/running.md ("LoRA adapters"), docs/cli.md and docs/api.md at the pinned release (src/config/sourced.mjs checks them); its commands are decisio's (src/lib/site-blocks.mjs). -->
 
-::covers{links="docs/running.md#lora-adapters docs/running.md#an-adapters-own-temperatures=2-give-it-its-own-temperatures docs/running.md#a-choice-temperature-by-the-number-of-options=2-give-it-its-own-temperatures docs/running.md#identity-and-the-fingerprint=5-know-what-it-does-to-certificates"}
+::covers{links="docs/running.md#a-default-adapter=6-answer-requests-that-name-no-adapter docs/running.md#lora-adapters docs/running.md#an-adapters-own-temperatures=2-give-it-its-own-temperatures docs/running.md#a-choice-temperature-by-the-number-of-options=2-give-it-its-own-temperatures docs/running.md#identity-and-the-fingerprint=5-know-what-it-does-to-certificates"}
 
 Serve a LoRA adapter you trained on the base, and ask each question with it or without it.
 An adapter changes the scale of the model's readout, so it carries its own temperatures: one per question type, and for choice questions one per band of option count.
@@ -60,6 +60,15 @@ Name the adapter in the request's `adapter` field:
 A certificate covers one serving setup, and an adapter is part of it.
 The setup a certificate is checked against holds each loaded adapter's name, weights hash and temperatures, so a different adapter, a retrained one or a changed temperature is a different setup: certify your tasks again on it.
 A request that names an adapter is never certified, and a question that a registered task matches is refused with an adapter.
+
+## 6. Answer requests that name no adapter
+
+`--default-adapter NAME` makes a loaded adapter answer every request that names none, for a client that cannot send an `adapter` field.
+
+- **A request with no `adapter` field** is answered by the default adapter at its own temperatures, and the response's `adapter` field says so.
+- **A request that names another loaded adapter** gets that one, and `"adapter": "none"` gets the base model.
+- **Tasks still read the base model:** ask a registered task's questions with `"adapter": "none"`.
+- **The default is part of what a certificate covers:** `/health` shows it, and a certificate made under another default is suspended.
 
 ## What next
 

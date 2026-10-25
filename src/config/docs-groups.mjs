@@ -32,6 +32,7 @@ export const docsGroups = [
 			{ slug: 'docs/deploy/mac', label: 'On a Mac or a laptop', shape: 'guide' },
 			{ slug: 'docs/deploy/development', label: 'For development (CPU)', shape: 'guide' },
 			{ slug: 'docs/deploy/adapter', label: 'Serve your own adapter', shape: 'guide' },
+			{ slug: 'docs/deploy/tuned-12b', label: 'Serve the tuned 12B', shape: 'guide' },
 			{ slug: 'docs/tasks', label: 'Teach a task', shape: 'guide' },
 			{ slug: 'docs/tasks/certify', label: 'Certify answers', shape: 'guide' },
 			{ slug: 'docs/tasks/drift', label: 'Watch for drift', shape: 'guide' },
