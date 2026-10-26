@@ -1,8 +1,7 @@
 // What the home page says, read from decisio at the pinned tag. Every number
 // on the home page comes through here, so each has one upstream source.
-import { code, inlineHtml, listItems, paragraph, paragraphStarting, paragraphText, sectionNodes, table, tree } from './upstream-content.mjs';
+import { code, inlineHtml, paragraph, paragraphStarting, paragraphText, sectionNodes, table, tree } from './upstream-content.mjs';
 import { toString } from 'mdast-util-to-string';
-import { commentsAbove } from './text.mjs';
 import { pin, readUpstream } from './upstream.mjs';
 
 const README = 'README.md';
@@ -103,42 +102,6 @@ export function firstRequest() {
 export function machines() {
 	const t = table(README, 'Install and run', 0);
 	return t.rows.map(([machine, path, memory]) => ({ machine, path, memory }));
-}
-
-/**
- * What the home page's laptop path says about Ollama: the pull commands, the
- * version it needs, which listing suits which machine and what Ollama leaves
- * out, from decisio's README and docs/running.md at the pinned release, and
- * the caveat on how far the Gemma listing's memory was measured, from the run
- * record's summary.md (the docs do not state it).
- */
-/** A run record named in body copy becomes a short link on the word "record", to the same place. */
-export const shortRecord = (html) => html.replace(/<a ([^>]*)><code>runs\/[^<]*<\/code><\/a>/g, '<a $1>record</a>');
-
-export function laptop() {
-	if (!code(README, 'Ollama', 0).includes('aminroudaki/decisio-gemma')) throw new Error('home: the pinned release does not document the Gemma Ollama listing (decisio #106); the home page offers it');
-	const lines = (start) => paragraphStarting(README, 'Ollama', start).split('\n');
-	const find = (ls, re, what) => {
-		const l = ls.find((x) => re.test(x.replace(/<[^>]+>/g, '')));
-		if (!l) throw new Error(`home: the Ollama section no longer has its sentence on ${what}`);
-		return l;
-	};
-	const readme = lines('Requires Ollama');
-	const options = listItems('docs/running.md', 'Ollama', 0);
-	if (options.length !== 2 || !/16 GB laptops/.test(options[0])) throw new Error('home: docs/running.md "Ollama" no longer lists the Gemma and Qwen listings in that order; revisit laptop()');
-	// The record the Gemma line cites says how far its figures reach.
-	const record = options[0].match(/<code>(runs\/[^<]+)<\/code>/)?.[1];
-	if (!record) throw new Error('home: the Gemma line of docs/running.md no longer names its run record');
-	const summary = `${record.replace(/\/$/, '')}/summary.md`;
-	const caveat = tree(summary).children.filter((n) => n.type === 'paragraph').flatMap((n) => toString(n).split('\n')).find((l) => /^It was measured on/.test(l));
-	if (!caveat) throw new Error(`home: ${summary} no longer says how far its measurement reaches; revisit laptop()`);
-	return {
-		pull: commentsAbove(code(README, 'Ollama', 0)),
-		requires: find(readme, /^Requires Ollama/, 'the version it needs'),
-		options: [shortRecord(`${options[0]} ${caveat}`), options[1]],
-		caveat,
-		own: find(readme, /^Ollama builds its own prompt/, 'its own prompt and numbers'),
-	};
 }
 
 /** The commands of each install path. */
