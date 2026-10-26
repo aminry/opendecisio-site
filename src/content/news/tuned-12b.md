@@ -51,11 +51,11 @@ It took a median of 100.0 ms of server time per question, against 151.7 ms for t
 
 The FP8 version is level with the full-precision tuned model on our held-out sets: differences are within a quarter of a point and the intervals include zero.
 
-| Held-out set | Items | bf16 | FP8 | Difference, points (90% interval) | Same likeliest answer |
-| --- | ---: | ---: | ---: | --- | ---: |
-| Hard decisions with rules, exceptions and arithmetic | 525 | 75.1% | 75.2% | +0.2 (-1.1 to +1.5) | 94.3% |
-| A mixed development set | 430 | 66.3% | 66.1% | -0.2 (-1.6 to +1.2) | 94.9% |
-| Decisions in natural, everyday wording | 939 | 69.0% | 69.2% | +0.2 (-0.5 to +1.0) | 97.0% |
+| Held-out set | bf16 | FP8 | Difference, points (90% interval) | Same likeliest answer |
+| --- | ---: | ---: | --- | ---: |
+| Hard decisions with rules, exceptions and arithmetic | 75.1% | 75.2% | +0.2 (-1.1 to +1.5) | 94.3% |
+| A mixed development set | 66.3% | 66.1% | -0.2 (-1.6 to +1.2) | 94.9% |
+| Decisions in natural, everyday wording | 69.0% | 69.2% | +0.2 (-0.5 to +1.0) | 97.0% |
 
 ::source[Measured with decisio 0.33.0 on one RTX PRO 6000, for the FP8 conversion we ship (FP8_DYNAMIC); the times on 2026-10-25 at 600 W, 430 questions one request at a time, with the diagnostic readout on, which adds time to both; each difference paired by item with a 90% bootstrap interval (4,000 resamples), on items screened against our training data.]
 
