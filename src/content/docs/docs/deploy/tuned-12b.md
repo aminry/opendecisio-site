@@ -32,8 +32,7 @@ On a GPU with FP8 support, two more repositories hold the tuned 12B in FP8, 13.1
 
 - **`tachara-ai/Decisio-12b-tuned-fp8-calibrated`**, revision `d77c2790`, and **`tachara-ai/Decisio-12b-tuned-fp8-commit`**, revision `c41323f0`.
 - **It is level with bf16 on the held-out sets,** within a quarter of a point, but gives a different likeliest answer on about 3 to 6 of every 100 questions ([the announcement](/news/tuned-12b/) has the figures).
-- **It answered about 1.5 times as fast as bf16** on one RTX PRO 6000.
-- **It needs decisio 0.33.0 or later,** which emulates bf16 rounding on an FP8 server by default.
+- **The server emulates bf16 rounding on FP8 by default,** which narrows the difference between two cold starts.
 
 ## 4. Or serve it on a Mac
 
