@@ -1,6 +1,6 @@
 ---
 title: "A tuned Gemma 4 12B: right more often on hard, rule-heavy decisions"
-summary: "Our tuned 12B is right about 7 points more often than the untrained 12B on held-out hard decisions and about 3 points more on everyday wording. Here is every way to run it."
+summary: "Our tuned 12B is right about 7 points more often than the untrained 12B in the same layout on held-out hard decisions, and about 3 points more on everyday wording. Every way to run it."
 date: 2026-10-25
 tags: [release]
 ---
@@ -59,7 +59,7 @@ The FP8 version is level with the full-precision tuned model on our held-out set
 
 - **It is not an answer-for-answer copy:** it gives a different likeliest answer on about 3 to 6 of every 100 questions, and those changes cancel out.
 - **The commit settings** gave the same likeliest answers as the calibrated FP8 version on all 430 items of the mixed set, and 88.0% accuracy on its 125 yes/no questions with a committed answer, as the bf16 model did.
-- **Two starts of the calibrated FP8 version** gave identical answers on the same 500 questions.
+- **One pair of starts of the calibrated FP8 version** gave identical answers on the same 500 questions.
 - **A simpler FP8 route we tried lost about a point,** which is why we ship this one.
 
 
