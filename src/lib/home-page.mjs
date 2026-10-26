@@ -118,7 +118,7 @@ export function homeBlocks() {
 			{ id: 'gpu', label: 'Cloud GPU', note: 'Linux with one NVIDIA card.', blocks: [siteBlock('gpu-pip').text], href: '/docs/deploy/cloud-gpu/', guide: 'On a cloud GPU' },
 			{ id: 'docker', label: 'Docker', note: 'A GPU host with Docker and the NVIDIA Container Toolkit.', blocks: [siteBlock('docker-run').text], href: '/docs/deploy/docker/', guide: 'With Docker' },
 			{ id: 'mac', label: 'Mac', note: 'A Mac with Apple silicon; the guide says which build fits yours.', blocks: [`${siteBlock('mac-install').text}\n${siteBlock('mac-31b-6bit').text}`], href: '/docs/deploy/mac/', guide: 'On a Mac' },
-			{ id: 'ollama', label: 'Ollama', note: 'A quick try on a laptop. Ollama builds its own prompt, so its numbers are not the ones on this page.', blocks: [ollama, siteBlock('ollama-request-gemma').text], href: '/docs/deploy/mac/#on-a-laptop-with-ollama', guide: 'With Ollama' },
+			{ id: 'ollama', label: 'Ollama', note: 'A quick try on a laptop. It works on Ollama 0.35.1 through 0.40.3. Ollama builds its own prompt, so its numbers are not the ones on this page.', blocks: [ollama, siteBlock('ollama-request-gemma').text], href: '/docs/deploy/mac/#on-a-laptop-with-ollama', guide: 'With Ollama' },
 		],
 		request: siteBlock('first-decision-request').text,
 		response: siteBlock('first-decision-response').text,

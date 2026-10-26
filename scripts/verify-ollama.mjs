@@ -41,6 +41,8 @@ const models = [...new Set(steps.flatMap((s) => s.models))];
 // The server, at the version the docs require.
 const version = (await (await fetch(`${ollama}/api/version`).catch(() => fail(`no Ollama at ${ollama}`))).json()).version;
 for (const s of steps) if (!atLeast(version, s.needs)) fail(`Ollama ${version} is older than the ${s.needs} that ${s.page}#${s.n} needs`);
+// Ollama 0.40.4 and later refuse the listings on the decision route, so a block is run only on a version the docs give.
+for (const s of steps) if (s.upTo && !atLeast(s.upTo, version)) fail(`Ollama ${version} is later than the ${s.upTo} that ${s.page}#${s.n} works on`);
 
 // Each local model, with the registry's layers.
 const listings = {};

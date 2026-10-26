@@ -18,7 +18,7 @@ Four steps: pick your machine, start a server, ask a question and read the answe
 | Linux with an NVIDIA card | [On a cloud GPU](/docs/deploy/cloud-gpu/) |
 | Linux with an NVIDIA card and Docker | [With Docker](/docs/deploy/docker/) |
 | Mac with Apple silicon | [On a Mac](/docs/deploy/mac/) |
-| Mac, Linux or Windows with Ollama | [With Ollama](/docs/deploy/mac/#on-a-laptop-with-ollama) |
+| Mac, Linux or Windows with Ollama 0.35.1 to 0.40.3 | [With Ollama](/docs/deploy/mac/#on-a-laptop-with-ollama) |
 | Any machine, for development | [For development](/docs/deploy/development/) |
 
 The memory and card each machine needs are on [Requirements and limits](/docs/limits/).

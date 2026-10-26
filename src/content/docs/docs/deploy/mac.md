@@ -1,6 +1,6 @@
 ---
 title: On a Mac or a laptop
-description: Run decisio on a Mac with Apple silicon from an MLX build, sized to your Mac's memory, or on any 16 GB laptop with Ollama.
+description: Run decisio on a Mac with Apple silicon from an MLX build, sized to your Mac's memory, or on a 16 GB laptop with Ollama 0.35.1 through 0.40.3.
 ---
 
 <!-- Site-written: the deploy guide for a Mac and for Ollama. The commands are decisio's docs/running.md at the pinned release (src/lib/site-blocks.mjs, ::upstream); the request is the site's, run against Ollama (verification/ollama.json); the numbers are docs/running.md's (src/config/sourced.mjs checks them). -->
@@ -65,7 +65,7 @@ On a smaller Mac, start the build that fits it instead:
 ## On a laptop, with Ollama
 
 Ollama runs decisio's Gemma 4 12B listing on Mac, Linux or Windows, and its smallest tag fits a 16 GB laptop.
-You need Ollama 0.35.1 or later.
+It works on Ollama 0.35.1 through 0.40.3; later versions refuse these models on the decision route. On a Mac, use decisio's MLX server instead ([above](#1-pick-the-build-for-your-mac)).
 
 ::upstream{file="docs/running.md" section="Ollama" block="1"}
 

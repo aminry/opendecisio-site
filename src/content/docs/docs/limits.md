@@ -34,7 +34,7 @@ curl -s http://127.0.0.1:8000/health
 | Mac, 64 GB | Gemma 4 31B, 6-bit MLX | 24.9 GB of weights; 33.7 GB at its peak | 16,383 tokens | yes, an Apple M5 Pro |
 | Mac, 48 GB | Gemma 4 31B, 4-bit MLX | 19.2 GB of weights; 28.0 GB at its peak | 16,383 tokens | read on the 64 GB Mac |
 | Mac, 32 GB | Gemma 4 12B, 6-bit MLX | 9.7 GB of weights; 15.1 GB at its peak | 32,768 tokens | read on the 64 GB Mac |
-| Laptop, 16 GB | Gemma 4 12B on Ollama | 8.6 GB in Ollama | 8,192 tokens | read on the 64 GB Mac |
+| Laptop, 16 GB | Gemma 4 12B on Ollama (Ollama 0.40.3 or earlier) | 8.6 GB in Ollama | 8,192 tokens | read on the 64 GB Mac |
 | Any machine | the CPU stand-in | a small model | 32,768 tokens | for development only |
 
 | To run | You need |
@@ -42,7 +42,7 @@ curl -s http://127.0.0.1:8000/health
 | On a GPU | Linux, a driver that supports CUDA 13.0, Python 3.12 |
 | With Docker | the NVIDIA Container Toolkit |
 | On a Mac | Apple silicon |
-| With Ollama | Ollama 0.35.1 or later |
+| With Ollama | Ollama 0.35.1 through 0.40.3; later versions refuse these models on the decision route |
 
 The guides have the commands: [on a cloud GPU](/docs/deploy/cloud-gpu/), [with Docker](/docs/deploy/docker/), [on a Mac or a laptop](/docs/deploy/mac/) and [for development](/docs/deploy/development/).
 

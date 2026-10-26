@@ -16,7 +16,7 @@
 //   same-as           the same text as another planned block
 //   python            run the block with python, with the packages named in with
 //   ollama            run against Ollama with the model named in model, by scripts/verify-ollama.mjs
-//                     on a machine that has it (needs: the Ollama version the docs require)
+//                     on a machine that has it (needs and upTo: the Ollama versions the docs give)
 //
 // optional: the step applies only to a release whose page has this block.
 //
@@ -391,8 +391,8 @@ export const plan = [
 	{ page: '/docs/deploy/mac/', n: 5, mode: 'output', expect: 'decisio: the gemma-4-12b base needs about 16.6 GiB under MLX' },
 	// The pull is decisio's; both Ollama blocks are run against Ollama by scripts/verify-ollama.mjs
 	// (the request is site-written: src/lib/site-blocks.mjs).
-	{ page: '/docs/deploy/mac/', n: 6, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma', models: ['aminroudaki/decisio-gemma', 'aminroudaki/decisio'], needs: '0.35.1', assert: pulled },
-	{ page: '/docs/deploy/mac/', n: 7, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma'], needs: '0.35.1', assert: ticketAnswers },
+	{ page: '/docs/deploy/mac/', n: 6, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma', models: ['aminroudaki/decisio-gemma', 'aminroudaki/decisio'], needs: '0.35.1', upTo: '0.40.3', assert: pulled },
+	{ page: '/docs/deploy/mac/', n: 7, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma'], needs: '0.35.1', upTo: '0.40.3', assert: ticketAnswers },
 	{ page: '/docs/bases/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', needs: 'an NVIDIA card', record: 'runs/2026-10-04_gemma-base/' },
 
 	{ page: '/docs/releases/', n: 2, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b', needs: 'an NVIDIA card, and for the container the NVIDIA Container Toolkit' },
