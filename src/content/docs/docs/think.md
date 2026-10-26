@@ -33,6 +33,7 @@ Start the server with `--think`:
 - A question thinks when its top probability is under its type's threshold: 0.75 for a choice, 0.92 for yes/no, 0.70 for a score.
 - `--think-factor` scales the three thresholds, 1 by default; a lower factor thinks on fewer questions.
 - `--think-budget` caps the reasoning at 512 tokens per question by default, from 16 to 4,096. It is set on the server only.
+- `--think-types choice,score` limits thinking to the named question types; without it, every type may think.
 - All the unsure questions of a request go to the model in one call.
 
 ## 3. Read what it did
@@ -62,6 +63,8 @@ On a tuned model, score answers that thought needed about twice the single-pass 
 - A question with more than 16 options.
 - A question a registered task answers: its correction and certificate were fitted on one read.
 - Every question of a request with images, an abstention option or two orders.
+- A question whose type is not in `--think-types`.
+- Every question of a request whose text was cut to fit (`--over-limit truncate`): thinking on a text that long can take longer than a caller waits.
 
 The response says why a question did not think.
 Where it runs, how it shares the server and what it does to certificates are in [Requirements and limits](/docs/limits/#3-set-up-for-production).
