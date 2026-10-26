@@ -30,6 +30,7 @@ curl -s http://127.0.0.1:8000/health
 | NVIDIA, 96 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights | up to 65,536 tokens | yes |
 | NVIDIA, larger than 96 GB | Gemma 4 31B, bf16 | 57.91 GiB of weights | up to 65,536 tokens, chosen at start | no; on a 96 GB card it does not start at the default share |
 | NVIDIA, 96 GB | the tuned Gemma 4 12B, bf16 | about 24 GB of weights | chosen at start | yes, an RTX PRO 6000 |
+| NVIDIA with FP8 support | the tuned Gemma 4 12B, FP8 | 13.1 GB of weights | chosen at start | yes, an RTX PRO 6000 |
 | NVIDIA, 32 GB | Gemma 4 12B, bf16 | does not start on vLLM's defaults | 4,096 tokens, at 0.95 of the card | yes, an RTX 5090 |
 | NVIDIA, 32 GB | Gemma 4 12B, FP8 | 12.74 GiB of weights | 65,536 tokens at the default share | yes, an RTX 5090 |
 | NVIDIA, 96 GB | Qwen3.6-35B-A3B, FP8 | 33.3 GiB of weights | 32,768 tokens | yes |

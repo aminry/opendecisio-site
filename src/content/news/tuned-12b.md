@@ -45,7 +45,9 @@ The repository brings its weights and its settings, so no other flag is needed, 
 
 ## In FP8, on a GPU with FP8 support
 
-TODO(Serve): the FP8 repositories, their revisions and size, and the start line.
+Two more repositories hold the tuned 12B in FP8: `tachara-ai/Decisio-12b-tuned-fp8-calibrated` (revision `d77c2790`) and `tachara-ai/Decisio-12b-tuned-fp8-commit` (revision `c41323f0`), 13.1 GB each.
+Start one with decisio 0.33.0 or later: `python -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-fp8-calibrated@d77c2790`.
+On one RTX PRO 6000 it answered about 1.5 times as fast as the bf16 model.
 
 The FP8 version is level with the full-precision tuned model on our held-out sets: differences are within a quarter of a point and the intervals include zero.
 

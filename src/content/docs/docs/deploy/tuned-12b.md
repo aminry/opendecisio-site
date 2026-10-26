@@ -1,6 +1,6 @@
 ---
 title: Serve the tuned 12B
-description: Run the tuned Gemma 4 12B from its Hugging Face repository with one command, on a GPU or a Mac, with honest probabilities or with committed yes/no answers.
+description: Run the tuned Gemma 4 12B from its Hugging Face repository with one command, on a GPU, in FP8 or on a Mac, with honest probabilities or with committed yes/no answers.
 ---
 
 <!-- Site-written: the Serve the tuned 12B guide. The repositories, revisions, served names and settings are the published repositories' and decisio's docs/running.md ("Flavors") at the pinned release; the accuracy figures are the announcement's held-out table. -->
@@ -24,7 +24,18 @@ Both repositories hold the same weights; only their settings differ.
 - **`--base owner/name@revision`** takes the repository's weights and its settings; no other flag is needed. The first start downloads the weights.
 - **A flag you give still applies,** and is recorded as an override, as on [a flavor](/docs/bases/#5-serve-a-flavor).
 
-## 3. Or serve it on a Mac
+## 3. Or serve it in FP8
+
+On a GPU with FP8 support, two more repositories hold the tuned 12B in FP8, 13.1 GB each, with the same two settings:
+
+::site-block{name="tuned-fp8-start"}
+
+- **`tachara-ai/Decisio-12b-tuned-fp8-calibrated`**, revision `d77c2790`, and **`tachara-ai/Decisio-12b-tuned-fp8-commit`**, revision `c41323f0`.
+- **It is level with bf16 on the held-out sets,** within a quarter of a point, but gives a different likeliest answer on about 3 to 6 of every 100 questions ([the announcement](/news/tuned-12b/) has the figures).
+- **It answered about 1.5 times as fast as bf16** on one RTX PRO 6000.
+- **It needs decisio 0.33.0 or later,** which emulates bf16 rounding on an FP8 server by default.
+
+## 4. Or serve it on a Mac
 
 decisio 0.34.0 or later serves the tuned 12B on a Mac with Apple silicon from its MLX conversions, with the same two settings:
 
@@ -37,17 +48,17 @@ decisio 0.34.0 or later serves the tuned 12B on a Mac with Apple silicon from it
 
 ::source[Measured on one Apple M5 Pro with 64 GB, decisio's MLX engine, on 1,894 held-out questions against the bf16 tuned model with the same settings.]
 
-## 4. Check what it serves
+## 5. Check what it serves
 
-`GET /v1/models` and `/health` report the served name, `Decisio-12b-tuned-calibrated` or `Decisio-12b-tuned-commit`.
+`GET /v1/models` and `/health` report the served name, such as `Decisio-12b-tuned-calibrated` or `Decisio-12b-tuned-fp8-commit`.
 
-## 5. Teach and certify on it
+## 6. Teach and certify on it
 
 Tasks and certificates are per model and per flavor: register and certify your tasks again on the tuned 12B, as on [Teach a task](/docs/tasks/).
 
-## 6. Know what is not there yet
+## 7. Know what is not there yet
 
-- **No FP8 version yet, and no Ollama version is planned.**
+- **No Ollama version is planned.**
 - **Its accuracy was measured in bf16** against the untrained 12B on held-out items; the figures and their limits are in [the announcement](/news/tuned-12b/).
 
 ## What next
