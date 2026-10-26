@@ -77,9 +77,6 @@ decisio 0.34.0 or later also serves the tuned 12B on a Mac with Apple silicon, f
 
 There is no Ollama version of the tuned 12B.
 
-## Data and licence
-
-Training data not disclosed. No Decision Index or JevBench evaluation items were used in training or checkpoint selection; the data was decontaminated against both boards' public test sets.
-Training included the official training splits of some public benchmarks, used under their licences. No test or evaluation items of those benchmarks were used, and every training row was checked against both boards' public test sets.
+## Licence
 
 The licence is the base model's, Apache License 2.0; Gemma 4 is Google's.
