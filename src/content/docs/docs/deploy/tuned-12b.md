@@ -51,7 +51,7 @@ On a GPU with FP8 support, two more repositories hold the tuned 12B in FP8, 13.1
 
 ## 5. Or serve it on a Mac
 
-decisio 0.34.0 or later serves the tuned 12B on a Mac with Apple silicon from its MLX conversions, with the same two settings:
+decisio serves the tuned 12B on a Mac with Apple silicon from its MLX conversions, with the calibrated and commit settings:
 
 ::site-block{name="tuned-mlx-start"}
 

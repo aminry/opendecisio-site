@@ -5,7 +5,7 @@ date: 2026-10-26
 tags: [release]
 ---
 
-The tuned 12B has a third setting, `commit-think`, on top of the calibrated and commit ones.
+The tuned 12B has a third setting, `commit-think`, beside the calibrated and commit ones.
 It keeps the commit settings and adds a short reasoning step on the choice questions it is least sure of.
 
 ## What it does
