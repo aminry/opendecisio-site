@@ -73,7 +73,7 @@ How a flavor is served:
 - **`read-enhanced` says `pending`** wherever the flavor is reported: it has no question cap until its timing run.
 - **Thinking is not a flavor:** [`--think`](/docs/think/) turns it on for any server.
 - **Tasks and certificates are per flavor.** The Qwen model and the 31B in bf16 have no flavors, and a server without `--flavor` is what it was.
-- **A tuned model can be a flavor of its own:** [the tuned 12B](/docs/deploy/tuned-12b/) ships as `Decisio-12b-tuned-calibrated` and `Decisio-12b-tuned-commit`.
+- **A tuned model can be a flavor of its own:** [the tuned 12B](/docs/deploy/tuned-12b/) ships as `Decisio-12b-tuned-calibrated`, `Decisio-12b-tuned-commit` and `Decisio-12b-tuned-commit-think`, which adds thinking on choice questions to the commit settings.
 
 ## 6. The 31B in bf16
 
