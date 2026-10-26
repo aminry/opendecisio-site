@@ -34,7 +34,7 @@ On the commit-think repository, against the same model without thinking, on held
 - **The mixed development set** (430): no question thinks.
 - **Time:** the median stayed at 60 ms per decision, and the slowest of 2,044 took 4.71 s.
 
-::source[TODO(Serve): the release, the card and the date of these measurements.]
+::source[Measured with decisio 0.33.0 on one RTX PRO 6000 Blackwell at 600 W, 2026-10-26, serving the tuned commit model with the commit-think settings given as flags, from cold starts, one request at a time, on questions screened against our training data.]
 
 ## 4. Or serve it in FP8
 

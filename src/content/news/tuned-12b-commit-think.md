@@ -24,7 +24,7 @@ Against the same model without thinking, on held-out questions:
 | Decisions in natural, everyday wording | 939 | 2.56% | +0.75 (+0.21 to +1.38) |
 | A mixed development set | 430 | none | no change |
 
-::source[TODO(Serve): the release, the card and the date of these measurements; questions screened against the training data.]
+::source[Measured with decisio 0.33.0 on one RTX PRO 6000 Blackwell at 600 W, 2026-10-26, serving the tuned commit model with the commit-think settings given as flags, from cold starts, one request at a time, on questions screened against our training data.]
 
 - **The settings were chosen on the hard set,** so its gain is optimistic. The natural-wording set was not used to choose them.
 - **Choice calibration is unchanged within noise.**
