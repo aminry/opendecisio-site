@@ -35,6 +35,8 @@ curl -s http://127.0.0.1:8000/health
 | NVIDIA, 96 GB | Qwen3.6-35B-A3B, FP8 | 33.3 GiB of weights | 32,768 tokens | yes |
 | Mac, 64 GB | Gemma 4 31B, 6-bit MLX | 24.9 GB of weights; 33.7 GB at its peak | 16,383 tokens | yes, an Apple M5 Pro |
 | Mac, 48 GB | Gemma 4 31B, 4-bit MLX | 19.2 GB of weights; 28.0 GB at its peak | 16,383 tokens | read on the 64 GB Mac |
+| Mac, 32 GB | the tuned Gemma 4 12B, 8-bit MLX | 13.8 GB of weights; 18.6 GB at its peak | measured to 32,000 tokens | read on the 64 GB Mac |
+| Mac, 32 GB | the tuned Gemma 4 12B, 6-bit MLX | 10.8 GB of weights; 15.6 GB at its peak | measured to 32,000 tokens | read on the 64 GB Mac |
 | Mac, 32 GB | Gemma 4 12B, 6-bit MLX | 9.7 GB of weights; 15.1 GB at its peak | 32,768 tokens | read on the 64 GB Mac |
 | Laptop, 16 GB | Gemma 4 12B on Ollama (Ollama 0.40.3 or earlier) | 8.6 GB in Ollama | 8,192 tokens | read on the 64 GB Mac |
 | Any machine | the CPU stand-in | a small model | 32,768 tokens | for development only |

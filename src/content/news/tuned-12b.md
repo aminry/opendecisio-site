@@ -43,7 +43,17 @@ On a GPU with room for about 24 GB of bf16 weights, install decisio 0.33.0 or la
 The repository brings its weights and its settings, so no other flag is needed, and the first start downloads the weights.
 [Serve the tuned 12B](/docs/deploy/tuned-12b/) has the whole setup.
 
-TODO(Amin): a Mac (MLX) version is being built; add it when checked, say "coming", or leave this line out.
+## On a Mac
+
+decisio 0.34.0 or later also serves the tuned 12B on a Mac with Apple silicon, from four more repositories: 8-bit and 6-bit conversions, each with the calibrated and the commit settings.
+
+- **8-bit, the closer one** (`tachara-ai/Decisio-12b-tuned-mlx8-calibrated` and `-mlx8-commit`, 12.7 GB): the same likeliest answer as the bf16 model on 97.9% of the held-out questions, and 69.8% accuracy against 69.9% (-0.1 points, 90% interval -0.5 to +0.3). It peaks at 14.9 GB with an 8,000-token text and 18.6 GB at 32,000.
+- **6-bit, the smaller one** (`-mlx-calibrated` and `-mlx-commit`, 9.7 GB): the same likeliest answer on 95.5%, and 69.5% against 69.9% (-0.4 points, -1.1 to +0.2). It peaks at 12.0 GB at 8,000 tokens and 15.6 GB at 32,000.
+- **Both fit a 32 GB Mac.** Start one with `pip install "decisio[mlx]"`, then `python -m decisio.serve.vllm_engine --backend mlx --base tachara-ai/Decisio-12b-tuned-mlx8-calibrated`.
+
+::source[Measured on one Mac, an Apple M5 Pro with 64 GB, with decisio's MLX engine, on the 1,894 held-out questions, against the bf16 tuned model served by decisio with the same settings.]
+
+There is no Ollama version of the tuned 12B.
 
 TODO(Amin): the FP8 repositories (Decisio-12b-tuned-fp8-calibrated and -fp8-commit) and their measured difference from bf16, once checked.
 
