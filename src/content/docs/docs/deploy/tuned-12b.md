@@ -32,7 +32,10 @@ On a GPU with FP8 support, two more repositories hold the tuned 12B in FP8, 13.1
 
 - **`tachara-ai/Decisio-12b-tuned-fp8-calibrated`**, revision `d77c2790`, and **`tachara-ai/Decisio-12b-tuned-fp8-commit`**, revision `c41323f0`.
 - **It is level with bf16 on the held-out sets,** within a quarter of a point, but gives a different likeliest answer on about 3 to 6 of every 100 questions ([the announcement](/news/tuned-12b/) has the figures).
+- **It is quicker:** a median of 100.0 ms of server time per question, against 151.7 ms for bf16.
 - **The server emulates bf16 rounding on FP8 by default,** which narrows the difference between two cold starts.
+
+::source[The times: decisio 0.33.0 on one RTX PRO 6000 Blackwell at 600 W, 2026-10-25, 430 questions one request at a time, both with the diagnostic readout on, which adds time to each.]
 
 ## 4. Or serve it on a Mac
 

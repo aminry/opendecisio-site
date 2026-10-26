@@ -47,6 +47,7 @@ The repository brings its weights and its settings, so no other flag is needed, 
 
 Two more repositories hold the tuned 12B in FP8: `tachara-ai/Decisio-12b-tuned-fp8-calibrated` (revision `d77c2790`) and `tachara-ai/Decisio-12b-tuned-fp8-commit` (revision `c41323f0`), 13.1 GB each.
 Start one with decisio 0.33.0 or later: `python -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-fp8-calibrated@d77c2790`.
+It took a median of 100.0 ms of server time per question, against 151.7 ms for the bf16 model.
 
 The FP8 version is level with the full-precision tuned model on our held-out sets: differences are within a quarter of a point and the intervals include zero.
 
@@ -56,7 +57,7 @@ The FP8 version is level with the full-precision tuned model on our held-out set
 | A mixed development set | 430 | 66.3% | 66.1% | -0.2 (-1.6 to +1.2) | 94.9% |
 | Decisions in natural, everyday wording | 939 | 69.0% | 69.2% | +0.2 (-0.5 to +1.0) | 97.0% |
 
-::source[Measured with decisio 0.33.0 on one RTX PRO 6000, for the FP8 conversion we ship (FP8_DYNAMIC), each difference paired by item with a 90% bootstrap interval (4,000 resamples), on items screened against our training data.]
+::source[Measured with decisio 0.33.0 on one RTX PRO 6000, for the FP8 conversion we ship (FP8_DYNAMIC); the times on 2026-10-25 at 600 W, 430 questions one request at a time, with the diagnostic readout on, which adds time to both; each difference paired by item with a 90% bootstrap interval (4,000 resamples), on items screened against our training data.]
 
 - **It is not an answer-for-answer copy:** it gives a different likeliest answer on about 3 to 6 of every 100 questions, and those changes cancel out.
 - **The commit settings** gave the same likeliest answers as the calibrated FP8 version on all 430 items of the mixed set, and 88.0% accuracy on its 125 yes/no questions with a committed answer, as the bf16 model did.
