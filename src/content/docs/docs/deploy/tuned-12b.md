@@ -34,7 +34,7 @@ Tasks and certificates are per model and per flavor: register and certify your t
 
 ## 5. Know what is not there yet
 
-- **No Mac, Ollama or FP8 version yet.** The tuned 12B runs on an NVIDIA card in bf16.
+- **No Mac or FP8 version yet, and no Ollama version is planned.** The tuned 12B runs on an NVIDIA card in bf16.
 - **Its accuracy was measured in bf16** against the untrained 12B on held-out items; the figures and their limits are in [the announcement](/news/tuned-12b/).
 
 ## What next
