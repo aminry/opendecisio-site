@@ -43,6 +43,8 @@ On a GPU with room for about 24 GB of bf16 weights, install decisio 0.33.0 or la
 The repository brings its weights and its settings, so no other flag is needed, and the first start downloads the weights.
 [Serve the tuned 12B](/docs/deploy/tuned-12b/) has the whole setup.
 
+TODO(Amin): the FP8 repositories (Decisio-12b-tuned-fp8-calibrated and -fp8-commit) and their measured difference from bf16, once checked.
+
 ## On a Mac
 
 decisio 0.34.0 or later also serves the tuned 12B on a Mac with Apple silicon, from four more repositories: 8-bit and 6-bit conversions, each with the calibrated and the commit settings.
@@ -54,8 +56,6 @@ decisio 0.34.0 or later also serves the tuned 12B on a Mac with Apple silicon, f
 ::source[Measured on one Mac, an Apple M5 Pro with 64 GB, with decisio's MLX engine, on the 1,894 held-out questions, against the bf16 tuned model served by decisio with the same settings.]
 
 There is no Ollama version of the tuned 12B.
-
-TODO(Amin): the FP8 repositories (Decisio-12b-tuned-fp8-calibrated and -fp8-commit) and their measured difference from bf16, once checked.
 
 ## Data and licence
 
