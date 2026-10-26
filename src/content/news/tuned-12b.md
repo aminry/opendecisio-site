@@ -43,7 +43,25 @@ On a GPU with room for about 24 GB of bf16 weights, install decisio 0.33.0 or la
 The repository brings its weights and its settings, so no other flag is needed, and the first start downloads the weights.
 [Serve the tuned 12B](/docs/deploy/tuned-12b/) has the whole setup.
 
-TODO(Amin): the FP8 repositories (Decisio-12b-tuned-fp8-calibrated and -fp8-commit) and their measured difference from bf16, once checked.
+## In FP8, on a GPU with FP8 support
+
+TODO(Serve): the FP8 repositories, their revisions and size, and the start line.
+
+The FP8 version is level with the full-precision tuned model on our held-out sets: differences are within a quarter of a point and the intervals include zero.
+
+| Held-out set | Items | bf16 | FP8 | Difference, points (90% interval) | Same likeliest answer |
+| --- | ---: | ---: | ---: | --- | ---: |
+| Hard decisions with rules, exceptions and arithmetic | 525 | 75.1% | 75.2% | +0.2 (-1.1 to +1.5) | 94.3% |
+| A mixed development set | 430 | 66.3% | 66.1% | -0.2 (-1.6 to +1.2) | 94.9% |
+| Decisions in natural, everyday wording | 939 | 69.0% | 69.2% | +0.2 (-0.5 to +1.0) | 97.0% |
+
+::source[Measured with decisio 0.33.0 on one RTX PRO 6000, for the FP8 conversion we ship (FP8_DYNAMIC), each difference paired by item with a 90% bootstrap interval (4,000 resamples), on items screened against our training data.]
+
+- **It is not an answer-for-answer copy:** it gives a different likeliest answer on about 3 to 6 of every 100 questions, and those changes cancel out.
+- **The commit settings** gave the same likeliest answers as the calibrated FP8 version on all 430 items of the mixed set, and 88.0% accuracy on its 125 yes/no questions with a committed answer, as the bf16 model did.
+- **Two starts of the calibrated FP8 version** gave identical answers on the same 500 questions.
+- **A simpler FP8 route we tried lost about a point,** which is why we ship this one.
+
 
 ## On a Mac
 
