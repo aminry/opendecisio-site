@@ -426,21 +426,33 @@ try {
 				// fixed headers part-way down, an artefact of the capture, not of the page).
 				const shot = `${route.replace(/^\/|\/$/g, '').replace(/\//g, '_') || 'home'}-${v.name}`;
 				await page.screenshot({ path: join(shots, `${shot}-top.png`) });
-				// WebKit and Firefox cannot capture more than 32,767 pixels in one image; a page that
-				// long (the evaluation card on a phone) is captured to its first 30,000.
+				// A page taller than 30,000 pixels (Release notes, the evaluation card on a phone) is captured in parts of
+				// 15,000, up to six: WebKit and Firefox cannot capture more than 32,767 pixels in one image, and Chromium's
+				// headless shell, which resizes the page to its whole height before it crops, timed out on every variant of
+				// an 80,000-pixel page (2026-10-25).
 				const height = await page.evaluate(() => document.documentElement.scrollHeight);
 				const width = v.viewport.width;
-				// A full-page capture can stall on a busy runner (Chromium's headless shell once took over 30 s on one page,
-				// 2026-10-22): it is tried again with more time, and a page that still cannot be captured is reported by name
+				// A capture can stall on a busy runner (Chromium's headless shell once took over 30 s on one page,
+				// 2026-10-22): it is tried again with more time, and one that still cannot be made is reported by name
 				// rather than ending the run and losing every other result.
-				const full = { path: join(shots, `${shot}.png`), fullPage: true, ...(height > 30000 && { clip: { x: 0, y: 0, width, height: 30000 } }) };
-				try {
-					await page.screenshot(full);
-				} catch (first) {
+				const capture = async (opts, what) => {
 					try {
-						await page.screenshot({ ...full, timeout: 90000 });
-					} catch (second) {
-						report(engineName, route, v.name, `the full-page screenshot failed twice: ${String(second.message).split('\n')[0]}`);
+						await page.screenshot(opts);
+					} catch (first) {
+						try {
+							await page.screenshot({ ...opts, timeout: 90000 });
+						} catch (second) {
+							report(engineName, route, v.name, `${what} failed twice: ${String(second.message).split('\n')[0]}`);
+						}
+					}
+				};
+				if (height <= 30000) await capture({ path: join(shots, `${shot}.png`), fullPage: true }, 'the full-page screenshot');
+				else {
+					const PART = 15000;
+					for (let y = 0, part = 1; y < height && part <= 6; y += PART, part += 1) {
+						await page.setViewportSize({ width, height: Math.min(PART, height - y) });
+						await page.evaluate((top) => window.scrollTo(0, top), y);
+						await capture({ path: join(shots, `${shot}-part${part}.png`) }, `part ${part} of the screenshot`);
 					}
 				}
 				await context.close();
