@@ -5,6 +5,8 @@ description: Answer short, repetitive command traffic without the model, from a 
 
 <!-- Site-written: the Answer short tasks faster guide. Its facts are decisio's docs/tasks.md ("A fast table in front of decisio") at the pinned release (src/config/sourced.mjs checks them). -->
 
+::covers{links="docs/tasks.md#a-fast-table-in-front-of-decisio-opt-in"}
+
 Short, repetitive command traffic can be answered without the model.
 On CLINC150's assistant commands, a small classifier on the host CPU answered 92.3% of requests, 3.1% of them wrong, and the mean time per request on the 31B fell from 384 ms to 71 ms.
 It is off unless a registration asks for it:

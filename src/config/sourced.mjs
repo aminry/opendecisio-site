@@ -581,6 +581,9 @@ export const sourced = [
 		['Every tenth request also times the table, and after 30 pairs that show the saving', tasksDoc, 'Every tenth request also times the table, after decisio has answered, and when 30 such pairs show the saving'],
 		['saves at least 25% of the time per request', upgrading, 'keeps it only if it saves at least 25% of the time per request'],
 	]),
+	...fromPage('/docs/operating/', [
+		['every replica needs the decisio[table] extra and CPU headroom', operating, 'needs `pip install \'decisio[table]\'` on every replica and CPU headroom on each'],
+	]),
 	...fromPage('/news/fast-table/', [
 		['across the ten sets tried it passed on 4', tasksDoc, 'Across the ten sets tried, the table passed the 25% guard on 4'],
 		['without the three assistant-command sets on 1 of 7', tasksDoc, 'Without the three assistant-command sets (CLINC150, MASSIVE, Snips) it passed on 1 of 7'],
