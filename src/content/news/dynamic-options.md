@@ -1,7 +1,7 @@
 ---
 title: "decisio 0.37.0 can certify answers when your options change with every request"
 summary: "Teach a question once, even when each request brings its own options. Brand detection certified 91.4% and 94.6% of answers at 3.1% error, and tool choice over 99% at 3.7%."
-date: 2026-10-30
+date: 2026-10-31
 tags: [release]
 ---
 

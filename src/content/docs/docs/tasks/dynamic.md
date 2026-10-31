@@ -3,7 +3,7 @@ title: Teach a task whose options change
 description: When your options change with every request, teach the question once and have decisio certify the answers it can, such as which brand a product title names.
 ---
 
-<!-- Site-written: the Teach a task whose options change guide. DRAFT until decisio 0.37.0; its facts are decisio's docs/tasks.md ("Tasks whose options change with every request"), docs/api.md, docs/upgrading.md and runs/2026-10-30_dynamic-options/summary.json in the pull request that adds them, and are checked again at the release. -->
+<!-- Site-written: the Teach a task whose options change guide. Its facts are decisio's docs/tasks.md ("Tasks whose options change with every request"), docs/api.md and runs/2026-10-30_dynamic-options/summary.json at the pinned release (src/config/sourced.mjs checks them). -->
 
 Your options change with every request: which brand a product title names, which of this request's tools to call.
 Teach that question once as a dynamic task, and decisio certifies the answers it can, whatever options a request brings.
@@ -45,8 +45,8 @@ On questions where the right option can be read from the text, most answers are 
 ## 4. Good to know
 
 - **Entity linking and product search matching certify nothing yet:** a 5% error target is out of reach. With the re-ranker, accuracy was 67.4% on the 12B and 72.5% on the 31B on entity linking, and 69.9% and 70.2% on product matching. So pooled over all five questions, 55.2% of answers are certified at 3.9% error on the 12B, and 54.9% at 3.2% on the 31B, against 53.3% and 54.4% at 3.3% with the model alone.
-- **The re-ranker is kept only where it helps:** in 14 of 15 draws on the 12B and 10 of 15 on the 31B. It helps where the right option can be seen in the text, or has been the answer before.
-- **Choice questions only, on the text route.** With the same options every time, [teach a fixed task](/docs/tasks/), which can also fit an intent head; a fixed task registered for exactly a request's options is matched first.
+- **The re-ranker is kept only where it helps:** in 14 of 15 draws on the 12B and 10 of 15 on the 31B. It helps where the right option can be seen in the text, or has been the answer before, and most of its gain is on entity linking and product matching, where nothing is certified.
+- **Choice questions only, on the text route, one order per request;** a request of two orders is answered as before and not certified. With the same options every time, [teach a fixed task](/docs/tasks/), which can also fit an intent head; a fixed task registered for exactly a request's options is matched first.
 - **These are five question types and two model sizes:** your task may gain more or nothing, and its cross-validation says which.
 - **What is stored:** the re-ranker's 13 weights and, for each option text in your examples, a hash and two counts. No request text or option text is stored.
 
