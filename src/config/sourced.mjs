@@ -557,6 +557,38 @@ export const sourced = [
 		['A checkpoint named with --model and no --base brings the model its config.json declares.', readme, 'A checkpoint named with `--model` and no `--base` brings the base its `config.json` declares'],
 		['Each is an official checkpoint at a pinned revision, with no training or fine-tuning by us.', readme, 'Official checkpoint from Google, at a pinned revision'],
 	]),
+	// Answer short tasks faster
+	...fromPage('/docs/tasks/fast-table/', [
+		['Across the ten sets tried, it passed the 25% check on 4', tasksDoc, 'Across the ten sets tried, the table passed the 25% guard on 4'],
+		['without the three assistant-command sets, on 1 of 7', tasksDoc, 'Without the three assistant-command sets (CLINC150, MASSIVE, Snips) it passed on 1 of 7'],
+		['CLINC150, 150 intents 92.3% 3.1% 384 ms, 71 ms 82%', tasksDoc, '| CLINC150 (150 intents) | 92.3% | 3.1% | 384 / 71 ms (82%) | yes |'],
+		['Snips, 7 intents 100.0% 2.1% 62 ms, 24 ms 62%', tasksDoc, '| Snips (7 intents) | 100.0% | 2.1% | 62 / 24 ms (62%) | yes |'],
+		['SMS spam 99.8% 1.4% 62 ms, 32 ms 49%', tasksDoc, '| SMS spam | 99.8% | 1.4% | 62 / 32 ms (49%) | yes |'],
+		['MASSIVE, 55 intents 45.2% 2.2% 310 ms, 190 ms 39%', tasksDoc, '| MASSIVE (55 intents) | 45.2% | 2.2% | 310 / 190 ms (39%) | yes |'],
+		['CFPB complaints went from 154 ms to 315 ms', tasksDoc, '| CFPB complaints (long) | 0.0% | - | 154 / 315 ms (-104%) | no |'],
+		['arXiv abstracts from 184 ms to 370 ms', tasksDoc, '| arXiv abstracts (long) | 0.0% | - | 184 / 370 ms (-101%) | no |'],
+		['the table answered 69.8%, 3.7% of them wrong, but 65 ms became 74 ms', tasksDoc, '| Civil comments (noisy labels) | 69.8% | 3.7% | 65 / 74 ms (-13%) | no |'],
+		['at 21 to 30 ms for a short text and 134 to 183 ms for 600 to 1,150 tokens', tasksDoc, 'at 21 to 30 ms for a short text and 134 to 183 ms for a text of 600 to 1,150 tokens'],
+		['timed as a plain read it saves 21% on the 31B', tasksDoc, 'timed as a plain read it saves 21% on the 31B'],
+		['roughly 60 to 75% of requests to clear 25%', tasksDoc, 'roughly 60 to 75% of requests to clear 25%'],
+		['roughly 35 to 45 table requests a second', tasksDoc, 'roughly 35 to 45 table requests per second'],
+		['at least 100 fit examples', tasksDoc, 'with at least 100 fit examples'],
+		['the image does not carry it', tasksDoc, 'the image does not carry them'],
+		['Without it the registration is refused with 422', tasksDoc, 'Without the extra the registration is refused with 422'],
+		['Hold out about 600 examples or more', tasksDoc, '(about 600 or more, at the defaults)'],
+		['at most 1.3% of draws against the 5% allowed', tasksDoc, 'it broke its allowance in at most 1.3% of draws against the 5% allowed'],
+		['about 2 to 3 of every 100 simulated draws, against the 10 allowed', tasksDoc, 'in about 2 to 3 of every 100 simulated draws of the held-out examples, against the 10 allowed'],
+		['Every 50th table answer is also read by decisio', tasksDoc, 'Every 50th table answer is also read by decisio'],
+		['Every tenth request also times the table, and after 30 pairs that show the saving', tasksDoc, 'Every tenth request also times the table, after decisio has answered, and when 30 such pairs show the saving'],
+		['saves at least 25% of the time per request', upgrading, 'keeps it only if it saves at least 25% of the time per request'],
+	]),
+	...fromPage('/docs/operating/', [
+		['every replica needs the decisio[table] extra and CPU headroom', operating, 'needs `pip install \'decisio[table]\'` on every replica and CPU headroom on each'],
+	]),
+	...fromPage('/news/fast-table/', [
+		['across the ten sets tried it passed on 4', tasksDoc, 'Across the ten sets tried, the table passed the 25% guard on 4'],
+		['without the three assistant-command sets on 1 of 7', tasksDoc, 'Without the three assistant-command sets (CLINC150, MASSIVE, Snips) it passed on 1 of 7'],
+	]),
 	// Server flags
 	...fromPage('/docs/flags/', [
 		['the server listens on 127.0.0.1:8000', running, 'It listens on `127.0.0.1:8000` (`--host`, `--port`)'],
