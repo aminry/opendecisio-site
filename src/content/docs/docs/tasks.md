@@ -17,7 +17,7 @@ With the example task from decisio's repository, one request teaches it:
 ## 1. Check that it is a task
 
 - A task is one question you ask again and again, with the same options in the same order every time: "Which support queue should handle this ticket?" over the same twelve queues.
-- A question whose options change every time is not one: exam questions, each with its own four answers.
+- A question whose options change every time is a [dynamic task](/docs/tasks/dynamic/), when its instructions stay the same: which brand a product title names, each title with its own candidates.
 
 ## 2. Gather your examples
 
