@@ -1,40 +1,35 @@
 ---
-title: "decisio 0.37.0 can answer short, repetitive texts without the model, where that saves time"
-summary: "An opt-in in decisio 0.37.0 answers short, repetitive texts from a small classifier on the CPU, kept only where it saves at least 25% on your own examples."
+title: "decisio 0.37.0 answers short command traffic without the model: 384 ms to 71 ms on assistant commands"
+summary: "An opt-in table on the host CPU answered 92.3% of CLINC150's assistant commands, 3.1% of them wrong, and cut the mean time per request on the 31B from 384 ms to 71 ms."
 date: 2026-10-30
 tags: [release]
 ---
 
-For a task of short texts that arrive in volume, decisio 0.37.0 can put a small classifier on the host CPU in front of the model, and answer most requests without asking it.
-It is off unless a registration asks for it.
+Short, repetitive command traffic can be answered without the model.
+decisio 0.37.0 can put a small classifier on the host CPU in front of it, and the table keeps itself only where it pays.
 
-## What it does
+## Where it works great
 
-Install `decisio[table]`, then register the task with `"fast_table": true` and a `certify` block.
-The server times the table and the model on your own held-out examples, and keeps the table only if it saves at least 25% of the time per request.
-Every answer says which side gave it, `answered_by` `table` or `decisio`, and the certificate covers both.
-
-## What it saves
-
-| Set | Table answers | Of those, wrong | Mean time per request on the 31B, decisio alone, then with the table |
-| --- | ---: | ---: | ---: |
-| CLINC150, 150 intents | 92.3% | 3.1% | 384 ms, 71 ms |
-| Snips, 7 intents | 100% | 2.1% | 62 ms, 24 ms |
-| SMS spam | 99.8% | 1.4% | 62 ms, 32 ms |
-| MASSIVE, 60 intents | 45.2% | 2.2% | 310 ms, 190 ms |
+| Set | Table answers | Of those, wrong | Mean time per request on the 31B, decisio alone, then with the table | Saving |
+| --- | ---: | ---: | ---: | ---: |
+| CLINC150, 150 intents | 92.3% | 3.1% | 384 ms, 71 ms | 82% |
+| Snips, 7 intents | 100.0% | 2.1% | 62 ms, 24 ms | 62% |
+| SMS spam | 99.8% | 1.4% | 62 ms, 32 ms | 49% |
+| MASSIVE, 55 intents | 45.2% | 2.2% | 310 ms, 190 ms | 39% |
 
 ::source[Measured offline with the server's own code at 1,000 labels: decisio 0.35.0 and vLLM 0.31.0 on one RTX PRO 6000 Blackwell at 600 W, the table on four threads of a server CPU, 2026-10-30, medians of two draws of the labelled examples.]
 
-## What it costs, and where it does not help
+The saving is largest where the model's own read is expensive, and the certificate covers the table and the model together.
 
-- **It passed on 4 of the 10 sets we tried.** Without the three assistant-command sets, it passed on 1 of 7.
-- **On long texts it was about twice as slow,** because the encoder runs in front of every request, at 134 to 183 ms for 600 to 1,150 tokens. The registration drops the table there, so asking for it on the wrong task costs the registration, not the traffic.
-- **It needs more examples:** at least 100 to fit, and about 600 or more held out at the defaults.
-- **It takes CPU:** a replica sustains roughly 35 to 45 table requests a second. Above that it falls back to the model.
+## How to use it
 
-## On several replicas
+Install `decisio[table]`, then register the task with `"fast_table": true` and a `certify` block.
+The server times the table and the model on your own held-out examples, and keeps the table only if it saves at least 25% of the time per request; `fast_table_report` says what it did.
+Every answer says which side gave it, `answered_by` `table` or `decisio`.
+[Answer short tasks faster](/docs/tasks/fast-table/) has the whole setup, and how each replica decides for itself.
 
-Each replica decides for itself and reports it in `status.fast_table`.
-A replica on another stack serves through the model until it has timed the table itself, a different encoder revision means registering again, and with a shared task store an alarm on one replica suspends the table on all of them.
+## When to use something else
 
-[Answer short tasks faster](/docs/tasks/fast-table/) has the whole setup.
+The timing check drops the table where it does not pay: across the ten sets tried it passed on 4, and without the three assistant-command sets on 1 of 7.
+Long texts are the clearest case, about twice as slow with the table, and asking for it there costs the registration, not the traffic.
+It takes CPU too, roughly 35 to 45 table requests a second per replica, and it needs about 600 held-out examples or more at the defaults.
