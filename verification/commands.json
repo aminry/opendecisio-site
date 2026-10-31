@@ -88,7 +88,7 @@
 			"status": "cpu",
 			"tag": "v0.37.0",
 			"date": "2026-10-31",
-			"stdout": "answers: 50\nserver ms: 39023.1"
+			"stdout": "answers: 50\nserver ms: 38620.0"
 		},
 		"72182c644904351a": {
 			"status": "cpu",
@@ -100,7 +100,7 @@
 			"status": "cpu",
 			"tag": "v0.37.0",
 			"date": "2026-10-31",
-			"stdout": "first question: 778.3 ms\na different question about the same text: 765.4 ms"
+			"stdout": "first question: 792.9 ms\na different question about the same text: 755.5 ms"
 		},
 		"f88514bde0c31e5b": {
 			"status": "cpu",
@@ -179,7 +179,7 @@
 			"status": "cpu",
 			"tag": "v0.37.0",
 			"date": "2026-10-31",
-			"stdout": "x-decisio-server-ms: 751.1\nx-decisio-route: text\nx-decisio-stages: prepare=0.7;warm=0.0;engine=750.6;wait=0.0",
+			"stdout": "x-decisio-server-ms: 742.3\nx-decisio-route: text\nx-decisio-stages: prepare=0.6;warm=0.0;engine=741.8;wait=0.0",
 			"trimmed": true
 		},
 		"cebbdb4a5cd60b45": {
@@ -216,6 +216,10 @@
 		"3745bb787deb7d02": {
 			"status": "shown",
 			"why": "it shows the shape with one example, as decisio's docs/tasks.md does; a registration that certifies needs more, 59 held out at the defaults"
+		},
+		"e37f7d7cbc354ebc": {
+			"status": "shown",
+			"why": "it leaves the examples out, as decisio's docs/tasks.md does; a registration needs at least 100 to fit and about 600 or more held out at the defaults"
 		},
 		"5a3798025c8159b5": {
 			"status": "cpu",
@@ -276,13 +280,13 @@
 			"status": "cpu",
 			"tag": "v0.37.0",
 			"date": "2026-10-31",
-			"stdout": "120 examples, 12 labels, 10 to 10 per label\ntask 'ticket-routing': 120 examples, 12 options, at least 10 per option, registered in 350 s\n  calibration: applied (cross-validated gain); cross-validated log loss 2.42554 -> 2.35643, accuracy 0.2667 -> 0.2917\n  head: applied (cross-validated gain); penalty 0.0001; cross-validated log loss by penalty {\"none\": 2.42554, \"100.0\": 2.42214, \"10.0\": 2.39179, \"1.0\": 2.11252, \"0.1\": 1.00911, \"0.01\": 0.45439, \"0.001\": 0.28943, \"0.0001\": 0.23452}"
+			"stdout": "120 examples, 12 labels, 10 to 10 per label\ntask 'ticket-routing': 120 examples, 12 options, at least 10 per option, registered in 349 s\n  calibration: applied (cross-validated gain); cross-validated log loss 2.42554 -> 2.35643, accuracy 0.2667 -> 0.2917\n  head: applied (cross-validated gain); penalty 0.0001; cross-validated log loss by penalty {\"none\": 2.42554, \"100.0\": 2.42214, \"10.0\": 2.39179, \"1.0\": 2.11252, \"0.1\": 1.00911, \"0.01\": 0.45439, \"0.001\": 0.28943, \"0.0001\": 0.23452}"
 		},
 		"065093b062639c13": {
 			"status": "cpu",
 			"tag": "v0.37.0",
 			"date": "2026-10-31",
-			"stdout": "My card keeps getting declined when I renew.\n  choice payment_failed; x-decisio-tasks: ticket-routing; route text, 1437.6 ms\n  payment_failed 1.000, bug 0.000, billing 0.000"
+			"stdout": "My card keeps getting declined when I renew.\n  choice payment_failed; x-decisio-tasks: ticket-routing; route text, 1476.1 ms\n  payment_failed 1.000, bug 0.000, billing 0.000"
 		},
 		"d4a331a0ca20c8ce": {
 			"status": "shown",
