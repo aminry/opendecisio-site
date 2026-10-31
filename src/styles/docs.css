@@ -95,6 +95,7 @@ h1#_top {
 	}
 
 	.docs-table:has(tr > :nth-child(3)) td {
+		text-align: start;
 		min-width: 0;
 		padding: 0.25rem 0;
 		border: 0;
@@ -131,6 +132,7 @@ h1#_top {
 	}
 
 	.docs-table:has(tr > :nth-child(6)) td {
+		text-align: start;
 		min-width: 0;
 		padding: 0.25rem 0;
 		border: 0;
