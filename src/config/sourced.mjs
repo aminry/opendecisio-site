@@ -250,6 +250,7 @@ export const sourced = [
 	]),
 	// Home: the Good fit box.
 	...fromPage('/', [
+		['a task can certify which brand a product title names, or which of these tools fits a command', api, 'such as which brand a product title names or which of a request\'s tools to call'],
 		['118 or more, at the defaults, for a task you want certified', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
 		['certification pauses on its own while the confidence alert is on', 'docs/tasks.md', '**By default this suspends certification:** every answer of the task is `certified: false` with the reason `traffic_changed` while the alert is on'],
 		['up to 255 per question', readme, 'and 255 options per question'],
