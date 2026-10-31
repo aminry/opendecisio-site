@@ -320,9 +320,12 @@ try {
 						const inMain = [...document.querySelectorAll('main h1[id], main h2[id], main h3[id], main section[id]')].map((e) => e.id);
 						const under = [];
 						const y = window.scrollY;
+						// A box that sticks moves as the page scrolls, so scrolling to a heading inside it says nothing about where a reader lands; it counts only when a link points at it.
+						const sticks = (el) => { for (let e = el; e; e = e.parentElement) if (getComputedStyle(e).position === 'sticky') return true; return false; };
 						for (const id of new Set([...linked, ...inMain])) {
 							const el = document.getElementById(decodeURIComponent(id));
 							if (!el || !el.getBoundingClientRect().height || el.closest('details:not([open])')) continue;
+							if (sticks(el) && !linked.includes(id)) continue;
 							el.scrollIntoView({ block: 'start', behavior: 'instant' });
 							// The target's eyebrow, when one sits just above it, is part of what the link lands on.
 							const above = el.previousElementSibling?.classList.contains('kicker') ? el.previousElementSibling : el;
