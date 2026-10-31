@@ -135,6 +135,27 @@ const concurrencyStart = () => `pip install "decisio[serve]==${version()}"\npyth
 const tunedStart = () => `python3.12 -m venv .venv && . .venv/bin/activate\npip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-calibrated@baa731aa`;
 const tunedFp8Start = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-fp8-calibrated@d77c2790`;
 const tunedMlxStart = () => `pip install "decisio[mlx]==${version()}"\npython -m decisio.serve.vllm_engine --backend mlx --base tachara-ai/Decisio-12b-tuned-mlx8-calibrated`;
+const dynamicRegister = () => `curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
+  "id": "brand",
+  "options": "dynamic",
+  "match": "instructions",
+  "examples": [
+    {
+      "request": {
+        "state": "Apple iPhone 13 Pro 256GB graphite",
+        "questions": {
+          "q": {
+            "type": "choice",
+            "instructions": "Which of these is the brand of the product in this listing?",
+            "criteria": { "1": "Apple", "2": "Samsung", "3": "Google", "none": "none of these" }
+          }
+        }
+      },
+      "answer": "1"
+    }
+  ],
+  "certify": {}
+}'`;
 const fastTableRegister = () => `pip install 'decisio[table]'
 curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
   "id": "assistant-commands",
@@ -261,6 +282,7 @@ export const siteBlocks = {
 	get 'tuned-start'() { return { lang: 'bash', text: tunedStart() }; },
 	get 'tuned-fp8-start'() { return { lang: 'bash', text: tunedFp8Start() }; },
 	get 'tuned-mlx-start'() { return { lang: 'bash', text: tunedMlxStart() }; },
+	get 'dynamic-register'() { return { lang: 'bash', text: dynamicRegister() }; },
 	get 'fast-table-register'() { return { lang: 'bash', text: fastTableRegister() }; },
 	get 'layout-start'() { return { lang: 'bash', text: layoutStart() }; },
 	get 'layout-health'() { return { lang: 'bash', text: layoutHealth() }; },
