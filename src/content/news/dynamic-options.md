@@ -1,32 +1,42 @@
 ---
 title: "decisio can now teach and certify questions whose options change"
-summary: "A dynamic task can certify answers whatever options a request brings, such as which brand a product title names. About half the answers certified, at 3.3% error, in our study."
+summary: "decisio 0.37.0 can certify answers whatever options a request brings, such as which brand a product title names. About half the answers certified, at a 5% target, on five question types."
 date: 2026-10-30
 tags: [release]
 ---
 
 Until now, a task needed the same options in every request.
-Many real questions do not work that way: which brand a product title names, which of these tools fits a command, which queue a message belongs in.
-decisio TODO(release) can teach them, and certify the answers it can.
+Many real questions do not work that way: which brand a product title names, which of this request's tools to call.
+decisio 0.37.0 can teach them, and certify the answers it can.
 
 ## What it does
 
-Register the question with `"options": "dynamic"` and `"match": "instructions"`, with examples that each carry their own options.
-Every such task gets a certificate on the model's own answer, which holds whatever options a request carries; on brand detection, choosing a tool and routing it covered 79 to 97% of answers.
-A small re-ranker is added only where cross-validation on your examples shows a gain.
+Register the question with `"options": "dynamic"` and a `certify` block, with examples that each carry their own options.
+Every such task gets a certificate on the model's own top probability, whatever options a request carries.
+A small re-ranker is kept only where cross-validation on your examples shows a gain, with no extra model and well under a millisecond added.
 
 ## What it gives
 
-On five kinds of task at 200 labelled examples, the certificate alone covered 53.3% of answers on the 12B and 54.4% on the 31B, at 3.3% error.
-The re-ranker added 3.7 points of accuracy on the 12B and 2.0 on the 31B, in under a millisecond per request, with no extra model.
+Pooled over five recurring questions, with 200 labels used for the fit:
 
-::source[Measured with decisio 0.35.0 and vLLM 0.31.0 on one RTX PRO 6000 Blackwell at 600 W, 2026-10-30, median over draws, equal weight per kind of task. The accuracy gains are for the re-ranker without an encoder, from a check made after the study; the certified shares with the re-ranker are for the study's version with one.]
+| | Gemma 4 12B | Gemma 4 31B |
+| --- | ---: | ---: |
+| The model alone: accuracy | 80.3% | 83.2% |
+| The model alone: answers certified, and the error among them | 53.3%, 3.3% | 54.4%, 3.3% |
+| With the re-ranker as shipped: accuracy | 84.1% | 85.0% |
+| With the re-ranker as shipped: answers certified, and the error among them | 55.2%, 3.9% | 54.9%, 3.2% |
+
+::source[Measured offline with the server's own code, on Gemma 4 readouts taken with decisio 0.35.0 and vLLM 0.31.0 on one RTX PRO 6000 Blackwell at 600 W, 2026-10-30: brand from a product title, entity linking, tool choice, product matching and intent routing, the mean over the five of the median over three draws of 200 labels, at a 5% error target.]
+
+Brand detection, tool choice and intent routing are right on 91 to 96% of requests, and most of their answers are certified with no teaching at all.
 
 ## What it costs
 
-- **Hard matching may certify nothing.** On linking a mention to an entity and matching a search query to a product, where the model was right on 57 to 68% of requests, no answer met a 5% error target, though the re-ranker raised accuracy most there.
-- **More accuracy can mean a smaller certified share.** With the re-ranker on the 31B, routing was 1.1 points more accurate and certified 69.7% of answers against 80.0%.
-- **Your option texts are kept as hashes and counts** from your own examples; no request text is stored.
+- **Hard matching may certify nothing.** On linking a mention to an entity and matching a search to a product, where the model was right on 57 to 67% of requests, no answer met a 5% error target, though the re-ranker added 3 to 10 points of accuracy there.
+- **The error among certified answers can rise,** as it did on the 12B, from 3.3% to 3.9%, inside the target.
+- **A `certify` block is required,** with 59 held-out examples at the defaults, and it covers choice questions only.
+- **These are five question types and two model sizes:** your task may gain more or nothing, and its cross-validation says which.
 
-A monitor reports the share of requests whose options were never seen in your examples, and an alert suspends certification.
+Your option texts are kept only as hashes and counts, and no request text is stored.
+A monitor watches the share of requests whose options your examples never contained, where options recur, and an alert suspends certification.
 [Teach a task whose options change](/docs/tasks/dynamic/) has the whole setup.

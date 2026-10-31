@@ -136,24 +136,25 @@ const tunedStart = () => `python3.12 -m venv .venv && . .venv/bin/activate\npip 
 const tunedFp8Start = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-fp8-calibrated@d77c2790`;
 const tunedMlxStart = () => `pip install "decisio[mlx]==${version()}"\npython -m decisio.serve.vllm_engine --backend mlx --base tachara-ai/Decisio-12b-tuned-mlx8-calibrated`;
 const dynamicRegister = () => `curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
-  "id": "brand-in-title",
-  "match": "instructions",
+  "id": "brand",
   "options": "dynamic",
+  "match": "instructions",
   "examples": [
     {
       "request": {
-        "state": "Acme Trail 2 running shoes, size 42",
+        "state": "Apple iPhone 13 Pro 256GB graphite",
         "questions": {
-          "brand": {
+          "q": {
             "type": "choice",
-            "instructions": "Which brand does this product title name?",
-            "criteria": { "acme": "Acme", "northwind": "Northwind", "none": "None of these" }
+            "instructions": "Which of these is the brand of the product in this listing?",
+            "criteria": { "1": "Apple", "2": "Samsung", "3": "Google", "none": "none of these" }
           }
         }
       },
-      "answer": "acme"
+      "answer": "1"
     }
-  ]
+  ],
+  "certify": {}
 }'`;
 const layoutStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --layout plain`;
 const layoutHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["systemone"]["layout"], indent=1))'`;
