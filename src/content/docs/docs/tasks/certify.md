@@ -5,7 +5,7 @@ description: Get answers the server stands behind. You choose the error rate; th
 
 <!-- Site-written: the second Teach and trust guide, rewritten from decisio's docs/tasks.md ("Certified answers") at the pinned release; its worked example's request is decisio's (::upstream) and the certificate and answers are that example recorded on the pinned release on the 31B, as is example 5's line by hand (src/lib/recorded.mjs), with the manual threshold and abstention from the former Use the probability guide and docs/api.md. The slider is the teach-and-certify runs' support inbox (src/lib/figures/tasks.mjs); the facts are docs/tasks.md's (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/tasks.md#certified-answers docs/tasks.md#what-certified-means=1-know-the-promise docs/tasks.md#a-worked-example=2-teach-the-task-with-a-certificate docs/tasks.md#how-many-examples-it-takes=4-have-enough-examples docs/tasks.md#where-it-stops=5-keep-it-valid docs/api.md#abstention=let-the-server-abstain"}
+::covers{links="docs/tasks.md#certified-answers docs/tasks.md#what-certified-means=1-know-the-promise docs/tasks.md#a-worked-example=2-teach-the-task-with-a-certificate docs/tasks.md#how-many-examples-it-takes=4-have-enough-examples docs/tasks.md#where-it-stops=5-keep-it-valid docs/running.md#deterministic-compile---deterministic-compile=5-keep-it-valid docs/api.md#abstention=let-the-server-abstain"}
 
 Add a `certify` block when you teach a task, and every answer says whether it is certified.
 Pick how often a certified answer may be wrong; the server finds the threshold that keeps that promise:
@@ -74,6 +74,10 @@ Set `certify.min_examples` above the floor to refuse a certificate that thin.
 2. **Certify again when the setup changes.** A certificate covers one task on one serving setup: the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length, the [prompt layout](/docs/layout/) and the serving flags. When any of it changes, every answer of the task is `certified: false` with the reason `serving_stack_changed`. Certify again with `POST /v1/tasks/{id}/certify`, on new labelled examples.
 3. **After upgrading decisio, certify your tasks again.**
 4. **Expect a few answers near the threshold to change sides** between two fresh starts of the same server: judge the certificate by its rate over many answers, not by one.
+5. **On the 12B with several replicas or fresh nodes, make cold starts agree** with `--deterministic-compile on`, then certify again: the setting is part of what a certificate covers, and the first start compiles from cold. Leave it off on the 31B, whose cold starts already agreed in the same check and whose answers it changes.
+6. **Expect a repeated request to differ slightly from its first read.** A request about a text the server has read before is computed on the blocks the prefix cache kept, which can move an answer near the threshold across it, and no setting removes this.
+
+::source[`--deterministic-compile`: decisio's card check on vLLM 0.31.0, one RTX PRO 6000, one session, 300 hard choice questions after each cold start with the compile caches cleared: on the 12B in FP8, 300 of 300 identical in every pair of starts with it, none without it, at about 1% in time per read. On the 31B in FP8, 300 of 300 identical without it, and 24 top answers changed by turning it on. Repeated reads: the 12B in FP8 on one card and one session, not measured on the 31B.]
 
 What is certified: choice and yes/no questions on text, asked in one order.
 Score questions and requests with images carry no certificate.

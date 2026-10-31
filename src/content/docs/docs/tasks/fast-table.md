@@ -26,7 +26,7 @@ It works best on short, command-style texts with about a thousand labelled examp
 | SMS spam | 99.8% | 1.4% | 62 ms, 32 ms | 49% |
 | MASSIVE, 55 intents | 45.2% | 2.2% | 310 ms, 190 ms | 39% |
 
-::source[Measured offline with the server's own code at 1,000 labels: decisio 0.35.0 and vLLM 0.31.0 on one RTX PRO 6000 Blackwell at 600 W, the classifier on four threads of a server CPU, 2026-10-30, medians of two draws of the labelled examples.]
+::source[Measured offline with the server's own code at 1,000 labels: decisio 0.35.0 and vLLM 0.31.0 on one RTX PRO 6000 Blackwell at 600 W, the classifier with its torch encoder on four threads of a server CPU, 2026-10-30, medians of two draws of the labelled examples.]
 
 What one request costs, on the same CPU and card:
 
@@ -37,8 +37,9 @@ What one request costs, on the same CPU and card:
 | SMS spam | 31.6 ms | 94 ms |
 | MASSIVE, 55 intents | 20.5 ms | 330 ms |
 
-::source[The per-request times are the classifier on an AMD EPYC 9755 with four threads, 200 timed texts per set, and the model's mean on the same texts, as docs/tasks.md states them on decisio's main at 53912433, for its next release.]
+::source[The per-request times are the classifier on an AMD EPYC 9755 with four threads, 200 timed texts per set, and the model's mean on the same texts, as decisio's docs/tasks.md states them, timed with the torch encoder of decisio 0.37.0.]
 
+- **These are the times of the earlier torch encoder.** decisio now runs the encoder through ONNX Runtime, with the same embeddings to about 1.5e-6. On one short text on an Apple M5 Pro at four threads, the whole classifier path took 4.6 ms against 11.6 ms; that was not measured on x86 server CPUs, and the registration times the encoder it will serve on your host.
 - **The classifier runs on every request** to find out whether it is sure, so every request pays its time, and a request it hands on pays the model's as well.
 - **The 71 ms is the mean over those 200 requests,** 26 of them, 13%, handed on. The whole test set handed on less, 7.7%, or 9.6% in the draw that was timed, and at that share the same arithmetic gives about 51 to 58 ms.
 - **The saving is largest where the model's own read is expensive:** CLINC150 and MASSIVE use the intent head, at 190 to 380 ms.
@@ -48,6 +49,7 @@ What one request costs, on the same CPU and card:
 ## 2. Ask for it
 
 - **Install the `decisio[table]` extra** on every replica that will serve the task; the image does not carry it. Without it the registration is refused with 422.
+- **The first use fetches the encoder,** a 436 MB export and its tokenizer, from the Hugging Face Hub at a pinned revision, checked against a pinned hash. A server with no route to the Hub needs them fetched first; its registration is refused, naming the command.
 - **Add `"fast_table": true` and a `certify` block,** with choice questions and at least 100 fit examples.
 - **Hold out about 600 examples or more,** at the defaults, since the certificate holds each side to half the risk.
 
@@ -62,7 +64,7 @@ What one request costs, on the same CPU and card:
 The timing check drops the classifier where it does not pay, so asking for it on the wrong task costs the registration, not the traffic.
 Across the ten sets tried, it passed the 25% check on 4; without the three assistant-command sets, on 1 of 7.
 
-- **Long texts:** the encoder runs in front of every request, at 21 to 30 ms for a short text and 134 to 183 ms for 600 to 1,150 tokens. CFPB complaints went from 154 ms to 315 ms, and arXiv abstracts from 184 ms to 370 ms: dropped.
+- **Long texts:** the encoder runs in front of every request: with the torch encoder, 21 to 30 ms for a short text and 134 to 183 ms for 600 to 1,150 tokens. CFPB complaints went from 154 ms to 315 ms, and arXiv abstracts from 184 ms to 370 ms: dropped.
 - **Noisy labels:** on Civil comments the classifier answered 69.8%, 3.7% of them wrong, but 65 ms became 74 ms: dropped.
 - **Nothing certified:** SciCite, and the two sets whose options change per request, were dropped.
 - **A plain read:** on short texts the classifier needs to answer roughly 60 to 75% of requests to clear 25%. MASSIVE passes only because its read goes through the intent head; timed as a plain read it saves 21% on the 31B.
@@ -80,7 +82,7 @@ Each replica decides for itself, and `status.fast_table` on `GET /v1/tasks/{id}`
 - **`suspended`:** the monitor's alarm fired here or on a replica sharing the task store.
 - **`unavailable`:** this server has another encoder revision than the classifier was fitted with, so register the task again, or the `table` extra is not installed.
 
-Size the CPU for it: the encoder runs one text at a time, so a replica sustains roughly 35 to 45 requests a second through the classifier. Above that, requests queue, the median time rises, and the replica falls back to decisio.
+Size the CPU for it: the encoder runs one text at a time, so the rate a replica sustains is the reciprocal of its time: with the torch encoder, about 35 to 45 requests a second through the classifier. Above that, requests queue, the median time rises, and the replica falls back to decisio.
 
 - **The monitor watches classifier and decisio answers together,** as for any certified task. Every 50th classifier answer is also read by decisio, which takes one more model read, and an alarm watches how often the two differ.
 - **When an alarm fires, the classifier is suspended,** unless the task sets `suspend_on_alert` off. With `--task-store`, every other replica stops using it within the store's poll. With `--tasks-dir`, no store, or a read-only replica, the suspension holds only on the replica that saw the alarm.
