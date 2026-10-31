@@ -24,9 +24,21 @@ const pct = (s) => Math.round(s * 100);
 const server = spawn('node', ['scripts/serve.mjs', String(port)], { stdio: 'ignore', env: { ...process.env, PLAIN_HTTP: '1' } });
 await new Promise((r) => setTimeout(r, 500));
 
+// Chrome now and then fails to bring up its debugging port on a runner; that says nothing about the page, so start it again.
+async function launchChrome(tries = 3) {
+	for (let i = 1; ; i++) {
+		try {
+			return await chromeLauncher.launch({ chromeFlags: ['--headless=new', '--no-sandbox'] });
+		} catch (e) {
+			if (i === tries) throw e;
+			console.log(`lighthouse: Chrome did not start (${e.message}); try ${i + 1} of ${tries}`);
+		}
+	}
+}
+
 // Three runs of a page in a browser of its own; the median of each category, and every run's performance.
 async function measure(path, report) {
-	const chrome = await chromeLauncher.launch({ chromeFlags: ['--headless=new', '--no-sandbox'] });
+	const chrome = await launchChrome();
 	try {
 		const runs = [];
 		for (let i = 0; i < RUNS; i++) {
