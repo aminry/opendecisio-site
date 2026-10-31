@@ -1,7 +1,7 @@
 ---
 title: "decisio 0.37.0 answers short command traffic without the model: 384 ms to 71 ms on assistant commands"
 summary: "An opt-in table on the host CPU answered 92.3% of CLINC150's assistant commands, 3.1% of them wrong, and cut the mean time per request on the 31B from 384 ms to 71 ms."
-date: 2026-10-30
+date: 2026-10-31
 tags: [release]
 ---
 
