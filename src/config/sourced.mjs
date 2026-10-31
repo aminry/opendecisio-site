@@ -622,7 +622,7 @@ export const sourced = [
 		['the whole classifier path took 4.6 ms against 11.6 ms', tasksDoc, '4.6 ms against 11.6 ms for the whole table path, median, on an Apple M5 Pro at 4 threads'],
 		['that was not measured on x86 server CPUs', tasksDoc, 'That ratio was not measured on the x86 server CPUs'],
 		['a 436 MB export and its tokenizer', tasksDoc, "the model's published ONNX export, 436 MB, and its tokenizer"],
-		['hf download BAAI/bge-base-en-v1.5 onnx/model.onnx tokenizer.json --revision a5beb1e3e68b9ab74eb54cfd186867f64f240e1a', tasksDoc, 'hf download BAAI/bge-base-en-v1.5 onnx/model.onnx tokenizer.json --revision a5beb1e3e68b9ab74eb54cfd186867f64f240e1a'],
+		['its registration is refused, naming the command', tasksDoc, 'or the registration is refused naming that command'],
 		['at least 100 fit examples', tasksDoc, 'with at least 100 fit examples'],
 		['the image does not carry it', tasksDoc, 'the image does not carry them'],
 		['Without it the registration is refused with 422', tasksDoc, 'Without the extra the registration is refused with 422'],

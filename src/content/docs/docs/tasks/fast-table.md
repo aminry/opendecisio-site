@@ -49,7 +49,7 @@ What one request costs, on the same CPU and card:
 ## 2. Ask for it
 
 - **Install the `decisio[table]` extra** on every replica that will serve the task; the image does not carry it. Without it the registration is refused with 422.
-- **The first use fetches the encoder,** a 436 MB export and its tokenizer, from the Hugging Face Hub at a pinned revision, checked against a pinned hash. A server with no route to the Hub needs them fetched first: `hf download BAAI/bge-base-en-v1.5 onnx/model.onnx tokenizer.json --revision a5beb1e3e68b9ab74eb54cfd186867f64f240e1a`.
+- **The first use fetches the encoder,** a 436 MB export and its tokenizer, from the Hugging Face Hub at a pinned revision, checked against a pinned hash. A server with no route to the Hub needs them fetched first; its registration is refused, naming the command.
 - **Add `"fast_table": true` and a `certify` block,** with choice questions and at least 100 fit examples.
 - **Hold out about 600 examples or more,** at the defaults, since the certificate holds each side to half the risk.
 
