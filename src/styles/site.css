@@ -11,8 +11,18 @@ html {
 	-webkit-text-size-adjust: 100%;
 	text-size-adjust: 100%;
 	color-scheme: light dark;
-	/* An in-page link lands below the sticky header (65 px at every width), not under it. */
-	scroll-padding-top: 5rem;
+	/* An in-page link lands below the sticky header (65 px at every width), not under it: a section flush with the
+	   header, since it has its own padding. */
+	scroll-padding-top: 65px;
+}
+
+/* A heading has none, and an eyebrow may sit above it: both keep clear of the header too. */
+:is(h1, h2, h3, h4)[id] {
+	scroll-margin-top: 1rem;
+}
+
+.kicker + :is(h1, h2, h3)[id] {
+	scroll-margin-top: 2.5rem;
 }
 
 :root[data-theme='light'] {

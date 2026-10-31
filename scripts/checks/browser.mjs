@@ -324,7 +324,9 @@ try {
 							const el = document.getElementById(decodeURIComponent(id));
 							if (!el || !el.getBoundingClientRect().height || el.closest('details:not([open])')) continue;
 							el.scrollIntoView({ block: 'start', behavior: 'instant' });
-							const top = el.getBoundingClientRect().top;
+							// The target's eyebrow, when one sits just above it, is part of what the link lands on.
+							const above = el.previousElementSibling?.classList.contains('kicker') ? el.previousElementSibling : el;
+							const top = above.getBoundingClientRect().top;
 							if (top < header - 0.5) under.push(`#${id}: ${Math.round(top)}px, the header ends at ${Math.round(header)}px`);
 						}
 						window.scrollTo({ top: y, behavior: 'instant' });
