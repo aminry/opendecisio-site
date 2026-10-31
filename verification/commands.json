@@ -88,7 +88,7 @@
 			"status": "cpu",
 			"tag": "v0.37.0",
 			"date": "2026-10-31",
-			"stdout": "answers: 50\nserver ms: 38678.3"
+			"stdout": "answers: 50\nserver ms: 38359.1"
 		},
 		"72182c644904351a": {
 			"status": "cpu",
@@ -100,7 +100,7 @@
 			"status": "cpu",
 			"tag": "v0.37.0",
 			"date": "2026-10-31",
-			"stdout": "first question: 800.4 ms\na different question about the same text: 762.5 ms"
+			"stdout": "first question: 770.9 ms\na different question about the same text: 763.9 ms"
 		},
 		"f88514bde0c31e5b": {
 			"status": "cpu",
@@ -179,7 +179,7 @@
 			"status": "cpu",
 			"tag": "v0.37.0",
 			"date": "2026-10-31",
-			"stdout": "x-decisio-server-ms: 738.1\nx-decisio-route: text\nx-decisio-stages: prepare=0.7;warm=0.0;engine=737.6;wait=0.0",
+			"stdout": "x-decisio-server-ms: 749.4\nx-decisio-route: text\nx-decisio-stages: prepare=0.6;warm=0.0;engine=748.9;wait=0.0",
 			"trimmed": true
 		},
 		"cebbdb4a5cd60b45": {
@@ -215,7 +215,7 @@
 		},
 		"3745bb787deb7d02": {
 			"status": "shown",
-			"why": "the pinned decisio release does not have dynamic tasks yet"
+			"why": "it shows the shape with one example, as decisio's docs/tasks.md does; a registration that certifies needs more, 59 held out at the defaults"
 		},
 		"5a3798025c8159b5": {
 			"status": "cpu",
@@ -282,7 +282,7 @@
 			"status": "cpu",
 			"tag": "v0.37.0",
 			"date": "2026-10-31",
-			"stdout": "My card keeps getting declined when I renew.\n  choice payment_failed; x-decisio-tasks: ticket-routing; route text, 1432.7 ms\n  payment_failed 1.000, bug 0.000, billing 0.000"
+			"stdout": "My card keeps getting declined when I renew.\n  choice payment_failed; x-decisio-tasks: ticket-routing; route text, 1426.2 ms\n  payment_failed 1.000, bug 0.000, billing 0.000"
 		},
 		"d4a331a0ca20c8ce": {
 			"status": "shown",
