@@ -135,10 +135,12 @@ const concurrencyStart = () => `pip install "decisio[serve]==${version()}"\npyth
 const tunedStart = () => `python3.12 -m venv .venv && . .venv/bin/activate\npip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-calibrated@baa731aa`;
 const tunedFp8Start = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-fp8-calibrated@d77c2790`;
 const tunedMlxStart = () => `pip install "decisio[mlx]==${version()}"\npython -m decisio.serve.vllm_engine --backend mlx --base tachara-ai/Decisio-12b-tuned-mlx8-calibrated`;
-const fastTableRegister = () => `curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
-  "id": "ticket-routing",
-  "fast_table": true,
-  "examples": [ ... ]
+const fastTableRegister = () => `pip install 'decisio[table]'
+curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
+  "id": "assistant-commands",
+  "examples": [ ... ],
+  "certify": { "alpha": 0.05, "delta": 0.1 },
+  "fast_table": true
 }'`;
 const layoutStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --layout plain`;
 const layoutHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["systemone"]["layout"], indent=1))'`;
