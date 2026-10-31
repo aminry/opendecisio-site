@@ -5,8 +5,8 @@ description: Teach and certify a question whose options are different in every r
 
 <!-- Site-written: the Teach a task whose options change guide. DRAFT until the decisio release that contains options: dynamic; its API names and numbers are checked against that release's docs before merging. The figures are the study's, on decisio 0.35.0; re-check them against decisio's docs at the release. -->
 
-Some questions keep their wording while their options change with every request: which brand a product title names, which of these tools fits a command, which of these products a listing is.
-Register such a question as a dynamic task, and decisio certifies its answers whatever options a request brings.
+Some questions keep their wording while their options change with every request: which brand a product title names, which of these tools fits a command, which queue a message belongs in.
+Register such a question as a dynamic task, and decisio certifies the answers it can, whatever options a request brings.
 Each example carries its own options:
 
 ::site-block{name="dynamic-register"}
@@ -15,7 +15,7 @@ Each example carries its own options:
 
 - **It fits** a question asked with the same instructions every time, where each request brings its own candidates.
 - **It does not replace a fixed task:** with the same options every time, [teach a fixed task](/docs/tasks/), which can also fit an intent head.
-- **Hard matching may certify nothing.** On entity linking and product matching, where the model was right on 57 to 68% of requests, no answer met a 5% error target.
+- **Hard matching may certify nothing.** On linking a mention to an entity and matching a search query to a product, where the model was right on 57 to 68% of requests, no answer met a 5% error target.
 
 ## 2. Register it
 
@@ -36,7 +36,7 @@ Every dynamic task gets two things, and may get a third:
 
 ## 4. Know what it costs and where it helps
 
-- **It helps most where the model is weakest:** the re-ranker added most on entity linking and product matching, while brand detection, choosing a tool and routing were already right on 91 to 96% of requests.
+- **The certificate and the re-ranker help in different places.** Brand detection, choosing a tool and routing were already right on 91 to 96% of requests, and certified 79 to 97% of answers. The re-ranker added most on entity linking and product matching, which certified nothing.
 - **A more accurate model can certify less.** With the re-ranker on the 31B, routing was 1.1 points more accurate and certified 69.7% of answers against 80.0%.
 - **No kind of task got worse in accuracy.**
 - **The re-ranker's time is small beside the model's** read, a median of 48 to 72 ms on these tasks.

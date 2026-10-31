@@ -1,18 +1,18 @@
 ---
 title: "decisio can now teach and certify questions whose options change"
-summary: "A dynamic task certifies answers whatever options a request brings, such as which brand a product title names. About half the answers certified, at 3.3% error, in our study."
+summary: "A dynamic task can certify answers whatever options a request brings, such as which brand a product title names. About half the answers certified, at 3.3% error, in our study."
 date: 2026-10-30
 tags: [release]
 ---
 
 Until now, a task needed the same options in every request.
-Many real questions do not work that way: which brand a product title names, which of these tools fits a command, which of these products a listing is.
-decisio TODO(release) can teach and certify them.
+Many real questions do not work that way: which brand a product title names, which of these tools fits a command, which queue a message belongs in.
+decisio TODO(release) can teach them, and certify the answers it can.
 
 ## What it does
 
 Register the question with `"options": "dynamic"` and `"match": "instructions"`, with examples that each carry their own options.
-Every such task gets a certificate on the model's own answer, which holds whatever options a request carries.
+Every such task gets a certificate on the model's own answer, which holds whatever options a request carries; on brand detection, choosing a tool and routing it covered 79 to 97% of answers.
 A small re-ranker is added only where cross-validation on your examples shows a gain.
 
 ## What it gives
@@ -24,7 +24,7 @@ The re-ranker added 3.7 points of accuracy on the 12B and 2.0 on the 31B, in und
 
 ## What it costs
 
-- **Hard matching may certify nothing.** On entity linking and product matching, where the model was right on 57 to 68% of requests, no answer met a 5% error target, though the re-ranker raised accuracy most there.
+- **Hard matching may certify nothing.** On linking a mention to an entity and matching a search query to a product, where the model was right on 57 to 68% of requests, no answer met a 5% error target, though the re-ranker raised accuracy most there.
 - **More accuracy can mean a smaller certified share.** With the re-ranker on the 31B, routing was 1.1 points more accurate and certified 69.7% of answers against 80.0%.
 - **Your option texts are kept as hashes and counts** from your own examples; no request text is stored.
 
