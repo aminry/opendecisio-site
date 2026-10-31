@@ -1,11 +1,11 @@
 ---
-title: "decisio 0.37.0 answers short command traffic without the model: 384 ms to 71 ms on assistant commands"
+title: "decisio 0.37.0 answers most short command traffic without the model: 384 ms to 71 ms on assistant commands"
 summary: "An opt-in learned classifier on the server's CPU answered 92.3% of CLINC150's assistant commands, 3.1% of them wrong, and cut the mean time per request on the 31B from 384 ms to 71 ms."
 date: 2026-10-31
 tags: [release]
 ---
 
-Short, repetitive command traffic can be answered without the model.
+Most short, repetitive command traffic can be answered without the model.
 decisio 0.37.0 can put a small learned classifier, a sentence encoder and a linear layer fitted on your examples, on the server's CPU before the model, and it keeps itself only where it pays.
 
 ## Where it works great
