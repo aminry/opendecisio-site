@@ -21,6 +21,7 @@ In the container, `DECISIO_BASE` and `DECISIO_PORT` do the same as `--base` and 
 | `--max-model-len` | pins one text length; without it the Gemma models take what the card holds, so cards that differ serve different lengths |
 | `--gpu-memory-utilization` | the model's share of the card; it changes how long a text the card holds, a lot |
 | `--tasks-file` | loads exported tasks at start, so a restart keeps them |
+| `--deterministic-compile` | off by default; turn it on on the 12B for certified tasks on several replicas or fresh nodes, so cold starts answer alike, and leave it off on the 31B ([Certify answers](/docs/tasks/certify/#5-keep-it-valid)) |
 | `--served-name` | the name `GET /v1/models` lists, kept stable across a change of model |
 | `--kv-cache-dtype` | `fp8` holds a longer text, but suspends a certificate made without it |
 | `--engine-process` | matters only with a second engine (`--image-model`, `--head-engine`, `--one-engine`) |

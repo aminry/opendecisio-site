@@ -23,7 +23,7 @@ On CLINC150 a request the classifier answers takes 21.1 ms, and one it hands to 
 The 71 ms is the mean over 200 timed requests, 13% of them handed on; at the whole test set's share the same arithmetic gives about 51 to 58 ms.
 The saving is largest where the model's own read is expensive, and the certificate covers the classifier and the model together.
 
-::source[The per-request times are the classifier on an AMD EPYC 9755 with four threads and the model's mean on the same texts, as docs/tasks.md states them on decisio's main at 53912433, for its next release.]
+::source[The per-request times are the classifier on an AMD EPYC 9755 with four threads and the model's mean on the same texts, as decisio's docs/tasks.md states them at 0.38.0, timed with the torch encoder of 0.37.0.]
 
 ## How to use it
 
