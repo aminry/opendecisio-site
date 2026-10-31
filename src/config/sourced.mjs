@@ -404,7 +404,8 @@ export const sourced = [
 	// Teach a task
 	...fromPage('/docs/tasks/', [
 		['At least 10 labelled examples', tasksDoc, 'at least 10 examples, below which the server declines to fit'],
-		['A question with 10 or more options, and at least 5 examples of each; 10 is better', tasksDoc, 'a question with 10 or more options, and at least 5 examples of every option. The measured gains below used 10 per option, which is what we recommend.'],
+		['A question with 10 or more options, and at least 2 examples of each; we recommend 10, which the measured gains used', tasksDoc, 'a question with 10 or more options, and at least 2 examples of every option. The measured gains below used 10 per option, which is what we recommend'],
+		['short_options names the options that have too few, each with its count', tasksDoc, 'the options that have too few examples, in option order. The `reason` gives each with its count'],
 		['scoring each fifth of them with a fit made on the other four', tasksDoc, 'the server split your examples into five parts and scored each part with a correction fitted on the other four'],
 		['up to 20 for the correction or 10 per option for the head', tasksDoc, 'add examples, up to 20 for calibration or 10 per option for the head'],
 		['Registering the same id again replaces the task.', tasksDoc, 'Registering the same `id` again replaces the task.'],

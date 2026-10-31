@@ -24,7 +24,7 @@ With the example task from decisio's repository, one request teaches it:
 | You need | For |
 | --- | --- |
 | At least 10 labelled examples | a correction per option that removes a steady lean toward some options |
-| A question with 10 or more options, and at least 5 examples of each; 10 is better | the intent head, which learns what your labels mean in your data |
+| A question with 10 or more options, and at least 2 examples of each; we recommend 10, which the measured gains used | the intent head, which learns what your labels mean in your data |
 | Examples from your own traffic | the same kind of text, and the same mix of options, as the server will see |
 | More examples, if you will certify | half of them are held back to set the threshold ([Certify answers](/docs/tasks/certify/)) |
 
@@ -53,7 +53,7 @@ The answer has one record for each correction, `calibration` and `head`:
 
 The server keeps a correction only when it helps on your own examples, checked by scoring each fifth of them with a fit made on the other four.
 When it declines one, the question is answered exactly as before:
-- **Too few examples:** add more, up to 20 for the correction or 10 per option for the head, and register again.
+- **Too few examples:** add more, up to 20 for the correction or 10 per option for the head, and register again. When the head is declined for this, `short_options` names the options that have too few, each with its count.
 - **The plain answer is already as good:** common for a clear yes/no question.
 - **Labels that disagree:** two people labelling the same kind of input differently look like noise, and the server declines.
 
