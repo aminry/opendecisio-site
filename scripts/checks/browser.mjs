@@ -311,6 +311,25 @@ try {
 						return !vid?.getAttribute('width') || !vid?.getAttribute('height') || !poster?.getAttribute('width') || poster?.getAttribute('loading') !== 'lazy';
 					}).length,
 					overflow: document.documentElement.scrollWidth > window.innerWidth + 1,
+					// An in-page link's target lands below the sticky header, not under it, at every width.
+					anchorsUnderHeader: (() => {
+						const header = Math.max(0, ...[...document.querySelectorAll('header, [class*="header"]')]
+							.filter((h) => ['sticky', 'fixed'].includes(getComputedStyle(h).position) && h.getBoundingClientRect().top <= 0)
+							.map((h) => h.getBoundingClientRect().bottom));
+						const linked = [...document.querySelectorAll('a[href^="#"]')].map((a) => a.getAttribute('href').slice(1)).filter(Boolean);
+						const inMain = [...document.querySelectorAll('main h1[id], main h2[id], main h3[id], main section[id]')].map((e) => e.id);
+						const under = [];
+						const y = window.scrollY;
+						for (const id of new Set([...linked, ...inMain])) {
+							const el = document.getElementById(decodeURIComponent(id));
+							if (!el || !el.getBoundingClientRect().height || el.closest('details:not([open])')) continue;
+							el.scrollIntoView({ block: 'start', behavior: 'instant' });
+							const top = el.getBoundingClientRect().top;
+							if (top < header - 0.5) under.push(`#${id}: ${Math.round(top)}px, the header ends at ${Math.round(header)}px`);
+						}
+						window.scrollTo({ top: y, behavior: 'instant' });
+						return under;
+					})(),
 					// No table scrolls sideways or is clipped, on any page, at any width: it ends inside its box, no
 					// cell is wider than itself, and below 1024px a stacking table (and, in a docs column under 36rem,
 					// a docs table of three columns or more, and under 60rem one of six or more) is stacked, its header row hidden.
@@ -385,6 +404,7 @@ try {
 				if (state.unsizedClips) report(engineName, route, v.name, `${state.unsizedClips} clips without a sized video and a lazily loaded, sized poster`);
 				if (state.overflow) report(engineName, route, v.name, 'the page is wider than the screen');
 				for (const t of state.wideTables) report(engineName, route, v.name, t);
+				for (const a of state.anchorsUnderHeader) report(engineName, route, v.name, `an in-page link lands under the sticky header: ${a}`);
 				for (const c of state.codeThatWraps) report(engineName, route, v.name, `code block wraps: ${c}`);
 				for (const s of state.unpaintedStrokes) report(engineName, route, v.name, `a line is not drawn (its gradient needs gradientUnits="userSpaceOnUse"): ${s}`);
 

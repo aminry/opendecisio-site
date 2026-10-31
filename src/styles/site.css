@@ -11,6 +11,8 @@ html {
 	-webkit-text-size-adjust: 100%;
 	text-size-adjust: 100%;
 	color-scheme: light dark;
+	/* An in-page link lands below the sticky header (65 px at every width), not under it. */
+	scroll-padding-top: 5rem;
 }
 
 :root[data-theme='light'] {
