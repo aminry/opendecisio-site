@@ -156,6 +156,13 @@ const dynamicRegister = () => `curl -s http://127.0.0.1:8000/v1/tasks -H 'Conten
   ],
   "certify": {}
 }'`;
+const fastTableRegister = () => `pip install 'decisio[table]'
+curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
+  "id": "assistant-commands",
+  "examples": [ ... ],
+  "certify": { "alpha": 0.05, "delta": 0.1 },
+  "fast_table": true
+}'`;
 const layoutStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --layout plain`;
 const layoutHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["systemone"]["layout"], indent=1))'`;
 const concurrencyHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["concurrency"], indent=1))'`;
@@ -276,6 +283,7 @@ export const siteBlocks = {
 	get 'tuned-fp8-start'() { return { lang: 'bash', text: tunedFp8Start() }; },
 	get 'tuned-mlx-start'() { return { lang: 'bash', text: tunedMlxStart() }; },
 	get 'dynamic-register'() { return { lang: 'bash', text: dynamicRegister() }; },
+	get 'fast-table-register'() { return { lang: 'bash', text: fastTableRegister() }; },
 	get 'layout-start'() { return { lang: 'bash', text: layoutStart() }; },
 	get 'layout-health'() { return { lang: 'bash', text: layoutHealth() }; },
 	get 'concurrency-health'() { return { lang: 'bash', text: concurrencyHealth() }; },

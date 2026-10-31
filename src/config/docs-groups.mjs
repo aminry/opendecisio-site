@@ -36,6 +36,7 @@ export const docsGroups = [
 			{ slug: 'docs/tasks', label: 'Teach a task', shape: 'guide' },
 			{ slug: 'docs/tasks/certify', label: 'Certify answers', shape: 'guide' },
 			{ slug: 'docs/tasks/dynamic', label: 'Teach a task whose options change', shape: 'guide' },
+			{ slug: 'docs/tasks/fast-table', label: 'Answer short tasks faster', shape: 'guide' },
 			{ slug: 'docs/tasks/drift', label: 'Watch for drift', shape: 'guide' },
 			{ slug: 'docs/scale', label: 'Scale', shape: 'guide' },
 			{ slug: 'docs/layout', label: 'Choose the prompt layout', shape: 'guide' },
