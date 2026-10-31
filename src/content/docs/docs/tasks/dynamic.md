@@ -5,6 +5,8 @@ description: When your options change with every request, teach the question onc
 
 <!-- Site-written: the Teach a task whose options change guide. Its facts are decisio's docs/tasks.md ("Tasks whose options change with every request"), docs/api.md and runs/2026-10-30_dynamic-options/summary.json at the pinned release (src/config/sourced.mjs checks them). -->
 
+::covers{links="docs/tasks.md#tasks-whose-options-change-with-every-request"}
+
 Your options change with every request: which brand a product title names, which of this request's tools to call.
 Teach that question once as a dynamic task, and decisio certifies the answers it can, whatever options a request brings.
 Each example carries its own options:
