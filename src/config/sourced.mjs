@@ -151,7 +151,7 @@ export const sourced = [
 		['300 of 300 identical in every pair of starts with it, none without it', running, 'identical on 300 of 300 in every pair'],
 		['24 top answers changed by turning it on', running, '24 top answers changed'],
 		['no setting removes this', tasksDoc, 'no setting removes it'],
-		['The 12B in FP8 on one card and one session, not measured on the 31B', tasksDoc, 'It was measured on the 12B in FP8 on one card and one session; it was not measured on the 31B'],
+		['the 12B in FP8 on one card and one session, not measured on the 31B', tasksDoc, 'It was measured on the 12B in FP8 on one card and one session; it was not measured on the 31B'],
 		['A threshold applies only on the served name it was fitted for', upgrading, 'An abstention task now applies only on the served name it was fitted for'],
 	]),
 	...fromPage('/docs/limits/', [
