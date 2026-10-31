@@ -245,7 +245,7 @@ export const plan = [
 	{ page: '/docs/deploy/tuned-12b/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with an NVIDIA card that supports FP8, which this check does not have' },
 	{ page: '/docs/deploy/tuned-12b/', n: 3, mode: 'shown', expect: 'pip install "decisio[mlx]', why: 'it needs a Mac with Apple silicon, which this check does not have' },
 	// Teach a task whose options change: shown until the decisio release that has it, then run on the stand-in.
-	{ page: '/docs/tasks/dynamic/', n: 1, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/tasks', why: 'the pinned decisio release does not have dynamic tasks yet' },
+	{ page: '/docs/tasks/dynamic/', n: 1, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/tasks', why: 'it shows the shape with one example, as decisio\'s docs/tasks.md does; a registration that certifies needs more, 59 held out at the defaults' },
 	// Choose the prompt layout: the layout read from /health on the stand-in (the Qwen model's default, plain); the start
 	// with --layout plain is decisio's command on a card.
 	{
