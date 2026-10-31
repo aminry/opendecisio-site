@@ -8,7 +8,9 @@ description: Answer short, repetitive command traffic from a small learned class
 ::covers{links="docs/tasks.md#a-fast-table-in-front-of-decisio-opt-in"}
 
 decisio's fast table (`fast_table`) is a small learned classifier, a sentence encoder and a linear layer fitted on your own examples, that runs on the server's CPU before the model and answers the short, repetitive requests it is sure of.
-On CLINC150's assistant commands it answered 92.3% of requests, 3.1% of them wrong, and the mean time per request on the 31B, counting the requests it handed on to the model, fell from 384 ms to 71 ms.
+On CLINC150's assistant commands it answered 92.3% of requests, 3.1% of them wrong.
+
+A request it answers takes 21.1 ms and one it hands to the model about 405 ms, so over 200 timed requests the mean on the 31B fell from 384 ms to 71 ms.
 It is off unless a registration asks for it:
 
 ::site-block{name="fast-table-register"}
@@ -26,6 +28,19 @@ It works best on short, command-style texts with about a thousand labelled examp
 
 ::source[Measured offline with the server's own code at 1,000 labels: decisio 0.35.0 and vLLM 0.31.0 on one RTX PRO 6000 Blackwell at 600 W, the classifier on four threads of a server CPU, 2026-10-30, medians of two draws of the labelled examples.]
 
+What one request costs, on the same CPU and card:
+
+| Set | A request the classifier answers, mean | A request handed to the model |
+| --- | ---: | ---: |
+| CLINC150, 150 intents | 21.1 ms | 405 ms |
+| Snips, 7 intents | 23.6 ms | 86 ms |
+| SMS spam | 31.6 ms | 94 ms |
+| MASSIVE, 55 intents | 20.5 ms | 330 ms |
+
+::source[The per-request times are the classifier on an AMD EPYC 9755 with four threads, 200 timed texts per set, and the model's mean on the same texts, as docs/tasks.md states them on decisio's main at 53912433, for its next release.]
+
+- **The classifier runs on every request** to find out whether it is sure, so every request pays its time, and a request it hands on pays the model's as well.
+- **The 71 ms is the mean over those 200 requests,** 26 of them, 13%, handed on. The whole test set handed on less, 7.7%, or 9.6% in the draw that was timed, and at that share the same arithmetic gives about 51 to 58 ms.
 - **The saving is largest where the model's own read is expensive:** CLINC150 and MASSIVE use the intent head, at 190 to 380 ms.
 - **The certificate covers both sides:** at most `alpha` of the certified answers are wrong, for traffic like your examples and on this serving stack.
 - **It checks itself:** the registration times the classifier and the model on your own held-out examples, and keeps the classifier only if it saves at least 25% of the time per request.
