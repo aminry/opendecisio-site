@@ -244,6 +244,8 @@ export const plan = [
 	{ page: '/docs/deploy/tuned-12b/', n: 1, mode: 'shown', expect: 'python3.12 -m venv .venv', why: 'it needs Linux with one NVIDIA card and about 24 GB of bf16 weights, which this check does not have' },
 	{ page: '/docs/deploy/tuned-12b/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with an NVIDIA card that supports FP8, which this check does not have' },
 	{ page: '/docs/deploy/tuned-12b/', n: 3, mode: 'shown', expect: 'pip install "decisio[mlx]', why: 'it needs a Mac with Apple silicon, which this check does not have' },
+	// Answer short tasks faster: shown until the decisio release that has it.
+	{ page: '/docs/tasks/fast-table/', n: 1, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/tasks', why: 'the pinned decisio release does not have the fast table yet' },
 	// Choose the prompt layout: the layout read from /health on the stand-in (the Qwen model's default, plain); the start
 	// with --layout plain is decisio's command on a card.
 	{
