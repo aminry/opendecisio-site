@@ -46,6 +46,11 @@ export const sourced = [
 		['Decisio-31b-<flavor>, Decisio-12b-<flavor> or Decisio-12b-fp8-<flavor>', upgrading, 'named `Decisio-31b-<flavor>`, `Decisio-12b-<flavor>` or `Decisio-12b-fp8-<flavor>`'],
 	]),
 	...fromPage('/docs/limits/', [
+		['On the 12B, batch-invariant kernels make it give the same bits again, from the prefix cache or not', running, 'There a read gives the same bits whatever the server read before it: from the prefix cache or not'],
+		['On the Gemma 4 12B, in bf16 and FP8, its tuned repositories and adapters applied at run time', running, 'It is on by default for the Gemma 4 12B'],
+		['at about 1.03 times a single read on FP8 and 1.6 times on bf16', running, 'a single read 1.03 times on FP8 (1.12 times at a batch of 16), 1.21 times with an adapter applied at run time on FP8, 1.60 times on bf16'],
+		['The 31B keeps the mode off until it is measured at that size', running, 'keeps it off until it is measured at that size'],
+		["A text longer than vLLM's batch budget is read in several engine steps, which repeats but is other arithmetic", running, 'A prompt split across engine steps is repeatable but is other arithmetic than one step'],
 		["Under the header layout the list of the request's questions takes room too, so the text keeps what the longest prompt leaves.", running, 'Under the header layout a row also holds the list of every question of the request, so the room for the state is smaller by that list'],
 	]),
 	// Choose the prompt layout
@@ -150,8 +155,10 @@ export const sourced = [
 		['--deterministic-compile on, then certify again', upgrading, 'Start with `--deterministic-compile on`, then certify again'],
 		['300 of 300 identical in every pair of starts with it, none without it', running, 'identical on 300 of 300 in every pair'],
 		['24 top answers changed by turning it on', running, '24 top answers changed'],
-		['no setting removes this', tasksDoc, 'no setting removes it'],
-		['the 12B in FP8 on one card and one session, not measured on the 31B', tasksDoc, 'It was measured on the 12B in FP8 on one card and one session; it was not measured on the 31B'],
+		['On the 12B, batch-invariant kernels, on by default there, remove this', tasksDoc, 'on by default for the Gemma 4 12B from decisio 0.39.0'],
+		['a request read from the cache gives the same bits as one read without it', tasksDoc, 'requests read with the cache on gave the same bits as with the cache off'],
+		['the same bits with the prefix cache on and off on 622 and 979 requests', tasksDoc, '622 and 979 requests'],
+		['two reads of the 622 differed on 145 by more than 0.01 and changed 4 top answers', tasksDoc, 'two reads of the 622 with the cache on differed on 145 by more than 0.01 and 4 top answers'],
 		['A threshold applies only on the served name it was fitted for', upgrading, 'An abstention task now applies only on the served name it was fitted for'],
 	]),
 	...fromPage('/docs/limits/', [
@@ -486,6 +493,7 @@ export const sourced = [
 	]),
 	// Scale
 	...fromPage('/docs/scale/', [
+		["the default, and the only setting, when --engine turns vLLM's prefix cache off", cli, '`off` by default, and the other two refused, when `--engine` turns vLLM\'s prefix cache off'],
 		["together, in one batch, with the engine in the server's process (the default)", cli, 'On the Gemma 4 31B base `warm` is the default when the engine runs in the server\'s process'],
 		['with --head-engine or --image-model the engine runs in its own process', cli, 'to `separate` when a second engine is configured (`--image-model`, `--head-engine`, `--one-engine`)'],
 		['the 31B scores the questions one at a time', cli, '| `--multi-question` | `sequential` | `sequential` | `warm` with the engine in the server\'s process, else `sequential` |'],
@@ -644,6 +652,8 @@ export const sourced = [
 	]),
 	// Server flags
 	...fromPage('/docs/flags/', [
+		['on by default for the 12B, off for the 31B', cli, 'on for the Gemma 4 12B in bf16 and FP8 and its tuned repositories, adapters applied at run time included; off for the 31B'],
+		['off opts out', cli, '`off` opts out'],
 		['on the 12B for certified tasks on several replicas or fresh nodes', running, 'Use it on the Gemma 4 12B when certified tasks run on several replicas or on fresh nodes'],
 		['leave it off on the 31B', running, 'Leave it off on the 31B'],
 		['the server listens on 127.0.0.1:8000', running, 'It listens on `127.0.0.1:8000` (`--host`, `--port`)'],

@@ -22,6 +22,7 @@ In the container, `DECISIO_BASE` and `DECISIO_PORT` do the same as `--base` and 
 | `--gpu-memory-utilization` | the model's share of the card; it changes how long a text the card holds, a lot |
 | `--tasks-file` | loads exported tasks at start, so a restart keeps them |
 | `--deterministic-compile` | off by default; turn it on on the 12B for certified tasks on several replicas or fresh nodes, so cold starts answer alike, and leave it off on the 31B ([Certify answers](/docs/tasks/certify/#5-keep-it-valid)) |
+| `--batch-invariant` | on by default for the 12B, off for the 31B: answers that do not depend on the batch or the prefix cache, at about 1.03 times a read on FP8 and 1.6 times on bf16; `off` opts out, and a certificate is suspended across a change ([Limits](/docs/limits/#3-set-up-for-production)) |
 | `--served-name` | the name `GET /v1/models` lists, kept stable across a change of model |
 | `--kv-cache-dtype` | `fp8` holds a longer text, but suspends a certificate made without it |
 | `--engine-process` | matters only with a second engine (`--image-model`, `--head-engine`, `--one-engine`) |

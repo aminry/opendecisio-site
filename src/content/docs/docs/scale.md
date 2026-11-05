@@ -107,7 +107,7 @@ print("options answered:", len(answer["probabilities"]))
 | --- | --- | --- |
 | `--register-boundary before` | the Gemma models' default: marks where a new text ends, ahead of its first question | +21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens |
 | `--register-boundary after` | marks it after the answer instead | the cost moves to throughput: the 31B kept 0.61 and 0.74 of it at 32 and 64 clients in the same run, so keep `before` on the 31B under load |
-| `--register-boundary off` | never marks it | a later question re-reads the text; for traffic that asks one question per text |
+| `--register-boundary off` | never marks it; the default, and the only setting, when `--engine` turns vLLM's prefix cache off | a later question re-reads the text; for traffic that asks one question per text |
 | `--layout plain` | the text, then the question, as the Qwen model reads it | a later, different question about a text reads it from the cache; the Gemma models' default, `header`, answered more accurately on most of what was measured |
 | `--multi-question` | `warm`, the 31B's default, scores a request's questions in one batch; `sequential` scores them one at a time | see the table in step 1 |
 | `--head-engine` | answers a taught task's head questions from a second engine | a second copy of the weights on the card, and no image engine |
