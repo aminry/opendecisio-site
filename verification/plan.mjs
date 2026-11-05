@@ -248,7 +248,8 @@ export const plan = [
 	{ page: '/docs/tasks/dynamic/', n: 1, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/tasks', why: 'it shows the shape with one example, as decisio\'s docs/tasks.md does; a registration that certifies needs more, 59 held out at the defaults' },
 	// Answer short tasks faster: the registration as decisio's docs give it.
 	{ page: '/docs/tasks/fast-table/', n: 1, mode: 'shown', expect: "pip install 'decisio[table]'", why: 'it leaves the examples out, as decisio\'s docs/tasks.md does; a registration needs at least 100 to fit and about 600 or more held out at the defaults' },
-	{ page: '/docs/tasks/fast-table/', n: 2, mode: 'shown', expect: 'python -m decisio.bench.table_latency', why: "it needs a running server with a model and the reader's own labelled examples; docs/tasks.md gives the command" },
+	{ page: '/docs/tasks/fast-table/', n: 2, mode: 'shown', expect: "pip install 'decisio[table]'", why: "it is decisio's docs/tasks.md request with the criteria left out; a learned table certifies only after hundreds of requests through a model" },
+	{ page: '/docs/tasks/fast-table/', n: 3, mode: 'shown', expect: 'python -m decisio.bench.table_latency', why: "it needs a running server with a model and the reader's own labelled examples; docs/tasks.md gives the command" },
 	// Choose the prompt layout: the layout read from /health on the stand-in (the Qwen model's default, plain); the start
 	// with --layout plain is decisio's command on a card.
 	{

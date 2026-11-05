@@ -163,6 +163,17 @@ curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
   "certify": { "alpha": 0.05, "delta": 0.1 },
   "fast_table": true
 }'`;
+// Answer short tasks faster: a task that learns its table from its traffic, decisio's docs/tasks.md request laid out for a phone.
+const fastTableLearn = () => `pip install 'decisio[table]'
+curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
+  "id": "queue",
+  "question": {
+    "type": "choice",
+    "instructions": "Which team should handle this message?",
+    "criteria": { "billing": "...", "tech": "...", "sales": "..." }
+  },
+  "fast_table": { "learn": true }
+}'`;
 // Answer short tasks faster: decisio's table-latency bench, as docs/tasks.md gives it.
 const fastTableBench = () => `python -m decisio.bench.table_latency \\
   --url http://127.0.0.1:8000 \\
@@ -289,6 +300,7 @@ export const siteBlocks = {
 	get 'tuned-mlx-start'() { return { lang: 'bash', text: tunedMlxStart() }; },
 	get 'dynamic-register'() { return { lang: 'bash', text: dynamicRegister() }; },
 	get 'fast-table-register'() { return { lang: 'bash', text: fastTableRegister() }; },
+	get 'fast-table-learn'() { return { lang: 'bash', text: fastTableLearn() }; },
 	get 'fast-table-bench'() { return { lang: 'bash', text: fastTableBench() }; },
 	get 'layout-start'() { return { lang: 'bash', text: layoutStart() }; },
 	get 'layout-health'() { return { lang: 'bash', text: layoutHealth() }; },

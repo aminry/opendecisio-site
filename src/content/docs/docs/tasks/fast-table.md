@@ -5,10 +5,11 @@ description: Answer short, repetitive traffic from a small learned classifier on
 
 <!-- Site-written: the Answer short tasks faster guide. Its facts are decisio's docs/tasks.md ("A fast table in front of decisio") at the pinned release, and the bench's own description in src/decisio/bench/table_latency.py (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/tasks.md#a-fast-table-in-front-of-decisio-opt-in"}
+::covers{links="docs/tasks.md#a-fast-table-in-front-of-decisio-opt-in docs/tasks.md#a-fast-table-that-learns-from-traffic=5-learn-from-your-traffic-with-no-labels"}
 
 decisio's fast table (`fast_table`) is a small learned classifier on the server's CPU that answers the requests it is sure of before the model is asked.
 It turns the text into an embedding, the table's student, and a linear layer fitted on your own examples picks the option.
+With no labelled examples, it learns from decisio's own answers to the task's traffic.
 
 The default student is a static embedding: on an Apple M5 Pro it takes 0.05 ms for a short text and 1.0 ms for a long one of about 1,400 tokens.
 At that cost a request the classifier hands on to the model costs about what it would without a table.
@@ -86,7 +87,57 @@ An object chooses one by its `kind`, for example `{"kind": "encoder"}`, and `{"k
 - **`fast_table.features` in the task's record names the student exactly:** its kind, model, revision, the files' sha256 and how it reads a long text. The table is served only with that function.
 - **A classifier that is not kept** leaves a task served and certified as it would be without one.
 
-## 5. Measure it on your own host
+## 5. Learn from your traffic, with no labels
+
+A task with no labelled examples can still get a fast table: decisio's own answers to the task's requests are its training data.
+Register the question with `"learn": true` in its `fast_table`:
+
+::site-block{name="fast-table-learn"}
+
+- **Decisio answers every request until a table certifies,** exactly as with no table.
+- **Each request decisio reads is logged as one row:** the student's features, decisio's answer and its confidence. No request text is kept.
+- **With `--tasks-dir`, the rows are files under `<tasks-dir>/learn/`** and survive a restart. With `--task-store` they are in the shared store; with neither, they are kept in memory and lost at restart. At most `max_rows`, 200,000 by default, are kept per task.
+- **A background refit runs every 2,000 new rows or every hour,** once the task has 100 rows, one task at a time, at low priority.
+- **A new version goes live only if its certificate holds** and it saves at least 25% of the time per request, more than the live version. A refit that fails leaves the live version live.
+- **The last 5 versions are kept,** and `POST /v1/tasks/{id}/fast_table/rollback` with `{"version": n}` serves one of them again.
+
+What the certificate promises:
+
+- **It is an agreement certificate:** at most `alpha`, 0.05 by default, of the table's answers differ from decisio's, with probability 1 - `delta`, 0.1 by default.
+- **It is made on held-out rows drawn like the traffic,** the requests read before any table was live and the explored ones below, never on the hard requests the table passed on.
+- **It bounds how often the table departs from decisio, not how often it is wrong.** The table learns decisio's answers, mistakes included, so a learned table is as right as decisio is, at best.
+- **Every certified answer says which kind it has:** `certificate_kind` is `agreement` for a learned table and `gold` for one certified on labelled examples.
+- **A labelled task can learn too:** `"learn": true` with `examples` adds them to every refit at twice a traffic row's weight, and its certificate stays gold while it has enough held-out examples.
+
+What exploration costs:
+
+- **A share `explore` of the requests the live table reads goes to decisio anyway,** 0.02 by default, so later certificates keep rows drawn like the traffic.
+- **At the default, with a table answering 80% of requests, 1.6% of requests go back to the model,** at decisio's latency. `status.fast_table.explore.cost` gives the share for the live version.
+- **Every 50th table answer is also a spot check,** 2% of them, and a spot-checked request waits for decisio's read too.
+- **`"explore": 0` turns exploration off;** later certificates then rest on the rows logged before the first table.
+
+How it handles drift:
+
+- **Two guards suspend a live table** to decisio-only answers. One watches the share of the last 200 requests under the table's threshold, and fires when it rises more than 15 points above its share at certification. The other is a CUSUM on how often the table and decisio disagree, fed by the spot checks and the explored requests.
+- **Logging and refits go on while it is suspended,** and the next version that certifies goes live.
+
+## 6. Learn across replicas
+
+On a shared store (`--task-store`), the replicas learn one table together, and a restart loses nothing.
+
+- **Every replica logs its rows to the store,** from the store's poll thread, so a request never waits on the store.
+- **One replica trains,** the holder of a lease in the store; when it stops, another takes the lease. The certificate names the replicas and how many rows each gave.
+- **Each replica times a new version on its own requests** before its table answers there. Until then its status is `timing`, and decisio answers.
+- **One replica's drift alarm suspends the table on every replica,** and a rollback on any replica reaches all of them.
+- **A restarted replica, or a whole restarted fleet, serves the promoted versions** after its own timing; nothing is learned again.
+- **Run one serving stack across the fleet** if every replica's rows should count: the trainer learns only from rows logged on its own stack.
+- **Keep the replicas' clocks synchronised,** with NTP: each replica judges the lease's expiry on its own clock.
+- **While the store is out of reach, serving goes on.** Rows wait in memory up to 256 MB per server and are then dropped and counted in `/health`, and no version is promoted.
+- **A `--task-store-readonly` replica serves the versions and writes nothing:** it logs no rows and never trains, and its traffic is not in the certificate.
+
+`GET /v1/tasks/{id}` reports the learning under `status.fast_table`: its state, rows, versions, coverage and saving, certificate, exploration, both guards and the last refit, and on a shared store this replica's part and the fleet's.
+
+## 7. Measure it on your own host
 
 The registration times the table path one request at a time.
 To see what the table saves your callers under load, time a certified task end to end through your running server:
@@ -97,8 +148,9 @@ To see what the table saves your callers under load, time a certified task end t
 - **It registers the task twice,** with `"fast_table": true` (arm `table`), then without it (arm `model`), each timed on its own held-out requests and deleted.
 - **Each line of its output is a cell:** an arm at a short or a padded long text, and at 1 or 16 requests in flight. It gives the wall time's p50 and p95, the server's time, the `task` stage, the share the table answered and the errors.
 - **Compare the `table` arm's wall time with the `model` arm's in the same cell:** that difference is what the table saves your callers, under your load.
+- **`--kinds static,encoder,auto` times a table arm for each student** instead, each registered on the same examples, and each cell names its kind; `static:multilingual` names the multilingual model.
 
-## 6. When to use something else
+## 8. When to use something else
 
 The timing check drops the classifier where it does not pay, so asking for it on the wrong task costs the registration, not the traffic.
 Across the ten sets tried with the encoder, it passed the 25% check on 4; without the three assistant-command sets, on 1 of 7.
@@ -111,9 +163,12 @@ Across the ten sets tried with the encoder, it passed the 25% check on 4; withou
 - **What it does not cover:** a yes/no or score question, an image request, an adapter, and a task whose options change per request. It serves choice questions on the text route, one order per request.
 - **An option none of your examples carried:** the classifier cannot answer with it, so those requests go to decisio.
 - **The saving is a mean over requests:** a request the classifier defers takes the classifier's time and then decisio's.
+- **A learned table copies decisio:** it learns decisio's answers, mistakes included, and its certificate bounds agreement, not accuracy. Where you have labels, a labelled table's certificate is gold.
+- **Another serving stack does not serve a learned version** certified elsewhere: decisio's answers there are another teacher's.
+- **Early traffic weighs more in a learned certificate** until `max_rows` drops it: before the first table every request is a held-out candidate, and afterwards only the explored share is.
 - **Your hosts decide your own figures,** which is why the registration measures them.
 
-## 7. Operating notes
+## 9. Operating notes
 
 Each replica decides for itself, and `status.fast_table` on `GET /v1/tasks/{id}` says what it is doing:
 
@@ -124,6 +179,7 @@ Each replica decides for itself, and `status.fast_table` on `GET /v1/tasks/{id}`
 
 A table registered on an earlier release keeps its encoder and is served as before; register the task again to choose a student.
 Upgrade every replica that shares a task store: one on an earlier release serves a new table through decisio and says to register the task again.
+It never serves a learned version or logs rows for one either, and its traffic counts once it is upgraded.
 
 Size the CPU for it:
 

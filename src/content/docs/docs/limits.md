@@ -100,7 +100,7 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 14. **Run one stack across replicas that certify.** With a shared task store, a certificate is suspended on a replica whose engine, card or settings differ, so a fleet with certified answers runs the same stack everywhere.
 15. **Watch each replica on its own.** The traffic monitors of a certified task are per replica, not shared: sum the `decisio_task_*` metrics across replicas.
 16. **Expect a taught task on the other replicas within seconds, not at once.** They pick it up within the poll interval; a client that must read its own change asks the replica that made it.
-17. **Check your object store at the first start.** The shared store was checked on RustFS and SeaweedFS, not on AWS S3, R2, MinIO, GCS or Azure; a replica refuses to start on a store that does not enforce conditional writes.
+17. **Check your object store at the first start.** The shared store was checked on RustFS, SeaweedFS and MinIO, not on AWS S3, R2, GCS or Azure; a replica refuses to start on a store that does not enforce conditional writes.
 18. **Certify on the layout you serve.** A task registered, and a certificate made, under one [prompt layout](/docs/layout/) is not applied under the other; a server that loads tasks fitted under plain holds plain and says so.
 19. **Keep the plain layout for a series of questions about one text.** Under the header layout, the Gemma models' default, a later request with other questions reads the text again; `--layout plain` reads it from the cache.
 20. **Certify on the flavor and the read-twice setting you serve.** A task registered, or a certificate made, under one flavor or one `--read-twice-under` setting is not applied under another.
