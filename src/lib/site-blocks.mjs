@@ -163,6 +163,9 @@ curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
   "certify": { "alpha": 0.05, "delta": 0.1 },
   "fast_table": true
 }'`;
+// Answer short tasks faster: decisio's table-latency bench, as docs/tasks.md gives it.
+const fastTableBench = () => `python -m decisio.bench.table_latency --url http://127.0.0.1:8000 \\
+  --examples train.jsonl --probe probe.jsonl --out table_latency.json`;
 const layoutStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --layout plain`;
 const layoutHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["systemone"]["layout"], indent=1))'`;
 const concurrencyHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["concurrency"], indent=1))'`;
@@ -284,6 +287,7 @@ export const siteBlocks = {
 	get 'tuned-mlx-start'() { return { lang: 'bash', text: tunedMlxStart() }; },
 	get 'dynamic-register'() { return { lang: 'bash', text: dynamicRegister() }; },
 	get 'fast-table-register'() { return { lang: 'bash', text: fastTableRegister() }; },
+	get 'fast-table-bench'() { return { lang: 'bash', text: fastTableBench() }; },
 	get 'layout-start'() { return { lang: 'bash', text: layoutStart() }; },
 	get 'layout-health'() { return { lang: 'bash', text: layoutHealth() }; },
 	get 'concurrency-health'() { return { lang: 'bash', text: concurrencyHealth() }; },
