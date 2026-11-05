@@ -53,14 +53,15 @@ What one request costs with the encoder, on the same CPU and card:
 
 ## 2. Choose a student
 
-`"fast_table": true` asks for the default student; an object chooses one.
+`"fast_table": true` asks for the default student.
+An object chooses one by its `kind`, for example `{"kind": "encoder"}`, and `{"kind": "static", "static_model": "multilingual"}` picks the multilingual static student.
 
-| `fast_table` | Student | Table path, short text, then long text | Use it for |
+| `kind` | Student | Table path, short text, then long text | Use it for |
 | --- | --- | ---: | --- |
-| `true`, or `{"kind": "static"}` | `minishlab/potion-base-8M`, a static embedding computed by decisio itself (the default) | 0.05 ms, 1.0 ms | most tasks: it costs so little that a table of it never makes a request slower |
-| `{"kind": "static", "static_model": "multilingual"}` | `minishlab/potion-multilingual-128M` | 0.05 ms, 1.9 ms | traffic that is not English |
-| `{"kind": "encoder"}` | `BAAI/bge-base-en-v1.5`, through ONNX Runtime | 6.3 ms, 85 ms | many-class English tasks where its larger share pays for its time on your host |
-| `{"kind": "auto"}` | fits a static student and the encoder, and keeps the one that saves more on this host | both | when you do not know |
+| `static`, the default | potion-base-8M, a static embedding computed by decisio itself | 0.05 ms, 1.0 ms | most tasks: it costs so little that a table of it never makes a request slower |
+| `static`, with the multilingual model | potion-multilingual-128M | 0.05 ms, 1.9 ms | traffic that is not English |
+| `encoder` | bge-base-en-v1.5, through ONNX Runtime | 6.3 ms, 85 ms | many-class English tasks where its larger share pays for its time on your host |
+| `auto` | fits a static student and the encoder, and keeps the one that saves more on this host | both | when you do not know |
 
 ::source[The table path, the student and the classifier, p50 for one request on an Apple M5 Pro: a short text of a median 22 tokens and a long text of a median 1,416 tokens, as decisio's docs/tasks.md states them.]
 
@@ -103,7 +104,7 @@ The timing check drops the classifier where it does not pay, so asking for it on
 Across the ten sets tried with the encoder, it passed the 25% check on 4; without the three assistant-command sets, on 1 of 7.
 
 - **Long or hard tasks:** a table usually certifies nothing there. The registration then keeps no table, and the task is served exactly as without one.
-- **Long texts with the encoder:** with the torch encoder the table path took 21 to 30 ms for a short text and 134 to 183 ms for 600 to 1,150 tokens. CFPB complaints went from 154 ms to 315 ms, and arXiv abstracts from 184 ms to 370 ms: dropped. A static student reads 1,400 tokens in 1.0 to 1.9 ms on an Apple M5 Pro, so its own time no longer makes a long text slower.
+- **Long texts with the encoder:** with the torch encoder the table path took 21 to 30 ms for a short text and 134 to 183 ms for 600 to 1,150 tokens. CFPB complaints went from 154 ms to 315 ms, and arXiv abstracts from 184 ms to 370 ms: dropped. A static student reads 1,400 tokens in 1.0 to 1.9 ms on an Apple M5 Pro, so its own time does not make a long text slower.
 - **Noisy labels:** on Civil comments the encoder's classifier answered 69.8%, 3.7% of them wrong, but 65 ms became 74 ms: dropped.
 - **Nothing certified:** SciCite, and the two sets whose options change per request, were dropped.
 - **A plain read with the encoder:** on short texts the classifier needs to answer roughly 60 to 75% of requests to clear 25%. MASSIVE passes only because its read goes through the intent head; timed as a plain read it saves 21% on the 31B.

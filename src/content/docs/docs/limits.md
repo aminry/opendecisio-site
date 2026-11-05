@@ -138,8 +138,9 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 
 A request repeats exactly on a freshly started server.
 Asked again on a server that has already answered it, it can move slightly: on the 31B, 5 of 200 items, by at most 0.031, with no top answer changed.
-On the 12B, batch-invariant kernels make it give the same bits again, from the prefix cache or not.
 Across restarts and machines, answers are not promised to repeat.
+
+On the 12B, batch-invariant kernels make a repeated request give the same bits, from the prefix cache or not.
 
 ## 6. What was not tested
 

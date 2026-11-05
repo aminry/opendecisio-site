@@ -164,8 +164,10 @@ curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
   "fast_table": true
 }'`;
 // Answer short tasks faster: decisio's table-latency bench, as docs/tasks.md gives it.
-const fastTableBench = () => `python -m decisio.bench.table_latency --url http://127.0.0.1:8000 \\
-  --examples train.jsonl --probe probe.jsonl --out table_latency.json`;
+const fastTableBench = () => `python -m decisio.bench.table_latency \\
+  --url http://127.0.0.1:8000 \\
+  --examples train.jsonl --probe probe.jsonl \\
+  --out table_latency.json`;
 const layoutStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --layout plain`;
 const layoutHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["systemone"]["layout"], indent=1))'`;
 const concurrencyHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 -c 'import json, sys; print(json.dumps(json.load(sys.stdin)["concurrency"], indent=1))'`;
