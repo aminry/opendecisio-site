@@ -59,10 +59,10 @@ On the support inbox, :value{name="inbox-certified-5"} of the messages were answ
 | Model | Asked again, on the same server | Many questions in one request | After a restart |
 | --- | --- | --- | --- |
 | Gemma 4 31B | exactly, on a freshly started server; on one that has already answered, 5 of 200 moved, by at most 0.031, with no top answer changed | the same choice on every item measured; probabilities within 0.0073 | not promised |
-| Gemma 4 12B | a first read and a cached read can differ, by up to 0.113 | the same choice; probabilities within 0.035 | not promised |
+| Gemma 4 12B | the same bits, from the cache or not, with its batch-invariant kernels, on by default | the same choice; probabilities within 0.035 | identical on 1,894 of 1,894 reads in FP8 across two fresh starts on one card, 99.37% in bf16; not promised |
 | Qwen3.6-35B-A3B | the same probabilities every time | the same probabilities as each question on its own | an earlier record matched in most starts measured |
 
-The top answer rarely moves: on the 12B, one choice of 60 changed between a first and a cached read. Exact numbers repeat only on one running server.
+The top answer rarely moves, and exact numbers repeat on one running server. On the 12B they repeat whether the text came from the cache or not.
 
 ## Under the hood
 

@@ -96,6 +96,9 @@ export const sourced = [
 	]),
 	// Batch concurrent requests
 	...fromPage('/docs/concurrency/', [
+		['Its batch-invariant kernels, on by default, give a request the same bits in any batch of up to 16 reads, in bf16 and FP8.', running, 'a request read alone twice, in any batch of up to 16 reads of 450 tokens, and from the prefix cache against computed from scratch, gives the same bits on bf16. On one RTX PRO 5000 the same held on FP8'],
+		['Answers on the 12B do not move.', running, 'It is on by default for the Gemma 4 12B'],
+		['Answers on the 31B can.', running, 'The 31B (`gemma-4-31b`, FP8, and `gemma-4-31b-bf16`) keeps it off until it is measured at that size'],
 		['it scores every request waiting for the engine together, in one call, so concurrent requests share the model\'s forward passes', running, 'scores all their rows in one engine call, so concurrent requests share forward passes'],
 		['A request that arrives at an idle server is still scored at once, alone, and gets the serial answer bit for bit', running, 'a request that arrives at an idle server is scored at once, alone, by the same engine call a serial server makes'],
 		['and gets the serial answer bit for bit', running, 'and its answer is the serial answer bit for bit (200 of 200 requests on the FP8 and the bf16 12B, RTX 5090, vLLM 0.31.0'],
@@ -570,7 +573,9 @@ export const sourced = [
 		['it never changes which option is likeliest', tasksDoc, 'It does not change which option is the top one'],
 		['exactly, on a freshly started server; on one that has already answered, 5 of 200 moved, by at most 0.031, with no top answer changed', card, 'A request repeats exactly on a freshly started server; on a server that has already answered it, a repeat can differ (5 of 200 items, up to 0.031, no top answer changed'],
 		['the same choice on every item measured; probabilities within 0.0073', readme, 'the same choice as one engine call per question on every item measured, probabilities within 0.0073'],
-		['a first read and a cached read can differ, by up to 0.113', running, 'On Gemma 4 12B a fresh read and a cached read of the same question can differ, by up to 0.113'],
+		['the same bits, from the cache or not, with its batch-invariant kernels, on by default', running, 'There a read gives the same bits whatever the server read before it: from the prefix cache or not'],
+		['identical on 1,894 of 1,894 reads in FP8 across two fresh starts on one card, 99.37% in bf16', running, 'each gave identical answers on 1,894 of 1,894 reads; the merged bf16 model matched on 99.37% of them'],
+		['On the 12B they repeat whether the text came from the cache or not.', running, 'It is on by default for the Gemma 4 12B'],
 		['the same choice; probabilities within 0.035', readme, 'the same choice as each question sent alone, probabilities within 0.035'],
 		['the same probabilities every time', cli, 'a question returns the same probabilities every time, alone or among other questions'],
 		['an earlier record matched in most starts measured', cli, 'single-question answers have matched an earlier record on the whole suite in most starts measured'],
