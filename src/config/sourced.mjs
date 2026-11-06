@@ -649,7 +649,7 @@ export const sourced = [
 		['--revision 73908c3438cf03b6a01bcb9611d62b23d0726f08', tasksDoc, 'hf download minishlab/potion-multilingual-128M model.safetensors tokenizer.json --revision 73908c3438cf03b6a01bcb9611d62b23d0726f08'],
 		['hf download BAAI/bge-base-en-v1.5 onnx/model.onnx tokenizer.json', tasksDoc, 'hf download BAAI/bge-base-en-v1.5 onnx/model.onnx tokenizer.json --revision a5beb1e3e68b9ab74eb54cfd186867f64f240e1a'],
 		['--revision a5beb1e3e68b9ab74eb54cfd186867f64f240e1a', tasksDoc, 'hf download BAAI/bge-base-en-v1.5 onnx/model.onnx tokenizer.json --revision a5beb1e3e68b9ab74eb54cfd186867f64f240e1a'],
-		['Fetch the students when you build the image or deploy, into the Hugging Face cache the server reads', tasksDoc, 'Any other server with no route to the Hub needs them fetched first'],
+		['fetch the students when you build the image or deploy, into the Hugging Face cache the server reads', tasksDoc, 'Any other server with no route to the Hub needs them fetched first'],
 		['With no labelled examples, it learns from decisio\'s own answers to the task\'s traffic', tasksDoc, 'A task with no labelled examples can still get a fast table: decisio\'s own answers to the task\'s requests are the table\'s training data'],
 		['Register the question with "learn": true in its fast_table', tasksDoc, 'Register the task\'s question with `"learn": true` in its `fast_table`'],
 		['Decisio answers every request until a table certifies, exactly as with no table', tasksDoc, 'Until a table certifies, decisio answers every request of the task, exactly as with no table'],
