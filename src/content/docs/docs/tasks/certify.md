@@ -83,6 +83,17 @@ What is certified: choice and yes/no questions on text, asked in one order.
 Score questions and requests with images carry no certificate.
 A certified question is scored on its own, the way the certificate was made, so it does not share the read of the text with the other questions of its request.
 
+## 6. Certify under the layout your clients send
+
+A task is fitted under one [prompt layout](/docs/layout/) and certifies only that layout's requests.
+One server holds tasks of both layouts, each answering its own layout's requests.
+
+- **Name the layout when you register,** with `"layout": "plain"` or `"layout": "header"`; without it, the task takes the server's. An example whose request names the other layout is refused with a 422.
+- **A question of the task asked under the other layout** gets decisio's own read, with `certified: false` and `certified_reason: "layout_mismatch"`, and the traffic monitor does not count it.
+- **To certify both kinds of client, register the question under each layout.** That makes two tasks, each serving its own layout's requests, and neither replaces the other; removing one leaves the other.
+- **A certificate is checked against its own layout's serving setup,** so a header task certified on a header server stays certified for header requests on a plain server that is otherwise the same.
+- **`POST /v1/tasks/{id}/certify` certifies again under the task's own layout,** and tasks of both layouts load from `--tasks-dir`, `--task-store`, `--tasks-file` and the import routes.
+
 ## Pick a line by hand
 
 Without a certificate, you can still keep the answers above a line you choose and escalate the rest.

@@ -250,7 +250,7 @@ export const plan = [
 	{ page: '/docs/tasks/fast-table/', n: 1, mode: 'shown', expect: "pip install 'decisio[table]'", why: 'it leaves the examples out, as decisio\'s docs/tasks.md does; a registration needs at least 100 to fit and about 600 or more held out at the defaults' },
 	{ page: '/docs/tasks/fast-table/', n: 2, mode: 'shown', expect: "pip install 'decisio[table]'", why: "it is decisio's docs/tasks.md request with the criteria left out; a learned table certifies only after hundreds of requests through a model" },
 	{ page: '/docs/tasks/fast-table/', n: 3, mode: 'shown', expect: 'python -m decisio.bench.table_latency', why: "it needs a running server with a model and the reader's own labelled examples; docs/tasks.md gives the command" },
-	// Choose the prompt layout: the layout read from /health on the stand-in (the Qwen model's default, plain); the start
+	// Choose the prompt layout: the layout read from /health on the stand-in (the Qwen model's default, plain), a request that asks for plain, and the start
 	// with --layout plain is decisio's command on a card.
 	{
 		page: '/docs/layout/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health \\', show: asPrinted,
@@ -259,7 +259,14 @@ export const plan = [
 			if (l.value !== 'plain' || l.default !== 'plain' || l.why !== 'the default of the base') throw new Error(`/health does not report the Qwen model's default layout, plain: ${stdout}`);
 		},
 	},
-	{ page: '/docs/layout/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
+	{
+		page: '/docs/layout/', n: 2, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/systemone \\', show: asPrinted,
+		assert(stdout) {
+			const body = json(stdout);
+			if (!body.answers?.urgent) throw new Error(`a request that asks for the plain layout was not answered: ${stdout}`);
+		},
+	},
+	{ page: '/docs/layout/', n: 3, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
 	// Think when unsure: the server's think setting read from /health on the stand-in (thinking off, its default); the start
 	// and a thinking request need the vLLM engine, which writes the reasoning.
 	{ page: '/docs/think/', n: 1, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
