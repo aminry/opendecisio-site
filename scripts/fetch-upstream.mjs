@@ -28,6 +28,8 @@ const KEEP = [
 	/^[^/]+\.md$/, /^docs\//, /^examples\/tasks\//, /^deploy\//, /^runs\/[^/]+\/(manifest\.json|summary\.md|summary\.json|README\.md)$/,
 	// The think budget's range, which decisio states in its code only (the site's Think when unsure page cites it).
 	/^src\/decisio\/serve\/think\.py$/,
+	// The table-latency bench's input files, which decisio describes in the bench's own text only (Answer short tasks faster cites it).
+	/^src\/decisio\/bench\/table_latency\.py$/,
 	// The certified-answers run behind the home page's teaching section: its README and the Mac run's certificate and answers.
 	/^runs\/2026-10-14_certified-answers\/(README\.md|results\/mac_mlx\/first_start_(answers|sample_answers|task_response)\.json)$/,
 ];

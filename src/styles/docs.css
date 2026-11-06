@@ -52,7 +52,10 @@ h1#_top {
 }
 
 .sl-markdown-content .table-wrap > table code {
-	word-break: break-all;
+	/* Code in a cell breaks where its text allows (a space, a hyphen, a slash) and anywhere only when one part is wider than
+	   the cell, so a flag reads --deterministic-|compile rather than --deterministic-c|ompile. */
+	word-break: normal;
+	overflow-wrap: anywhere;
 	/* WebKit let the chip's side padding stick out of a cell where a path broke at the cell's edge. */
 	padding-inline: 0;
 }

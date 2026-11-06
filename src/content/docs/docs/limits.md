@@ -100,12 +100,12 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 14. **Run one stack across replicas that certify.** With a shared task store, a certificate is suspended on a replica whose engine, card or settings differ, so a fleet with certified answers runs the same stack everywhere.
 15. **Watch each replica on its own.** The traffic monitors of a certified task are per replica, not shared: sum the `decisio_task_*` metrics across replicas.
 16. **Expect a taught task on the other replicas within seconds, not at once.** They pick it up within the poll interval; a client that must read its own change asks the replica that made it.
-17. **Check your object store at the first start.** The shared store was checked on RustFS and SeaweedFS, not on AWS S3, R2, MinIO, GCS or Azure; a replica refuses to start on a store that does not enforce conditional writes.
+17. **Check your object store at the first start.** The shared store was checked on RustFS, SeaweedFS and MinIO, not on AWS S3, R2, GCS or Azure; a replica refuses to start on a store that does not enforce conditional writes.
 18. **Certify on the layout you serve.** A task registered, and a certificate made, under one [prompt layout](/docs/layout/) is not applied under the other; a server that loads tasks fitted under plain holds plain and says so.
 19. **Keep the plain layout for a series of questions about one text.** Under the header layout, the Gemma models' default, a later request with other questions reads the text again; `--layout plain` reads it from the cache.
 20. **Certify on the flavor and the read-twice setting you serve.** A task registered, or a certificate made, under one flavor or one `--read-twice-under` setting is not applied under another.
 21. **Expect FP8 servers to emulate bf16 rounding.** By default an FP8 server keeps each bf16 rounding step in its compiled kernels (`--emulate-precision-casts`), so two cold starts agree more often, though not always. It is part of what a certificate covers, and `--emulate-precision-casts off` turns it off.
-22. **Turn on batch-invariant kernels where answers must not depend on the batch.** `--batch-invariant on` computes each row with kernels whose result does not depend on what else is in the batch, at about 1.03 times a single read on FP8 and 1.6 times on bf16; on FP8 a long text split across engine steps can still differ. Its answers are not the other kernels' answers, and a certificate made without it is suspended.
+22. **Expect batch-invariant kernels on the 12B.** On the Gemma 4 12B, in bf16 and FP8, its tuned repositories and adapters applied at run time, each row is computed with kernels whose result does not depend on what else is in the batch or on the prefix cache, at about 1.03 times a single read on FP8 and 1.6 times on bf16. A text longer than vLLM's batch budget is read in several engine steps, which repeats but is other arithmetic, so the budget is part of what a certificate covers. The 31B keeps the mode off until it is measured at that size; `--batch-invariant on` or `off` sets it either way, and a certificate made under one setting is suspended under the other.
 23. **Certify with the default adapter you serve.** A certificate made under another `--default-adapter`, or none, is suspended.
 
 ## 4. What was measured on what
@@ -139,6 +139,8 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 A request repeats exactly on a freshly started server.
 Asked again on a server that has already answered it, it can move slightly: on the 31B, 5 of 200 items, by at most 0.031, with no top answer changed.
 Across restarts and machines, answers are not promised to repeat.
+
+On the 12B, batch-invariant kernels make a repeated request give the same bits, from the prefix cache or not.
 
 ## 6. What was not tested
 
