@@ -85,6 +85,20 @@ const dockerRun = () => `docker run -d --gpus all --shm-size 8g --restart unless
   -p 127.0.0.1:8000:8000 -v decisio-data:/data \\
   ${pin.image}
 curl -s http://127.0.0.1:8000/health   # answers once the first start has fetched the weights`;
+// The fast-table image, <version>-table, by the digest the release notes give it (upstream.json, checked in CI).
+const tableImage = () => {
+	if (!pin.tableImage) throw new Error(`site-blocks: upstream.json pins no fast-table image for ${pin.tag}`);
+	return pin.tableImage;
+};
+const dockerRunTable = () => `docker run -d --gpus all --shm-size 8g --restart unless-stopped \\
+  -p 127.0.0.1:8000:8000 -v decisio-data:/data \\
+  ${tableImage()}
+curl -s http://127.0.0.1:8000/health   # answers once the first start has fetched the weights`;
+// The fast-table image with the encoder built in, as docs/running.md gives the build, on the release image.
+const dockerBuildTableEncoder = () => `${clone()}
+docker build -f docker/Dockerfile.table \\
+  --build-arg BASE=${pin.image} \\
+  --build-arg WITH_ENCODER=1 .`;
 // decisio's compose file, run from the release image instead of a local build.
 const dockerCompose = () => {
 	const file = sectionBlocks('docs/operating.md', 'Docker Compose')[0];
@@ -283,6 +297,8 @@ export const siteBlocks = {
 	get 'gpu-pip'() { return { lang: 'bash', text: gpuPip() }; },
 	get 'gpu-clone'() { return { lang: 'bash', text: `${clone()}\nuv sync --extra serve --frozen\nuv run python -m decisio.serve.vllm_engine` }; },
 	get 'docker-run'() { return { lang: 'bash', text: dockerRun() }; },
+	get 'docker-run-table'() { return { lang: 'bash', text: dockerRunTable() }; },
+	get 'docker-build-table-encoder'() { return { lang: 'bash', text: dockerBuildTableEncoder() }; },
 	get 'docker-compose'() { return { lang: 'yaml', text: dockerCompose() }; },
 	get 'docker-build'() { return { lang: 'bash', text: `${clone()}\nuv build --wheel\ndocker compose up --build` }; },
 	get 'kubernetes'() { return { lang: 'yaml', text: kubernetes() }; },

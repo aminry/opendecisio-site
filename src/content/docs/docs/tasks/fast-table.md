@@ -74,13 +74,14 @@ An object chooses one by its `kind`, for example `{"kind": "encoder"}`, and `{"k
 
 ## 3. Ask for it
 
-- **Install the `decisio[table]` extra** on every replica that will serve the task; the image does not carry it. Without it the registration is refused with 422.
+- **Install the `decisio[table]` extra** on every replica that will serve the task; the release image does not carry it, and the [fast-table image](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access) does. Without it the registration is refused with 422.
 - **The first use fetches the student** from the Hugging Face Hub at its pinned revision: 31 MB for the static base, 531 MB for the multilingual one and 436 MB for the encoder. A server with no route to the Hub needs them fetched first; its registration is refused, naming the command.
 - **Add `fast_table` and a `certify` block,** with choice questions and at least 100 fit examples.
 - **Hold out about 600 examples or more,** at the defaults, since the certificate holds each side to half the risk.
 
 **Servers without internet access.**
-Fetch the students when you build the image or deploy, into the Hugging Face cache the server reads, at the revisions decisio pins:
+Run the [fast-table image](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access), `<version>-table`, which has both static students built in, so a static table needs no Hub access.
+For the encoder, or a server not run from that image, fetch the students when you build the image or deploy, into the Hugging Face cache the server reads, at the revisions decisio pins:
 
 ```bash
 # static, base (31 MB)
@@ -95,6 +96,7 @@ hf download BAAI/bge-base-en-v1.5 onnx/model.onnx tokenizer.json \
 ```
 
 Fetch only the students your tasks use, and install the `decisio[table]` extra in the same image.
+The fast-table image can also be built with the encoder in it, with `WITH_ENCODER=1`.
 
 ## 4. Read what it kept
 
