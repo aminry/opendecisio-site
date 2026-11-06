@@ -57,7 +57,11 @@ An agent, a game or a teaching loop that sends one text with a series of differe
 ```bash
 curl -s http://127.0.0.1:8000/v1/systemone \
   -H 'Content-Type: application/json' \
-  -d '{"state": "Both charges are 49.00 EUR, same day. Please refund one.", "questions": {"urgent": {"type": "noul"}}, "layout": "plain"}'
+  -d '{
+  "state": "Both charges are 49.00 EUR, same day. Please refund one.",
+  "questions": {"urgent": {"type": "noul"}},
+  "layout": "plain"
+}'
 ```
 
 - **`"layout"` is `"plain"` or `"header"`,** on `/v1/systemone` and `/v1/answer`. Absent or `null`, the request gets the server's layout; any other value is a 422.

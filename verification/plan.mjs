@@ -260,7 +260,7 @@ export const plan = [
 		},
 	},
 	{
-		page: '/docs/layout/', n: 2, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/systemone \\', show: asPrinted,
+		page: '/docs/layout/', n: 2, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/systemone \\', show: (stdout) => JSON.stringify(json(stdout), null, 1),
 		assert(stdout) {
 			const body = json(stdout);
 			if (!body.answers?.urgent) throw new Error(`a request that asks for the plain layout was not answered: ${stdout}`);
