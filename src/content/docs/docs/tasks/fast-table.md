@@ -79,6 +79,23 @@ An object chooses one by its `kind`, for example `{"kind": "encoder"}`, and `{"k
 - **Add `fast_table` and a `certify` block,** with choice questions and at least 100 fit examples.
 - **Hold out about 600 examples or more,** at the defaults, since the certificate holds each side to half the risk.
 
+**Servers without internet access.**
+Fetch the students when you build the image or deploy, into the Hugging Face cache the server reads, at the revisions decisio pins:
+
+```bash
+# static, base (31 MB)
+hf download minishlab/potion-base-8M model.safetensors tokenizer.json \
+  --revision bf8b056651a2c21b8d2565580b8569da283cab23
+# static, multilingual (531 MB)
+hf download minishlab/potion-multilingual-128M model.safetensors tokenizer.json \
+  --revision 73908c3438cf03b6a01bcb9611d62b23d0726f08
+# encoder (436 MB)
+hf download BAAI/bge-base-en-v1.5 onnx/model.onnx tokenizer.json \
+  --revision a5beb1e3e68b9ab74eb54cfd186867f64f240e1a
+```
+
+Fetch only the students your tasks use, and install the `decisio[table]` extra in the same image.
+
 ## 4. Read what it kept
 
 - **`fast_table_report` in the response** has `kept`, the `reason` when it is false, the `guard` with both mean times, the classifier's share and the saving, and the thresholds.

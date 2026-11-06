@@ -82,7 +82,7 @@ To serve plain to every request that names none, start the server with `--layout
 
 ## 3. Know what holds a server at plain
 
-The server decides the layout for requests that name none once, at start:
+For a request that names no layout, the server decides the layout once, at start:
 
 1. **`--layout plain` or `--layout header`**, when given, wins.
 2. **A tuned model or an adapter** is served on the layout it records, and on plain when it records none.
