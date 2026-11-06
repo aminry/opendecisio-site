@@ -1,7 +1,7 @@
 {
 	"_note": "decisio-examples' integration checks, run by scripts/verify-integrations.mjs against decisio's CPU stand-in (Qwen/Qwen3-0.6B-Base, --backend hf) at the pinned release. They check the plumbing, not the answers.",
-	"tag": "v0.42.0",
-	"commit": "592b65b37d75421324e6944a848269547b5982b8",
+	"tag": "v0.44.0",
+	"commit": "ee2137c78991ebfd55c9fedf67e0613cb026e781",
 	"examples": {
 		"repository": "aminry/decisio-examples",
 		"commit": "343691565ad708f99389bc863e3f64c398856fed"

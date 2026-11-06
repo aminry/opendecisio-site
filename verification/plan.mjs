@@ -248,9 +248,10 @@ export const plan = [
 	{ page: '/docs/tasks/dynamic/', n: 1, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/tasks', why: 'it shows the shape with one example, as decisio\'s docs/tasks.md does; a registration that certifies needs more, 59 held out at the defaults' },
 	// Answer short tasks faster: the registration as decisio's docs give it.
 	{ page: '/docs/tasks/fast-table/', n: 1, mode: 'shown', expect: "pip install 'decisio[table]'", why: 'it leaves the examples out, as decisio\'s docs/tasks.md does; a registration needs at least 100 to fit and about 600 or more held out at the defaults' },
-	{ page: '/docs/tasks/fast-table/', n: 2, mode: 'shown', expect: "pip install 'decisio[table]'", why: "it is decisio's docs/tasks.md request with the criteria left out; a learned table certifies only after hundreds of requests through a model" },
-	{ page: '/docs/tasks/fast-table/', n: 3, mode: 'shown', expect: 'python -m decisio.bench.table_latency', why: "it needs a running server with a model and the reader's own labelled examples; docs/tasks.md gives the command" },
-	// Choose the prompt layout: the layout read from /health on the stand-in (the Qwen model's default, plain); the start
+	{ page: '/docs/tasks/fast-table/', n: 2, mode: 'shown', expect: '# static, base (31 MB)', why: "it fetches the students from the Hugging Face Hub, 1 GB in all, at the revisions decisio's docs/tasks.md pins; decisio's registration refusal names the same commands" },
+	{ page: '/docs/tasks/fast-table/', n: 3, mode: 'shown', expect: "pip install 'decisio[table]'", why: "it is decisio's docs/tasks.md request with the criteria left out; a learned table certifies only after hundreds of requests through a model" },
+	{ page: '/docs/tasks/fast-table/', n: 4, mode: 'shown', expect: 'python -m decisio.bench.table_latency', why: "it needs a running server with a model and the reader's own labelled examples; docs/tasks.md gives the command" },
+	// Choose the prompt layout: the layout read from /health on the stand-in (the Qwen model's default, plain), a request that asks for plain, and the start
 	// with --layout plain is decisio's command on a card.
 	{
 		page: '/docs/layout/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health \\', show: asPrinted,
@@ -259,7 +260,14 @@ export const plan = [
 			if (l.value !== 'plain' || l.default !== 'plain' || l.why !== 'the default of the base') throw new Error(`/health does not report the Qwen model's default layout, plain: ${stdout}`);
 		},
 	},
-	{ page: '/docs/layout/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
+	{
+		page: '/docs/layout/', n: 2, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/systemone \\', show: (stdout) => JSON.stringify(json(stdout), null, 1),
+		assert(stdout) {
+			const body = json(stdout);
+			if (!body.answers?.urgent) throw new Error(`a request that asks for the plain layout was not answered: ${stdout}`);
+		},
+	},
+	{ page: '/docs/layout/', n: 3, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
 	// Think when unsure: the server's think setting read from /health on the stand-in (thinking off, its default); the start
 	// and a thinking request need the vLLM engine, which writes the reasoning.
 	{ page: '/docs/think/', n: 1, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
@@ -393,7 +401,9 @@ export const plan = [
 		page: '/docs/deploy/docker/', n: 2, mode: 'shown', expect: 'name: decisio', record: 'runs/2026-10-01_docker-first-gpu-start/',
 		why: "decisio's compose.yaml, with the release image in place of its local build; not run at this release (an image built from decisio's main came up with the file on a card on 2026-10-01)",
 	},
-	{ page: '/docs/deploy/docker/', n: 3, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: 'it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have' },
+	{ page: '/docs/deploy/docker/', n: 3, mode: 'shown', expect: 'docker run -d --gpus all', why: 'it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have' },
+	{ page: '/docs/deploy/docker/', n: 4, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: 'it builds a 10 GB image on the release image, which this check does not pull; decisio builds the variant in CI on every pull request' },
+	{ page: '/docs/deploy/docker/', n: 5, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: 'it needs a GPU host with the NVIDIA Container Toolkit, which this check does not have' },
 	{ page: '/docs/deploy/mac/', n: 1, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: 'it needs a Mac with Apple silicon, which this check does not have' },
 	{ page: '/docs/deploy/mac/', n: 2, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --backend mlx --base gemma-4-31b --model mlx-community/gemma-4-31b-it-6bit', needs: 'a Mac with Apple silicon', record: 'runs/2026-10-07_mlx-gemma-31b/' },
 	{ page: '/docs/deploy/mac/', n: 3, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --backend mlx --base gemma-4-31b --model tachara-ai/decisio-gemma-4-31b-mlx-4bit', needs: 'a Mac with Apple silicon', record: 'runs/2026-10-16_mlx-gemma-31b-4bit/' },
