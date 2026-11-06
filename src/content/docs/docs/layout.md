@@ -10,6 +10,7 @@ description: The Gemma models list a request's questions before its text, which 
 On the Gemma models the prompt lists every question of the request, then the text, then the question being answered.
 The model reads the text knowing what will be asked, and the 31B answered more accurately that way on most of what was measured.
 The Qwen model keeps the plain layout, the text then the question.
+
 Each request can choose its layout, so one server serves both kinds of client.
 
 | Layout | The prompt | The server's default on | Choose it for |
@@ -86,6 +87,7 @@ The server decides the layout for requests that name none once, at start:
 
 So an upgrade changes nothing that was taught.
 The start prints `LAYOUT plain (held at plain; this base's default is header): ...`, and `/health` gives the reason under `systemone.layout`.
+
 Requests may ask for the header meanwhile, with `"layout": "header"`.
 To make the header the default, export the tasks if you want the records, register them again with `"layout": "header"`, start with `--layout header`, and measure.
 

@@ -581,7 +581,6 @@ export const sourced = [
 		['an earlier record matched in most starts measured', cli, 'single-question answers have matched an earlier record on the whole suite in most starts measured'],
 		['decisio runs on stock vLLM 0.31.0: a plugin registers its model classes, and no patch is needed.', running, 'so vLLM 0.31.0 loads them without any patch'],
 		['no training, no fine-tuning, no adapter', readme, 'No training: every base is an official checkpoint, frozen, with no fine-tuning and no adapter.'],
-		['on the 12B, one choice of 60 changed between a first and a cached read', card, 'and one choice of the 60 changed'],
 		['no adapter unless you serve one with --adapter', cli, 'of a vLLM-format LoRA adapter; repeatable. A request uses it only when its body names it'],
 		['the MLX engine answers each question on its own from one shared read of the text', running, 'It scores each question as its own continuation of the shared prefix'],
 	]),
