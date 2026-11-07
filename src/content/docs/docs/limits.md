@@ -105,7 +105,7 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 19. **Ask for the plain layout for a series of questions about one text.** Under the header layout, the Gemma models' default, a later request with other questions reads the text again; a request with `"layout": "plain"` reads it from the cache.
 20. **Certify on the flavor and the read-twice setting you serve.** A task registered, or a certificate made, under one flavor or one `--read-twice-under` setting is not applied under another.
 21. **Expect FP8 servers to emulate bf16 rounding.** By default an FP8 server keeps each bf16 rounding step in its compiled kernels (`--emulate-precision-casts`), so two cold starts agree more often, though not always. It is part of what a certificate covers, and `--emulate-precision-casts off` turns it off.
-22. **Expect batch-invariant kernels on the 12B.** On the Gemma 4 12B, in bf16 and FP8, its tuned repositories and adapters applied at run time, each row is computed with kernels whose result does not depend on what else is in the batch or on the prefix cache, at about 1.03 times a single read on FP8 and 1.6 times on bf16. A text longer than vLLM's batch budget is read in several engine steps, which repeats but is other arithmetic, so the budget is part of what a certificate covers. The 31B keeps the mode off until it is measured at that size; `--batch-invariant on` or `off` sets it either way, and a certificate made under one setting is suspended under the other.
+22. **Turn on batch-invariant kernels where exact repeats matter.** With `--batch-invariant on`, off by default, each row is computed with kernels whose result does not depend on what else is in the batch or on the prefix cache; without it, two reads of 622 requests on the 12B changed 4 top answers (0.6%) and probabilities moved in the last digits. Its cost grows with the input: 1.03 times a short read on FP8 and 1.6 times on bf16, and about 30% slower on FP8 requests over 1,000 tokens in a field report not yet measured on a fixed set. A certificate made under one setting is suspended under the other, and a text longer than vLLM's batch budget is read in several engine steps, which repeats but is other arithmetic, so the budget is part of what a certificate covers.
 23. **Certify with the default adapter you serve.** A certificate made under another `--default-adapter`, or none, is suspended.
 
 ## 4. What was measured on what
@@ -140,7 +140,7 @@ A request repeats exactly on a freshly started server.
 Asked again on a server that has already answered it, it can move slightly: on the 31B, 5 of 200 items, by at most 0.031, with no top answer changed.
 Across restarts and machines, answers are not promised to repeat.
 
-On the 12B, batch-invariant kernels make a repeated request give the same bits, from the prefix cache or not.
+On the 12B, `--batch-invariant on`, off by default, makes a repeated request give the same bits, from the prefix cache or not.
 
 ## 6. What was not tested
 

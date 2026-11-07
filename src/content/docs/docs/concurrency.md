@@ -37,8 +37,8 @@ Start the server with `--concurrency batched`:
 
 ## 3. Know what can move
 
-- **Answers on the 12B do not move.** Its batch-invariant kernels, on by default, give a request the same bits in any batch of up to 16 reads, in bf16 and FP8.
-- **Answers on the 31B can.** An answer no certified task covers can differ slightly when it is scored beside other requests, because the engine's arithmetic follows the shape of the batch. Keep serial there where the same request must give the same bytes, such as two benchmark runs you compare request by request.
+- **Answers on the 12B can be made not to move.** With `--batch-invariant on`, off by default, a request gives the same bits in any batch of up to 16 reads, in bf16 and FP8, at a cost that grows with the input.
+- **Answers on the 31B, and on the 12B by default, can.** An answer no certified task covers can differ slightly when it is scored beside other requests, because the engine's arithmetic follows the shape of the batch. Keep serial there where the same request must give the same bytes, such as two benchmark runs you compare request by request.
 - **What was measured.** Only the 12B in FP8 has a published batched throughput figure; none is published for the 31B or the 12B in bf16.
 
 ## 4. Read what it did
