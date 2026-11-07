@@ -774,8 +774,7 @@ export const sourced = [
 	]),
 	// Server flags
 	...fromPage('/docs/flags/', [
-		['on by default for the 12B, off for the 31B', cli, 'on for the Gemma 4 12B in bf16 and FP8 and its tuned repositories, adapters applied at run time included; off for the 31B'],
-		['off opts out', cli, '`off` opts out'],
+		['off by default', cli, 'then the default: off for every base since 0.45.0'],
 		['on the 12B for certified tasks on several replicas or fresh nodes', running, 'Use it on the Gemma 4 12B when certified tasks run on several replicas or on fresh nodes'],
 		['leave it off on the 31B', running, 'Leave it off on the 31B'],
 		['the server listens on 127.0.0.1:8000', running, 'It listens on `127.0.0.1:8000` (`--host`, `--port`)'],
