@@ -51,7 +51,7 @@ export const sourced = [
 		['1.03 times a short read on FP8 and 1.6 times on bf16', running, 'a single read 1.03 times on FP8 (1.12 times at a batch of 16), 1.21 times with an adapter applied at run time on FP8, 1.60 times on bf16'],
 		['about 30% slower on FP8 requests over 1,000 tokens in a field report not yet measured on a fixed set', running, 'requests over 1,000 tokens ran about 30% slower with it on (a field report, 2026-11-06, not yet measured on a fixed set)'],
 		['two reads of 622 requests on the 12B changed 4 top answers (0.6%)', running, 'changed 4 top answers (0.6%)'],
-		["A text longer than vLLM's batch budget is read in several engine steps, which repeats but is other arithmetic", running, 'A prompt split across engine steps is repeatable but is other arithmetic than one step'],
+		["a text longer than vLLM's batch budget is read in several engine steps, which repeats but is other arithmetic", running, 'A prompt split across engine steps is repeatable but is other arithmetic than one step'],
 		["Under the header layout the list of the request's questions takes room too, so the text keeps what the longest prompt leaves.", running, 'Under the header layout a row also holds the list of every question of the request, so the room for the state is smaller by that list'],
 	]),
 	// Choose the prompt layout
