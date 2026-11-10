@@ -5,7 +5,7 @@ description: Register a long, fixed text, such as a policy or a rubric, once as 
 
 <!-- Site-written: the Send a fixed text once guide. Its facts are decisio's docs/tasks.md ("Task context") and docs/api.md at the pinned release (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/tasks.md#task-context docs/tasks.md#what-a-context-buys-on-each-engine=1-see-where-it-works-great"}
+::covers{links="docs/tasks.md#task-context docs/tasks.md#what-a-context-buys-on-each-engine=1-see-where-it-works-great docs/tasks.md#the-context-in-the-prefix-cache=1-see-where-it-works-great"}
 
 Every request of a task is often read against the same long text: a policy, a rubric, a catalogue, a set of definitions.
 Register that text once as the task's context, and each request sends only the part that changes; the server puts the context in front of it.
