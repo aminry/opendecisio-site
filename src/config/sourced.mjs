@@ -767,7 +767,6 @@ export const sourced = [
 		['Every 50th classifier answer is also read by decisio', tasksDoc, 'Every 50th table answer is also read by decisio'],
 		['Every tenth request also times the classifier, and after 30 pairs that show the saving', tasksDoc, 'Every tenth request also times the table, after decisio has answered, and when 30 such pairs show the saving'],
 		['256 numbers per option for a static student, 768 for the encoder', tasksDoc, '256 floats for the static students and 768 for the encoder'],
-		['saves at least 25% of the time per request', upgrading, 'keeps it only if it saves at least 25% of the time per request'],
 	]),
 	...fromPage('/docs/operating/', [
 		['every replica needs the decisio[table] extra and CPU headroom', operating, 'needs `pip install \'decisio[table]\'` on every replica and CPU headroom on each'],
@@ -782,7 +781,6 @@ export const sourced = [
 	...fromPage('/docs/tasks/context/', [
 		['MLX, an Apple M5 Pro 1,946 ms a read 373 ms a read', tasksDoc, '| MLX (the 12B MLX conversion, an Apple M5 Pro; the mean of 600 reads) | 1,946 ms a read | 373 ms a read |'],
 		['vLLM, an RTX PRO 6000 61.4 ms p50 60.8 ms p50', tasksDoc, '61.4 ms p50, 1,216 tokens of each first read from the cache | 60.8 ms p50'],
-		['On a Mac it is 5.2 times faster here.', tasksDoc, '5.2 times faster here'],
 		['vLLM\'s prefix cache already reuses a prefix every request repeats, so the two run at the same speed', tasksDoc, 'the two run at the same speed (a ratio of 0.99)'],
 		['the context is held from the task\'s first request', tasksDoc, 'so that the cache holds the context from the task\'s first request'],
 		['since it encodes the state alone', tasksDoc, 'A fast table encodes the state alone'],
@@ -798,7 +796,7 @@ export const sourced = [
 	]),
 	// Server flags
 	...fromPage('/docs/flags/', [
-		['off by default', cli, 'then the default: off for every base since 0.45.0'],
+		['off by default', cli, 'then the default: off for every base'],
 		['on the 12B for certified tasks on several replicas or fresh nodes', running, 'Use it on the Gemma 4 12B when certified tasks run on several replicas or on fresh nodes'],
 		['leave it off on the 31B', running, 'Leave it off on the 31B'],
 		['the server listens on 127.0.0.1:8000', running, 'It listens on `127.0.0.1:8000` (`--host`, `--port`)'],
