@@ -1,6 +1,6 @@
 ---
 title: Answer short tasks faster
-description: Answer short, repetitive traffic from a small learned classifier on the server's CPU, before the model, kept only where it saves at least 25% on your own examples.
+description: Answer short, repetitive traffic from a small learned classifier on the server's CPU, before the model, kept only where it saves enough time on your own examples, 10% by default.
 ---
 
 <!-- Site-written: the Answer short tasks faster guide. Its facts are decisio's docs/tasks.md ("A fast table in front of decisio") at the pinned release, and the bench's own description in src/decisio/bench/table_latency.py (src/config/sourced.mjs checks them). -->
@@ -19,7 +19,7 @@ It is off unless a registration asks for it:
 
 ::site-block{name="fast-table-register"}
 
-The registration tries it on your own examples and keeps it only where it saves at least 25% of the time per request and its answers certify.
+The registration tries it on your own examples and keeps it only where it saves at least the task's bar, 10% of the time per request by default, and its answers certify.
 
 ## 1. See where it works great
 
@@ -50,7 +50,7 @@ What one request costs with the encoder, on the same CPU and card:
 - **The 71 ms is the mean over those 200 requests,** 26 of them, 13%, handed on. The whole test set handed on less, 7.7%, or 9.6% in the draw that was timed, and at that share the same arithmetic gives about 51 to 58 ms.
 - **The saving is largest where the model's own read is expensive:** CLINC150 and MASSIVE use the intent head, at 190 to 380 ms.
 - **The certificate covers both sides:** at most `alpha` of the certified answers are wrong, for traffic like your examples and on this serving stack.
-- **It checks itself:** the registration times the classifier and the model on your own held-out examples, and keeps the classifier only if it saves at least 25% of the time per request.
+- **It checks itself:** the registration times the classifier and the model on your own held-out examples, and keeps the classifier only if it saves at least the task's `min_saving`, 10% of the time per request by default.
 
 ## 2. Choose a student
 
@@ -68,7 +68,7 @@ An object chooses one by its `kind`, for example `{"kind": "encoder"}`, and `{"k
 
 - **On an x86 server CPU the static students cost about the same:** 0.04 to 0.06 ms for a short text and 1 to 4 ms at 1,400 tokens. bge-base at one thread costs about 25 ms for a short text and up to about 450 ms for a long one.
 - **The static students read the whole text.** The encoder reads at most 512 tokens: the first 256 and the last 254 of a longer text.
-- **`auto` keeps the student with the larger saving,** when that saving is at least 25% and its threshold holds. When the two savings are within 1 point it keeps the static one, and when neither qualifies there is no table. `static_model` picks the static student it tries.
+- **`auto` keeps the student with the larger saving,** when that saving is at least the task's bar and its threshold holds. When the two savings are within 1 point it keeps the static one, and when neither qualifies there is no table. `static_model` picks the static student it tries.
 - **`{"kind": "hashed"}` is reserved** and refused in this version.
 - **All three students are MIT licensed,** and each one's files are pinned to a revision and checked against pinned sha256 hashes.
 
@@ -76,7 +76,9 @@ An object chooses one by its `kind`, for example `{"kind": "encoder"}`, and `{"k
 
 - **Install the `decisio[table]` extra** on every replica that will serve the task; the release image does not carry it, and the [fast-table image](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access) does. Without it the registration is refused with 422.
 - **The first use fetches the student** from the Hugging Face Hub at its pinned revision: 31 MB for the static base, 531 MB for the multilingual one and 436 MB for the encoder. A server with no route to the Hub needs them fetched first; its registration is refused, naming the command.
-- **Add `fast_table` and a `certify` block,** with choice questions and at least 100 fit examples.
+- **Add `fast_table` and a `certify` block,** with choice or yes/no questions and at least 100 fit examples.
+- **Set your own bar with `"fast_table": {"min_saving": x}`,** from 0.01 to 0.90; the default is 0.10. A table registered before decisio 0.46.0 keeps the 25% it was kept under, at run time and when certified again; register it again to take the new default.
+- **A yes/no table reports its own P(yes),** calibrated by one temperature fitted on the fit examples, never on the certification examples, so the table's certificate holds as proved. The temperature changes neither the answer nor the order of its confidences.
 - **Hold out about 600 examples or more,** at the defaults, since the certificate holds each side to half the risk.
 
 **Servers without internet access.**
@@ -117,7 +119,7 @@ Register the question with `"learn": true` in its `fast_table`:
 - **Each request decisio reads is logged as one row:** the student's features, decisio's answer and its confidence. No request text is kept.
 - **With `--tasks-dir`, the rows are files under `<tasks-dir>/learn/`** and survive a restart. With `--task-store` they are in the shared store; with neither, they are kept in memory and lost at restart. At most `max_rows`, 200,000 by default, are kept per task.
 - **A background refit runs every 2,000 new rows or every hour,** once the task has 100 rows, one task at a time, at low priority.
-- **A new version goes live only if its certificate holds** and it saves at least 25% of the time per request, more than the live version. A refit that fails leaves the live version live.
+- **A new version goes live only if its certificate holds** and it saves at least the task's bar, more than the live version. A refit that fails leaves the live version live.
 - **The last 5 versions are kept,** and `POST /v1/tasks/{id}/fast_table/rollback` with `{"version": n}` serves one of them again.
 
 What the certificate promises:
@@ -179,7 +181,7 @@ Across the ten sets tried with the encoder, it passed the 25% check on 4; withou
 - **Noisy labels:** on Civil comments the encoder's classifier answered 69.8%, 3.7% of them wrong, but 65 ms became 74 ms: dropped.
 - **Nothing certified:** SciCite, and the two sets whose options change per request, were dropped.
 - **A plain read with the encoder:** on short texts the classifier needs to answer roughly 60 to 75% of requests to clear 25%. MASSIVE passes only because its read goes through the intent head; timed as a plain read it saves 21% on the 31B.
-- **What it does not cover:** a yes/no or score question, an image request, an adapter, and a task whose options change per request. It serves choice questions on the text route, one order per request.
+- **What it does not cover:** a score question, an image request, an adapter, and a task whose options change per request. It serves choice and yes/no questions on the text route, one order per request.
 - **An option none of your examples carried:** the classifier cannot answer with it, so those requests go to decisio.
 - **The saving is a mean over requests:** a request the classifier defers takes the classifier's time and then decisio's.
 - **A learned table copies decisio:** it learns decisio's answers, mistakes included, and its certificate bounds agreement, not accuracy. Where you have labels, a labelled table's certificate is gold.

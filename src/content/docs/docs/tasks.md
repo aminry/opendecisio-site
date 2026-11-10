@@ -74,6 +74,7 @@ Start the server with `--tasks-dir` and every task you teach is saved to disk be
 
 - Put the directory on a volume that outlives the server, and add `--require-tasks N`: a server that finds fewer than N usable tasks refuses to start, so a volume that failed to mount does not turn into untaught answers.
 - A save that fails fails the request with 500, and the task is not registered.
+- A task registered under another id for the same question replaces the first on disk too, so a restart serves the task registered last.
 - One directory belongs to one server. For several replicas, see [Operate](/docs/operating/#4-keep-tasks-across-restarts-and-replicas).
 
 `/health` says where the server saves its tasks, and how many it loaded and applies:
@@ -112,4 +113,5 @@ These compare the taught server with the untaught one on the same messages, whic
 - [Certify answers](/docs/tasks/certify/): get answers the server stands behind, at the error rate you choose.
 - [Watch for drift](/docs/tasks/drift/): know when traffic moves away from your examples.
 - [Answer short tasks faster](/docs/tasks/fast-table/): an opt-in learned classifier on the server's CPU, before the model, for short command traffic.
+- [Send a fixed text once](/docs/tasks/context/): a policy or rubric every request is read against, sent once at registration.
 - [The HTTP API](/docs/api/): the task routes, field by field.
