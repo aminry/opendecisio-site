@@ -150,6 +150,7 @@ export const sourced = [
 	]),
 	// Taught tasks saved to disk and shared between replicas (0.25.0)
 	...fromPage('/docs/tasks/', [
+		['A task registered under another id for the same question replaces the first on disk too, so a restart serves the task registered last.', upgrading, 'a restart serves the task registered last'],
 		['every task you teach is saved to disk before the server answers, and loaded again at the next start', upgrading, 'written through atomically before the response and loaded at start'],
 		['a server that finds fewer than N usable tasks refuses to start', tasksDoc, '**`--require-tasks N`** refuses to start unless at least N tasks apply to this server'],
 		['so a volume that failed to mount does not turn into untaught answers', tasksDoc, 'a store volume that failed to mount gives a server that starts, answers, and has forgotten everything'],
@@ -483,7 +484,7 @@ export const sourced = [
 		['The server warns when a choice task has no such option', tasksDoc, 'Registration says so in the certificate (`warnings`, and its summary) when a choice task has no option whose key says it.'],
 		['every answer of the task is certified: false with the reason serving_stack_changed', tasksDoc, 'every answer of the task is `certified: false` with the reason `serving_stack_changed`'],
 		['POST /v1/tasks/{id}/certify, on new labelled examples', tasksDoc, 'Re-certify with an explicit call, `POST /v1/tasks/{id}/certify`, on new labelled examples'],
-		['choice and yes/no questions on text, asked in one order', tasksDoc, 'Choice and yes/no questions, on text requests, in the single-order form the certificate was made on'],
+		['choice and yes/no questions on text, asked in one order', tasksDoc, 'on text requests, in the single-order form the certificate was made on'],
 		['Score questions and requests with images carry no certificate', tasksDoc, 'Score questions are not certified'],
 		['so it does not share the read of the text with the other questions of its request', tasksDoc, 'This costs the request\'s certified questions the shared-prefix saving'],
 		['start the server with --abstain-option to add one', 'docs/cli.md', '--abstain-option'],
@@ -643,6 +644,11 @@ export const sourced = [
 	]),
 	// Answer short tasks faster
 	...fromPage('/docs/tasks/fast-table/', [
+		['from 0.01 to 0.90; the default is 0.10', tasksDoc, 'from 0.01 to 0.90 inclusive'],
+		['A table registered before decisio 0.46.0 keeps the 25% it was kept under, at run time and when certified again', tasksDoc, 'it is held to 25% at run time, and a re-certification keeps that bar'],
+		['A yes/no table reports its own P(yes), calibrated by one temperature fitted on the fit examples, never on the certification examples', tasksDoc, 'The certification examples are never used'],
+		['The temperature changes neither the answer nor the order of its confidences.', tasksDoc, 'it changes neither the table\'s answer nor the order of its confidences'],
+		['It serves choice and yes/no questions on the text route, one order per request.', tasksDoc, 'Choice and yes/no questions on the text route, one order'],
 		['hf download minishlab/potion-base-8M model.safetensors tokenizer.json', tasksDoc, 'hf download minishlab/potion-base-8M model.safetensors tokenizer.json --revision bf8b056651a2c21b8d2565580b8569da283cab23'],
 		['--revision bf8b056651a2c21b8d2565580b8569da283cab23', tasksDoc, 'hf download minishlab/potion-base-8M model.safetensors tokenizer.json --revision bf8b056651a2c21b8d2565580b8569da283cab23'],
 		['hf download minishlab/potion-multilingual-128M model.safetensors tokenizer.json', tasksDoc, 'hf download minishlab/potion-multilingual-128M model.safetensors tokenizer.json --revision 73908c3438cf03b6a01bcb9611d62b23d0726f08'],
@@ -658,7 +664,7 @@ export const sourced = [
 		['with neither, they are kept in memory and lost at restart', upgrading, 'without either they are kept in memory and lost at restart'],
 		['At most max_rows, 200,000 by default, are kept per task', upgrading, 'At most `max_rows` (default 200,000) are kept per task'],
 		['A background refit runs every 2,000 new rows or every hour, once the task has 100 rows, one task at a time, at low priority', tasksDoc, 'One background thread at low priority refits a task every 2,000 new rows or every hour, once it has 100 rows, and never two tasks at once'],
-		['A new version goes live only if its certificate holds and it saves at least 25% of the time per request, more than the live version', tasksDoc, 'A refit\'s version goes live only if its certificate holds and its expected saving, timed on this host from the logged times, is at least 25% and more than the live version\'s'],
+		['A new version goes live only if its certificate holds and it saves at least the task\'s bar, more than the live version', tasksDoc, 'A refit\'s version goes live only if its certificate holds and its expected saving, timed on this host from the logged times, is at least the task\'s `min_saving`'],
 		['A refit that fails leaves the live version live', tasksDoc, 'A refit that fails leaves the live version live'],
 		['The last 5 versions are kept, and POST /v1/tasks/{id}/fast_table/rollback with {"version": n} serves one of them again', tasksDoc, 'The last 5 versions are kept, and `POST /v1/tasks/{id}/fast_table/rollback` with `{"version": n}` serves one of them again'],
 		['at most alpha, 0.05 by default, of the table\'s answers differ from decisio\'s, with probability 1 - delta, 0.1 by default', upgrading, 'at most alpha of the table\'s answers differ from decisio\'s, with probability 1 - delta (defaults 0.05 and 0.1)'],
@@ -695,7 +701,7 @@ export const sourced = [
 		['It turns the text into an embedding, the table\'s student, and a linear layer fitted on your own examples picks the option', tasksDoc, 'The embedding is the table\'s student, and since 0.41.0 a task chooses it'],
 		['on an Apple M5 Pro it takes 0.05 ms for a short text and 1.0 ms for a long one of about 1,400 tokens', upgrading, 'On an Apple M5 Pro it takes about 0.05 ms for a short text and 1.0 ms at 1,400 tokens'],
 		['At that cost a request the classifier hands on to the model costs about what it would without a table', tasksDoc, 'with a static student that time is close to nothing, so a request the table hands on costs about what it would without a table'],
-		['keeps it only where it saves at least 25% of the time per request and its answers certify', tasksDoc, 'It keeps a table only if the expected time falls by at least 25% and a table threshold holds'],
+		['keeps it only where it saves at least the task\'s bar, 10% of the time per request by default, and its answers certify', tasksDoc, 'It keeps a table only if the expected time falls by at least the task\'s `min_saving` (10% by default) and a table threshold holds'],
 		['These results are the encoder student\'s, bge-base', tasksDoc, 'These figures are for the `encoder` kind (bge-base), measured before the static student existed'],
 		['Across the ten sets tried with the encoder, it passed the 25% check on 4', tasksDoc, 'Across the ten sets tried, the table passed the 25% guard on 4'],
 		['without the three assistant-command sets, on 1 of 7', tasksDoc, 'Without the three assistant-command sets (CLINC150, MASSIVE, Snips) it passed on 1 of 7'],
@@ -771,6 +777,24 @@ export const sourced = [
 		['The 71 ms is the mean over 200 timed requests, 13% of them handed on', tasksDoc, 'The 71 ms in the table above is the mean over the 200 timed requests, of which 26 (13%) were handed to the model'],
 		['across the ten sets tried it passed on 4', tasksDoc, 'Across the ten sets tried, the table passed the 25% guard on 4'],
 		['without the three assistant-command sets on 1 of 7', tasksDoc, 'Without the three assistant-command sets (CLINC150, MASSIVE, Snips) it passed on 1 of 7'],
+	]),
+	// Send a fixed text once
+	...fromPage('/docs/tasks/context/', [
+		['MLX, an Apple M5 Pro 1,946 ms a read 373 ms a read', tasksDoc, '| MLX (the 12B MLX conversion, an Apple M5 Pro; the mean of 600 reads) | 1,946 ms a read | 373 ms a read |'],
+		['vLLM, an RTX PRO 6000 61.4 ms p50 60.8 ms p50', tasksDoc, '61.4 ms p50, 1,216 tokens of each first read from the cache | 60.8 ms p50'],
+		['On a Mac it is 5.2 times faster here.', tasksDoc, '5.2 times faster here'],
+		['vLLM\'s prefix cache already reuses a prefix every request repeats, so the two run at the same speed', tasksDoc, 'the two run at the same speed (a ratio of 0.99)'],
+		['the context is held from the task\'s first request', tasksDoc, 'so that the cache holds the context from the task\'s first request'],
+		['since it encodes the state alone', tasksDoc, 'A fast table encodes the state alone'],
+		['Labelled, dynamic-option and learning registrations take it.', tasksDoc, 'The labelled registration, the dynamic-option one (`"options": "dynamic"`) and a task that learns from traffic take it.'],
+		['so the task is fitted, certified and timed on exactly what it serves', tasksDoc, 'so the task is fitted, certified and timed on exactly what it serves'],
+		['A state that still starts with the context is read with it twice, and the response carries x-decisio-warning.', upgrading, 'a state that still starts with it is read twice and gets `x-decisio-warning`'],
+		['The same question with another context is another task, kept beside the first', tasksDoc, 'The same question registered with another context is another task, kept beside the first'],
+		['A context over the model\'s window is refused with 422 before any model work', tasksDoc, 'is over the context window before any state is refused with 422'],
+		['a certificate made under one context does not hold under another', tasksDoc, 'a certificate made under one context does not hold under another'],
+		['Status shows the context\'s sha256 and length, never its text', upgrading, 'Status shows the context\'s sha256 and length, never its text'],
+		['Abstention tasks take no context.', tasksDoc, 'Abstention tasks (`POST /v1/abstention/tasks`) take no context'],
+		['Upgrade every replica before registering a task with a context.', upgrading, 'Upgrade every replica before registering a task with a context'],
 	]),
 	// Server flags
 	...fromPage('/docs/flags/', [
