@@ -1,49 +1,49 @@
 {
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"decisioVersion": "0.46.0",
-	"sha256": "9548f20469dd263a934f2289bfd7ecdaae739778008f0265e19dcd8cb762d102",
+	"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
 	"date": "2026-11-13",
 	"blocks": {
-		"5f31419b19647714": {
+		"62bd3a0efcba4998": {
 			"status": "skills",
-			"version": "0.1.0",
-			"sha256": "9548f20469dd263a934f2289bfd7ecdaae739778008f0265e19dcd8cb762d102",
+			"version": "0.1.1",
+			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
 			"date": "2026-11-13"
 		},
-		"7303d4f543be70c0": {
+		"a414db5537e2e441": {
 			"status": "skills",
-			"version": "0.1.0",
-			"sha256": "9548f20469dd263a934f2289bfd7ecdaae739778008f0265e19dcd8cb762d102",
+			"version": "0.1.1",
+			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
 			"date": "2026-11-13"
 		},
-		"c76ec7ab3534753f": {
+		"80b298026cf0394e": {
 			"status": "skills",
-			"version": "0.1.0",
-			"sha256": "9548f20469dd263a934f2289bfd7ecdaae739778008f0265e19dcd8cb762d102",
+			"version": "0.1.1",
+			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
 			"date": "2026-11-13"
 		},
-		"b691390c09308831": {
+		"0de71b0d6aab980b": {
 			"status": "skills",
-			"version": "0.1.0",
-			"sha256": "9548f20469dd263a934f2289bfd7ecdaae739778008f0265e19dcd8cb762d102",
+			"version": "0.1.1",
+			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
 			"date": "2026-11-13"
 		},
-		"1864d16f80a6dafd": {
+		"0a3521267b96b65e": {
 			"status": "skills",
-			"version": "0.1.0",
-			"sha256": "9548f20469dd263a934f2289bfd7ecdaae739778008f0265e19dcd8cb762d102",
+			"version": "0.1.1",
+			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
 			"date": "2026-11-13"
 		},
-		"c9f450fe75457cbf": {
+		"d712084e092a849a": {
 			"status": "skills",
-			"version": "0.1.0",
-			"sha256": "9548f20469dd263a934f2289bfd7ecdaae739778008f0265e19dcd8cb762d102",
+			"version": "0.1.1",
+			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
 			"date": "2026-11-13"
 		},
-		"7b9a72d6b3dd61f9": {
+		"09c15633d716f063": {
 			"status": "skills",
-			"version": "0.1.0",
-			"sha256": "9548f20469dd263a934f2289bfd7ecdaae739778008f0265e19dcd8cb762d102",
+			"version": "0.1.1",
+			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
 			"date": "2026-11-13"
 		}
 	}
