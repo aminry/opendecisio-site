@@ -12,12 +12,12 @@ const stages = [
 ---
 <div class="ca-walkthrough" data-ca data-record={JSON.stringify(record)} data-target="0.05" data-eligible="true">
 <section class="ca-hero" aria-labelledby="demo-title">
-  <div><p class="ca-eyebrow">Certified answers</p><h1 id="demo-title">Automate part of your inbox. Review the rest.</h1><p>Teach decisio your categories with labelled examples. Choose an error target. Your application routes certified predictions and sends the rest for review.</p><p class="ca-small">Explore recorded predictions. Your choices change the routing policy; they do not run a live model.</p><nav class="ca-hero-links" aria-label="On this page"><a href="#how-title">See how it works</a><a href="#inbox">Try a recorded prediction</a><a href="#method">Recorded sources</a></nav></div>
+  <div><p class="ca-eyebrow">Certified answers</p><h1 id="demo-title">Automate part of your inbox. Review the rest.</h1><p>Teach decisio your categories with labelled examples. Choose an error target. Your application routes certified predictions and sends the rest for review.</p><p class="ca-small">Explore recorded predictions. Your choices change the routing policy; they do not run a live model.</p><nav class="ca-hero-links" aria-label="On this page"><a href="#how-title">See how it works</a><a href="#inbox">Try a recorded prediction</a><a href="#method">Dataset credits</a></nav></div>
   <figure class="ca-hero-flow"><p class="ca-label">One recorded ticket</p><blockquote data-case-text>{result.example.text}</blockquote><p class="ca-label">Predicted category</p><p class="ca-prediction" data-prediction>{result.example.answerName}</p><svg viewBox="0 0 360 140" role="img" aria-label="Your application checks the certificate, then routes the ticket or requests human review."><text x="180" y="22" text-anchor="middle">Valid correctness certificate?</text><path class="ca-svg-line" data-branch="route" d="M180 30v25H85v25m-6-6 6 6 6-6"/><path class="ca-svg-line ca-svg-line--muted" data-branch="review" d="M180 55h95v25m-6-6 6 6 6-6"/><rect class="ca-svg-box" data-hero-route x="10" y="88" width="150" height="42" rx="8"/><text data-hero-route-text x="85" y="114" text-anchor="middle">Route automatically</text><rect class="ca-svg-box" data-hero-review x="200" y="88" width="150" height="42" rx="8"/><text data-hero-review-text x="275" y="114" text-anchor="middle">Human review</text></svg><figcaption class="ca-small">Recorded prediction. Your application owns the action.</figcaption></figure>
 </section>
-  <section class="ca-learn ca-player" data-player="learn" data-playback="idle" aria-labelledby="how-title">
+  <section class="ca-learn ca-player" data-player="learn" data-loop data-playback="idle" aria-labelledby="how-title">
     <div class="ca-section-head"><div><p class="ca-eyebrow">How it works</p><h2 id="how-title">Teach. Certify. Use it in your app.</h2></div>
-      <div class="ca-play-controls" data-enhance hidden><button type="button" class="chip" data-play>Play</button><button type="button" class="chip" data-pause disabled>Pause</button><button type="button" class="chip" data-step>Step</button><button type="button" class="chip" data-all>Show all</button></div>
+      <label class="ca-motion-toggle" data-enhance hidden><input type="checkbox" data-loop-pause /> Pause motion</label>
     </div>
     <div class="ca-stages">
       {stages.map((stage, i) => <article class="ca-stage" data-stage={i} data-phase={i}>
@@ -31,7 +31,7 @@ const stages = [
         <p>{stage.note}</p>
       </article>)}
     </div>
-    <p class="ca-play-status" data-player-status aria-live="polite">The complete process is shown. The diagrams illustrate the steps.</p>
+    <p class="ca-play-status">The diagrams illustrate the steps. Each stage keeps its explanation visible.</p>
   </section>
 
   <section class="ca-inbox" id="inbox" aria-labelledby="inbox-title" data-table-keys>

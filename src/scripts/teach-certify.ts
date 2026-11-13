@@ -7,8 +7,38 @@ const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 const players: Array<{ finish: (announce?: boolean) => void }> = [];
 let routeMotion: Animation | undefined;
 
+// The teaching sequence loops automatically while visible. Labels never disappear.
+for (const panel of $$<HTMLElement>('[data-loop]')) {
+  const phases = $$<HTMLElement>('[data-phase]', panel);
+  const pause = panel.querySelector<HTMLInputElement>('[data-loop-pause]')!;
+  let position = 0, visible = false, timer: number | undefined, remaining = 2400, started = 0;
+  const stop = () => {
+    if (timer === undefined) return;
+    clearTimeout(timer); timer = undefined;
+    remaining = Math.max(0, remaining - (performance.now() - started));
+  };
+  const sync = () => {
+    const running = visible && !document.hidden && !motion.matches && !pause.checked;
+    if (!running) stop();
+    panel.dataset.playback = motion.matches ? 'static' : running ? 'running' : 'paused';
+    phases.forEach((phase, i) => phase.classList.toggle('is-current', !motion.matches && i === position));
+    if (motion.matches) delete panel.dataset.position; else panel.dataset.position = String(position);
+    if (running && timer === undefined) {
+      started = performance.now();
+      timer = window.setTimeout(() => {
+        timer = undefined; remaining = 2400; position = (position + 1) % phases.length; sync();
+      }, remaining);
+    }
+  };
+  pause.addEventListener('change', sync);
+  document.addEventListener('visibilitychange', sync);
+  motion.addEventListener('change', sync);
+  new IntersectionObserver(entries => { visible = entries.some(e => e.isIntersecting); sync(); }).observe(panel);
+  sync();
+}
+
 // A finite sequence keeps its remaining time when paused. It never starts on scroll.
-for (const panel of $$<HTMLElement>('[data-player]')) {
+for (const panel of $$<HTMLElement>('[data-player]:not([data-loop])')) {
   const phases = $$<HTMLElement>('[data-phase]', panel);
   const play = panel.querySelector<HTMLButtonElement>('[data-play]')!;
   const pause = panel.querySelector<HTMLButtonElement>('[data-pause]')!;

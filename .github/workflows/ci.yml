@@ -258,7 +258,7 @@ jobs:
         with:
           path: ~/apt-archives
           key: ${{ steps.apt.outputs.cache-primary-key }}
-      - name: Certified walkthrough, recorded cases and finite playback
+      - name: Certified walkthrough, recorded cases and motion preferences
         if: matrix.shard == '1/2'
         run: node scripts/checks/certified-interactions.mjs
         env:
