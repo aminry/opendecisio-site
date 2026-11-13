@@ -51,9 +51,7 @@ export function guidanceFor(flag) {
 }
 
 /**
- * The sentences the README's Benchmarks section keeps beside its tables, found by their opening words, not their
- * position (v0.11.1 rewrote the section: the "Where it stands" paragraph is gone, and its intent-heads, calibration
- * and evaluation-card sentences now sit in the paragraph after the comparison link).
+ * The measurement qualifiers beside the README's benchmark tables, found by their opening words.
  */
 function standingLines() {
 	const lines = sectionNodes(README, 'Benchmarks')
@@ -68,7 +66,6 @@ function standingLines() {
 	return {
 		heads: pick(/^(The )?[Ii]ntent heads use labelled examples/, 'the intent heads'),
 		calibration: pick(/^Calibration on JevBench/, 'calibration'),
-		card: pick(/(EVAL_CARD\.md|Evaluation card) has the full tables/, 'the evaluation card'),
 	};
 }
 

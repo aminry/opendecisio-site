@@ -1,6 +1,6 @@
 ---
-title: Get started
-description: Run decisio and get your first answer in about five minutes. A text and questions go in; a probability for every option comes out, in one call.
+title: Quickstart
+description: Start on a GPU, with MLX on Apple silicon, or with Ollama on a laptop. Send text and questions, then read a typed answer from your backend.
 ---
 
 <!-- Site-written: the start page. The machine table follows decisio's README "Install and run" at the pinned release; the request and its answer are the first recorded decision, as decisio 0.17.0 answered it (src/lib/recorded.mjs); every command was run, as the record says. -->
@@ -19,28 +19,38 @@ Four steps: pick your machine, start a server, ask a question and read the answe
 | Linux with an NVIDIA card and Docker | [With Docker](/docs/deploy/docker/) |
 | Mac with Apple silicon | [On a Mac](/docs/deploy/mac/) |
 | Mac, Linux or Windows with Ollama 0.35.1 to 0.40.3 | [With Ollama](/docs/deploy/mac/#on-a-laptop-with-ollama) |
-| Any machine, for development | [For development](/docs/deploy/development/) |
 
 The memory and card each machine needs are on [Requirements and limits](/docs/limits/).
-The steps below use the CPU stand-in, which runs on any machine.
-On any other machine, start the server as its guide says and go on from step 3.
+Choose the guide for your hardware, start the model server it describes, then continue below.
+Ollama uses its own port and model names; its guide includes the request to send.
 
 ## 2. Start a server
 
+Follow the [GPU](/docs/deploy/cloud-gpu/), [Docker](/docs/deploy/docker/) or [MLX](/docs/deploy/mac/) setup, including the hardware and software requirements.
+The first start downloads the model and loads it into memory.
+
+<details>
+<summary>Optional: a CPU server for client contract tests</summary>
+
+If you only need to test request and response handling without serving hardware, use the small development model.
 You need Python 3.12, [uv](https://docs.astral.sh/uv/) and `git`.
-The first start downloads a small model from Hugging Face.
 
 ::site-block{name="stand-in-start"}
 
-The server listens on `http://127.0.0.1:8000`.
+Its probabilities are for development and do not represent the models above.
+[CPU development](/docs/deploy/development/) explains this path.
+
+</details>
+
+A decisio server listens on `http://127.0.0.1:8000`.
 It is ready when `/health` answers:
 
 ```bash
 curl -s http://127.0.0.1:8000/health
 ```
 
-This small model is for development, so its probabilities are not the default model's.
-The answer in step 4 is the default model's, Gemma 4 31B.
+The answer in step 4 is a recorded example from Gemma 4 31B, labelled with its serving setup.
+Your running model's probabilities can differ.
 
 ## 3. Ask your first question
 
