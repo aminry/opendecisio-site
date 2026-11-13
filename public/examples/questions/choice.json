@@ -1,0 +1,14 @@
+{
+  "state": "My card keeps getting declined when I renew.",
+  "questions": {
+    "category": {
+      "type": "choice",
+      "instructions": "Which team should handle this ticket?",
+      "criteria": {
+        "billing": "Invoices, payments and refunds",
+        "access": "Login, passwords and permissions",
+        "bug": "The product behaves wrongly"
+      }
+    }
+  }
+}

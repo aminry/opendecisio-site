@@ -6,13 +6,9 @@ description: Turn a backend decision into a text, a question and its possible an
 Ask a small question your application needs answered, such as which queue should handle a ticket.
 With a server running, this checks the service and asks one choice question:
 
-```bash
-curl -s http://127.0.0.1:8000/v1/models
-curl -s http://127.0.0.1:8000/health
-curl -s http://127.0.0.1:8000/v1/systemone \
-  -H 'Content-Type: application/json' \
-  -d '{"state": "My card keeps getting declined when I renew.", "questions": {"category": {"type": "choice", "instructions": "Which team should handle this ticket?", "criteria": {"billing": null, "access": null, "bug": null}}}}'
-```
+::site-block{name="question-choice"}
+
+[Download this request as JSON](/examples/questions/choice.json) for your client.
 
 ## 1. Supply the text
 

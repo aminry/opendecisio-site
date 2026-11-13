@@ -19,6 +19,24 @@ const cli = 'docs/cli.md';
 const fromPage = (page, rows) => rows.map(([says, file, source]) => ({ page, says, file, source }));
 
 export const sourced = [
+	...fromPage('/docs/concepts/choice/', [
+		['A choice accepts up to 255 options; more returns status 422.', api, 'up to 255 options (more is 422)'],
+		['choice is the key with the largest probability.', api, "the most probable option's key"],
+	]),
+	...fromPage('/docs/concepts/noul/', [
+		['The probability of yes', api, '| `noul` | the probability of yes |'],
+		['optional criteria keys true and false', api, '`noul`: optional, `{"true": ..., "false": ...}` describing each side'],
+	]),
+	...fromPage('/docs/concepts/score/', [
+		['score is the probability-weighted mean of the level indices', api, '| `score` | the probability-weighted mean level |'],
+		['Scores are not certified.', tasksDoc, 'Score questions are not certified'],
+		['ordered from lowest to highest', api, 'a list of level descriptions, lowest first'],
+	]),
+	...fromPage('/docs/concepts/probabilities/', [
+		['a learned table', tasksDoc, '**The certificate is an agreement certificate.**'],
+		['check certificate_kind as well as certified', tasksDoc, 'Answers from a learned table carry `"certificate_kind": "agreement"`; a table certified on labelled examples carries `"gold"`.'],
+	]),
+
 	// decisio 0.27.0: think temperatures, read twice, flavors, truncation under the header
 	...fromPage('/docs/think/', [
 		['On a tuned model, score answers that thought needed about twice the single-pass temperature.', running, "a tuned model's score answers that thought needed a temperature about twice the single-pass one"],

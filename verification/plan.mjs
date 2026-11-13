@@ -44,6 +44,27 @@ function ticketAnswers(stdout) {
 	if (answers?.impact?.type !== 'score' || typeof answers.impact.score !== 'number') throw new Error('no score for "impact"');
 }
 
+// Check response contracts, not model judgments or exact probabilities.
+function questionAnswer(stdout, name, type, options) {
+	const answer = json(stdout).answers?.[name];
+	const probability = (p) => typeof p === 'number' && Number.isFinite(p) && p >= 0 && p <= 1;
+	if (answer?.type !== type) throw new Error(`no ${type} answer for ${name}`);
+	if (type === 'noul') {
+		if (!probability(answer.noul)) throw new Error('yes probability is outside [0, 1]');
+		return;
+	}
+	const distribution = answer.probabilities;
+	if (!distribution || JSON.stringify(Object.keys(distribution).sort()) !== JSON.stringify([...options].sort())) throw new Error('answer options differ from the request');
+	if (!Object.values(distribution).every(probability) || Math.abs(Object.values(distribution).reduce((a, b) => a + b, 0) - 1) > 0.0001) throw new Error('invalid probability distribution');
+	if (type === 'choice') {
+		if (!options.includes(answer.choice) || distribution[answer.choice] !== Math.max(...Object.values(distribution))) throw new Error('choice is not the likeliest option');
+	} else {
+		const mean = Object.entries(distribution).reduce((sum, [key, p]) => sum + Number(key) * p, 0);
+		if (typeof answer.score !== 'number' || !Number.isFinite(answer.score) || Math.abs(answer.score - mean) > 0.0001) throw new Error('score is not the probability-weighted mean');
+		if (!answer.legend || options.some((k) => typeof answer.legend[k] !== 'string')) throw new Error('score has no level descriptions');
+	}
+}
+
 // A client of the recorded support ticket prints one line for each of its three questions.
 function printsThreeAnswers(stdout) {
 	const lines = stdout.trim().split('\n').filter((l) => !l.startsWith('#'));
@@ -74,8 +95,8 @@ const asPrinted = (stdout) => stdout;
 const TASKS_DIR = 'decisio-tasks';
 
 export const plan = [
-	{ page: '/docs/build-request/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/v1/models', of: ['/docs/api/', 1] },
-	// Get started, on the stand-in, the path every machine can take: the recorded support ticket (src/lib/site-blocks.mjs).
+	{ page: '/docs/build-request/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 3] },
+	// Get started, on the stand-in, the path every machine can take: the small choice request (src/lib/site-blocks.mjs).
 	{
 		page: '/docs/', n: 1, mode: 'run-then-server', expect: `git clone --branch ${pin.tag} https://github.com/${pin.repository}`,
 		skip: [`git clone --branch ${pin.tag} https://github.com/${pin.repository}`, 'cd decisio'],
@@ -88,10 +109,17 @@ export const plan = [
 		},
 	},
 	{
-		page: '/docs/', n: 3, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone',
+		page: '/docs/', n: 3, mode: 'run', expect: 'curl --fail-with-body',
 		note: "the answers are the stand-in's, not the default model's",
-		assert: recordedAnswers,
+		assert: (stdout) => questionAnswer(stdout, 'category', 'choice', ['billing', 'access', 'bug']),
 	},
+	{ page: '/docs/', n: 4, mode: 'example', expect: '{\n  "type": "choice",' },
+	{ page: '/docs/concepts/choice/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 3] },
+	{ page: '/docs/concepts/choice/', n: 2, mode: 'same-as', expect: '{\n  "type": "choice",', of: ['/docs/', 4] },
+	{ page: '/docs/concepts/noul/', n: 1, mode: 'run', expect: 'curl --fail-with-body', assert: (stdout) => questionAnswer(stdout, 'refund', 'noul'), note: "the answer is the stand-in's, not a model-quality measurement" },
+	{ page: '/docs/concepts/noul/', n: 2, mode: 'example', expect: '{"type": "noul",' },
+	{ page: '/docs/concepts/score/', n: 1, mode: 'run', expect: 'curl --fail-with-body', assert: (stdout) => questionAnswer(stdout, 'impact', 'score', ['0', '1', '2', '3']), note: "the answer is the stand-in's, not a model-quality measurement" },
+	{ page: '/docs/concepts/score/', n: 2, mode: 'example', expect: '{\n  "type": "score",' },
 	{
 		page: '/docs/api/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/models', show: (stdout) => stdout.replace(/\}\{/g, '}\n{'),
 		assert(stdout) {
@@ -101,7 +129,7 @@ export const plan = [
 	},
 	// Call it from your code, on the stand-in: the recorded support ticket sent from each language (src/lib/site-blocks.mjs),
 	// then decisio's programs for the frameworks (docs/integrations.md), the Python ones run with the versions they name.
-	{ page: '/docs/use-from/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/', 3] },
+	{ page: '/docs/use-from/', n: 1, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone', assert: recordedAnswers, note: "the answers are the stand-in's, not the default model's" },
 	{ page: '/docs/use-from/', n: 2, mode: 'python', expect: 'import json\nimport urllib.request', assert: printsThreeAnswers, note: "the answers are the stand-in's, not the default model's" },
 	{
 		page: '/docs/use-from/', n: 3, mode: 'python', expect: 'from typesafe_sdk import TypeSafeClient', with: ['typesafe-sdk==0.7.2'],
@@ -228,7 +256,7 @@ export const plan = [
 		},
 	},
 	// How it works, on the stand-in.
-	{ page: '/docs/how-it-works/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/', 3] },
+	{ page: '/docs/how-it-works/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/use-from/', 1] },
 	{ page: '/docs/how-it-works/', n: 2, mode: 'output', expect: '{\n  "answers": {' },
 	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
@@ -447,6 +475,6 @@ export const plan = [
 	{ page: '/', n: 3, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model" },
 	{ page: '/', n: 4, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/deploy/mac/', 6] },
 	{ page: '/', n: 5, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 7] },
-	{ page: '/', n: 6, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/', 3] },
+	{ page: '/', n: 6, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/use-from/', 1] },
 	{ page: '/', n: 7, mode: 'same-as', expect: '{\n  "answers": {', of: ['/docs/how-it-works/', 2] },
 ];

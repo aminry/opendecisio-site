@@ -40,8 +40,9 @@ const ollamaRequest = (model) => `curl http://localhost:11434/v1/systemone \\
   }
 }'`;
 
+import { readFileSync } from 'node:fs';
 import { recordedRequest, recordedResponse } from './docs-figures.mjs';
-import { pin, readUpstream } from './upstream.mjs';
+import { pin, readUpstream, siteRoot } from './upstream.mjs';
 import { recipeIds, routeScript, teachBody } from './use-cases.mjs';
 import { certificate, health } from './recorded.mjs';
 
@@ -53,6 +54,11 @@ const curl = (body) => {
 	return `curl http://127.0.0.1:8000/v1/systemone \\\n  -H 'Content-Type: application/json' \\\n  -d '${json}'`;
 };
 const firstRequest = () => recordedRequest();
+// The download and the command use the same JSON so a copied request cannot drift.
+const questionCommand = (type) => {
+	const body = JSON.parse(readFileSync(`${siteRoot}/public/examples/questions/${type}.json`, 'utf8'));
+	return curl(body).replace('curl http://', 'curl --fail-with-body -sS --max-time 60 http://');
+};
 const standInStart = () => `git clone --branch ${pin.tag} https://github.com/${pin.repository}
 cd decisio
 uv sync --extra dev --frozen
@@ -227,15 +233,16 @@ const certificateAnswers = () => JSON.stringify(certificate().samples.map((x) =>
 const pythonBody = () => JSON.stringify(recordedRequest(), null, 4).replace(/\n/g, '\n');
 const pythonUrllib = () => `import json
 import urllib.request
+import os
 
 body = ${pythonBody()}
 
 request = urllib.request.Request(
-    "http://127.0.0.1:8000/v1/systemone",
+    os.environ.get("DECISIO_BASE_URL", "http://127.0.0.1:8000").rstrip("/") + "/v1/systemone",
     data=json.dumps(body).encode(),
     headers={"Content-Type": "application/json"},
 )
-with urllib.request.urlopen(request) as response:
+with urllib.request.urlopen(request, timeout=60) as response:
     answers = json.load(response)["answers"]
 
 for name, answer in answers.items():
@@ -246,9 +253,11 @@ for name, answer in answers.items():
         print(name, top, round(answer["probabilities"][top], 3))
 ${comments('#')}`;
 const pythonSdk = () => `from typesafe_sdk import TypeSafeClient
+import os
 
 client = TypeSafeClient(
-    base_url="http://127.0.0.1:8000",
+    base_url=os.environ.get("DECISIO_BASE_URL", "http://127.0.0.1:8000").rstrip("/"),
+    timeout=60,
     api_key="unused",  # the SDK requires one; the server ignores it
     model="${SERVED}",  # the name GET /v1/models lists
 )
@@ -268,10 +277,12 @@ print(response.model, response.usage.input_tokens)`;
 const jsBody = () => JSON.stringify(recordedRequest(), null, 2);
 const jsFetch = (ts) => `const body${ts ? ': { state: string; questions: Record<string, unknown> }' : ''} = ${jsBody()};
 
-const response = await fetch("http://127.0.0.1:8000/v1/systemone", {
+const baseUrl = (process.env.DECISIO_BASE_URL ?? "http://127.0.0.1:8000").replace(/\\/$/, "");
+const response = await fetch(baseUrl + "/v1/systemone", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify(body),
+  signal: AbortSignal.timeout(60_000),
 });
 if (!response.ok) throw new Error(\`\${response.status} \${await response.text()}\`);
 ${ts
@@ -289,6 +300,9 @@ for (const [name, answer] of Object.entries(answers)) {
 ${comments('//')}`;
 
 export const siteBlocks = {
+	get 'question-choice'() { return { lang: 'bash', text: questionCommand('choice') }; },
+	get 'question-noul'() { return { lang: 'bash', text: questionCommand('noul') }; },
+	get 'question-score'() { return { lang: 'bash', text: questionCommand('score') }; },
 	get 'python-urllib'() { return { lang: 'python', text: pythonUrllib() }; },
 	get 'python-sdk'() { return { lang: 'python', text: pythonSdk() }; },
 	get 'js-fetch'() { return { lang: 'js', text: jsFetch(false) }; },

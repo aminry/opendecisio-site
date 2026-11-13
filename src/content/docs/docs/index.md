@@ -3,7 +3,7 @@ title: Quickstart
 description: Start on a GPU, with MLX on Apple silicon, or with Ollama on a laptop. Send text and questions, then read a typed answer from your backend.
 ---
 
-<!-- Site-written: the start page. The machine table follows decisio's README "Install and run" at the pinned release; the request and its answer are the first recorded decision, as decisio 0.17.0 answered it (src/lib/recorded.mjs); every command was run, as the record says. -->
+<!-- The machine paths follow the pinned release. The first request shares the downloadable choice example; the optional recorded result retains its original source label. -->
 
 ::covers{links="README.md#install-and-run=1-pick-your-machine README.md#quickstart=1-pick-your-machine docs/running.md=1-pick-your-machine"}
 
@@ -49,33 +49,49 @@ It is ready when `/health` answers:
 curl -s http://127.0.0.1:8000/health
 ```
 
-The answer in step 4 is a recorded example from Gemma 4 31B, labelled with its serving setup.
-Your running model's probabilities can differ.
-
 ## 3. Ask your first question
 
 One `POST` to `/v1/systemone`: the text goes in `state`, and each question has a name you choose, a `type` and `instructions`.
 
-::site-block{name="first-decision-request"}
+::site-block{name="question-choice"}
 
-- `noul` is a yes or no question; its answer is the probability of yes.
-- `choice` picks among named options, up to 255; the options are its `criteria`.
-- `score` picks a level on a scale, listed lowest first.
+This asks which team should handle one ticket and supplies billing, access and bug as the possible answers.
+[Download this request as JSON](/examples/questions/choice.json) for your own client.
 
 ## 4. Read the answer
 
-Each question comes back under its own name.
-A choice gives its likeliest option and the probability of every option, so you see how sure it is as well as what it picked.
+Read `answers.category` in the response.
+`choice` gives the selected queue, and `probabilities` gives a value for each supplied option.
+The following fields are illustrative, with chosen probabilities rather than a measured result:
+
+```json
+{
+  "type": "choice",
+  "choice": "billing",
+  "probabilities": {"billing": 0.8, "access": 0.05, "bug": 0.15}
+}
+```
+
+Your running model will return its own probabilities.
+Your backend maps the selected key to a queue or sends the ticket to review, using a policy you [evaluate on your task](/docs/concepts/probabilities/).
+
+<details>
+<summary>A recorded model result with three question types</summary>
+
+This separate example asks about urgency, queue and impact on another support ticket.
+It is a recorded Gemma 4 31B result, labelled with its release, hardware and date; it is not the output of the one-question request above.
 
 ::figure{name="first-decision"}
 
-Good to know:
+</details>
+
+## Good to know
 
 - A request the server cannot read gets status 422, with a `detail` that names what is wrong.
 - The `model` field does not choose a model: a server serves the one model it was started with.
 
 ## What next
 
-- [Call it from your code](/docs/use-from/): the same request from Python, JavaScript and TypeScript, and the frameworks.
-- [On a cloud GPU](/docs/deploy/cloud-gpu/): run the default model, Gemma 4 31B, on your own card.
-- [Teach a task](/docs/tasks/): teach a question you ask again and again, and certify its answers.
+- [Call it from your code](/docs/use-from/): typed questions from Python, JavaScript, TypeScript and frameworks.
+- [Choose a question type](/docs/concepts/questions/): add a yes or no question or an ordered score.
+- [Use the probabilities](/docs/concepts/probabilities/): decide when to route and when to review.

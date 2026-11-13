@@ -18,19 +18,19 @@ The same text can answer several named questions in one request.
 
 ## Choose an option
 
-Use a choice when your code already knows the possible answers.
+[Choose an option](/docs/concepts/choice/) when your code already knows the possible answers.
 For a ticket, those might be billing, access and bug; your code maps the selected key to the appropriate queue.
 Descriptions help distinguish similar options.
 
 ## Ask yes or no
 
-Use `noul` for a question such as whether a ticket asks for a refund.
+[Ask yes or no](/docs/concepts/noul/) with `noul` for a question such as whether a ticket asks for a refund.
 The result is a probability of yes, rather than a Boolean your application must always act on.
 Your code decides when to act or ask for review.
 
 ## Rate on a scale
 
-Use a score when the levels have an order, such as no impact, one person blocked and a whole team blocked.
+[Rate on a scale](/docs/concepts/score/) when the levels have an order, such as no impact, one person blocked and a whole team blocked.
 The score is the probability-weighted position on your scale, so it can fall between levels.
 Read the level probabilities too when the distinction changes your action.
 
@@ -49,4 +49,4 @@ Your code can combine those typed answers into a routing policy that is easy to 
 
 - [Build a request](/docs/build-request/): write a complete choice request.
 - [Call from your code](/docs/use-from/): send the request from your backend.
-- [HTTP API](/docs/api/#post-v1systemone): each question's request and response fields.
+- [Use the probabilities](/docs/concepts/probabilities/): choose an application policy and a review path.
