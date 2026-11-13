@@ -221,3 +221,4 @@
 .sl-markdown-content .fp-job-list>div,.sl-markdown-content .fp-jobs>section { margin-top:0; }
 @media(max-width:640px) { .fp-job-copy,.fp-job-list,.fp-jobs .fp-job-fallback { grid-column:1; grid-row:auto; } }
 .fp-demo-node span:not(.fp-demo-mark) { min-height:2.8em; }
+.sl-markdown-content .fp-film-chapters>button { margin:0; }
