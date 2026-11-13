@@ -65,3 +65,13 @@ Render change descriptions and issue links without source-commit citations, reta
 Recipe callers and registrations share one question definition and are available as generated plain-text downloads.
 Their tests exercise real HTTP transport, certificate kinds, error fallbacks and labelled-file input without treating fixture responses as model measurements.
 The published-command runner continues to exercise callable examples on the development server; registrations needing the reader's own labels say so.
+
+## Addendum: progressive learning figures
+
+Generated SVG and HTML show the complete useful state before JavaScript runs.
+One shared TypeScript enhancement adds native field selectors, sliders and finite playback without a client framework.
+The target is under 10 KB of compressed shared visual JavaScript per documentation page.
+
+Playback starts on request and pauses when the figure leaves view or the tab is hidden.
+Reduced motion preferences apply on load and when they change; the static explanation remains available without JavaScript.
+Illustrative distributions stay labelled, and measured certification controls use only their recorded stops.

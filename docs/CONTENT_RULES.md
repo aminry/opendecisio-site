@@ -57,3 +57,15 @@ These writing rules stay binding and checked:
 
 - The site is the home of the open-source project only: it offers no hosted service and sells nothing.
 - It collects no personal data. Visits are counted by Cloudflare Web Analytics, which uses no cookies and no fingerprinting, and the site sets no cookies of its own; `/privacy/` says so.
+
+## Public references and skills
+
+Public pages, Markdown exports and downloads never display source commit identifiers or link to commit pages.
+Keep release tags and artifact checksums where they identify a reproducible dependency or download; the build still checks its release pin.
+
+Skill installation examples name a published package version and archive checksum, with references compatible with the documented decisio release.
+Show project scope first and make personal scope an explicit choice.
+Keep each installed skill self-contained, including its references and assets, and link the host's discovery instructions.
+
+Check displayed package commands against the published archive in an isolated project, and use fixture homes to test personal scope.
+Describe these as installation checks; they are separate from inference or model-quality measurements.
