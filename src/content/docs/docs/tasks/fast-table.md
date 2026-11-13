@@ -11,6 +11,10 @@ A **decision fast path** learns a recurring choice or yes/no task, then answers 
 The decisio model handles requests the classifier passes on.
 The API calls this feature `fast_table`.
 
+Teach it from labelled examples, or let model-answered traffic supply the examples.
+A candidate starts answering only after it passes certification and the saving check on your host.
+[Watch the 54-second walkthrough](#watch-the-walkthrough), or explore the request routes below.
+
 ::figure{name="table-fallback"}
 
 <span class="fp-anchor" id="1-see-where-it-works-great"></span>
@@ -34,13 +38,21 @@ This pattern works across different kinds of decisions:
 These are illustrative task shapes, not measured results for these examples.
 Focus the changing input on what the decision needs; its length alone does not determine whether a fast path qualifies.
 
+## Watch the walkthrough
+
+Follow one request from teaching to a fast answer, see when decisio takes over, and compare a simple workload budget.
+
+::figure{name="table-film"}
+
 <span class="fp-anchor" id="3-ask-for-it"></span>
 
 ## 2. Register the task
 
 On the serving host, install the `decisio[table]` extra or use the [table container](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access).
 Without the extra, registration returns 422.
-The default student is a small text encoder; you can start with it before choosing another.
+
+The default `static` backend uses token-vector lookups and a classifier, with no neural network running on the CPU.
+For short texts, the published embedding-plus-classifier cost is about 0.05 ms (50 µs); longer changing inputs cost more.
 
 Prepare these files beside the script:
 

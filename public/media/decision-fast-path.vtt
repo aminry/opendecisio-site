@@ -1,0 +1,22 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:07.000
+Give recurring choices a faster route. The model stays available for everything the fast path passes on.
+
+00:00:07.000 --> 00:00:15.000
+Teach from human labels, or learn from decisio’s answers. Certify on separate examples and check the saving before serving.
+
+00:00:15.000 --> 00:00:23.000
+Register shared rules once as context. Each state contains the facts that change. The model keeps both.
+
+00:00:23.000 --> 00:00:31.000
+The default static embedding plus classifier costs about 0.05 ms, or 50 microseconds, for short texts. No neural network runs on the CPU.
+
+00:00:31.000 --> 00:00:39.000
+A fallback pays for the static check, then the model read. With an illustrative 50 ms model budget, that is about 50.05 ms.
+
+00:00:39.000 --> 00:00:47.000
+Assume 80% of requests skip a 50 ms model read. The estimated mean is 10.05 ms. This share and model budget are assumptions, not a combined benchmark.
+
+00:00:47.000 --> 00:00:54.000
+Use it for support routing, moderation or refund eligibility. Enable fast_table, then measure and certify on your task and host.

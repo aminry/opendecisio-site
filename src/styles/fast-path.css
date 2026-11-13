@@ -86,3 +86,33 @@
 /* The head marks JavaScript before paint. Reserve enhancement space while the module loads. */
 .js .fp-scene [data-fp-controls][hidden] { display: block!important; visibility: hidden; }
 .js .fp-scene .fp-controls[hidden] { display: flex!important; }
+.fp-message { border-left: 3px solid var(--fp-accent); padding: .7rem 1rem; background: var(--d-surface); border-radius: 0 6px 6px 0; }
+.fp-message>strong { display: block; line-height: 1.5; }
+.fp-flow-neck { text-align: center; color: var(--fp-accent); font-size: 1.4rem; line-height: 1.5; }
+.fp-static-node { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; border: 1px solid var(--fp-accent); border-radius: 8px; background: var(--d-surface); }
+.fp-static-node p { font-size: .8rem; }
+.fp-micro { flex: none; font-size: 1.65rem; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.fp-micro small { display: block; font-weight: 400; font-size: .7rem; margin-top: .3rem; color: var(--d-muted); }
+.fp-flow-fork { display: block; width: 100%; height: 48px; }
+.fp-flow-fork path { stroke: var(--d-line-strong); stroke-width: 2; fill: none; }
+.fp-flow-fork .fp-flow-pulse { stroke: var(--fp-accent); stroke-width: 3; stroke-dasharray: 20 180; stroke-dashoffset: 200; opacity: 0; }
+.fp-scene[data-playback=running][data-scenario=fast] .fp-flow-pulse--fast,
+.fp-scene[data-playback=running][data-scenario=fallback] .fp-flow-pulse--fallback,
+.fp-scene[data-playback=running][data-scenario=average]:not([data-fast-share="0"]) .fp-flow-pulse--fast,
+.fp-scene[data-playback=running][data-scenario=average]:not([data-fast-share="100"]) .fp-flow-pulse--fallback { opacity: 1; animation: fp-route-pulse 2.4s linear infinite; }
+.fp-scene[data-scenario=fast] [data-flow-route=fast], .fp-scene[data-scenario=fallback] [data-flow-route=fallback] { border-color: var(--fp-accent); box-shadow: inset 0 3px var(--fp-accent); }
+.fp-scene .fp-flow-outputs>* { margin-top: 0; }
+.fp-budget { margin-top: 1.5rem; padding-top: .5rem; border-top: 1px solid var(--d-line-strong); }
+.fp-workload { margin-top: 1rem; padding: .8rem; border: 1px solid var(--d-line-strong); border-radius: 6px; }
+.fp-workload label { display: flex; justify-content: space-between; gap: .5rem; font-size: .85rem; }
+.fp-workload output { font-weight: 650; font-variant-numeric: tabular-nums; }
+.fp-workload input { display: block; width: 100%; margin: .7rem 0; accent-color: var(--fp-accent); }
+.fp-workload input:focus-visible { outline: 2px solid var(--fp-accent); outline-offset: 3px; }
+@keyframes fp-route-pulse { to { stroke-dashoffset: 0; } }
+@media(max-width:640px) { .fp-static-node { align-items: flex-start; flex-direction: column; } .fp-flow-fork { display: none; } .fp-flow-outputs { margin-top: 1rem; } }
+@media(prefers-reduced-motion:reduce) { .fp-flow-pulse { animation: none!important; opacity: 0!important; } }
+.fp-film { margin: 1.5rem 0; }
+.fp-film video { display: block; width: 100%; height: auto; aspect-ratio: 16/9; border: 1px solid var(--d-line-strong); border-radius: 8px; }
+.fp-film figcaption { margin-top: .65rem; color: var(--d-muted); font-size: .82rem; }
+.fp-transcript { font-size: .85rem; }
+.fp-transcript li { margin-top: .5rem; }

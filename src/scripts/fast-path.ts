@@ -30,23 +30,30 @@ for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-loop]:not
 
 // A common clock and scale make the early finish visible, including the fallback cost.
 for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-timing]')) {
-  const record = JSON.parse(scene.dataset.timingRecord!);
+  const share = scene.querySelector<HTMLInputElement>('#fp-share')!;
   const get = <T extends Element = HTMLElement>(selector: string) => scene.querySelector<T>(selector)!;
-  let mode = 'average', visible = false, animations: Animation[] = [];
+  let mode = 'fast', visible = false, animations: Animation[] = [];
   const sync = () => {
     const running = visible && !document.hidden && !motion.matches;
     scene.dataset.playback = motion.matches ? 'static' : running ? 'running' : 'paused';
     for (const animation of animations) running ? animation.play() : animation.pause();
   };
   const render = () => {
-    const v = timingView(record, mode);
-    get('[data-timing-total]').textContent = `${v.displayMs} ms`;
-    get('[data-timing-summary]').textContent = mode === 'average' ? `${v.savingPercent}% lower mean time`
-      : mode === 'fast' ? 'The model is skipped.' : 'Fallback is slower.';
+    const v = timingView(mode, Number(share.value));
+    scene.dataset.scenario = mode;
+    scene.dataset.fastShare = String(v.fastShare);
+    get('[data-share-label]').textContent = `${v.fastShare}%`;
+    get('[data-timing-total]').textContent = `~${v.displayMs} ms`;
+    get('[data-timing-summary]').textContent = mode === 'average' ? `${Math.abs(v.savingPercent)}% ${v.savingPercent<0?'more':'less'} processing time in this example`
+      : mode === 'fast' ? '~50 µs of CPU work. No model read.' : 'Fallback adds ~0.05 ms before the model.';
     get('[data-timing-explanation]').textContent = mode === 'average'
-      ? `The CPU check runs on every request. Only ${v.modelRequests} of ${v.requestCount} needed the model: ${v.cpuMs} ms + ${Math.round(100*v.modelRequests/v.requestCount)}% × ${v.modelMs} ms ≈ ${v.displayMs} ms on average.`
-      : mode === 'fast' ? `CPU classifier: ${v.cpuMs} ms. No model work is needed on this route. The model read is skipped.`
-      : `CPU classifier: ${v.cpuMs} ms, then model: ${v.modelMs} ms. Together, about ${v.displayMs} ms. Falling back adds work; the saving comes from requests that skip the model.`;
+      ? `Assume ${v.fastShare}% of requests skip the model. Every request pays ${v.cpuMs} ms on the CPU; ${100-v.fastShare}% also pay the ${v.modelMs} ms model budget: about ${v.displayMs} ms mean processing time. This is an estimate, not a measured result.`
+      : mode === 'fast' ? 'The static backend needs no neural-network run on the CPU. An eligible short-text answer uses about 0.05 ms of embedding and classification work; the model read is skipped.'
+      : 'The static check costs about 0.05 ms, then decisio handles the request. With a 50 ms model budget, the total is about 50.05 ms. The CPU check adds little to a fallback.';
+    get('[data-flow-request]').textContent = mode === 'average' ? 'An example workload of recurring support requests'
+      : mode === 'fast' ? '“I was charged twice. Can you help?”' : '“My new team cannot open last month’s invoice.”';
+    get('[data-flow-fast]').textContent = mode === 'average' ? `${v.fastShare}% skip the model` : mode === 'fast' ? 'billing' : 'Pass this request on';
+    get('[data-flow-model]').textContent = mode === 'average' ? `${100-v.fastShare}% need decisio` : mode === 'fast' ? 'Model idle for this request' : 'Model reads policy + facts';
     get('[data-timing-cpu]').setAttribute('width', String(v.cpuWidth));
     get('[data-timing-model]').setAttribute('width', String(v.modelWidth));
     scene.querySelectorAll<HTMLButtonElement>('[data-timing-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.timingMode === mode)));
@@ -63,12 +70,13 @@ for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-timing]')
       const ready = get(`[data-timing-ready="${name}"]`);
       if (!motion.matches) {
         const finish=0.85*ms/v.scaleMs;
-        animations.push(ready.animate([{opacity:0,offset:0},{opacity:0,offset:finish-0.001},{opacity:1,offset:finish},{opacity:1,offset:1}],{duration:4000,iterations:Infinity}));
+        animations.push(ready.animate([{opacity:0,offset:0},{opacity:0,offset:Math.max(0,finish-0.0001)},{opacity:1,offset:finish},{opacity:1,offset:1}],{duration:4000,iterations:Infinity}));
       }
     }
     sync();
   };
   scene.querySelectorAll<HTMLButtonElement>('[data-timing-mode]').forEach(button => button.addEventListener('click', () => { mode = button.dataset.timingMode!; render(); }));
+  share.addEventListener('input', () => { mode = 'average'; render(); });
   scene.querySelectorAll<HTMLElement>('[data-fp-controls]').forEach(control => { control.hidden = false; });
   document.addEventListener('visibilitychange', sync);
   motion.addEventListener('change', render);

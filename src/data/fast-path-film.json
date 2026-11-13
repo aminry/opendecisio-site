@@ -1,0 +1,67 @@
+{
+  "title": "Give recurring decisions a fast path",
+  "duration": 54,
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "silent": true,
+  "timingSha256": "96dab87a85d9267ee0a95d7a4c6618c992283c37231d9a67fd926cdb64977b60",
+  "assets": {
+    "mp4": {
+      "path": "/media/decision-fast-path.mp4",
+      "sha256": "de9fb90e8b69e51cadef662b78056759c7a43c1ebbeefaeb1bdb52be81db28eb"
+    },
+    "webp": {
+      "path": "/media/decision-fast-path.webp",
+      "sha256": "0077147aca8ffd5ed90507cc9035894b6d1c234c3ca7b4ce4d3a5f4b58b11354"
+    },
+    "vtt": {
+      "path": "/media/decision-fast-path.vtt",
+      "sha256": "538f7a102335873386d7c1339043f87c6e75a13b9f80be38c63c3ce9044b7b19"
+    }
+  },
+  "chapters": [
+    {
+      "start": 0,
+      "end": 7,
+      "title": "A fast path for recurring decisions",
+      "text": "Give recurring choices a faster route. The model stays available for everything the fast path passes on."
+    },
+    {
+      "start": 7,
+      "end": 15,
+      "title": "Teach. Certify. Activate.",
+      "text": "Teach from human labels, or learn from decisio’s answers. Certify on separate examples and check the saving before serving."
+    },
+    {
+      "start": 15,
+      "end": 23,
+      "title": "Keep the policy. Send new facts.",
+      "text": "Register shared rules once as context. Each state contains the facts that change. The model keeps both."
+    },
+    {
+      "start": 23,
+      "end": 31,
+      "title": "An eligible answer skips the model",
+      "text": "The default static embedding plus classifier costs about 0.05 ms, or 50 microseconds, for short texts. No neural network runs on the CPU."
+    },
+    {
+      "start": 31,
+      "end": 39,
+      "title": "Keep decisio for the rest",
+      "text": "A fallback pays for the static check, then the model read. With an illustrative 50 ms model budget, that is about 50.05 ms."
+    },
+    {
+      "start": 39,
+      "end": 47,
+      "title": "The share answered makes the saving",
+      "text": "Assume 80% of requests skip a 50 ms model read. The estimated mean is 10.05 ms. This share and model budget are assumptions, not a combined benchmark."
+    },
+    {
+      "start": 47,
+      "end": 54,
+      "title": "One pattern. Many recurring choices.",
+      "text": "Use it for support routing, moderation or refund eligibility. Enable fast_table, then measure and certify on your task and host."
+    }
+  ]
+}

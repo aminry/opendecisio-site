@@ -18,6 +18,7 @@ try {
   await context.route(/https:\/\/(static\.)?cloudflareinsights\.com\//, r => r.fulfill({ status: 200, contentType: 'application/javascript', body: '' }));
   await context.route('**/cdn-cgi/rum*', r => r.fulfill({ status: 204 }));
   const page = await context.newPage(); const errors = []; page.on('pageerror', e => errors.push(e.message));
+  let videoRequests=0;page.on('request',request=>{if(request.url().includes('/media/decision-fast-path.mp4'))videoRequests++;});
   await page.goto(`${base}/docs/tasks/fast-table/`); await page.waitForLoadState('networkidle');
   const scenes = page.locator('[data-fast-loop]');
   assert.equal(await scenes.count(), 3, 'The context, routing and learning scenes are missing');
@@ -27,23 +28,28 @@ try {
   for (const level of levels) { assert.ok(level <= previous + 1, 'The guide skips a heading level'); previous = level; }
   const timing = page.locator('[data-fast-timing]');
   await timing.scrollIntoViewIfNeeded();
-  assert.match(await timing.locator('[data-timing-total]').textContent(), /71/);
-  assert.match(await timing.locator('[data-timing-summary]').textContent(), /82%/);
-  await timing.getByRole('button', {name:'Classifier answers',exact:true}).click();
-  assert.match(await timing.locator('[data-timing-total]').textContent(), /21.1/);
-  assert.match(await timing.locator('[data-timing-explanation]').textContent(), /skipped/);
-  const fastWidth=Number(await timing.locator('[data-timing-cpu]').getAttribute('width'));
+  assert.match(await timing.locator('[data-timing-total]').textContent(), /0.05/);
+  assert.match(await timing.locator('[data-timing-summary]').textContent(), /50 µs/);
+  assert.doesNotMatch(await timing.textContent(), /21.1|384|CLINC150|26 of 200|82%/);
   await timing.getByRole('button', {name:'Model fallback',exact:true}).click();
-  assert.match(await timing.locator('[data-timing-total]').textContent(), /405/);
-  assert.equal(Number(await timing.locator('[data-timing-cpu]').getAttribute('width')),fastWidth);
-  assert.match(await timing.locator('[data-timing-summary]').textContent(), /slower/i);
-  await timing.getByRole('button', {name:'Timed average',exact:true}).click();
-  assert.match(await timing.locator('[data-timing-explanation]').textContent(), /26 of 200/);
+  assert.match(await timing.locator('[data-timing-total]').textContent(), /50.05/);
+  assert.match(await timing.locator('[data-timing-explanation]').textContent(), /0.05.*50/);
+  await timing.getByRole('button', {name:'Workload estimate',exact:true}).click();
+  assert.match(await timing.locator('[data-timing-total]').textContent(), /10.05/);
+  const share=timing.getByLabel('Assumed fast-path share');
+  await share.fill('0');
+  assert.match(await timing.locator('[data-timing-total]').textContent(), /50.05/);
+  assert.match(await timing.locator('[data-timing-summary]').textContent(), /more processing time/);
+  await share.fill('100');
+  assert.match(await timing.locator('[data-timing-total]').textContent(), /0.05/);
+  await share.fill('80');
+  assert.match(await timing.locator('[data-timing-summary]').textContent(), /79.9%/);
   assert.equal(await timing.locator('button[aria-pressed=true]').count(),1);
+  assert.equal(await timing.locator('[data-flow-route=fast]').count(),1);
+  assert.equal(await timing.locator('[data-flow-route=fallback]').count(),1);
   const race=await timing.evaluate(el=>el.getAnimations({subtree:true}).filter(a=>a.effect.target.hasAttribute('data-timing-marker')).map(a=>({duration:a.effect.getTiming().duration,end:a.effect.getKeyframes()[1].offset})));
-  assert.equal(race.length,2);
-  assert.ok(race.every(a=>a.duration===4000));
-  assert.ok(race[1].end<race[0].end/5,'Average marker does not finish proportionally earlier');
+  assert.equal(race.length,2);assert.ok(race.every(a=>a.duration===4000));
+  assert.ok(race[1].end<race[0].end/4,'Estimated average does not finish proportionally earlier');
   const anatomy=page.locator('[data-fast-context]');
   await anatomy.scrollIntoViewIfNeeded();
   const editor=anatomy.getByLabel('Changing facts');
@@ -70,6 +76,25 @@ try {
   assert.equal(await anatomy.locator('[data-cpu-input]').textContent(),'');
   assert.match(await anatomy.locator('[data-cpu-count]').textContent(),/^0 /);
   await anatomy.getByRole('button',{name:'Order A',exact:true}).click();
+  const video=page.locator('.fp-film video');
+  assert.equal(await video.count(),1);
+  assert.equal(await video.getAttribute('preload'),'none');
+  assert.equal(await video.getAttribute('autoplay'),null);
+  assert.equal(videoRequests,0,'Film downloaded before reader intent');
+  await video.scrollIntoViewIfNeeded();
+  await video.evaluate(v=>v.play());
+  await until(()=>video.evaluate(v=>!v.paused&&v.currentTime>0),'Video did not actually decode and play');
+  assert.equal(await video.evaluate(v=>Math.round(v.duration)),54);
+  await video.evaluate(v=>{v.pause();v.currentTime=40;});
+  await until(()=>video.evaluate(v=>!v.seeking&&v.currentTime>=40),'Video could not seek to the workload chapter');
+  assert.ok((await page.locator('.fp-transcript').textContent()).includes('10.05 ms'));
+  const captions=await page.request.get(`${base}/media/decision-fast-path.vtt`);
+  assert.equal(captions.status(),200);assert.match(captions.headers()['content-type'],/text\/vtt/);
+  await video.evaluate(v=>{v.textTracks[0].mode='hidden';});
+  await until(()=>video.evaluate(v=>v.textTracks[0].cues?.length===7),'Caption track did not load and parse');
+  assert.ok(await video.evaluate(v=>v.textTracks[0].activeCues?.[0]?.text.includes('80%')),'Caption does not match the selected workload chapter');
+  assert.match(await captions.text(),/WEBVTT/);
+  assert.match(await captions.text(),/00:00:47.000 --> 00:00:54.000/);
   await page.clock.install();
   for (const scene of await scenes.all()) {
     assert.equal(await scene.getByRole('button', {name:/play|pause|animate/i}).count(), 0, 'An animation control was added');
@@ -111,6 +136,6 @@ try {
   }
   assert.match(await staticPage.locator('[data-fp-context]').textContent(),/policy/i);
   assert.match(await staticPage.locator('[data-cpu-input]').textContent(),/days/i);
-  assert.match(await staticPage.locator('[data-timing-summary]').textContent(),/82%/);
+  assert.match(await staticPage.locator('[data-timing-summary]').textContent(),/50 µs/);
   console.log(`fast-path-interactions: timing choices, editable inputs, autoplay, visibility, reduced motion, aliases and no-JS pass in ${engine}`);
 } finally { await browser?.close(); server.kill('SIGTERM'); }

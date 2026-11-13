@@ -1,4 +1,5 @@
 // Interactive input anatomy and replay of recorded fast-path timing. No inference runs here.
+import { fastPathFilm } from '../fast-path-film.mjs';
 import { readUpstream } from '../upstream.mjs';
 import { esc, panel } from './core.mjs';
 import { contextView, timingView, POLICY, FACTS } from '../fast-path-demo.mjs';
@@ -16,25 +17,28 @@ function scene(name, title, desc, body, note, attributes = '', sourceNote = sour
 }
 
 function routes() {
-  const record = JSON.parse(readUpstream('runs/2026-10-30_fast-table/summary.json')).clinc150_timed;
-  const v = timingView(record, 'average');
-  const lane = (baseline) => `<div class="fp-lane"><div class="fp-lane-label"><strong>${baseline ? 'Model on every request' : 'With a decision fast path'}</strong><span ${baseline ? '' : 'data-timing-total'}>${baseline ? v.modelMs : v.displayMs} ms</span></div>
+  const v = timingView('fast');
+  const lane = (baseline) => `<div class="fp-lane"><div class="fp-lane-label"><strong>${baseline ? 'Model on every request' : 'With a decision fast path'}</strong><span ${baseline ? '' : 'data-timing-total'}>~${baseline ? v.modelMs : v.displayMs} ms</span></div>
     <svg class="fp-timeline" viewBox="0 0 600 32" aria-hidden="true"><path class="fp-rail" d="M4 16H596"/>
     ${baseline ? `<rect class="fp-model-bar" x="4" y="10" width="${v.baselineWidth}" height="12" rx="3"/>` : `<rect class="fp-cpu-bar" data-timing-cpu x="4" y="10" width="${v.cpuWidth}" height="12" rx="3"/><rect class="fp-model-bar" data-timing-model x="${4+v.cpuWidth}" y="10" width="${v.modelWidth}" height="12" rx="3"/>`}
-    <circle class="fp-racer" data-timing-marker="${baseline ? 'baseline' : 'fast'}" cx="4" cy="16" r="4"/></svg><span class="fp-returned" data-timing-ready="${baseline ? 'baseline' : 'fast'}" aria-hidden="true">✓ Answer returned</span></div>`;
-  return scene('table-fallback', 'Watch the time saved when the model can be skipped.',
-    'Compare a recorded model-only baseline with a decision fast path. Choose a classifier answer, a model fallback or the average of the timed sample. Both timelines use the same time scale; the animation is slowed down for readability.',
-    `<div class="fp-controls" data-fp-controls hidden role="group" aria-label="Timing scenario">${[['fast','Classifier answers'],['fallback','Model fallback'],['average','Timed average']].map(([key,label])=>`<button type="button" data-timing-mode="${key}" aria-pressed="${key==='average'}">${label}</button>`).join('')}</div>
-    <p class="fp-timing-summary" data-timing-summary role="status">${v.savingPercent}% lower mean time</p>
-    <p class="fp-small">Recorded CLINC150 intent-classification sample · ${v.requestCount} timed requests</p>
-    <div class="fp-race">${lane(true)}${lane(false)}<div class="fp-scale" aria-hidden="true"><span>0 ms</span><span>Same scale · 405 ms</span></div></div>
-    <div class="fp-key"><span><i class="fp-cpu-swatch"></i>CPU classifier</span><span><i class="fp-model-swatch"></i>Model work</span></div>
-    <p class="fp-timing-explanation" data-timing-explanation>The CPU check runs on every request. Only ${v.modelRequests} of ${v.requestCount} needed the model: 21.1 ms + 13% × 384 ms ≈ 71 ms on average.</p>
-    <p class="fp-result">An eligible request skips the model. A fallback pays for both.</p>
-    <noscript><p class="fp-small">Classifier answers: 21.1 ms. Model fallback: about 405 ms. Timed average: 71 ms, versus 384 ms for the model baseline.</p></noscript>`,
-    'Replay of historical offline timings, slowed down and looped. These are not timings for the refund example below. Savings depend on the task, student and host; measure your own workload.',
-    `data-fast-timing data-timing-record="${esc(JSON.stringify(record))}"`,
-    'Historical offline CLINC150 run, 2026-10-30: model reads from decisio 0.35.0 with vLLM 0.31.0 on one RTX PRO 6000 Blackwell at 600 W. CPU timing uses the torch encoder described for 0.37.0 on AMD EPYC 9755, four threads. The 200-request timing sample is separate from the full test-set results. Source: the pinned fast-table timing record and task guide.');
+    <circle class="fp-racer" data-timing-marker="${baseline ? 'baseline' : 'fast'}" cx="${4+(baseline ? v.baselineWidth : v.totalWidth)}" cy="16" r="4"/></svg><span class="fp-returned" data-timing-ready="${baseline ? 'baseline' : 'fast'}" aria-hidden="true">✓ Answer returned</span></div>`;
+  return scene('table-fallback', 'A familiar decision can skip the model read.',
+    'Follow an illustrative support request through the static CPU fast path. It returns an eligible answer or passes the request to decisio. Compare about 50 microseconds of short-text CPU work with an illustrative 50 millisecond model budget, or estimate a workload by changing the assumed fast-path share.',
+    `<div class="fp-controls" data-fp-controls hidden role="group" aria-label="Request scenario">${[['fast','Classifier answers'],['fallback','Model fallback'],['average','Workload estimate']].map(([key,label])=>`<button type="button" data-timing-mode="${key}" aria-pressed="${key==='fast'}">${label}</button>`).join('')}</div>
+    <div class="fp-message"><p class="fp-label">Illustrative support request</p><strong data-flow-request>“I was charged twice. Can you help?”</strong><p class="fp-small">A learned task picks the support team.</p></div>
+    <div class="fp-flow-neck" aria-hidden="true">↓</div>
+    <div class="fp-static-node"><div><strong class="fp-heading">Static embedding + classifier</strong><p>Read token vectors and classify on the CPU.</p></div><strong class="fp-micro">~50 µs<small>0.05 ms · short texts</small></strong></div>
+    <svg class="fp-flow-fork" viewBox="0 0 600 64" preserveAspectRatio="none" aria-hidden="true"><path d="M300 0V20H150V60m-5-7 5 7 5-7"/><path d="M300 20H450V60m-5-7 5 7 5-7"/><path class="fp-flow-pulse fp-flow-pulse--fast" pathLength="200" d="M300 0V20H150V60"/><path class="fp-flow-pulse fp-flow-pulse--fallback" pathLength="200" d="M300 0V20H450V60"/></svg>
+    <div class="fp-inputs fp-flow-outputs"><div class="fp-branch" data-flow-route="fast"><p class="fp-label">Eligible answer</p><strong class="fp-heading" data-flow-fast>billing</strong><p class="fp-small">Return the classifier’s answer. Skip the model read.</p></div><div class="fp-branch" data-flow-route="fallback"><p class="fp-label">Otherwise → decisio</p><strong class="fp-heading" data-flow-model>Model idle for this request</strong><p class="fp-small">The model reads the policy and facts when needed.</p></div></div>
+    <div class="fp-budget"><p class="fp-timing-summary" data-timing-summary role="status">~50 µs of CPU work. No model read.</p><p class="fp-small">Illustrative time budget · model ~50 ms · static short-text path ~0.05 ms</p>
+    <div class="fp-race">${lane(true)}${lane(false)}<div class="fp-scale" aria-hidden="true"><span>0 ms</span><span>Same scale · ~50 ms</span></div></div>
+    <div class="fp-key"><span><i class="fp-cpu-swatch"></i>Static CPU work</span><span><i class="fp-model-swatch"></i>Model work</span></div>
+    <div class="fp-workload" data-fp-controls hidden><label for="fp-share">Assumed fast-path share <output for="fp-share" data-share-label>80%</output></label><input id="fp-share" aria-label="Assumed fast-path share" type="range" min="0" max="100" step="1" value="80"/><p class="fp-small">Adjust to estimate a workload. This share is an assumption, not measured coverage.</p></div>
+    <p class="fp-timing-explanation" data-timing-explanation>The static backend needs no neural-network run on the CPU. An eligible short-text answer uses about 0.05 ms of embedding and classification work; the model read is skipped.</p></div>
+    <noscript><p class="fp-small">Model fallback: about 50.05 ms including the CPU check. Example workload with an assumed 80% fast-path share: 0.05 + 20% × 50 = 10.05 ms mean processing time.</p></noscript>`,
+    'Illustrative routes, not live predictions. Motion is slowed down; timelines share a linear scale. The workload calculator includes every CPU check and model fallback, and excludes network, queueing and monitoring reads. Actual latency and eligible share depend on your task, text length and host.',
+    'data-fast-timing data-scenario="fast"',
+    'Static embedding + classifier: published short-text p50 0.05 ms (50 µs), median 22 tokens, Apple M5 Pro; x86 short-text range 0.04–0.06 ms. Longer texts cost more. The approximately 50 ms model baseline is an illustrative budget, not a new combined benchmark. Source: the pinned task guide, “What a student costs.”');
 }
 
 function context() {
@@ -60,4 +64,4 @@ function learning() {
     'An agreement certificate concerns matching the model, including its mistakes. A labelled task can also learn and retain gold certification while it has enough held-out human labels. The animation shows the process, not a training schedule.');
 }
 
-export const fastPathFigures = { 'table-fallback': routes, 'table-context': context, 'table-learning': learning };
+export const fastPathFigures = { 'table-film': fastPathFilm, 'table-fallback': routes, 'table-context': context, 'table-learning': learning };

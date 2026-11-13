@@ -612,11 +612,10 @@ export const sourced = [
 	]),
 	// Decision fast path
 	...fromPage('/docs/tasks/fast-table/', [
-		['82% lower mean time', 'runs/2026-10-30_fast-table/summary.json', '"saving": 82'],
-		['71 ms', tasksDoc, 'The 71 ms in the table above is the mean over the 200 timed requests, of which 26 (13%) were handed to the model'],
-		['21.1 ms', tasksDoc, 'a request the table answers takes **21.1 ms**'],
-		['384 ms', tasksDoc, "384 for the model's read"],
-		['AMD EPYC 9755', 'runs/2026-10-30_fast-table/summary.json', 'AMD EPYC 9755, 4 threads'],
+		['Static embedding + classifier', tasksDoc, "The table path (the student and the classifier) for one request, p50 milliseconds"],
+		['0.05 ms', tasksDoc, '| static, `base` | 0.05 | 1.0 |'],
+		['0.04–0.06 ms', tasksDoc, '0.04 to 0.06 ms a short text'],
+		['default static backend', tasksDoc, '`true` or `{"kind": "static"}` (the default)'],
 	]),
 	...fromPage('/docs/tasks/fast-table/', [
 		['The task can use a long policy, rubric or catalogue.', tasksDoc, 'a policy, a rubric, a catalogue, a set of definitions, a long instruction'],
