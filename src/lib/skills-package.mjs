@@ -25,7 +25,7 @@ export function skillsBlock(name) {
 mkdir -p "$DECISIO_SKILLS"
 curl --fail --location --output "$DECISIO_SKILLS/${m.archive}" \\
   ${skillsArchiveUrl}
-node --input-type=module -e 'import {readFileSync} from "node:fs"; import {createHash} from "node:crypto"; if (createHash("sha256").update(readFileSync(process.argv[1])).digest("hex") !== "${m.sha256}") throw new Error("Archive checksum mismatch"); console.log("Archive checksum matches");' "$DECISIO_SKILLS/${m.archive}"
+node --input-type=module -e 'import {readFileSync} from "node:fs"; import {createHash} from "node:crypto"; if (createHash("sha256").update(readFileSync(process.argv[1])).digest("hex") !== "${m.sha256}") throw new Error("Archive checksum mismatch"); console.log("Archive checksum matches");' "$DECISIO_SKILLS/${m.archive}" &&
 python3 -m zipfile --extract "$DECISIO_SKILLS/${m.archive}" "$DECISIO_SKILLS"`,
         'skills-codex': `node ${script} install --host codex --scope project --project "$DECISIO_PROJECT"`,
         'skills-claude': `node ${script} install --host claude --scope project --project "$DECISIO_PROJECT"`,
