@@ -90,6 +90,11 @@ It is a recorded Gemma 4 31B result, labelled with its release, hardware and dat
 - A request the server cannot read gets status 422, with a `detail` that names what is wrong.
 - The `model` field does not choose a model: a server serves the one model it was started with.
 
+## Use a coding assistant
+
+[Install the decisio skills](/docs/ai-skills/) to have Claude Code or Codex prepare your setup, request or backend integration.
+Choose the workflow for your task and include your hardware or endpoint in the prompt.
+
 ## What next
 
 - [Call it from your code](/docs/use-from/): typed questions from Python, JavaScript, TypeScript and frameworks.

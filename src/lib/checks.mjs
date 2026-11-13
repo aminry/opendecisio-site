@@ -1,3 +1,4 @@
+import { skillsPackage } from './skills-package.mjs';
 // How each published code block was checked, read from verification/commands.json.
 // A block is known by the sha256 of its text, so a changed block is a new block
 // that must be checked again before the site builds.
@@ -18,6 +19,8 @@ function load() {
 		// The blocks run against Ollama, on a machine that has it (scripts/verify-ollama.mjs).
 		const ollama = join(siteRoot, 'verification/ollama.json');
 		if (existsSync(ollama)) memo.blocks = { ...memo.blocks, ...JSON.parse(readFileSync(ollama, 'utf8')).blocks };
+		const skills = join(siteRoot, 'verification/skills.json');
+		if (existsSync(skills)) memo.blocks = { ...memo.blocks, ...JSON.parse(readFileSync(skills, 'utf8')).blocks };
 	}
 	return memo;
 }
@@ -32,6 +35,7 @@ export function checkOf(text, where) {
 	if (entry.status === 'cpu' && entry.tag !== pin.tag) {
 		throw new Error(`checks: the code block ${hash} on ${where} was checked at ${entry.tag}, not at ${pin.tag}. Run npm run verify.`);
 	}
+    if (entry.status === 'skills' && (entry.version !== skillsPackage.version || entry.sha256 !== skillsPackage.sha256)) throw new Error(`checks: skills command on ${where} was checked with another package`);
 	return entry;
 }
 
@@ -48,6 +52,8 @@ export function checkHtml(entry, { moved = false } = {}) {
 	switch (entry.status) {
 		case 'cpu':
 			return line(`Run against the CPU stand-in at ${entry.tag} on ${entry.date}${entry.note ? `: ${entry.note}` : ''}${entry.stdout ? (entry.trimmed ? '. It printed, trimmed to the fields this page uses:' : '. It printed:') : '.'}`, ' checked--cpu') + (entry.stdout ? `<pre class="checked__out" tabindex="0"><code>${escHtml(entry.stdout)}</code></pre>` : '');
+		case 'skills':
+			return line(`Checked with skills package ${entry.version} on ${entry.date}, in an isolated project.`);
 		case 'verbatim':
 			return line(`Needs ${entry.needs}: taken as it is from decisio's checked docs${entry.record ? `, ${record(entry.record)}` : ''}.`);
 		case 'shown':

@@ -9,6 +9,7 @@ export const docsGroups = [
 			{ slug: 'docs', label: 'Quickstart', shape: 'guide' },
 			{ slug: 'docs/build-request', label: 'Build a request', shape: 'guide' },
 			{ slug: 'docs/use-from', label: 'Call it from your code', shape: 'guide' },
+			{ slug: 'docs/ai-skills', label: 'Use AI skills', shape: 'guide' },
 		],
 	},
 	{

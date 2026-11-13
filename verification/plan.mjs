@@ -95,6 +95,14 @@ const asPrinted = (stdout) => stdout;
 const TASKS_DIR = 'decisio-tasks';
 
 export const plan = [
+	{ page: '/docs/ai-skills/', n: 1, mode: 'skills', expect: 'DECISIO_PROJECT=' },
+	{ page: '/docs/ai-skills/', n: 2, mode: 'skills', expect: 'node ' },
+	{ page: '/docs/ai-skills/', n: 3, mode: 'skills', expect: 'node ' },
+	{ page: '/docs/ai-skills/', n: 4, mode: 'skills', expect: 'node ' },
+	{ page: '/docs/ai-skills/', n: 5, mode: 'shown', expect: 'node ', why: 'personal installation changes your own skill directory; the package tests exercise user scope in isolated homes' },
+	{ page: '/docs/ai-skills/', n: 6, mode: 'skills', expect: 'node ' },
+	{ page: '/docs/ai-skills/', n: 7, mode: 'skills', expect: 'node ' },
+	{ page: '/docs/ai-skills/', n: 8, mode: 'skills', expect: 'node ' },
 	{ page: '/docs/build-request/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 3] },
 	// Get started, on the stand-in, the path every machine can take: the small choice request (src/lib/site-blocks.mjs).
 	{

@@ -9,6 +9,7 @@ The current release is read from `upstream.json`.
 | Route | Purpose |
 | --- | --- |
 | `/docs/` | Quickstart |
+| `/docs/ai-skills/` | Use AI skills |
 | `/docs/api/` | HTTP API |
 | `/docs/bases/` | Choosing a model |
 | `/docs/build-request/` | Build a request |

@@ -134,6 +134,11 @@ Each program below asks two questions about one ticket and prints the answers.
 
 :::
 
+## Use a coding assistant
+
+[Install the decisio skills](/docs/ai-skills/) to have Claude Code or Codex prepare your setup, request or backend integration.
+Choose the workflow for your task and include your hardware or endpoint in the prompt.
+
 ## What next
 
 - [Move from System One](/docs/migrating/): point a client you already have at decisio, and what changes.

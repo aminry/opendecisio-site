@@ -10,6 +10,7 @@ import { join } from 'node:path';
 import { collectBlocks } from '../src/lib/blocks.mjs';
 import { pin, siteRoot } from '../src/lib/upstream.mjs';
 import { answers, stopAndWait } from './server-control.mjs';
+import {skillsPackage} from '../src/lib/skills-package.mjs';
 import { plan } from '../verification/plan.mjs';
 
 const dry = process.argv.includes('--dry-run');
@@ -212,6 +213,13 @@ for (const step of steps) {
 		case 'example':
 			entries[block.hash] = { status: 'example' };
 			break;
+		case 'skills': {
+            const path = join(siteRoot, 'verification/skills.json');
+            const evidence = existsSync(path) && JSON.parse(readFileSync(path, 'utf8'));
+            const entry = evidence?.blocks?.[block.hash];
+            if (!entry || entry.status !== 'skills' || entry.version !== skillsPackage.version || entry.sha256 !== skillsPackage.sha256 || evidence.sha256 !== skillsPackage.sha256) fail(`block ${step.n} on ${step.page} needs current package evidence; run node scripts/verify-skills.mjs --write`);
+            break;
+        }
 		case 'ollama': {
 			// Run apart, on a machine with Ollama; its record must cover this block as it is now.
 			const path = join(siteRoot, 'verification/ollama.json');
