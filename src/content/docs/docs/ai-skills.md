@@ -90,7 +90,7 @@ Ordinary language can also select a matching workflow.
 Use **decisio-setup** when your backend needs a working connection.
 For a decisio server already running locally, paste:
 
-> Use decisio-setup to connect this application to http://localhost:8000. Save the endpoint in the project's existing environment configuration, check the service and send one support-ticket request.
+> Use decisio-setup to connect this application to `http://localhost:8000`. Save the endpoint in the project's existing environment configuration, check the service and send one support-ticket request.
 
 You should get reusable endpoint configuration, a first response and the command to check the connection again.
 The assistant reports any missing requirement if the endpoint is unavailable.
