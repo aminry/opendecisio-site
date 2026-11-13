@@ -36,7 +36,7 @@ For example, distinguish a failed payment from a login failure rather than askin
 
 For this request, read `answers.category.choice` for the selected option and `answers.category.probabilities` for its distribution.
 Your application maps that option to a queue or a review workflow.
-When you need an error target for automated decisions, use a [certified task](/docs/tasks/certify/) and check the answer's `certified` field before acting automatically.
+For automatic decisions at an error target, use a [certified task](/docs/tasks/certify/) and require both `certified: true` and `certificate_kind: "gold"` on its answer.
 
 ## Good to know
 

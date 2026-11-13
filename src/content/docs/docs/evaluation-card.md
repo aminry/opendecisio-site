@@ -63,7 +63,7 @@ An agreement certificate measures agreement with the model; it does not measure 
 
 ## 4. Decide what can run automatically
 
-For an error target, [certify your task](/docs/tasks/certify/) and have your code act automatically only when the answer is certified.
+For an error target, [certify your task](/docs/tasks/certify/) and require both `certified: true` and `certificate_kind: "gold"` before acting automatically.
 Give every other answer a deliberate path, such as a person, another workflow or a request for clarification.
 Check that path as part of the application, including service errors.
 

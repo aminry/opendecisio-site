@@ -3,6 +3,7 @@
 The documentation sidebar, breadcrumbs and text indexes share `src/config/docs-groups.mjs`.
 Every documentation source page must be in that navigation exactly once; `scripts/checks/docs-navigation.mjs` checks for missing, duplicate and moved pages.
 The current release is read from `upstream.json`.
+`scripts/checks/discovery.mjs` checks this inventory and navigation against the built canonical sitemap and robots.txt.
 
 ## Documentation pages
 
