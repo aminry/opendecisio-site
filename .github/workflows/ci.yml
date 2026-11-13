@@ -141,6 +141,8 @@ jobs:
         run: node --test scripts/checks/figure-math-selftest.mjs
       - name: Recipe clients, task files and release presentation
         run: node --test scripts/checks/recipe-clients-selftest.mjs scripts/checks/task-registration-selftest.mjs scripts/checks/public-reference-selftest.mjs
+      - name: Recorded certification targets and explanation cases
+        run: node --test scripts/checks/certified-walkthrough-selftest.mjs
       - name: Skill package compatibility and command evidence
         run: node --test scripts/checks/skills-selftest.mjs
       - name: The published skills archive and install commands
@@ -256,6 +258,11 @@ jobs:
         with:
           path: ~/apt-archives
           key: ${{ steps.apt.outputs.cache-primary-key }}
+      - name: Certified walkthrough, recorded cases and motion preferences
+        if: matrix.shard == '1/2'
+        run: node scripts/checks/certified-interactions.mjs
+        env:
+          ENGINE: ${{ matrix.engine }}
       - name: Figure controls, motion preferences and static fallbacks
         if: matrix.shard == '1/2'
         run: node scripts/checks/figure-interactions.mjs

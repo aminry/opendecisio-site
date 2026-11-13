@@ -1,0 +1,65 @@
+---
+import { selectResult } from '../lib/certified-walkthrough.mjs';
+const { record, source } = Astro.props;
+const result = selectResult(record, '0.05', 'clear');
+const n = (x: number) => x.toLocaleString('en-US');
+const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
+const stages = [
+  { title: 'Teach your categories', note: 'Give decisio examples with the correct labels. It learns your task without retraining the base model.', top: 'Labelled examples', bottom: 'A task that recognises your categories' },
+  { title: 'Certify on separate examples', note: 'Choose an error target. Examples held back from teaching let decisio find a probability cutoff it can certify.', top: 'Separate labelled examples', bottom: 'A certificate at your error target' },
+  { title: 'Let your application act', note: 'The model predicts a category. Your backend checks the certificate, routes the ticket or asks for review.', top: 'New message → prediction', bottom: 'Certificate check → route or review' },
+];
+---
+<div class="ca-walkthrough" data-ca data-record={JSON.stringify(record)} data-target="0.05" data-eligible="true">
+<section class="ca-hero" aria-labelledby="demo-title">
+  <div><p class="ca-eyebrow">Certified answers</p><h1 id="demo-title">Automate part of your inbox. Review the rest.</h1><p>Teach decisio your categories with labelled examples. Choose an error target. Your application routes certified predictions and sends the rest for review.</p><p class="ca-small">Explore recorded predictions. Your choices change the routing policy; they do not run a live model.</p><nav class="ca-hero-links" aria-label="On this page"><a href="#how-title">See how it works</a><a href="#inbox">Try a recorded prediction</a><a href="#method">Dataset credits</a></nav></div>
+  <figure class="ca-hero-flow"><p class="ca-label">One recorded ticket</p><blockquote data-case-text>{result.example.text}</blockquote><p class="ca-label">Predicted category</p><p class="ca-prediction" data-prediction>{result.example.answerName}</p><svg viewBox="0 0 360 140" role="img" aria-label="Your application checks the certificate, then routes the ticket or requests human review."><text x="180" y="22" text-anchor="middle">Valid correctness certificate?</text><path class="ca-svg-line" data-branch="route" d="M180 30v25H85v25m-6-6 6 6 6-6"/><path class="ca-svg-line ca-svg-line--muted" data-branch="review" d="M180 55h95v25m-6-6 6 6 6-6"/><rect class="ca-svg-box" data-hero-route x="10" y="88" width="150" height="42" rx="8"/><text data-hero-route-text x="85" y="114" text-anchor="middle">Route automatically</text><rect class="ca-svg-box" data-hero-review x="200" y="88" width="150" height="42" rx="8"/><text data-hero-review-text x="275" y="114" text-anchor="middle">Human review</text></svg><figcaption class="ca-small">Recorded prediction. Your application owns the action.</figcaption></figure>
+</section>
+  <section class="ca-learn ca-player" data-player="learn" data-loop data-playback="idle" aria-labelledby="how-title">
+    <div class="ca-section-head"><div><p class="ca-eyebrow">How it works</p><h2 id="how-title">Teach. Certify. Use it in your app.</h2></div>
+    </div>
+    <div class="ca-stages">
+      {stages.map((stage, i) => <article class="ca-stage" data-stage={i} data-phase={i}>
+        <p class="ca-stage-number">{i + 1}</p><h3>{stage.title}</h3>
+        <svg viewBox="0 0 320 154" role="img" aria-label={`${stage.top}. ${stage.bottom}.`}>
+          <rect class="ca-svg-box" x="10" y="6" width="300" height="43" rx="7"/><text x="160" y="33" text-anchor="middle">{stage.top}</text>
+          <path class="ca-svg-line" d="M160 50v48m-6-6 6 6 6-6"/>
+          <circle class="ca-packet" cx="160" cy="57" r="5"/>
+          <rect class="ca-svg-end" x="10" y="103" width="300" height="43" rx="7"/><text class="ca-svg-end-text" x="160" y="130" text-anchor="middle">{stage.bottom}</text>
+        </svg>
+        <p>{stage.note}</p>
+      </article>)}
+    </div>
+    <p class="ca-play-status">The diagrams illustrate the steps. Each stage keeps its explanation visible.</p>
+  </section>
+
+  <section class="ca-inbox" id="inbox" aria-labelledby="inbox-title" data-table-keys>
+    <div class="ca-section-head"><div><p class="ca-eyebrow">A recorded support task</p><h2 id="inbox-title">Follow one prediction.</h2></div></div>
+    <p>Try three selected test messages, then change the error target. The predictions stay the same; which ones your application can route changes.</p>
+    <div class="ca-picker" data-enhance hidden>
+      <fieldset><legend>Error target, among certified answers</legend><div class="ca-options">{['0.02', '0.05', '0.1'].map(a => <button type="button" class="chip" data-target-select={a} aria-pressed={String(a === '0.05')}>{Number(a) * 100}% target</button>)}</div></fieldset>
+      <fieldset><legend>Selected cases, not a representative sample</legend><div class="ca-options">{record.cases.map((c: any) => <button type="button" class="chip" data-case={c.id} aria-pressed={String(c.id === 'clear')}>{c.name}</button>)}</div></fieldset>
+    </div>
+    <div class="ca-ticket-flow">
+      <article class="ca-ticket"><p class="ca-label">Incoming ticket</p><blockquote data-case-text>{result.example.text}</blockquote><p class="ca-label">Predicted category</p><p class="ca-prediction" data-prediction>{result.example.answerName}</p><p class="ca-small">The model proposes a category. It does not send a customer reply.</p></article>
+      <div class="ca-decision"><span class="ca-connector" aria-hidden="true">→</span><p class="ca-label">Application check</p><p data-certificate-state>Covered by this certificate</p><p class="ca-small">A valid correctness certificate lets your backend take the routing path.</p><svg class="ca-route-motion" viewBox="0 0 160 90" aria-hidden="true"><path data-branch="route" d="M10 45H70V20H145m-6-6 6 6-6 6"/><path data-branch="review" d="M10 45H70V70H145m-6-6 6 6-6 6"/><circle data-route-marker cx="10" cy="45" r="5"/></svg></div>
+      <div class="ca-destinations"><div class="ca-destination is-selected" id="tc-lane-auto" data-lane="route"><span class="ca-dest-icon" aria-hidden="true">↗</span><h3>Route automatically</h3><p>Assign the predicted category.</p></div><div class="ca-destination" id="tc-lane-person" data-lane="review"><span class="ca-dest-icon" aria-hidden="true">↘</span><h3>Human review</h3><p>Keep the prediction as a suggestion.</p></div></div>
+    </div>
+    <p class="ca-result-line" role="status" data-result-announcement><strong data-destination>Route automatically</strong><span data-route-reason> This prediction reaches the recorded cutoff.</span></p>
+    <details class="ca-inspect"><summary>Inspect this prediction</summary><dl><div><dt>Predicted label</dt><dd><code data-case-answer>{result.example.answer}</code></dd></div><div><dt>Top probability</dt><dd><code data-case-probability>{result.example.probability.toFixed(5)}</code></dd></div><div><dt>Recorded certificate cutoff</dt><dd><code data-cutoff>{result.threshold.toFixed(6)}</code></dd></div></dl><p class="ca-small">The cutoff comes from the separate labelled examples. It is different from the error target. Displayed values are rounded.</p></details>
+    <details class="ca-truth" data-truth><summary>Show the known test label</summary><p><strong data-verdict>Right in this test.</strong> Correct category: <span data-test-label>{result.example.labelName}</span>.</p><p class="ca-small">The evaluator had this label. Your application does not know it at runtime; revealing it here does not change the routing decision.</p></details>
+
+    <div class="ca-population" aria-labelledby="population-title"><h3 id="population-title">Now look at the whole test inbox.</h3><p>The selected message explains one decision. These totals cover all {n(record.testN)} test messages.</p>
+      <svg class="ca-population-bar" viewBox="0 0 1000 36" preserveAspectRatio="none" role="img" data-population-bar aria-label={`${n(result.covered)} certified, ${n(result.review)} for review; ${result.errors} certified predictions were wrong.`}><defs><pattern id="ca-mistake-pattern" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M-2 2l4-4M0 8l8-8M6 10l4-4" class="ca-hatch"/></pattern></defs><rect class="ca-bar-review" width="1000" height="36"/><rect class="ca-bar-certified" data-bar-certified width={1000 * result.covered / record.testN} height="36"/><rect fill="url(#ca-mistake-pattern)" data-bar-errors x={1000 * (result.covered - result.errors) / record.testN} width={1000 * result.errors / record.testN} height="36"/></svg>
+      <dl class="ca-totals"><div><dt>Certified for automatic routing</dt><dd><strong data-covered>{n(result.covered)}</strong><span data-share>{pct(result.covered / record.testN)} of the whole inbox</span></dd></div><div><dt>For human review</dt><dd><strong data-review>{n(result.review)}</strong><span data-review-share>{pct(result.review / record.testN)} of the whole inbox</span></dd></div><div class="ca-errors"><dt>Wrong among certified</dt><dd><strong data-error-count>{n(result.errors)} of {n(result.covered)}</strong><span data-error-rate>{pct(result.wrongRate)}</span></dd></div></dl>
+      <p class="ca-target-note" data-target-note>A certified prediction can still be wrong. The hatched part shows mistakes inside the certified population.</p>
+    </div>
+    <div data-static-targets><div class="table-scroll"><table class="data-table"><caption>Recorded targets on the same test inbox</caption><thead><tr><th scope="col">Error target</th><th scope="col">Certified</th><th scope="col">Review</th><th scope="col">Wrong among certified</th></tr></thead><tbody>{['0.02','0.05','0.1'].map(alpha => { const r = selectResult(record, alpha, 'clear'); return <tr><th scope="row">{Number(alpha) * 100}%</th><td>{n(r.covered)}</td><td>{n(r.review)}</td><td>{r.wrongRate === null ? 'Not applicable' : `${n(r.errors)} of ${n(r.covered)} (${pct(r.wrongRate)})`}</td></tr>; })}</tbody></table></div></div>
+    <noscript><details class="ca-inspect" data-static-cases><summary>Read the other two recorded cases</summary>{record.cases.slice(1).map((example: any) => { const r = selectResult(record, '0.05', example.id); return <article><h3>{example.name}</h3><blockquote>{example.text}</blockquote><p>Predicted category: {example.answerName}. At the default target: {r.eligible ? 'route automatically' : 'human review'}.</p><p>Known test label: {example.labelName}. {example.answer === example.label ? 'Right in this test.' : 'Wrong in this test, despite being certified.'}</p></article>; })}</details></noscript>
+    <p class="src-note">{source}</p><p class="ca-small">Taught with {n(record.teachN)} examples and certified on {n(record.heldN)} separate examples. These selected cases explain possible outcomes; the totals use the full test split.</p>
+  </section>
+
+  <section class="ca-promise" aria-labelledby="meaning-title"><h2 id="meaning-title">What the error target means</h2><div class="ca-promise-grid"><p>For traffic like your examples, on the same serving setup, the certificate promises that <strong>nine times in ten</strong>, the share wrong among certified answers stays within your target.</p><p>The promise is about a rate across answers. It does not tell your application whether one particular answer is right. A stricter target can leave more for review, or certify nothing.</p></div><p class="ca-small">Choosing a probability cutoff yourself does not provide this promise. Certification checks labelled evidence. <a href="/docs/tasks/certify/#1-know-the-promise">Read what a certificate covers</a>.</p>
+    <details class="ca-inspect"><summary>Use the result in your backend</summary><p>For a correctness-based action, check that <code>certified</code> is <code>true</code> and <code>certificate_kind</code> is <code>gold</code>. An agreement certificate concerns matching the model, mistakes included.</p><p>Send uncertified predictions, a paused certificate and service failures to your review path. <a href="/docs/use-cases/support-routing/">Use the runnable support-routing example</a>.</p></details>
+  </section>
+</div>

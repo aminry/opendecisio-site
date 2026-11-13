@@ -76,8 +76,8 @@ export function task(model, dataset, k = 10, draw = 1) {
 export const SETUPS = [['g31', 'banking77'], ['g12', 'banking77'], ['g31', 'clinc150'], ['g12', 'clinc150']];
 
 /**
- * The out-of-scope fix under the current monitor (oos_replay.json): the CLINC150 stream with out_of_scope taught,
- * its recorded readouts replayed through the monitor of the release it names. Checked against the drift record it
+ * Historical offline policy replay (oos_replay.json): the CLINC150 stream with out_of_scope taught,
+ * its recorded readouts replayed with suspension on an answer-mix alert, not the current server default. Checked against the drift record it
  * replays (the same stream), with the share of off-topic messages at the first pause read from the stream's ramp.
  */
 export function oosReplay() {
