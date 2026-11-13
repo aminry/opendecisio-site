@@ -6,9 +6,10 @@ export const p2 = (n) => Number(n).toFixed(2);
 export const p3 = (n) => Number(n).toFixed(3);
 
 /** The panel around a figure's drawing. `live` is the number of seconds the animation takes; without it the figure holds still. */
-export function panel({ name, label, title, desc, body, legend, source, live, extra = '', interactive = false }) {
-	return `<figure class="fig fig--${name}" data-fig="${name}"${live ? ` data-live="${live}"` : ''}>
-<div class="fig__head"><div><p class="fig__kicker">Figure · ${esc(label)}</p><p class="fig__title">${esc(title)}</p></div>${live ? '<button type="button" class="fig__pause" data-fig-pause hidden>Pause</button>' : ''}</div>
+export function panel({ name, label, title, desc, body, legend, source, live, steps = ['Text', 'Read the text', 'Answer the questions'], extra = '', interactive = false }) {
+	return `<figure class="fig fig--${name}" data-fig="${name}"${live ? ` data-live="${live}" data-fig-steps="${esc(JSON.stringify(steps))}"` : ''}>
+<div class="fig__head"><div><p class="fig__kicker">Figure · ${esc(label)}</p><p class="fig__title">${esc(title)}</p></div></div>
+${live ? `<div class="fig__enhance"><div class="fig__controls"><button type="button" data-fig-play disabled>Play</button><button type="button" data-fig-pause disabled>Pause</button><button type="button" data-fig-step disabled>Step</button><button type="button" data-fig-all disabled>Show all</button></div><p class="fig__status" data-fig-status aria-live="polite">Complete diagram shown.</p></div>` : ''}
 <div class="fig__stage"${interactive ? ` role="group" aria-label="${esc(desc)}"` : ` role="img" tabindex="0" aria-label="${esc(desc)}"`}>${body}</div>
 ${extra}${legend ? `<p class="fig__legend">${legend}</p>` : ''}${source ? `<p class="fig__source">${source}</p>` : ''}
 </figure>`;

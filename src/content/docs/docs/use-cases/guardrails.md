@@ -7,6 +7,8 @@ description: Check each message against a policy, such as toxicity, in one yes-o
 
 This script asks one yes-or-no question and blocks or allows only on a certified answer:
 
+::figure{name="recipe-guardrails"}
+
 ::site-block{name="route-guardrails"}
 
 Until the task is certified (step 2), every answer goes to a person, as on the stand-in.

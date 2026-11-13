@@ -12,6 +12,8 @@ Before you start, export what you have taught:
 curl -s 'http://127.0.0.1:8000/v1/tasks?full=1' > tasks.json
 ```
 
+::figure{name="upgrade-flow"}
+
 ## 1. Read the notes for every release you skip
 
 [Release notes](/docs/releases/#upgrade-notes) has, for each release that changes what a deployment serves, who is affected and what to do.

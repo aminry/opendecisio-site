@@ -13,6 +13,8 @@ Each example carries its own options:
 
 ::site-block{name="dynamic-register"}
 
+::figure{name="dynamic-options"}
+
 ## 1. See where it works great
 
 On questions where the right option can be read from the text, most answers are certified:

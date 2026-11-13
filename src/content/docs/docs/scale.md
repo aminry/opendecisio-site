@@ -36,6 +36,8 @@ with urllib.request.urlopen(request) as response:
     print("server ms:", response.headers["x-decisio-server-ms"])
 ```
 
+::figure{name="shared-read"}
+
 ## 1. Ask many questions in one request
 
 The 31B answered 50 questions about one 3,000-token text in 1.08 s.

@@ -188,3 +188,19 @@ Put limits last in a short Good to know section, while keeping prerequisites tha
 
 Public documentation never names specific commits or links to commit pages.
 Describe a feature by the application behavior it enables, not by the benchmark or implementation process that motivated it.
+
+## Interactive learning figures
+
+A figure renders its complete useful state without JavaScript.
+Enhancement controls appear only when JavaScript is available; they use native buttons and labelled inputs.
+Start playback on an explicit action, run it once and hold on the complete result.
+Pause it out of view or when the tab is hidden, keep a manual pause until resumed, and react when the reader changes their reduced-motion preference.
+
+Use a small field chooser to explain JSON; individual members do not each need a keyboard stop.
+Keep scrollable code panels reachable from a keyboard.
+Label illustrative probabilities beside the drawing, and keep measured figures tied to their recorded source.
+A manual act/review line never implies a certificate; a certification control uses only its recorded stops.
+
+Use the existing figure panel, type and colour tokens.
+Keep labels in HTML where they need to stay readable on a phone, with equivalent text for every drawing.
+A schedule diagram without measured timing says that its boxes have no timing scale.

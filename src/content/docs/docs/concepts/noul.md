@@ -33,6 +33,15 @@ The probability of yes is 0.1, and the probability of no is `1 - 0.1`, or 0.9.
 The answer is a number, not a Boolean.
 A value near 0 means likely no, a value near 1 means likely yes, and a value near 0.5 gives little separation.
 
+::figure{name="yes-no-probability"}
+
+<details>
+<summary>Explore the request and answer fields</summary>
+
+::figure{name="request-map-noul"}
+
+</details>
+
 ## Keep a review path
 
 Your application chooses when to act on yes, when to act on no and when to ask for review.

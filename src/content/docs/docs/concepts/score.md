@@ -49,6 +49,15 @@ These illustrative fields use chosen probabilities, rather than a measured model
 It can be fractional, even though your rubric contains whole-number levels.
 The probability keys are strings such as `"2"`, and `legend` maps each index back to its description.
 
+::figure{name="score-distribution"}
+
+<details>
+<summary>Explore the request and answer fields</summary>
+
+::figure{name="request-map-score"}
+
+</details>
+
 ## Choose the action from your rubric
 
 If your code needs the likeliest level, select the key with the largest value in `probabilities`; here that is level 2.
