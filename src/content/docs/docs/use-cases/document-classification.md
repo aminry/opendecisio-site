@@ -7,6 +7,8 @@ description: Sort incoming documents by type, file the ones decisio can stand be
 
 This script asks for the document's type and files it only on a certified answer:
 
+::figure{name="recipe-document-classification"}
+
 ::site-block{name="route-document-classification"}
 
 Until the task is certified (step 2), every answer goes to a person, as on the stand-in.

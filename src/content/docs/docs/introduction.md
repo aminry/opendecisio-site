@@ -6,7 +6,7 @@ description: Add fast, structured decisions to your backend. Send text and quest
 Use decisio when your application needs to choose a queue, check a condition or rate something on a scale.
 You define the possible answers, and your code decides what happens with the result.
 
-::figure{name="request-flow"}
+::figure{name="first-question"}
 
 ## A decision your code can use
 

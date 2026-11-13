@@ -50,7 +50,7 @@ jobs:
           # The files whose change means the examples may differ: the docs' pages (their code samples), the code that writes
           # a sample (site-blocks, the figures' recorded decision, the home page's blocks, the facts they come from), the plan
           # and the runner that runs them, the record, and the release they run against.
-          pattern='^(public/examples/questions/|src/content/docs/|src/lib/(site-blocks|blocks|home|launch|remark-upstream)\.mjs$|src/lib/figures/core\.mjs$|src/lib/docs-figures\.mjs$|src/data/launch/|verification/|src/data/integrations\.json$|scripts/(verify-commands|verify-integrations|verify-ollama)\.mjs$|scripts/checks/verify-record\.mjs$|upstream\.json$)'
+          pattern='^(public/examples/questions/|src/content/docs/|src/lib/(site-blocks|question-examples|blocks|home|launch|remark-upstream)\.mjs$|src/lib/figures/core\.mjs$|src/lib/docs-figures\.mjs$|src/data/launch/|verification/|src/data/integrations\.json$|scripts/(verify-commands|verify-integrations|verify-ollama)\.mjs$|scripts/checks/verify-record\.mjs$|upstream\.json$)'
           case "$EVENT" in
             pull_request) files=$(gh pr diff "$PR" --repo "$REPO" --name-only) ;;
             push)
@@ -133,6 +133,8 @@ jobs:
         run: node --test scripts/checks/docs-navigation-selftest.mjs
       - name: Tutorial requests match their downloads and fail on HTTP errors
         run: node --test scripts/checks/question-examples-selftest.mjs
+      - name: Illustration scores and manual policies
+        run: node --test scripts/checks/figure-math-selftest.mjs
       - name: Every moved page redirects to a built page
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/redirects.mjs
@@ -242,6 +244,11 @@ jobs:
         with:
           path: ~/apt-archives
           key: ${{ steps.apt.outputs.cache-primary-key }}
+      - name: Figure controls, motion preferences and static fallbacks
+        if: matrix.shard == '1/2'
+        run: node scripts/checks/figure-interactions.mjs
+        env:
+          ENGINE: ${{ matrix.engine }}
       - name: WCAG 2.2 AA, CSP, failed requests, layout shift, keyboard reach, media, search (phone, tablet, desktop; light, dark)
         run: node scripts/checks/browser.mjs
         env:

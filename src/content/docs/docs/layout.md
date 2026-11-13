@@ -24,6 +24,8 @@ This reads the layout your server gives a request that names none, and why:
 
 The CPU stand-in serves the Qwen model, so it says `plain`; a Gemma server with nothing taught says `header`.
 
+::figure{name="request-layout"}
+
 ## 1. Know what the header changes
 
 Answers change.

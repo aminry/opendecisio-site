@@ -43,6 +43,15 @@ For example, these are illustrative fields from one answer, with chosen probabil
 The probabilities cover all supplied options and add up to 1, apart from rounding.
 Here, billing has probability 0.8, while the two alternatives together have probability 0.2.
 
+::figure{name="choice-distribution"}
+
+<details>
+<summary>Explore the request and answer fields</summary>
+
+::figure{name="request-map-choice"}
+
+</details>
+
 ## Map the key to an action
 
 Your backend maps `billing` to its billing queue, `access` to its access queue and `bug` to its bug queue.

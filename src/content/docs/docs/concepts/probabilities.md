@@ -4,9 +4,9 @@ description: Read an answer's probabilities, choose a review policy and evaluate
 ---
 
 Use the probabilities to decide when your application should act and when it should ask for review.
-The recorded support-ticket example below shows a probability for each option:
+Move the manual threshold to see which illustrative answers your policy would accept:
 
-::figure{name="first-decision"}
+::figure{name="manual-threshold"}
 
 ## Read the value for your question type
 
@@ -53,6 +53,13 @@ Your code checks the returned `certified` field before using its certified-answe
 Certification applies to choice and yes/no tasks, not scores.
 A gold certificate concerns errors against labelled answers; a learned table's agreement certificate concerns agreement with the model.
 If your policy requires a gold certificate, check `certificate_kind` as well as `certified`.
+
+<details>
+<summary>Explore a recorded request and answer</summary>
+
+::figure{name="first-decision"}
+
+</details>
 
 ## Good to know
 

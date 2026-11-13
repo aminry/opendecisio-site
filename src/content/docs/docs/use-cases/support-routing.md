@@ -7,6 +7,8 @@ description: Send each support ticket to the right queue, act on the routes deci
 
 This script asks for the queue and acts only on a certified answer:
 
+::figure{name="recipe-support-routing"}
+
 ::site-block{name="route-support-routing"}
 
 Until the task is certified (step 2), every answer goes to a person, as on the stand-in.

@@ -9,7 +9,7 @@ description: Start on a GPU, with MLX on Apple silicon, or with Ollama on a lapt
 
 Four steps: pick your machine, start a server, ask a question and read the answer.
 
-::figure{name="request-flow"}
+::figure{name="first-question"}
 
 ## 1. Pick your machine
 

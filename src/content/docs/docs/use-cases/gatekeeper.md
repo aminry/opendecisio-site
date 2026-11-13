@@ -7,6 +7,8 @@ description: Decide allow, ask or block for each shell command a coding agent pr
 
 decisio names the rule a command falls under; your policy maps the rule to an action, and only a certified answer acts on its own:
 
+::figure{name="recipe-gatekeeper"}
+
 ::site-block{name="route-gatekeeper"}
 
 Until the task is certified (step 2), every answer goes to a person, as on the stand-in.

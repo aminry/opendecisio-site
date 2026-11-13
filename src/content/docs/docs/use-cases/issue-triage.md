@@ -7,6 +7,8 @@ description: Label each new issue by its kind and its owning team, out of the bo
 
 It sorts issues well untaught; this script asks for the issue's kind and applies the label only when the answer is certified:
 
+::figure{name="recipe-issue-triage"}
+
 ::site-block{name="route-issue-triage"}
 
 Until the task is certified (step 2), every answer goes to a person, as on the stand-in.

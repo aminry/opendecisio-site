@@ -1683,3 +1683,326 @@ a.fig__card:hover {
 .sl-markdown-content .glossary-table tr:target {
 	background: color-mix(in srgb, var(--sl-color-accent) 12%, transparent);
 }
+
+/* Learning figures use the existing panel, with readable HTML labels at every width. */
+.fig__enhance {
+	display: none;
+}
+
+.js .fig__enhance {
+	display: block;
+}
+
+.fig__controls {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+	margin-block: 0.75rem;
+}
+
+.fig__controls button {
+	margin: 0;
+	min-block-size: 2.75rem;
+	padding: 0.4rem 0.7rem;
+	border: 1px solid var(--d-line-strong);
+	border-radius: var(--d-radius-control);
+	background: var(--d-surface);
+	color: var(--d-ink);
+	font: 500 0.875rem var(--d-font-body);
+	cursor: pointer;
+}
+
+.fig__controls button[aria-pressed='true'] {
+	border-color: var(--d-accent);
+	box-shadow: inset 0 -2px var(--d-accent);
+}
+
+.fig__controls button:disabled {
+	color: var(--d-muted);
+	cursor: default;
+}
+
+.fig__controls button:focus-visible,
+.fig input:focus-visible {
+	outline: 2px solid var(--d-focus);
+	outline-offset: 3px;
+}
+
+.fig__status,
+.fig__field-note {
+	min-block-size: 3em;
+	margin-block: 0.5rem 0;
+	font-size: 0.9rem;
+	color: var(--d-muted);
+}
+
+.fig__field-note {
+	min-block-size: 4.5em;
+}
+
+.fig input[type='range'] {
+	inline-size: 100%;
+	min-block-size: 2.75rem;
+	accent-color: var(--d-accent-fill);
+}
+
+.fig .learn__flow {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 1.25rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.fig .learn__flow > li {
+	position: relative;
+	min-inline-size: 0;
+	margin: 0;
+	padding: 0.85rem;
+	border: 1px solid var(--d-line-strong);
+	border-radius: var(--d-radius-control);
+	background: var(--d-surface);
+	font-size: 0.9rem;
+	line-height: 1.45;
+}
+
+.learn__flow b,
+.learn__flow span {
+	display: block;
+}
+
+.learn__flow b {
+	margin-bottom: 0.4rem;
+	color: var(--d-strong);
+}
+
+.learn__flow > li:not(:last-child)::after {
+	position: absolute;
+	inset-inline-end: -1.1rem;
+	inset-block-start: 50%;
+	content: '→';
+	color: var(--d-accent);
+	font-weight: 650;
+}
+
+.fig .learn__flow > li.is-current {
+	border-color: var(--d-accent);
+	box-shadow: inset 0 0 0 1px var(--d-accent);
+}
+
+.fig .learn__distribution {
+	margin: 0.5rem 0;
+}
+
+.learn__distribution > div {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 1rem;
+	align-items: center;
+	padding-block: 0.7rem;
+	border-bottom: 1px solid var(--d-line);
+}
+
+.learn__distribution dt {
+	font-size: 0.9rem;
+	color: var(--d-ink);
+}
+
+.learn__distribution dd {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 4ch;
+	gap: 0.6rem;
+	align-items: center;
+	margin: 0;
+	font: 0.9rem var(--d-font-mono);
+}
+
+.learn__bar,
+.learn__axis {
+	display: block;
+	inline-size: 100%;
+	min-inline-size: 0;
+	height: auto;
+}
+
+.learn__bar {
+	margin: 0;
+	overflow: visible;
+}
+
+.learn__axis {
+	margin-block: 0.5rem;
+}
+
+.learn__marker {
+	fill: var(--d-accent-line);
+}
+
+.learn__threshold {
+	fill: none;
+	stroke: var(--d-ink);
+	stroke-width: 2;
+	stroke-dasharray: 2 2;
+}
+
+.learn__threshold-halo {
+	fill: none;
+	stroke: var(--d-surface);
+	stroke-width: 4;
+}
+
+.learn__ticks {
+	display: flex;
+	justify-content: space-between;
+	gap: 0.5rem;
+	font-size: 0.8rem;
+	color: var(--d-muted);
+}
+
+.learn__result {
+	min-block-size: 3em;
+	font-size: 1rem;
+	font-weight: 600;
+	color: var(--d-strong);
+}
+
+.learn__arithmetic {
+	font-size: 0.85rem;
+	font-family: var(--d-font-mono);
+}
+
+.fig .learn__cases {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.fig .learn__cases > li {
+	display: grid;
+	grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr) 3.5rem;
+	gap: 0.75rem;
+	align-items: center;
+	margin: 0;
+	padding-block: 0.75rem;
+	border-bottom: 1px solid var(--d-line);
+	font-size: 0.85rem;
+}
+
+.learn__cases b,
+.learn__cases span {
+	display: block;
+}
+
+.learn__cases > li > div {
+	min-inline-size: 0;
+}
+
+@media (max-width: 48rem) {
+	.fig .learn__flow {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1.5rem;
+	}
+	.learn__flow > li:not(:last-child)::after {
+		inset-inline-end: auto;
+		inset-inline-start: 50%;
+		inset-block-start: auto;
+		inset-block-end: -1.4rem;
+		transform: rotate(90deg);
+	}
+	.fig__field-note {
+		min-block-size: 6.5em;
+	}
+}
+
+.fig .learn__flow--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.fig .learn__flow--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.learn__schedule + .learn__schedule {
+	margin-top: 1.5rem;
+}
+
+.learn__schedule h3,
+.learn__branches h3 {
+	margin-block: 0 0.75rem;
+	font-size: 1rem;
+}
+
+.learn__branches {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+
+.learn__branches > section {
+	min-inline-size: 0;
+	padding: 1rem;
+	border: 1px solid var(--d-line-strong);
+	border-radius: var(--d-radius-control);
+	background: var(--d-surface);
+	font-size: 0.9rem;
+}
+
+.learn__junction {
+	margin-block: 1rem;
+	font-weight: 600;
+}
+
+@media (max-width: 48rem) {
+	.fig .learn__flow--2,
+	.fig .learn__flow--3,
+	.learn__branches {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+.fig .drift__events {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.fig .drift__events li {
+	display: grid;
+	gap: 0.3rem;
+	margin-block: 0.75rem;
+	padding-inline-start: 1rem;
+	border-inline-start: 3px solid var(--d-line-strong);
+	font-size: 0.9rem;
+}
+
+.fig .drift__events li[aria-current='step'] {
+	border-inline-start-color: var(--d-accent);
+}
+
+.learn__mini-distribution > div {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 0.15rem 0.4rem;
+	margin-block: 0.4rem;
+	font-size: 0.8rem;
+}
+
+.learn__mini-distribution .learn__bar {
+	grid-column: 1 / -1;
+}
+
+.learn__selected {
+	font-size: 0.8rem;
+	font-weight: 600;
+}
+
+.learn__mini-distribution .learn__bar {
+	block-size: 0.4rem;
+}
+
+.learn__axis + .learn__ticks {
+	margin-top: 0;
+	padding-inline: 3.3333%;
+}
+
+.fig [data-phase].is-current .f-node,
+.fig [data-phase].is-current .f-rail {
+	stroke: var(--d-accent-line);
+	stroke-width: 2.5;
+}

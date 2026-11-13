@@ -40,9 +40,9 @@ const ollamaRequest = (model) => `curl http://localhost:11434/v1/systemone \\
   }
 }'`;
 
-import { readFileSync } from 'node:fs';
+import { questionExample } from './question-examples.mjs';
 import { recordedRequest, recordedResponse } from './docs-figures.mjs';
-import { pin, readUpstream, siteRoot } from './upstream.mjs';
+import { pin, readUpstream } from './upstream.mjs';
 import { recipeIds, routeScript, teachBody } from './use-cases.mjs';
 import { certificate, health } from './recorded.mjs';
 
@@ -56,7 +56,7 @@ const curl = (body) => {
 const firstRequest = () => recordedRequest();
 // The download and the command use the same JSON so a copied request cannot drift.
 const questionCommand = (type) => {
-	const body = JSON.parse(readFileSync(`${siteRoot}/public/examples/questions/${type}.json`, 'utf8'));
+	const body = questionExample(type);
 	return curl(body).replace('curl http://', 'curl --fail-with-body -sS --max-time 60 http://');
 };
 const standInStart = () => `git clone --branch ${pin.tag} https://github.com/${pin.repository}

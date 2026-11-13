@@ -13,6 +13,8 @@ On a Mac, a 1,176-token moderation policy sent as the context took 373 ms a read
 
 ::upstream{file="docs/tasks.md" section="Task context" block="1"}
 
+::figure{name="fixed-context"}
+
 ## 1. See where it works great
 
 | Engine | The policy at the start of every request | The policy as the task's context |

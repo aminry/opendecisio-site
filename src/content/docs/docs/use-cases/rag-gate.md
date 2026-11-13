@@ -7,6 +7,8 @@ description: Before a retrieval pipeline answers, check whether the passages it 
 
 This script sends the question and the passage as one text and acts only on a certified answer:
 
+::figure{name="recipe-rag-gate"}
+
 ::site-block{name="route-rag-gate"}
 
 Until the task is certified (step 2), every answer goes to a person, as on the stand-in.

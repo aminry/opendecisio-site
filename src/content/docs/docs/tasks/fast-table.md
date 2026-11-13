@@ -21,6 +21,8 @@ It is off unless a registration asks for it:
 
 The registration tries it on your own examples and keeps it only where it saves at least the task's bar, 10% of the time per request by default, and its answers certify.
 
+::figure{name="table-fallback"}
+
 ## 1. See where it works great
 
 It works best on short, command-style texts with about a thousand labelled examples, where decisio is reliable: an assistant's commands, spam, a fixed set of intents.

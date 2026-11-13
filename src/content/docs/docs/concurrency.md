@@ -19,6 +19,8 @@ This reads the mode your server runs; without a flag it is serial:
 
 ::site-block{name="concurrency-health"}
 
+::figure{name="concurrent-requests"}
+
 ## 1. Turn it on
 
 Start the server with `--concurrency batched`:

@@ -10,6 +10,8 @@ With a server running, this checks the service and asks one choice question:
 
 [Download this request as JSON](/examples/questions/choice.json) for your client.
 
+::figure{name="request-map-choice"}
+
 ## 1. Supply the text
 
 Put the message, document or record you want evaluated in `state`.

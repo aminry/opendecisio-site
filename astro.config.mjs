@@ -2,6 +2,7 @@
 import sitemap from '@astrojs/sitemap';
 import starlight from '@astrojs/starlight';
 import { defineConfig, fontProviders } from 'astro/config';
+import codeFocus from './src/lib/expressive-code-focus.mjs';
 import rehypeTables from './src/lib/rehype-tables.mjs';
 import rehypeThemedImages from './src/lib/rehype-themed-images.mjs';
 import remarkUpstream from './src/lib/remark-upstream.mjs';
@@ -64,7 +65,7 @@ export default defineConfig({
 			head: socialTags,
 			// One frame for every code block: a plain panel with its copy button.
 			// A code block scrolls its long lines sideways and never breaks one inside a word or a path.
-			expressiveCode: { defaultProps: { frame: 'code', wrap: false, preserveIndent: true } },
+			expressiveCode: { plugins: [codeFocus()], defaultProps: { frame: 'code', wrap: false, preserveIndent: true } },
 			sidebar: docsGroups.map((g) => ({ ...g, items: g.items.map(({ legacy, ...item }) => item) })),
 		}),
 		sitemap(),

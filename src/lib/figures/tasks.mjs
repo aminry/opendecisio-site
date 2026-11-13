@@ -61,9 +61,9 @@ function certifySlider() {
 	const s0 = R.stops[start];
 	const w = (s) => (640 * s.certified / R.n).toFixed(1);
 	const bad = (s) => (640 * s.wrong / R.n).toFixed(1);
-	const body = `<div class="th" data-cs data-d="${esc(JSON.stringify(R))}"><label class="th__l" for="cs-in">Error target: at most this share of certified answers wrong</label>
-<input id="cs-in" class="th__in" type="range" min="0" max="${R.stops.length - 1}" step="1" value="${start}" aria-describedby="cs-out">
-<div class="th__ticks" aria-hidden="true">${R.stops.map((s) => `<span>${s.alpha * 100}%</span>`).join('')}</div>
+	const body = `<div class="th" data-cs data-d="${esc(JSON.stringify(R))}"><div class="fig__enhance"><label class="th__l" for="cs-in">Error target: at most this share of certified answers wrong</label>
+<input id="cs-in" class="th__in" type="range" disabled min="0" max="${R.stops.length - 1}" step="1" value="${start}" aria-describedby="cs-out">
+<div class="th__ticks" aria-hidden="true">${R.stops.map((s) => `<span>${s.alpha * 100}%</span>`).join('')}</div></div>
 <svg class="th__svg" viewBox="0 0 640 56" aria-hidden="true"><rect class="f-rail" x="0" y="8" width="640" height="24" rx="6"/><rect class="th__kept" data-cs-ok x="0" y="8" width="${w(s0)}" height="24" rx="6"/><rect class="cs__bad" data-cs-bad x="${(w(s0) - bad(s0)).toFixed(1)}" y="8" width="${bad(s0)}" height="24"/><text class="ft ft-d" x="0" y="52">certified</text><text class="ft ft-d" x="640" y="52" text-anchor="end">not certified</text></svg>
 <p id="cs-out" class="th__out" data-cs-out aria-live="polite">${esc(say(R, s0))}</p></div>`;
 	return panel({
@@ -95,21 +95,27 @@ function drift() {
 	const R = driftStream();
 	const x = (n) => 24 + (600 * n) / R.messages;
 	const y = (s) => 186 - (s / R.share) * 100;
+	const frames = [
+		{ key: 'stable', title: 'Stable traffic', x: x(Math.max(0, R.start - 1)), note: `Before message ${fmt(R.start)}, no out-of-scope traffic has been added to this stream.` },
+		{ key: 'shift', title: 'Traffic shifts', x: x(R.start), note: `From message ${fmt(R.start)} to ${fmt(R.full)}, out-of-scope traffic rises to ${R.share * 100}%.` },
+		{ key: 'suspended', title: 'Certification pauses', x: x(R.suspended.at), note: `At message ${fmt(R.suspended.at)}, certification is suspended after ${R.suspended.wrong} wrong certified answers. Answers continue, marked not certified.` },
+	];
 	// The suspension's label sits above the shaded area, right of its line.
-	const body = `<svg class="fig__svg" viewBox="0 0 720 222" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+	const body = `<div data-drift data-frames="${esc(JSON.stringify(frames))}"><div class="fig__enhance"><div class="fig__controls">${frames.map((frame) => `<button type="button" data-drift-select="${frame.key}" aria-pressed="false" disabled>${frame.title}</button>`).join('')}</div></div><svg class="fig__svg" viewBox="0 0 720 222" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 <path class="f-area" d="M${x(0)} 186L${x(R.start).toFixed(1)} 186L${x(R.full).toFixed(1)} ${y(R.share).toFixed(1)}L${x(R.messages).toFixed(1)} ${y(R.share).toFixed(1)}L${x(R.messages).toFixed(1)} 186Z"/>
 <path class="f-axis" d="M24 186L${x(R.messages)} 186"/>
+<path data-drift-cursor class="learn__threshold" d="M${x(R.suspended.at).toFixed(1)} 20V186"/>
 <path class="f-mark f-mark--on" d="M${x(R.suspended.at).toFixed(1)} 20L${x(R.suspended.at).toFixed(1)} 186"/>
 <text class="ft ft-b" x="${(x(R.suspended.at) + 8).toFixed(1)}" y="34">certification suspended</text>
 <text class="ft ft-d" x="${(x(R.suspended.at) + 8).toFixed(1)}" y="52">message ${fmt(R.suspended.at)}, after ${R.suspended.wrong} wrong certified answers</text>
 <text class="ft ft-d" x="24" y="208">message 0</text><text class="ft ft-d" x="${x(R.messages)}" y="208" text-anchor="end">${fmt(R.messages)}</text>
 <text class="ft ft-d" x="${(x(R.messages) + 8).toFixed(1)}" y="${(y(R.share) + 4).toFixed(1)}">${R.share * 100}%</text>
 <text class="ft ft-d" x="${(x(R.messages) + 8).toFixed(1)}" y="190">0%</text>
-</svg>`;
+</svg><p class="fig__field-note" data-drift-out aria-live="polite">The complete recorded stream is shown. Choose an event to inspect it.</p><ol class="drift__events">${frames.map((frame) => `<li data-drift-event="${frame.key}"><b>${frame.title}</b><span>${esc(frame.note)}</span></li>`).join('')}</ol><p>Next, review the changed traffic and certify the task again before resuming automation.</p></div>`;
 	return panel({
 		name: 'drift-replay', label: 'Watching for drift', title: 'The alarm suspends certification soon after the traffic shifts.',
 		desc: `A certified CLINC150 task on ${R.base}, sent ${fmt(R.messages)} messages, with messages that fit none of its options rising from message ${fmt(R.start)} to ${R.share * 100}% at message ${fmt(R.full)}. Certification was first suspended at message ${fmt(R.suspended.at)}, after ${R.suspended.wrong} wrong certified answers.`,
-		body, legend: 'The shaded area is the share of messages the task has no option for, from 0% to its peak; each of them is a wrong answer. While certification is suspended, answers keep coming, none marked certified.',
+		body, interactive: true, legend: 'The shaded area is the share of messages the task has no option for, from 0% to its peak; each of them is a wrong answer. While certification is suspended, answers keep coming, none marked certified.',
 		source: `Source: the teach-and-certify drift stream, ${R.suspended.model} on ${R.machine.replace(/ \(.*\)$/, '')}, measured on the decisio ${R.suspended.version} release candidate.`,
 	});
 }
