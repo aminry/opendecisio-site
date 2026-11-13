@@ -81,7 +81,7 @@ Once the engine is dead, every request, and `/health`, answers at once with the 
 - **Replicas behind a load balancer:** start every one with `--task-store` on object storage, such as `s3://bucket/prefix`. A task taught on one replica reaches the others within `--task-store-poll-seconds`, 5 by default, as the same fitted record, so every replica serves the same numbers.
 - **Two teachers at once:** a second registration of the same task answers 409 instead of overwriting it; read the task again and send it again.
 - **Keep fitting on one replica:** start the others with `--task-store-readonly` and route the task-writing routes to that one.
-- **A task with a fast table:** every replica needs the `decisio[table]` extra and CPU headroom, and decides for itself whether to use it; [Answer short tasks faster](/docs/tasks/fast-table/#9-operating-notes) has what each state means.
+- **A task with a fast table:** every replica needs the `decisio[table]` extra and CPU headroom, and decides for itself whether to use it; [Add a decision fast path](/docs/tasks/fast-table/#9-operating-notes) has what each state means.
 - **A fast table that learns from traffic:** on the shared store the replicas learn one table together. One replica trains under a lease, every replica times each new version itself, and a restart loses nothing ([Learn across replicas](/docs/tasks/fast-table/#6-learn-across-replicas)).
 - **If the store goes away:** replicas keep serving what they have, and teaching answers 503 until it is back; `/health` says so under `systemone.task_store`.
 

@@ -44,7 +44,7 @@ const ollamaRequest = (model) => `curl http://localhost:11434/v1/systemone \\
 import { questionExample } from './question-examples.mjs';
 import { recordedRequest, recordedResponse } from './docs-figures.mjs';
 import { pin, readUpstream } from './upstream.mjs';
-import { taskRegistration, learningRegistration } from './task-clients.mjs';
+import { taskRegistration, learningRegistration, fastPathRegistration, fastPathRequest } from './task-clients.mjs';
 import { recipeIds, routeScript, teachBody } from './use-cases.mjs';
 import { certificate, health } from './recorded.mjs';
 
@@ -297,6 +297,8 @@ export const siteBlocks = {
 	get 'tuned-mlx-start'() { return { lang: 'bash', text: tunedMlxStart() }; },
 	get 'context-register'() { return { lang: 'python', text: taskRegistration('context') }; },
 	get 'dynamic-register'() { return { lang: 'python', text: dynamicRegister() }; },
+	get 'fast-path-register'() { return { lang: 'python', text: fastPathRegistration() }; },
+	get 'fast-path-ask'() { return { lang: 'python', text: fastPathRequest() }; },
 	get 'fast-table-register'() { return { lang: 'python', text: fastTableRegister() }; },
 	get 'fast-table-learn'() { return { lang: 'python', text: fastTableLearn() }; },
 	get 'fast-table-bench'() { return { lang: 'bash', text: fastTableBench() }; },

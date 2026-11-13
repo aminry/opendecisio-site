@@ -610,8 +610,14 @@ export const sourced = [
 	...fromPage('/news/dynamic-options/', [
 		['55.2% of answers are certified at 3.9% error on the 12B and 54.9% at 3.2% on the 31B', tasksDoc, '| with the re-ranker as shipped: certified share / error among them | 55.2 / 3.9 | 54.9 / 3.2 |'],
 	]),
-	// Answer short tasks faster
+	// Decision fast path
 	...fromPage('/docs/tasks/fast-table/', [
+		['The task can use a long policy, rubric or catalogue.', tasksDoc, 'a policy, a rubric, a catalogue, a set of definitions, a long instruction'],
+		['The fast path encodes the state alone', tasksDoc, 'A fast table encodes the state alone'],
+		['the model reads the context together with the state', tasksDoc, 'a long, fixed text that the server reads before the state of every request of the task'],
+		['Changing the context changes the task and requires teaching and certification again.', tasksDoc, 'Registering an id again with another context moves that task to the new context, with a new certificate'],
+		['This fast path supports choice and yes/no questions on the text route', tasksDoc, 'Choice and yes/no questions on the text route, one order'],
+		['A model fallback can still be uncertified', tasksDoc, 'An answer of either stage that reaches its threshold is certified'],
 	]),
 	...fromPage('/docs/operating/', [
 		['every replica needs the decisio[table] extra and CPU headroom', operating, 'needs `pip install \'decisio[table]\'` on every replica and CPU headroom on each'],

@@ -1,137 +1,242 @@
 ---
-title: Answer short tasks faster
-description: Answer short, repetitive traffic from a small learned classifier on the server's CPU, before the model, kept only where it saves enough time on your own examples, 10% by default.
+title: Give recurring decisions a fast path
+description: Let a small CPU classifier answer eligible requests before the model. Keep shared instructions in task context and send only the facts that change.
 ---
 
-<!-- Site-written: the Answer short tasks faster guide. Its facts are decisio's docs/tasks.md ("A fast table in front of decisio") at the pinned release, and the bench's own description in src/decisio/bench/table_latency.py (src/config/sourced.mjs checks them). -->
+<!-- Site-written from the pinned task/context guides. The API spelling remains fast_table. -->
 
-::covers{links="docs/tasks.md#a-fast-table-in-front-of-decisio-opt-in docs/tasks.md#a-fast-table-that-learns-from-traffic=5-learn-from-your-traffic-with-no-labels"}
+::covers{links="docs/tasks.md#a-fast-table-in-front-of-decisio-opt-in=2-register-the-task docs/tasks.md#a-fast-table-that-learns-from-traffic=5-start-without-human-labels"}
 
-Add a fast table when short, recurring requests can often be answered before reaching the model.
-The table runs on the server's CPU; decisio handles the requests it passes on.
-Registration keeps a table only when its answers certify and it saves enough time on your own examples.
+A **decision fast path** learns a recurring choice or yes/no task, then answers the requests it can certify on the server's CPU.
+The decisio model handles requests the classifier passes on.
+The API calls this feature `fast_table`.
 
 ::figure{name="table-fallback"}
 
-Install the `decisio[table]` extra on the serving host first, or use the [fast-table container](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access).
-Prepare `task.json` as a complete labelled registration, as [Teach a task](/docs/tasks/#3-register) shows.
-This adds the opt-in and asks for a certificate:
+<span class="fp-anchor" id="1-see-where-it-works-great"></span>
 
-::site-block{name="fast-table-register"}
+## 1. Separate shared rules from changing facts
 
-## 1. See where it works great
+The task can use a long policy, rubric or catalogue.
+Register that fixed material once as `context`, and send only the changing facts in each request's `state`.
+The fast path encodes the state alone; the model reads the context together with the state.
 
-Start with short commands, spam checks or a fixed set of intents, with representative labels.
-The registration times the table and model on your host, and keeps the table only if it clears `min_saving`, 10% by default.
-If no table qualifies, the task continues through decisio.
+::figure{name="table-context"}
 
-## 2. Choose a student
+This pattern works across different kinds of decisions:
 
-A student is the small text encoder used by the table.
+| Decision | Shared `context` | Changing `state` | Question |
+| --- | --- | --- | --- |
+| Refund eligibility | Refund policy | Order, delivery and return facts | Eligible, yes or no? |
+| Moderation | Community policy | New post and necessary local context | Allow, review or block? |
+| Incident routing | Ownership rules and runbook | This incident's relevant facts | Which team? |
+
+These are illustrative task shapes, not measured results for these examples.
+Focus the changing input on what the decision needs; its length alone does not determine whether a fast path qualifies.
+
+<span class="fp-anchor" id="3-ask-for-it"></span>
+
+## 2. Register the task
+
+On the serving host, install the `decisio[table]` extra or use the [table container](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access).
+Without the extra, registration returns 422.
+The default student is a small text encoder; you can start with it before choosing another.
+
+Prepare these files beside the script:
+
+| File | Contents |
+| --- | --- |
+| `task.json` | A complete labelled registration: your task id, examples and certification settings, as [Teach a task](/docs/tasks/#3-register) shows |
+| `context.txt` | The shared policy, unchanged across this task's requests |
+
+For the refund example, each labelled request asks the same refund-eligibility question and contains only the changing order facts.
+Use at least 100 fitting examples and about 600 or more held-out examples at the default targets.
+With the default half held out, prepare about 1,200 representative labels to start; the certificate can still find no usable threshold.
+
+Run this with `DECISIO_BASE_URL` set to your running server:
+
+::site-block{name="fast-path-register"}
+
+The script preserves your examples, labels and certificate settings.
+It adds the shared context and enables the default fast path; an existing `fast_table` settings object is preserved.
+Each example is read with the same context the task will use when serving.
+
+<span class="fp-anchor" id="4-read-what-it-kept"></span>
+
+## 3. Check whether a fast path qualified
+
+Registration fits a candidate, checks its certificate and times the classifier and model on your host.
+It keeps the classifier only if it clears `min_saving`, 10% by default.
+If none qualifies, the task continues through decisio.
+
+| Response field | What it tells you |
+| --- | --- |
+| `fast_table_report.kept` | Whether a classifier was kept |
+| `fast_table_report.reason` | Why one was declined |
+| `fast_table_report.guard` | Measured mean times, classifier share and saving |
+| `fast_table_report.kinds` | Which students were tried and selected |
+
+The saving includes the classifier's cost on every request and the model's cost on the requests passed on.
+A retained table is a result for this task and host, not a promised speedup for other traffic.
+
+## 4. Send new facts, then read the answer
+
+Save the new order's facts as `state.json`.
+For example, this is a complete illustrative input, not a training set:
+
+```json
+{
+  "days_since_delivery": 12,
+  "opened": false,
+  "category": "home"
+}
+```
+
+Use the same `task.json` and run:
+
+::site-block{name="fast-path-ask"}
+
+The call selects your task by id and reuses its exact question and any explicit layout setting.
+The policy is already registered; the request sends only the new state.
+A policy repeated at the start of the state is read twice and triggers `x-decisio-warning`.
+
+| Answer field | How to use it |
+| --- | --- |
+| `answered_by` | `table` means the classifier answered; `decisio` means the model answered |
+| `certified` | Whether this answer reaches its applicable certificate's threshold |
+| `certificate_kind` | `gold` concerns human-labelled correctness; `agreement` concerns matching decisio |
+
+For an action that requires correctness certification, check both `certified: true` and `certificate_kind: "gold"`.
+A model fallback can still be uncertified; your backend chooses whether to use it as a suggestion or request human review.
+The [support-routing recipe](/docs/use-cases/support-routing/) shows that application check.
+
+<span class="fp-anchor" id="5-learn-from-your-traffic-with-no-labels"></span>
+
+## 5. Start without human labels
+
+You can also let model-answered traffic supply the learning data.
+Until a candidate qualifies, decisio answers every request.
+A candidate becomes active only after certification and the host saving check pass.
+
+::figure{name="table-learning"}
+
+For this route, replace `task.json` with a complete question registration such as this:
+
+```json
+{
+  "id": "refund-policy-learn",
+  "question": {
+    "type": "noul",
+    "instructions": "Is this return eligible for a refund under the policy?"
+  },
+  "fast_table": {"learn": true},
+  "certify": {"alpha": 0.05}
+}
+```
+
+Use your real refund policy in `context.txt`, then run the same registration and request scripts above.
+For a question registration, the request script names its answer `decision`; labelled registrations retain the question keys from their examples.
+No human labels are invented or added to the learning registration.
+
+A learned table can copy the model's mistakes.
+Its agreement certificate concerns matching the model, not correctness against human labels.
+A labelled task can also learn; its certificate stays gold while it has enough held-out human labels.
+
+The explore share sends some table-eligible requests to the model, 0.02 by default.
+Spot checks also send some table answers to the model, so allow for those model reads when sizing the service.
+Refits continue as traffic arrives; a failed candidate leaves the current serving path available.
+
+## 6. Keep the changing input focused and sufficient
+
+- Put only genuinely shared rules, definitions or catalogue text in `context`.
+- Keep delivery age, item condition, new messages and other changing facts in `state`.
+- Use a compact, consistent representation and leave out duplicated policy text or unrelated logs.
+- If you select an excerpt or summary, preserve every fact needed for the question and evaluate that representation on held-out requests.
+
+A different document on every request is changing input; do not hide it in a supposedly fixed context.
+Shortening an input is not a substitute for checking the task's answers.
+Changing the context changes the task and requires teaching and certification again.
+
+<span class="fp-anchor" id="2-choose-a-student"></span>
+
+## 7. Choose another student when needed
+
+The student turns the changing state into features for the classifier.
 Use `fast_table: true` for the default, or an object with a `kind`.
 
-| `kind` | Student | Choose it for |
+| Setting | Student | Use it when |
 | --- | --- | --- |
-| `static`, the default | potion-base-8M | A low-cost first try on short, repetitive traffic |
-| `static` with `static_model: multilingual` | potion-multilingual-128M | Traffic in several languages |
-| `encoder` | bge-base-en-v1.5 | Many-class English tasks; measure its added CPU cost |
-| `auto` | Tries static and encoder | Letting registration choose the larger saving on this host |
+| `static`, the default | potion-base-8M | Starting with a low-cost classifier |
+| `static` with `static_model: multilingual` | potion-multilingual-128M | Your traffic uses several languages |
+| `encoder` | bge-base-en-v1.5 | Its additional CPU cost pays on your task and host |
+| `auto` | Tries static and encoder | You want registration to select the larger measured saving |
 
 Static students read the whole text.
 The encoder reads at most 512 tokens, from the start and end of a longer text.
+This is a student-specific input rule, not a universal recommended state length.
 
-## 3. Ask for it
+The first use downloads the chosen student.
+Use the [table image](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access) when the host cannot reach the Hub, or fetch the student files before registration.
 
-- Install the extra on every replica serving the table; without it, registration returns 422.
-- Use choice or yes/no questions, a `certify` block, at least 100 fitting examples and about 600 or more held-out examples at the default targets.
-- With the default half held out, prepare about 1,200 representative labels to start; a certificate can still find no usable threshold.
-- Set `fast_table.min_saving` from 0.01 to 0.90 to change the required mean saving.
-- The first use downloads the chosen student; use the [table image](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access) when the serving host cannot reach the Hub.
+<span class="fp-anchor" id="7-measure-it-on-your-own-host"></span>
 
-## 4. Read what it kept
-
-| Field | What to check |
-| --- | --- |
-| `fast_table_report.kept` | Whether a table was kept |
-| `fast_table_report.reason` | Why a table was declined |
-| `fast_table_report.guard` | The measured mean times, table share and saving |
-| `fast_table_report.kinds` | Which students were tried and selected |
-| `answered_by` on an answer | `table` or `decisio` |
-| `status.fast_table` | What this replica is doing now |
-
-Read `certified` and `certificate_kind` as well as the selected answer.
-A table that is not kept leaves the model path available.
-
-## 5. Learn from your traffic, with no labels
-
-You can register a complete question with `fast_table.learn: true` and let model answers supply the learning data.
-This support-routing example starts with no human labels:
-
-::site-block{name="fast-table-learn"}
-
-Until a table qualifies, decisio answers every request.
-With `--tasks-dir` or `--task-store`, learning rows survive restarts; without either they stay in memory.
-The rows keep features and model answers, not request text.
-
-| Certificate kind | What it concerns |
-| --- | --- |
-| `gold` | Correctness against human-labelled examples |
-| `agreement` | How often the table agrees with decisio |
-
-A learned table can copy the model's mistakes.
-An agreement certificate is insufficient for a policy that requires a gold correctness certificate.
-A labelled task can also learn; its certificate stays gold while it has enough held-out human labels.
-
-The `explore` share sends some table-eligible requests to the model, 0.02 by default.
-Spot checks also send some table answers to the model, so allow for those slower requests when sizing the service.
-Refits continue as traffic arrives; a version goes live only when it certifies and clears the saving requirement.
-
-## 6. Learn across replicas
-
-Use one shared `--task-store` and one serving setup across the fleet.
-One replica trains; each replica times a promoted table locally before serving it.
-A drift alarm or rollback reaches the other replicas through the store.
-
-Keep clocks synchronized and monitor store reachability.
-During an outage, replicas keep serving, pending rows have a memory limit, and no new version is promoted.
-A read-only replica serves tables without logging rows or training.
-
-## 7. Measure it on your own host
+## 8. Measure the paths on your host
 
 Registration measures one request at a time.
-For caller-visible latency under load, use your own labelled examples and separate probe requests:
+Measure caller-visible latency under your expected load too, including requests passed on to the model:
 
 ::site-block{name="fast-table-bench"}
 
 The examples file contains one complete `request` and human `answer` per line; probes contain requests outside that set.
 The command registers temporary table and model tasks, compares them under load, then deletes them.
-Compare the `table` and `model` arms in the same text-length and concurrency cell, using wall-clock p50 and p95 as well as mean saving.
+Compare the same text-length and concurrency cells, using wall-clock p50 and p95 as well as mean saving.
 
-## 8. When to use something else
+<span class="fp-anchor" id="9-operating-notes"></span>
 
-- Scores, images, adapters and changing-option tasks do not use this table path.
-- Long or difficult tasks can certify too little to save time.
-- An option absent from the fitting examples is passed to decisio.
-- A deferred request pays both the CPU table cost and the model cost; test the slow path too.
+## 9. Keep it running
 
-## 9. Operating notes
+Inspect `GET /v1/tasks/{id}` and `status.fast_table` for this replica's live state:
 
-| State | What answers | What to do |
+| State | What answers | What to check |
 | --- | --- | --- |
-| `active` | The table where eligible, otherwise decisio | Watch latency, certified share and drift |
-| `timing` | Decisio while the replica checks the table's saving | Allow CPU headroom and inspect the timing result |
-| `suspended` | Decisio | Investigate the alert and certify again when appropriate |
-| `unavailable` | Decisio | Check the installed extra and student files; register again if needed |
+| `learning` | Decisio while learning data is collected | Whether a candidate has qualified yet |
+| `active` | Classifier where eligible, otherwise decisio | Latency, certified share and drift |
+| `timing` | Decisio while this replica checks the saving | CPU headroom and timing results |
+| `suspended` | Decisio | The alert and whether certification needs updating |
+| `unavailable` | Decisio | Installed extra, student files and registration |
+| `off` on a learning task | Decisio | Whether this replica matches the learned version's serving setup and features |
 
-Inspect `GET /v1/tasks/{id}` for the live state and retained learning versions.
-To roll back a learned table, send a retained version number to `POST /v1/tasks/{id}/fast_table/rollback`.
+With `--tasks-dir` or `--task-store`, learning rows survive restarts; without either they stay in memory.
+The rows keep features and model answers, not request text.
+
+To roll back, send a retained version number to `POST /v1/tasks/{id}/fast_table/rollback`.
 The last five versions are kept.
 
-An encoder table needs CPU headroom on every replica.
-Keep [drift alerts](/docs/tasks/drift/) connected to your review policy, and certify again after changing the serving setup.
+<span class="fp-anchor" id="6-learn-across-replicas"></span>
+
+### Share learning across replicas
+
+Use one shared `--task-store` and one serving setup across the fleet.
+One replica trains; each replica times a promoted table locally before serving it.
+Drift suspension and rollbacks reach the other replicas through the store.
+
+Keep clocks synchronized and monitor store reachability.
+During an outage, replicas keep serving, pending rows have a memory limit, and no new version is promoted.
+A read-only replica serves tables without logging rows or training.
+
+<span class="fp-anchor" id="8-when-to-use-something-else"></span>
+
+## Good to know
+
+- This fast path supports choice and yes/no questions on the text route; scores, images, adapters and changing-option tasks do not use it.
+- Long or difficult changing inputs can certify too little to save time, even with a well-organized context.
+- An option absent from the fitting examples is passed to decisio.
+- A deferred request pays both the CPU classifier cost and the model cost; test that path too.
+- Set `fast_table.min_saving` from 0.01 to 0.90 if your deployment needs a different required mean saving.
+- Install the extra and provide CPU headroom on every replica, and certify again after changing the context or serving setup.
 
 ## What next
 
-- [Teach a task](/docs/tasks/): prepare the question and labelled registration.
-- [Certify answers](/docs/tasks/certify/): choose the error target and read certification fields.
-- [Operate](/docs/operating/): persistence, replicas and supervision.
+- [Teach a task](/docs/tasks/): prepare complete labelled examples.
+- [Send a fixed text once](/docs/tasks/context/): register context and understand prefix-cache behavior.
+- [Certify answers](/docs/tasks/certify/): choose the error target and read certificate fields.

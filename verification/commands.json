@@ -249,14 +249,6 @@
 			"status": "shown",
 			"why": "it needs a complete labelled task.json and a context.txt policy supplied by the reader; transport tests check both files"
 		},
-		"7a6443cab4cd71ed": {
-			"status": "shown",
-			"why": "it needs the table extra and the reader’s own complete labelled task.json; transport tests check the registration"
-		},
-		"fc8f0c12dba434bd": {
-			"status": "shown",
-			"why": "a learned table needs traffic through the running model; the code sends a complete question"
-		},
 		"e0b08f456930b876": {
 			"status": "shown",
 			"why": "it needs a running server and the reader’s own labelled examples and probes"
@@ -502,6 +494,20 @@
 		},
 		"643e9b3102b8e77e": {
 			"status": "output"
+		},
+		"0a8e31684a788e7e": {
+			"status": "shown",
+			"why": "it needs the table extra, a running server, a complete task.json and a context.txt policy; transport tests execute the registration with fixture data"
+		},
+		"7c30a10ff6f94034": {
+			"status": "example"
+		},
+		"18fad55b2bf1d1ab": {
+			"status": "example"
+		},
+		"df05c9b7477b5c44": {
+			"status": "shown",
+			"why": "it needs a registered task, its task.json and a new state.json; transport tests execute the call and check the exact question and task id"
 		}
 	}
 }
