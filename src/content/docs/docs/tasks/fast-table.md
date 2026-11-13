@@ -55,7 +55,7 @@ Changing the context changes the task and requires teaching and certification ag
 
 The default static path uses token-vector lookups and a classifier.
 Static embedding + classifier work costs about 0.05 ms for short texts; the model is skipped on the requests that qualify.
-Use the calculator to explore an assumed fast-path share against a roughly 50 ms model budget.
+See the fast answer, fallback and an example workload together against a roughly 50 ms model budget.
 
 ::figure{name="table-budget"}
 
@@ -283,10 +283,6 @@ A read-only replica serves tables without logging rows or training.
 - A deferred request pays both the CPU classifier cost and the model cost; test that path too.
 - Set `fast_table.min_saving` from 0.01 to 0.90 if your deployment needs a different required mean saving.
 - Install the extra and provide CPU headroom on every replica, and certify again after changing the context or serving setup.
-
-## Video transcript
-
-::figure{name="table-transcript"}
 
 ## What next
 

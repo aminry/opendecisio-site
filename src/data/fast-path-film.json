@@ -1,6 +1,6 @@
 {
   "title": "Give recurring decisions a fast path",
-  "duration": 96,
+  "duration": 40,
   "width": 1280,
   "height": 720,
   "fps": 24,
@@ -8,99 +8,59 @@
   "hasMusic": true,
   "hasNarration": true,
   "narration": {
-    "model": "en_US-ljspeech-high",
-    "modelSource": "https://huggingface.co/rhasspy/piper-voices/tree/main/en/en_US/ljspeech/high",
-    "trainingData": "LJ Speech, public domain",
-    "trainingDataSource": "https://keithito.com/LJ-Speech-Dataset/"
+    "model": "Kokoro v1.0",
+    "voice": "af_heart",
+    "modelLicense": "Apache-2.0",
+    "runtimeLicense": "MIT",
+    "modelSource": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "runtimeSource": "https://github.com/thewh1teagle/kokoro-onnx"
   },
   "timingSha256": "96dab87a85d9267ee0a95d7a4c6618c992283c37231d9a67fd926cdb64977b60",
   "examplesSha256": "a74f5c52b9e057757578f5cb53c5983bbb9eb429114c3dc6d264110cbfd20541",
   "assets": {
     "mp4": {
       "path": "/media/decision-fast-path.mp4",
-      "sha256": "bfe23c1ec883704f381401975211bc581a112815213c28ad3613a29fbd4d2462"
+      "sha256": "94c43447de2b51862ef12f56d056a19f40825640ff25a3c1b4a2d5fb1f479ef6"
     },
     "webp": {
       "path": "/media/decision-fast-path.webp",
-      "sha256": "f0597530226226d16cf8a9ab2f6a4ef29752f2de3d9c431a2f2025755b863570"
+      "sha256": "dbbc1b4f7b73970f3806b645a768686cb76afb3276a2128eb88aedd2952a3b04"
     },
     "vtt": {
       "path": "/media/decision-fast-path.vtt",
-      "sha256": "03e17580ed4bdb73e35f6f2fa26975208904caadf5c51d47e54efd5ae586b35c"
+      "sha256": "400ddac3f6d59660f006be224b648d2c88c8b2839fc54a803866bf9fc8c3f24a"
     }
   },
   "chapters": [
     {
       "start": 0,
       "end": 8,
-      "title": "One more ticket. Another model read.",
-      "text": "One customer. Two charges. Your application asks the model which team should handle the ticket. The answer is billing."
+      "title": "One ticket. Two ways to answer.",
+      "text": "Here's a ticket we've seen before: I was charged twice. It needs billing. Do we need another model read?"
     },
     {
       "start": 8,
       "end": 16,
-      "title": "Same answer. A much shorter route.",
-      "text": "A small CPU fast path can return familiar answers. For short texts, embedding and classification take about fifty microseconds."
+      "title": "Familiar request? Take the fast path.",
+      "text": "The fast path learns that choice. Short-text CPU work takes about fifty microseconds, skipping the model read."
     },
     {
       "start": 16,
       "end": 24,
-      "title": "New wording. A familiar decision.",
-      "text": "Different words can lead to the same decision. A learned classifier recognizes the recurring task, beyond exact text repeats."
+      "title": "Something unfamiliar? Ask decisio.",
+      "text": "A request that doesn't qualify goes to decisio. So the model stays available for the cases that need it."
     },
     {
       "start": 24,
       "end": 32,
-      "title": "Unfamiliar? Keep decisio in the loop.",
-      "text": "Not every request qualifies. Pass those requests to decisio. The model stays available, and the application keeps its answer interface."
+      "title": "Keep the policy. Send new facts.",
+      "text": "Save your shared policy as context. Send just the facts that change. When needed, the model can still read both."
     },
     {
       "start": 32,
       "end": 40,
-      "title": "First, learn from examples.",
-      "text": "Teach from human-labelled requests, or collect model answers. These examples train a small candidate for one recurring decision."
-    },
-    {
-      "start": 40,
-      "end": 48,
-      "title": "Check it before it answers.",
-      "text": "Check separate examples and the saving on your host. Activate only a candidate that qualifies. Otherwise, keep the model path."
-    },
-    {
-      "start": 48,
-      "end": 56,
-      "title": "Keep the rules. Send the new facts.",
-      "text": "Register shared rules once as context. Send changing facts as state. The classifier reads facts; the model gets both."
-    },
-    {
-      "start": 56,
-      "end": 64,
-      "title": "Route support tickets as they arrive.",
-      "text": "Route recurring billing and access requests on the CPU. Keep unfamiliar support requests on the model path."
-    },
-    {
-      "start": 64,
-      "end": 72,
-      "title": "Sort new posts as they arrive.",
-      "text": "Moderation works the same way. Keep the policy fixed, classify each new post, and send ambiguous cases to the model."
-    },
-    {
-      "start": 72,
-      "end": 80,
-      "title": "Check each return against the policy.",
-      "text": "For refunds, keep the policy fixed. Send delivery age and item condition. Answer yes or no; pass exceptions on."
-    },
-    {
-      "start": 80,
-      "end": 88,
-      "title": "Keep the same task. Send fresh facts.",
-      "text": "Register the task, shared context and fast table option. Ask with the same task identifier and new facts."
-    },
-    {
-      "start": 88,
-      "end": 96,
-      "title": "Give recurring decisions a fast path.",
-      "text": "Let familiar decisions take the shorter route. Keep the model for everything else. Start with one task, and see what qualifies."
+      "title": "Teach. Check. Then switch it on.",
+      "text": "Teach with examples. Check separate examples and time savings. If it qualifies, switch the fast path on."
     }
   ]
 }

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Render an original narrated explainer with an original instrumental score.
-Requires Python pillow/fonttools/brotli/numpy, piper-tts, and ffmpeg/ffprobe.
-Run from the repository root. DECISIO_VIDEO_CACHE controls temporary assets;
-DECISIO_NARRATOR_MODEL names the local en_US-ljspeech-high ONNX model.
-The model card is rhasspy/piper-voices, en/en_US/ljspeech/high/MODEL_CARD;
-its LJ Speech training recordings are public domain. Fetch weights separately.
+"""Render the 40-second explainer, Kokoro narration and an original score.
+Requires pillow/fonttools/brotli/numpy/kokoro-onnx and ffmpeg/ffprobe.
+DECISIO_VIDEO_CACHE holds intermediates. DECISIO_NARRATOR_DIR holds the
+separately downloaded kokoro-v1.0.onnx and voices-v1.0.bin weights.
+Kokoro model: Apache-2.0. kokoro-onnx runtime: MIT.
 """
 from pathlib import Path
 import hashlib, json, math, os, subprocess, sys, wave
@@ -16,45 +15,20 @@ ROOT=Path.cwd();CACHE=Path(os.environ.get('DECISIO_VIDEO_CACHE',str(Path.home()/
 CACHE.mkdir(parents=True,exist_ok=True);OUT=ROOT/'public/media';OUT.mkdir(parents=True,exist_ok=True)
 BUDGET=json.loads((ROOT/'src/data/fast-path-timing.json').read_text())
 EXAMPLES=json.loads((ROOT/'src/data/fast-path-examples.json').read_text())
-W,H,FPS,DURATION,SR=1280,720,24,96,48000
+W,H,FPS,DURATION,SR=1280,720,24,40,48000
 BG,SURFACE,INK,MUTED,LINE,GOLD,BLUE='#03050a','#0b1221','#f3f7ff','#b7c7dc','#3c4b63','#ffb000','#a9caef'
-CHAPTERS=[('One more ticket. Another model read.',
-  'One customer. Two charges. Your application asks the model which team should handle the ticket. The '
-  'answer is billing.'),
- ('Same answer. A much shorter route.',
-  'A small CPU fast path can return familiar answers. For short texts, embedding and classification take '
-  'about fifty microseconds.'),
- ('New wording. A familiar decision.',
-  'Different words can lead to the same decision. A learned classifier recognizes the recurring task, beyond '
-  'exact text repeats.'),
- ('Unfamiliar? Keep decisio in the loop.',
-  'Not every request qualifies. Pass those requests to decisio. The model stays available, and the '
-  'application keeps its answer interface.'),
- ('First, learn from examples.',
-  'Teach from human-labelled requests, or collect model answers. These examples train a small candidate for '
-  'one recurring decision.'),
- ('Check it before it answers.',
-  'Check separate examples and the saving on your host. Activate only a candidate that qualifies. Otherwise, '
-  'keep the model path.'),
- ('Keep the rules. Send the new facts.',
-  'Register shared rules once as context. Send changing facts as state. The classifier reads facts; the '
-  'model gets both.'),
- ('Route support tickets as they arrive.',
-  'Route recurring billing and access requests on the CPU. Keep unfamiliar support requests on the model '
-  'path.'),
- ('Sort new posts as they arrive.',
-  'Moderation works the same way. Keep the policy fixed, classify each new post, and send ambiguous cases to '
-  'the model.'),
- ('Check each return against the policy.',
-  'For refunds, keep the policy fixed. Send delivery age and item condition. Answer yes or no; pass '
-  'exceptions on.'),
- ('Keep the same task. Send fresh facts.',
-  'Register the task, shared context and fast table option. Ask with the same task identifier and new '
-  'facts.'),
- ('Give recurring decisions a fast path.',
-  'Let familiar decisions take the shorter route. Keep the model for everything else. Start with one task, '
-  'and see what qualifies.')]
-SHORT=['A recurring request. A familiar answer.','About 50 µs of short-text CPU work.','Different words can lead to the same choice.','The model stays available for the rest.','Human labels, or examples supplied by the model.','Certify. Time. Activate only if qualified.','Fixed context. Changing state.','Your support inbox, with a faster route.','One shared policy. A stream of new posts.','The same policy. Different return facts.','Enable fast_table. Keep asking your task.','Start with one recurring choice or yes/no task.']
+CHAPTERS=[
+ ('One ticket. Two ways to answer.',
+  "Here's a ticket we've seen before: I was charged twice. It needs billing. Do we need another model read?"),
+ ('Familiar request? Take the fast path.',
+  "The fast path learns that choice. Short-text CPU work takes about fifty microseconds, skipping the model read."),
+ ('Something unfamiliar? Ask decisio.',
+  "A request that doesn't qualify goes to decisio. So the model stays available for the cases that need it."),
+ ('Keep the policy. Send new facts.',
+  "Save your shared policy as context. Send just the facts that change. When needed, the model can still read both."),
+ ('Teach. Check. Then switch it on.',
+  "Teach with examples. Check separate examples and time savings. If it qualifies, switch the fast path on.")]
+SHORT=['Same task. Same answer. Different cost.','~50 µs CPU work · ~50 ms illustrative model budget','CPU check + model read ~50.05 ms in this example','CPU reads facts. Model reads policy + facts.','Start with one choice or yes/no task.']
 for weight in (400,650):
  p=CACHE/f'geist-{weight}.ttf'
  if not p.exists():
@@ -101,80 +75,61 @@ def inbox(d,domain,u):
  wrap(d,'CPU fast path' if current['route']=='table' else 'decisio model',935,296,280,36,GOLD if current['route']=='table' else BLUE,True)
  wrap(d,'Model read skipped' if current['route']=='table' else 'Model handles this one',935,402,270,26,MUTED)
 def frame(t):
- i=min(11,int(t//8));u=t-i*8;title,narration=CHAPTERS[i]
+ i=min(4,int(t//8));u=t-i*8;title,_=CHAPTERS[i]
  im=Image.new('RGB',(W,H),BG);d=ImageDraw.Draw(im)
- text(d,(64,30),'Decisio',27,INK,True);text(d,(960,36),f'Decision fast path · {i+1}/12',19,MUTED)
+ text(d,(64,30),'Decisio',27,INK,True);text(d,(980,36),f'Decision fast path · {i+1}/5',19,MUTED)
  d.line((64,82,1216,82),fill=LINE,width=1)
- size=52
+ size=50
  while d.textlength(title,font=font(size,True))>1152:size-=1
  text(d,(64,116),title,size,INK,True)
- if i==0:
-  ticket(d,EXAMPLES['support']['cases'][0]['text'],'billing',u,False)
-  text(d,(870,244),'Model read',25,MUTED);text(d,(870,294),f'~{min(50,int(u*15)):02} ms',62,BLUE,True)
-  text(d,(872,383),'Illustrative budget',22,MUTED)
-  arrow(d,(794,354),(850,354),BLUE);packet(d,(794,354),(850,354),min(1,u/3),BLUE)
- elif i==1:
-  ticket(d,EXAMPLES['support']['cases'][0]['text'],'billing',u,True)
-  text(d,(870,244),'CPU fast path',25,MUTED);text(d,(870,294),'~50 µs',62,GOLD,True)
-  text(d,(872,383),'Model read skipped',24,GOLD,True)
-  arrow(d,(794,354),(850,354));packet(d,(794,354),(850,354),min(1,u/.5))
-  text(d,(64,515),'Published static p50: 0.05 ms for short texts. Longer texts cost more.',21,MUTED)
- elif i in (2,7,8):inbox(d,'support' if i in (2,7) else 'moderation',u)
+ # Each scene starts with one clear arrival, then holds the outcome for reading.
+ reveal=min(1,u/.55);dy=int(20*(1-reveal))
+ if i in (0,1,2):
+  message=EXAMPLES['support']['cases'][3 if i==2 else 0]['text']
+  r=(64,216+dy,1216,340+dy);box(d,r,u<.8)
+  text(d,(88,235+dy),'NEW REQUEST 02' if i==2 else 'REQUEST 01 · SUPPORT ROUTING',20,GOLD,True)
+  wrap(d,'“'+message+'”',88,273+dy,1080,31,INK,True)
+  active=0 if i==1 else 1
+  for j,(label,number,note) in enumerate([('CPU fast path','~50 µs','0.05 ms · short texts'),('decisio model','~50 ms','Illustrative model budget')]):
+   x=64+j*592;selected=u>1.5 and (j==active or i==0)
+   box(d,(x,395,x+560,563),selected)
+   if selected:d.rounded_rectangle((x+1,396,x+559,562),radius=14,outline=GOLD,width=4)
+   text(d,(x+24,411),label,24,MUTED)
+   text(d,(x+24,449),number,46,GOLD if selected else INK,True)
+   text(d,(x+24,517),note,21,MUTED)
+   # Shared, slowed clock: CPU finishes first; model budget keeps filling.
+   progress=min(1,max(0,(u-1)/(.12 if j==0 else 3.5)))
+   d.line((x+24,549,x+536,549),fill=LINE,width=4)
+   if progress:d.line((x+24,549,x+24+int(512*progress),549),fill=GOLD if j==0 else BLUE,width=4)
+   if selected and u>2:pill(d,x+350,449,'billing' if i!=2 else 'Model',GOLD)
+  if i==1 and u>2:text(d,(680,574),'Model read skipped',23,GOLD,True)
+  if i==2 and u>2:text(d,(64,574),'Unfamiliar request passed to decisio',23,BLUE,True)
+  if u>1:
+   arrow(d,(342,348),(342 if i==1 else 930,387))
+   packet(d,(342,348),(342 if i==1 else 930,387),min(1,(u-1)/.7))
+   if i==0:arrow(d,(342,348),(342,387))
  elif i==3:
-  ticket(d,EXAMPLES['support']['cases'][3]['text'],'Pass to decisio',u,False)
-  box(d,(905,260,1216,474),True);text(d,(931,288),'decisio model',29,BLUE,True)
-  wrap(d,'Reads policy + facts',931,356,260,27,MUTED)
-  arrow(d,(795,355),(883,355),BLUE);packet(d,(795,355),(883,355),min(1,max(0,u-2)/2),BLUE)
-  text(d,(64,519),'One task. Two routes. The same typed-answer interface.',27,INK,True)
+  box(d,(64,226,608,520));text(d,(88,251),'CONTEXT · REGISTERED ONCE',22,MUTED,True)
+  wrap(d,'Billing handles payments and invoices. Access handles sign-in problems.',88,309,492,32,INK,True)
+  pill(d,88,455,'Policy stays fixed',BLUE)
+  index=min(2,int(u/2.7));box(d,(654,226,1216,520),True)
+  text(d,(678,251),f'NEW FACTS · TICKET {index+1}/3',22,GOLD,True)
+  wrap(d,EXAMPLES['support']['cases'][index]['text'],678,309,508,32,INK,True)
+  text(d,(678,463),'Only this card changes',23,GOLD)
+  # A restrained moving underline marks each new facts card.
+  progress=(u%2.7)/2.7;d.line((678,503,678+int(508*(1-progress)),503),fill=GOLD,width=3)
  elif i==4:
-  box(d,(64,230,805,530));text(d,(88,251),'Examples supplied by people or the model',23,MUTED)
-  for j,c in enumerate(EXAMPLES['support']['cases'][:3]):
-   if u<j+1:continue
-   text(d,(88,310+j*64),c['text'][:43],25);pill(d,635,303+j*64,c['answer'])
-  arrow(d,(825,382),(900,382));packet(d,(825,382),(900,382),(u%2)/2)
-  text(d,(929,252),'Small candidate',29,GOLD,True)
-  if u>3:
-   for row in range(7):
-    for col in range(10):
-     x=932+col*23;y=310+row*23
-     d.rounded_rectangle((x,y,x+17,y+17),radius=3,fill=GOLD if (row*7+col*3)%5<3 else LINE)
- elif i==5:
-  for j,(label,sub) in enumerate([('Fit','Learn from one set'),('Certify + time','Check separate examples'),('Activate','Only if qualified')]):
-   x=64+j*395;box(d,(x,244,x+362,494),j==min(2,int(u/2.2)))
-   text(d,(x+24,270),label,33,GOLD if j==min(2,int(u/2.2)) else INK,True)
-   wrap(d,sub,x+24,345,310,29,MUTED)
-  text(d,(64,530),'Does not qualify? Keep the model path.',28,BLUE,True)
- elif i==6:
-  box(d,(64,230,595,508),True);text(d,(88,255),'context · fixed support policy',26,GOLD,True)
-  wrap(d,'Billing handles payments and invoices. Access handles sign-in problems.',88,320,480,31)
-  box(d,(687,230,1216,508));text(d,(711,255),'state · new ticket facts',26,BLUE,True)
-  c=EXAMPLES['support']['cases'][min(2,int(u/2.5))]
-  wrap(d,c['text'],711,320,470,31)
-  text(d,(64,545),'CPU: state only. Model: context + state.',29,INK,True)
- elif i==9:
-  box(d,(64,225,880,554));text(d,(88,244),'Example policy: unopened home items, within 30 days',24,MUTED)
-  for j,(days,condition,result) in enumerate([('12 days','Unopened','yes'),('45 days','Opened','no'),('8 days','Unopened','yes'),('Exception','Special agreement','Ask decisio')]):
-   if u<j*1.2+.3:continue
-   y=302+j*60;text(d,(88,y),days,26);text(d,(300,y),condition,26);pill(d,650,y-3,result,BLUE if j==3 else GOLD)
-  text(d,(932,255),'Refund eligible?',30,GOLD,True);wrap(d,'Yes, no, or pass the exception to decisio.',932,332,270,29,MUTED)
- elif i==10:
-  box(d,(64,230,665,535));text(d,(90,253),'Task registration',25,MUTED)
-  text(d,(90,318),'"fast_table": true',42,GOLD,True)
-  text(d,(90,399),'Your task id + shared context',26)
-  text(d,(90,459),'Examples + certification settings',24,MUTED)
-  for j,s in enumerate(['Register the task','Send new state','Read the typed answer']):
-   if u<j*1.3+.4:continue
-   text(d,(754,275+j*86),str(j+1),28,GOLD,True);text(d,(800,275+j*86),s,29)
- elif i==11:
-  text(d,(64,241),'Decisio',78,INK,True)
-  wrap(d,'Familiar decisions take the fast path. The model handles the rest.',64,350,710,40,INK,True)
-  text(d,(64,511),'opendecisio.com/docs/tasks/fast-table/',25,GOLD)
-  box(d,(940,256,1216,500),True);text(d,(971,300),'~50 µs',48,GOLD,True);wrap(d,'Static short-text path',971,383,218,25,MUTED)
- text(d,(64,606),SHORT[i],29,INK,True)
- text(d,(64,654),'Illustration · motion slowed for explanation · static short-text cost reference · model budget varies by host',17,MUTED)
- for j in range(12):
-  x=64+j*97;d.rounded_rectangle((x,703,x+80,707),radius=2,fill=GOLD if j<=i else LINE)
- if i>0 and u<.22:im=Image.blend(frame(i*8-.001),im,u/.22)
+  for j,(label,sub) in enumerate([('1. Teach','Human labels or model answers'),('2. Check','Separate examples + host timing'),('3. Activate','Only if the candidate qualifies')]):
+   x=64+j*394;selected=j==min(2,int(u/2))
+   box(d,(x,244,x+364,476),selected)
+   text(d,(x+24,276),label,37,GOLD if selected else INK,True)
+   wrap(d,sub,x+24,354,310,28,MUTED)
+  text(d,(64,521),'opendecisio.com/docs/tasks/fast-table/',29,GOLD,True)
+ text(d,(64,620),SHORT[i],28,INK,True)
+ text(d,(64,665),'Illustration · motion slowed · static short-text component cost · network and queueing excluded',18,MUTED)
+ for j in range(5):
+  x=64+j*235;d.rounded_rectangle((x,703,x+215,707),radius=2,fill=GOLD if j<=i else LINE)
+ if i>0 and u<.2:im=Image.blend(frame(i*8-.001),im,u/.2)
  return im
 
 def add_score():
@@ -192,7 +147,7 @@ def add_score():
   env*=np.exp(-t*(4.5 if kind=='pluck' else .8))
   return (sig*env).astype(np.float32)
  chords=[[57,60,64],[53,57,60],[48,52,55],[55,59,62]]
- for bar in range(48):
+ for bar in range(DURATION//2):
   start=bar*2;chord=chords[bar%4];energy=.65 if bar<4 else .85 if bar<8 else 1
   if 20<=bar<24:energy=.58
   for note in chord:add(start,tone(note,2.1),.035*energy,-.25 if note%2 else .25)
@@ -218,19 +173,21 @@ def add_score():
  return out
 
 def narrated_audio():
+ from kokoro_onnx import Kokoro
+ narrator=Path(os.environ.get('DECISIO_NARRATOR_DIR',str(CACHE)))
+ kokoro=Kokoro(str(narrator/'kokoro-v1.0.onnx'),str(narrator/'voices-v1.0.bin'))
  voice=np.zeros(DURATION*SR,dtype=np.float32)
  for i,(_,line) in enumerate(CHAPTERS):
-  narrated=CACHE/f'narration-open-{i:02}.wav'
-  model=Path(os.environ.get('DECISIO_NARRATOR_MODEL',str(CACHE/'en_US-ljspeech-high.onnx')))
-  if not model.exists():raise RuntimeError('Set DECISIO_NARRATOR_MODEL to the downloaded narration model')
-  subprocess.run([sys.executable,'-m','piper','--model',str(model),'--output_file',str(narrated)],input=line,text=True,check=True,stdout=subprocess.DEVNULL)
-  seconds=float(subprocess.check_output(['ffprobe','-v','error','-show_entries','format=duration','-of','default=nw=1:nk=1',str(narrated)]))
-  rate=max(1,seconds/7.2)
-  raw=subprocess.check_output(['ffmpeg','-v','error','-i',str(narrated),'-af',f'atempo={rate:.6f},afade=t=in:d=0.04','-ar',str(SR),'-ac','1','-f','f32le','pipe:1'])
-  samples=np.frombuffer(raw,dtype=np.float32);peak=max(.01,float(np.max(np.abs(samples))))
-  samples=samples/peak*.42;start=int((i*8+.35)*SR);length=min(len(samples),len(voice)-start)
-  voice[start:start+length]=samples[:length]
-  print(f'narration: {i+1}/12',flush=True)
+  samples,rate=kokoro.create(line,voice='af_heart',speed=1.0,lang='en-us',sentence_pause=.3,clause_pause=.12)
+  seconds=len(samples)/rate
+  if seconds>7.5:raise RuntimeError(f'Scene {i+1} narration is {seconds:.2f}s; shorten its wording')
+  samples=np.interp(np.arange(round(seconds*SR))*rate/SR,np.arange(len(samples)),samples).astype(np.float32)
+  peak=max(.01,float(np.max(np.abs(samples))));samples=samples/peak*.42
+  start=int((i*8+.25)*SR);voice[start:start+len(samples)]=samples
+  narrated=CACHE/f'narration-{i+1}.wav'
+  with wave.open(str(narrated),'wb') as w:
+   w.setnchannels(1);w.setsampwidth(2);w.setframerate(SR);w.writeframes((samples*32767).astype('<i2').tobytes())
+  print(f'narration: {i+1}/5 · {seconds:.2f}s',flush=True)
  score=add_score()
  # Keep music audible between phrases and below the voice while it speaks.
  window=SR//10;levels=np.repeat([np.max(np.abs(voice[j:j+window])) for j in range(0,len(voice),window)],window)[:len(voice)]
@@ -255,8 +212,8 @@ poster=OUT/'decision-fast-path.webp';frame(10.8).save(poster,'WEBP',quality=90)
 def stamp(s):return f'00:{s//60:02}:{s%60:02}.000'
 vtt=OUT/'decision-fast-path.vtt'
 vtt.write_text('WEBVTT\n\n'+'\n\n'.join(f'{stamp(i*8)} --> {stamp((i+1)*8)}\n'+('[Upbeat instrumental music]\n' if i==0 else '')+line for i,(_,line) in enumerate(CHAPTERS))+'\n')
-for i in range(12):frame(i*8+5).save(CACHE/f'chapter-{i+1}.png')
+for i in range(5):frame(i*8+5).save(CACHE/f'chapter-{i+1}.png')
 assets={p.suffix[1:]:{'path':'/media/'+p.name,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in [video,poster,vtt]}
-meta={'title':'Give recurring decisions a fast path','duration':DURATION,'width':W,'height':H,'fps':FPS,'silent':False,'hasMusic':True,'hasNarration':True,'narration':{'model':'en_US-ljspeech-high','modelSource':'https://huggingface.co/rhasspy/piper-voices/tree/main/en/en_US/ljspeech/high','trainingData':'LJ Speech, public domain','trainingDataSource':'https://keithito.com/LJ-Speech-Dataset/'},'timingSha256':hashlib.sha256((ROOT/'src/data/fast-path-timing.json').read_bytes()).hexdigest(),'examplesSha256':hashlib.sha256((ROOT/'src/data/fast-path-examples.json').read_bytes()).hexdigest(),'assets':assets,'chapters':[{'start':i*8,'end':(i+1)*8,'title':title,'text':line} for i,(title,line) in enumerate(CHAPTERS)]}
+meta={'title':'Give recurring decisions a fast path','duration':DURATION,'width':W,'height':H,'fps':FPS,'silent':False,'hasMusic':True,'hasNarration':True,'narration':{'model':'Kokoro v1.0','voice':'af_heart','modelLicense':'Apache-2.0','runtimeLicense':'MIT','modelSource':'https://huggingface.co/hexgrad/Kokoro-82M','runtimeSource':'https://github.com/thewh1teagle/kokoro-onnx'},'timingSha256':hashlib.sha256((ROOT/'src/data/fast-path-timing.json').read_bytes()).hexdigest(),'examplesSha256':hashlib.sha256((ROOT/'src/data/fast-path-examples.json').read_bytes()).hexdigest(),'assets':assets,'chapters':[{'start':i*8,'end':(i+1)*8,'title':title,'text':line} for i,(title,line) in enumerate(CHAPTERS)]}
 (ROOT/'src/data/fast-path-film.json').write_text(json.dumps(meta,indent=2,ensure_ascii=False)+'\n')
 print(f'render: complete, {video.stat().st_size:,} bytes, narration + original 120 BPM score',flush=True)

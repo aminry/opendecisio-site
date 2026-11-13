@@ -40,3 +40,15 @@ export function streamView(domain, index, phase) {
     stage:phase===0?'New request':phase===1?'CPU fast path reads it':current.route==='table'?'Answer returned. Model skipped.':'Passed to decisio.',
     examples:Array.from({length:3},(_,i)=>task.cases[(position+i+1)%task.cases.length])};
 }
+
+export function autoStream(index, phase) {
+  if (!Number.isInteger(index) || index<0) throw new Error('Invalid automatic example');
+  const domains=Object.keys(STREAMS), count=4, total=domains.length*count;
+  const number=index%total, domain=domains[Math.floor(number/count)];
+  return {...streamView(domain,number%count,phase),domain,number:number+1,total};
+}
+export function contextExample(index) {
+  if (!Number.isInteger(index) || index<0) throw new Error('Invalid context example');
+  const task=STREAMS.refund, position=index%3, facts=task.cases[position].text;
+  return {number:position+1,policy:task.context,facts,cpuText:facts,modelText:task.context+'\n\n'+facts};
+}

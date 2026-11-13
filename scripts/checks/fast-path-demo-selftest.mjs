@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readUpstream} from '../../src/lib/upstream.mjs';
-import {streamView, contextView, timingView, STATIC_TIMING, POLICY, FACTS} from '../../src/lib/fast-path-demo.mjs';
+import {autoStream, contextExample, streamView, contextView, timingView, STATIC_TIMING, POLICY, FACTS} from '../../src/lib/fast-path-demo.mjs';
 test('current static short-text cost and illustrative model budget replace encoder history',()=>{
  assert.equal(STATIC_TIMING.cpuMs,0.05);assert.equal(STATIC_TIMING.modelMs,50);
  const fast=timingView('fast'), fallback=timingView('fallback');
@@ -60,4 +60,18 @@ test('illustrative streams preserve the request, answer and fallback meaning acr
  assert.notEqual(streamView('support',0,2).text,streamView('support',1,2).text);
  assert.equal(streamView('support',0,2).answer,streamView('support',1,2).answer);
  for(const args of [['unknown',0,0],['support',-1,0],['support',0,9]])assert.throws(()=>streamView(...args));
+});
+
+test('the automatic example cycle rotates tasks and labels each new arrival',()=>{
+ assert.equal(autoStream(0,0).domain,'support');assert.equal(autoStream(0,0).number,1);
+ assert.equal(autoStream(3,2).route,'decisio');assert.equal(autoStream(4,0).domain,'moderation');
+ assert.equal(autoStream(8,0).domain,'refund');assert.equal(autoStream(12,0).number,1);
+ assert.notEqual(autoStream(0,0).text,autoStream(1,0).text);
+ assert.throws(()=>autoStream(-1,0));assert.throws(()=>autoStream(NaN,0));
+});
+test('automatic facts change while the registered policy stays fixed',()=>{
+ const a=contextExample(0),b=contextExample(1);
+ assert.equal(a.policy,b.policy);assert.notEqual(a.facts,b.facts);
+ assert.equal(a.cpuText,a.facts);assert.equal(a.modelText,a.policy+'\n\n'+a.facts);
+ assert.equal(contextExample(3).facts,a.facts);assert.throws(()=>contextExample(-1));
 });
