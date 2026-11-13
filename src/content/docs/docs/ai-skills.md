@@ -1,6 +1,6 @@
 ---
 title: Use AI skills
-description: Give Claude Code or Codex a workflow to set up decisio, write a decision request, or add it to your backend.
+description: Set up decisio, write requests and integrate decisions with skills for Claude Code, Codex, Devin, Cursor and GitHub Copilot.
 ---
 
 Install three focused skills for your coding assistant, then ask it to run decisio, write a question or connect a decision to your application.
@@ -40,6 +40,22 @@ In Claude Code, open `/skills` or type `/decisio-request` to invoke that workflo
 The installer reports each skill's destination and whether it was installed or already present.
 If a skill does not appear, start a fresh session in the application.
 
+### Devin, Cursor and GitHub Copilot
+
+These tools also read project skills from `.agents/skills/`.
+Choose the **Codex** tab above and run its project installation command; `--host codex` selects that shared folder layout.
+Keep each complete skill folder, including its references and assets.
+
+| Tool | How to use an installed skill |
+| --- | --- |
+| [Devin](https://docs.devin.ai/product-guides/skills) | Commit the folders in a connected repository, then include `@skills:decisio-request` in your session prompt |
+| [Cursor](https://cursor.com/docs/skills) | Open the project, type `/` in Agent chat and select `decisio-request` |
+| [GitHub Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills) | Run `/skills reload`, then include `/decisio-request` in your prompt |
+
+For Devin and other cloud sessions, the skill folders must be available in the repository the session clones.
+Local personal installations are separate; they do not automatically reach a remote environment.
+For Copilot in an IDE or the cloud, use a [supported agent surface](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) and ask it to use the skill by name.
+
 ### Install only one skill
 
 Add `--skill` for a single workflow:
@@ -69,14 +85,43 @@ In Codex, mention `$decisio-setup`, `$decisio-request` or `$decisio-integrate`.
 In Claude Code, use `/decisio-setup`, `/decisio-request` or `/decisio-integrate`.
 Ordinary language can also select a matching workflow.
 
-Try one of these prompts, including the endpoint or hardware you want to use:
+### Example: connect to your server
 
-- **Set up:** “Use decisio-setup to connect this project to the decisio endpoint in its environment configuration. Check it and send a first request.”
-- **Write a request:** “Use decisio-request to route support tickets to billing, access or other. Save the request and explain how my code reads the answer.”
-- **Integrate:** “Use decisio-integrate to add this decision to my Python backend. Send uncertified answers and service failures to review, and require a gold certificate before automatic routing.”
+Use **decisio-setup** when your backend needs a working connection.
+For a decisio server already running locally, paste:
 
-The request workflow can prepare files before you have a server.
-A successful service check requires a response from your actual endpoint; follow the reported setup steps when the endpoint is not ready.
+> Use decisio-setup to connect this application to http://localhost:8000. Save the endpoint in the project's existing environment configuration, check the service and send one support-ticket request.
+
+You should get reusable endpoint configuration, a first response and the command to check the connection again.
+The assistant reports any missing requirement if the endpoint is unavailable.
+
+For a fresh installation, replace the endpoint sentence with “Set up decisio with MLX,” “Use my NVIDIA GPU,” or “Use Ollama with the decisio model listing.”
+Run the setup in an environment with access to that hardware or endpoint.
+
+### Example: write a ticket-routing request
+
+Use **decisio-request** when you know the decision you want to ask.
+Paste:
+
+> Use decisio-request to route support tickets to billing, access or other, using the endpoint configured in this project. Start with “I was charged twice this month” and save request.json plus a small Python caller. Show how to read the chosen category and its probabilities.
+
+You should get a named choice question with the three options, the input ticket in `state`, and a caller that reads the answer.
+The model chooses the category when you run it; the prompt does not fix the result.
+Without an endpoint, the assistant can still prepare the files and explain how to run them later.
+
+### Example: add the decision to your backend
+
+Use **decisio-integrate** once your application needs to act on the answer.
+Paste:
+
+> Use decisio-integrate to add ticket routing to this Python backend using its HTTP client and configured decisio endpoint. Set a three-second timeout and send service errors or uncertified answers to review. Require a gold certificate before automatic assignment, and add tests for successful routing, review and timeout.
+
+You should get a small application change with configuration, response handling and tests that follow your existing project structure.
+Automatic assignment requires an answer with `certified: true` and `certificate_kind: "gold"`; the other cases follow the review path.
+See [Support routing](/docs/use-cases/support-routing/) for the full application example.
+
+Use the same prompts in each assistant, with its invocation from the table above.
+For example, a Devin request can start with `@skills:decisio-request`, while Codex can start with `$decisio-request` and Claude Code, Cursor or Copilot CLI with `/decisio-request`.
 
 ## 3. Update or remove
 
@@ -137,7 +182,10 @@ The Node commands can be run from a Windows terminal with the extracted installe
 
 The skills guide your coding assistant through your backend workflow.
 Run the decision service on the [GPU, MLX or Ollama path](/docs/#1-pick-your-machine) suited to your hardware, and keep its version aligned with the package references.
-These folder instructions apply to local Codex and Claude Code discovery; see the [Codex host guide](https://learn.chatgpt.com/docs/build-skills) and [Claude Code host guide](https://code.claude.com/docs/en/skills) for their other distribution options.
+
+The package installer manages the Codex and Claude Code folder layouts; Devin, Cursor and Copilot can read the shared project layout described above.
+Their discovery instructions come from their linked host guides; this package has been exercised with Codex and Claude Code.
+See the [Codex host guide](https://learn.chatgpt.com/docs/build-skills) and [Claude Code host guide](https://code.claude.com/docs/en/skills) for other distribution options.
 
 ## What next
 
