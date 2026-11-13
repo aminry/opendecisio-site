@@ -2,6 +2,7 @@
 // the CPU stand-in), the registration body that teaches and certifies it, and the measured result that proves it, read
 // from its record (the teach-and-certify runs, decisio's EVAL_CARD.md and docs/demos/README.md at the pinned release).
 // A record that stops saying a number stops the build.
+import { recipeClient, recipeRegistration } from './recipe-clients.mjs';
 import { data as tcData, baseName } from './teach-certify.mjs';
 import { readUpstream } from './upstream.mjs';
 import { facts } from './launch.mjs';
@@ -61,40 +62,12 @@ const question = (r) => ({ type: r.type, instructions: r.instructions, ...(r.cri
 
 /** The script that asks the question and routes on the certificate: certified answers act, the rest go to a person. */
 export function routeScript(id) {
-	const r = recipe(id);
-	const q = JSON.stringify(question(r), null, 4).replace(/: null/g, ': None');
-	return `import json
-import urllib.request
-
-${r.pre ?? ''}QUESTION = ${q}
-
-
-def route(text):
-    request = urllib.request.Request(
-        "http://127.0.0.1:8000/v1/systemone",
-        data=json.dumps({"state": text, "questions": {"${r.key}": QUESTION}}).encode(),
-        headers={"Content-Type": "application/json"},
-    )
-    with urllib.request.urlopen(request) as response:
-        answer = json.load(response)["answers"]["${r.key}"]
-    # A certified answer acts on its own; anything else goes to a person.
-    if answer.get("certified"):
-        return ${r.act}
-    return ${r.person}
-
-
-print(route("${r.text}"))`;
+	return recipeClient(id, recipe(id));
 }
 
 /** The registration that teaches the question from your labelled examples and certifies it at 5%. */
 export function teachBody(id) {
-	const r = recipe(id);
-	return `POST /v1/tasks
-{"id": "${id}",
- "examples": [{"request": {"state": "<a past ${id === 'rag-gate' ? 'question and passage' : 'item'} of yours>", "questions": {"${r.key}": <the question above>}},
-               "answer": ${r.type === 'noul' ? r.label : `"${r.label}"`}},
-              ...],
- "certify": {"alpha": 0.05}}`;
+	return recipeRegistration(id, recipe(id));
 }
 
 // --- The proofs ---------------------------------------------------------------------------------------------------------
@@ -248,7 +221,7 @@ const PROOFS = {
 			`Priority is ${p(prio.untaught.accuracy)} right, and needs-information has a balanced accuracy of ${p(ni.untaught.score)}, which teaching lowers slightly.`,
 			`These figures are ${t.reporting_sentence}.`,
 			esc(t.licence_line),
-		].concat(sources(esc(run.wording)));
+		].concat(sources(esc(run.wording.replace(/ at [a-f0-9]{7,40}\b/g, ' at the recorded revision'))));
 	},
 	'document-classification': () => ['A recipe: decisio is measured on short texts, such as the intent sets of the support inbox; no run on long documents is published.'],
 };

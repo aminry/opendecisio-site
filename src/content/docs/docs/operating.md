@@ -54,6 +54,18 @@ curl -s -D - -o /dev/null http://127.0.0.1:8000/v1/systemone \
 - There are no engine metrics and no structured log: take latency and queueing from the headers, in your client or your proxy's log.
 - After a deploy, read `/health` for the model, its checkpoint and revision, and `max_model_len` with its source.
 
+## Respond to failures
+
+| What you see | Application or operator action |
+| --- | --- |
+| Readiness is not 200 | Stop sending new work to that replica; let its supervisor recover it |
+| A request times out or returns 5xx | Use the review/fallback path, then retry only as your application policy allows |
+| Requests return 422 | Fix the input or prompt length before sending them again |
+| A task is not certified | Keep its suggestion for review; inspect the task status and reason |
+| Store writes fail | Keep serving loaded records; restore the store before teaching again |
+
+The [recipe callers](/docs/use-cases/) demonstrate timeout and review behavior.
+
 ## 3. Know what happens when the engine dies
 
 The figure above is the sequence: the server checks the engine, answers 503, finishes what is in flight, exits with code 70 about 7 seconds after the failing request, and your supervisor starts it again.

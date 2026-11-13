@@ -24,6 +24,11 @@ The routing code is the same in every recipe; this is support routing's:
 Each answer is read from one forward pass and no generated text, so nothing is worked out step by step.
 A question that needs reasoning over several steps, or knowledge the text does not hold, is not a good fit.
 
+## Handle review and service failures
+
+The recipe callers have a timeout and return a review action on HTTP errors or malformed answers.
+They require a gold certificate before acting automatically; a learned table's agreement certificate alone does not meet that policy.
+
 ## What next
 
 - [Teach a task](/docs/tasks/): the teaching step every recipe uses.

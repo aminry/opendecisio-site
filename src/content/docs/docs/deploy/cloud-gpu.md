@@ -52,7 +52,7 @@ For exactly the versions decisio was measured with, install from a clone of the 
 
 ## 3. Pin what you serve
 
-Name the model repository at a commit, so a later change to it cannot change your answers:
+Name the model repository at a revision, so a later change to it cannot change your answers:
 
 ::upstream{file="docs/running.md" section="Model repositories" block="1"}
 

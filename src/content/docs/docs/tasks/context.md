@@ -11,8 +11,6 @@ Every request of a task is often read against the same long text: a policy, a ru
 Register that text once as the task's context, and each request sends only the part that changes; the server puts the context in front of it.
 On a Mac, a 1,176-token moderation policy sent as the context took 373 ms a read, against 1,946 ms when every request carried it:
 
-::upstream{file="docs/tasks.md" section="Task context" block="1"}
-
 ::figure{name="fixed-context"}
 
 ## 1. See where it works great
@@ -29,6 +27,13 @@ On a Mac, a 1,176-token moderation policy sent as the context took 373 ms a read
 - **A fast table learns from the part that changes,** since it encodes the state alone.
 
 ## 2. Register it
+
+Prepare a complete `task.json` registration with your real examples, as [Teach a task](/docs/tasks/#3-register) shows.
+Save the fixed policy in `context.txt`; each example's state contains only the changing input.
+Run this Python script from the directory containing both files, with `DECISIO_BASE_URL` set to your endpoint:
+
+::site-block{name="context-register"}
+
 
 - **Add `"context"` to the registration:** a string, or an object or array read as compact JSON. Labelled, dynamic-option and learning registrations take it.
 - **Send only the changing part as each example's state.** The server reads each example with the context, so the task is fitted, certified and timed on exactly what it serves.

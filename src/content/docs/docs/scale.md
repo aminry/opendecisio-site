@@ -9,6 +9,18 @@ description: Ask every question about a text for the price of one read, plan for
 
 Put every question about a text in one request: the server reads the text once and answers them all.
 On the Gemma models it matters more, because their default [prompt layout](/docs/layout/) lists the request's questions before the text, so a later request with other questions reads the text again.
+::figure{name="shared-read"}
+
+| Your workload | Start here |
+| --- | --- |
+| Several known questions about one text | [Ask them together](#1-ask-many-questions-in-one-request) |
+| A series of different questions about the same text | [Choose plain layout](/docs/layout/#2-ask-for-plain-for-a-series-of-questions-about-one-text) |
+| Long documents | [Plan for the first read](#2-plan-for-the-first-read) |
+| Many clients at once | [Batch concurrent requests](/docs/concurrency/) |
+
+<details>
+<summary>Try fifty questions in one request</summary>
+
 This script asks fifty questions about one ticket in a single request:
 
 ```python
@@ -36,7 +48,8 @@ with urllib.request.urlopen(request) as response:
     print("server ms:", response.headers["x-decisio-server-ms"])
 ```
 
-::figure{name="shared-read"}
+
+</details>
 
 ## 1. Ask many questions in one request
 

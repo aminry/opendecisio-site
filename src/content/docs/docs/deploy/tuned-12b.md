@@ -5,9 +5,11 @@ description: Run the tuned Gemma 4 12B from its Hugging Face repository with one
 
 <!-- Site-written: the Serve the tuned 12B guide. The repositories, revisions, served names and settings are the published repositories' and decisio's docs/running.md ("Flavors") at the pinned release; the accuracy figures are the announcement's held-out table. -->
 
-The tuned 12B is Gemma 4 12B with a fine-tuned adapter merged into its weights, stored in bf16.
+Run the tuned 12B when you want the smaller model with settings for rule-based decisions.
 It is right more often than the untrained 12B on hard decisions with rules, exceptions and arithmetic, and about the same elsewhere ([the announcement](/news/tuned-12b/)).
-Each repository holds the weights and their settings, so one flag serves it:
+
+Choose GPU bf16, GPU FP8 or MLX below.
+Each repository holds its weights and settings, so one flag serves it:
 
 ::site-block{name="tuned-start"}
 
@@ -15,9 +17,9 @@ Each repository holds the weights and their settings, so one flag serves it:
 
 All three repositories hold the same weights; only their settings differ.
 
-- **`tachara-ai/Decisio-12b-tuned-calibrated`**, revision `baa731aa`, gives honest probabilities: calibrated temperatures for every question type, yes/no included, the header layout, and no commit rule, thinking or read twice.
-- **`tachara-ai/Decisio-12b-tuned-commit`**, revision `245e00dc`, commits yes/no answers: the same temperatures and layout with the commit rule, so no yes/no answer sits between 0.20 and 0.80. It changes no answer.
-- **`tachara-ai/Decisio-12b-tuned-commit-think`**, revision `e36aeb24`, adds thinking on choice questions to the commit settings: a choice question whose likeliest option is under 0.3712 is read again after up to 256 tokens of reasoning, and a text longer than 45,000 tokens is cut to its start and answered without thinking.
+- **`tachara-ai/Decisio-12b-tuned-calibrated`**, gives honest probabilities: calibrated temperatures for every question type, yes/no included, the header layout, and no commit rule, thinking or read twice.
+- **`tachara-ai/Decisio-12b-tuned-commit`**, commits yes/no answers: the same temperatures and layout with the commit rule, so no yes/no answer sits between 0.20 and 0.80. It changes no answer.
+- **`tachara-ai/Decisio-12b-tuned-commit-think`**, adds thinking on choice questions to the commit settings: a choice question whose likeliest option is under 0.3712 is read again after up to 256 tokens of reasoning, and a text longer than 45,000 tokens is cut to its start and answered without thinking.
 
 ## 2. Start it
 
@@ -42,7 +44,7 @@ On a GPU with FP8 support, two more repositories hold the tuned 12B in FP8, 13.1
 
 ::site-block{name="tuned-fp8-start"}
 
-- **`tachara-ai/Decisio-12b-tuned-fp8-calibrated`**, revision `d77c2790`, and **`tachara-ai/Decisio-12b-tuned-fp8-commit`**, revision `c41323f0`.
+- **`tachara-ai/Decisio-12b-tuned-fp8-calibrated`**, and **`tachara-ai/Decisio-12b-tuned-fp8-commit`**.
 - **It is level with bf16 on the held-out sets,** within a quarter of a point, but gives a different likeliest answer on about 3 to 6 of every 100 questions ([the announcement](/news/tuned-12b/) has the figures).
 - **It is quicker:** a median of 100.0 ms of server time per question, against 151.7 ms for bf16.
 - **The server emulates bf16 rounding on FP8 by default,** which narrows the difference between two cold starts.
@@ -70,7 +72,9 @@ decisio serves the tuned 12B on a Mac with Apple silicon from its MLX conversion
 
 Tasks and certificates are per model and per flavor: register and certify your tasks again on the tuned 12B, as on [Teach a task](/docs/tasks/).
 
-## 8. Know what is not there yet
+<span id="8-know-what-is-not-there-yet"></span>
+
+## 8. Good to know
 
 - **No Ollama version is planned.**
 - **Its accuracy was measured in bf16** against the untrained 12B on held-out items; the figures and their limits are in [the announcement](/news/tuned-12b/).

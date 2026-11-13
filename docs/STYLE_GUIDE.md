@@ -204,3 +204,14 @@ A manual act/review line never implies a certificate; a certification control us
 Use the existing figure panel, type and colour tokens.
 Keep labels in HTML where they need to stay readable on a phone, with equivalent text for every drawing.
 A schedule diagram without measured timing says that its boxes have no timing scale.
+
+## Recipes and advanced references
+
+Keep an application decision separate from the action your backend performs.
+A complete recipe includes the exact question, a real labelled-file format, a runnable caller, the review path and service-failure behavior.
+Require the appropriate certificate kind for the action; agreement alone is insufficient for a correctness policy.
+Generate downloadable clients from the displayed code so the two cannot drift.
+
+Put the minimum successful action before optional fitting and deployment detail.
+The API page retains all supported fields and routes, including extensions absent from the base schema, while omitting verification routes and methods.
+Group configuration tables by purpose and link the corresponding usage guide.

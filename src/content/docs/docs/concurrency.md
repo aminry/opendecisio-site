@@ -10,6 +10,8 @@ description: An opt-in mode that scores the requests waiting for the engine toge
 Batched mode is opt-in: it scores every request waiting for the engine together, in one call, so concurrent requests share the model's forward passes.
 A request that arrives at an idle server is still scored at once, alone, and gets the serial answer bit for bit, so a single client sees no change.
 
+::figure{name="concurrent-requests"}
+
 Under concurrent load it answers more requests a second: the Gemma 4 12B in FP8 answered 8.9 and 9.2 requests a second at 8 and 16 clients, against 7.2 one at a time, on requests about new texts of about 1,000 tokens.
 The gain depends on the card, the model and how often texts repeat, so measure it on your own traffic.
 
@@ -19,7 +21,6 @@ This reads the mode your server runs; without a flag it is serial:
 
 ::site-block{name="concurrency-health"}
 
-::figure{name="concurrent-requests"}
 
 ## 1. Turn it on
 
@@ -40,7 +41,7 @@ Start the server with `--concurrency batched`:
 ## 3. Know what can move
 
 - **Answers on the 12B can be made not to move.** With `--batch-invariant on`, off by default, a request gives the same bits in any batch of up to 16 reads, in bf16 and FP8, at a cost that grows with the input.
-- **Answers on the 31B, and on the 12B by default, can.** An answer no certified task covers can differ slightly when it is scored beside other requests, because the engine's arithmetic follows the shape of the batch. Keep serial there where the same request must give the same bytes, such as two benchmark runs you compare request by request.
+- **Answers on the 31B, and on the 12B by default, can.** An answer no certified task covers can differ slightly when it is scored beside other requests, because the engine's arithmetic follows the shape of the batch. Keep serial where your application requires repeatable request-by-request results.
 - **What was measured.** Only the 12B in FP8 has a published batched throughput figure; none is published for the 31B or the 12B in bf16.
 
 ## 4. Read what it did

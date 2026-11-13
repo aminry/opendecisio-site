@@ -22,7 +22,7 @@ Read every entry between your release and the one you are moving to.
 ## 2. Pin what you serve
 
 - Install the exact release: `pip install "decisio[serve]==<version>"`, or a clone at its tag.
-- Name the model repository at a commit, `--base tachara-ai/decisio-gemma-4-31b@<commit>`, so the weights cannot change under you.
+- Name the model repository at a revision, `--base tachara-ai/decisio-gemma-4-31b@<revision>`, so the weights cannot change under you.
 - Give `--max-model-len` the same value on every card.
 
 ## 3. Start the new release next to the old one
@@ -66,6 +66,16 @@ The task's `status` should read `ok` for every certified task, with no `suspende
 ## 7. Move the traffic
 
 Point your proxy at the new server, and watch `/health` and the server time as the traffic arrives ([Operate](/docs/operating/#2-watch-it)).
+
+## Check before cutover
+
+- The new endpoint answers 200 on `/health` and reports the intended model and prompt ceiling.
+- A representative request returns the expected answer shape.
+- Every task you rely on has the intended status; inspect a real decision's `certified`, `certificate_kind` and `certified_reason` as well.
+- Your review path handles answers that are not certified and requests that fail.
+
+If the new deployment fails these checks, keep traffic on the old deployment while you fix it.
+Retain its exported tasks and configuration for rollback; do not import a new deployment's certificate into the old setup and assume it holds.
 
 ## 8. Stop the old server
 

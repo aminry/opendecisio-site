@@ -8,7 +8,9 @@ description: Load a LoRA adapter you trained on the base, give it its own temper
 ::covers{links="docs/running.md#a-default-adapter=6-answer-requests-that-name-no-adapter docs/running.md#lora-adapters docs/running.md#an-adapters-own-temperatures=2-give-it-its-own-temperatures docs/running.md#a-choice-temperature-by-the-number-of-options=2-give-it-its-own-temperatures docs/running.md#identity-and-the-fingerprint=5-know-what-it-does-to-certificates"}
 
 Serve a LoRA adapter you trained on the base, and ask each question with it or without it.
-An adapter changes the scale of the model's readout, so it carries its own temperatures: one per question type, and for choice questions one per band of option count.
+Use an adapter on a GPU server when you already have its weights and serving settings.
+Keep its temperature file beside it, then check the responding adapter name.
+
 This writes decisio's example file and has decisio check it, on any machine:
 
 ::site-block{name="adapter-check"}
@@ -33,12 +35,17 @@ Start the server with `--adapter name=path`, once per adapter, and the adapter's
 - An adapter with no file is served at the base's temperatures, and the server says so when it starts.
 - The file is checked before the engine is built, and an unusable one stops the start.
 
-Fit the file from the adapter's readouts on labelled items, one row per item (`{"type": ..., "probs": [...], "gold": <index>}`):
+<details>
+<summary>Fit a temperature file when you need to create one</summary>
+
+Use labelled readouts from the adapter under the layout you will serve:
 
 ::site-block{name="adapter-fit"}
 
 Fit on items that are not a benchmark's: a temperature holds for the kind of items it was fitted on.
 Fit on readouts taken under the layout you serve, and give `--layout` to the fit so the file records it.
+
+</details>
 
 ## 3. Ask with it
 
@@ -57,9 +64,11 @@ Name the adapter in the request's `adapter` field:
 
 ## 5. Know what it does to certificates
 
-A certificate covers one serving setup, and an adapter is part of it.
-The setup a certificate is checked against holds each loaded adapter's name, weights hash and temperatures, so a different adapter, a retrained one or a changed temperature is a different setup: certify your tasks again on it.
-A request that names an adapter is never certified, and a question that a registered task matches is refused with an adapter.
+Requests answered by an adapter are never certified.
+A request combining an adapter with a question matched by a registered task is refused; use the base model for that task.
+
+Loaded adapter settings are part of the serving setup recorded by a base task's certificate.
+After loading, retraining or changing an adapter, certify affected base tasks again on the resulting setup.
 
 ## 6. Answer requests that name no adapter
 

@@ -27,4 +27,4 @@ uv run python -c "from importlib.metadata import version; print(version('decisio
 
 - [Upgrade](/docs/upgrading/): the steps of every upgrade.
 - [Choosing a model](/docs/bases/): which model is the default, and why.
-- [Evaluation card](/docs/evaluation-card/): what each release was measured on.
+- [Evaluate a task](/docs/evaluation-card/): check your application after an upgrade.

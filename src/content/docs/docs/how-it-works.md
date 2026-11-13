@@ -1,78 +1,70 @@
 ---
 title: How it works
-description: Send a text and your questions; decisio reads the text once and gives a probability for every option, in one call, with no text generated.
+description: Follow a text from your request to a typed answer, then decide what your application should do with it.
 ---
-
-<!-- Site-written: the one visual page of how decisio works, merging How it works, What the probability means and Repeatability. The diagrams are drawn at build time (src/lib/diagrams.mjs, src/lib/figures/); the request and its answer are the first recorded decision; the facts are decisio's README, docs/cli.md, docs/running.md, docs/tasks.md and EVAL_CARD.md at the pinned release (src/config/sourced.mjs checks them). -->
 
 ::covers{links="README.md#how-it-works"}
 
-A support ticket and three questions about it:
+Send a text and your questions, then use the typed answers in your application.
+The model judges the text; your code chooses the next action.
 
-::site-block{name="first-decision-request"}
-
-::site-block{name="first-decision-response"}
-
-::recorded-label
+::figure{name="first-question"}
 
 ## 1. The request flow
 
+Put the text in `state`, and name each entry in `questions` so you can find its answer later.
+A request shares a read of the text across its questions.
+Ask related questions together when you already know them.
+
 ::diagram{name="request-flow"}
 
-- The text is read once per request, and every question is answered from that read.
-- On the default model the questions are answered together; on the other two, one after another. Either way they pick the same options on every item measured.
-- A later request about the same text starts from what was read, so it is quick, when it asks the same questions; under the plain layout, any question does.
+Use [plain layout](/docs/layout/) when you ask a series of different questions about the same text.
+The default header layout on Gemma lists the questions before the text, so a different set of questions can require another read.
 
 ## 2. One decision and its probabilities
 
+Each question returns probabilities over the answers you supplied.
+A [choice](/docs/concepts/choice/) selects an option, a [yes/no question](/docs/concepts/noul/) returns the probability of yes, and a [score](/docs/concepts/score/) returns a weighted level on your scale.
+
 ::figure{name="one-pass"}
 
-Each question becomes one prompt that ends where the answer goes, and decisio reads the model's probability for each option at that point.
-On the Gemma models the prompt first lists every question of the request, then the text, then the question; the figure shows the plain layout, the text then the question, that it was recorded on ([Choose the prompt layout](/docs/layout/)).
-The probabilities add up to 1, and three things shape them:
-
-| What | Where it comes from |
-| --- | --- |
-| The model's own setting | fitted once per model; it never changes which option is likeliest |
-| Your task's correction | learned from your labelled examples, and kept only when it helps |
-| The certified threshold | set when you certify a task: answers at or above it are certified |
-
-A task's correction makes the probabilities more honest: on six held-out tasks, 20 labelled examples each lowered the calibration error from 0.058 to 0.037 (the Qwen model, 900 test items, 2026-09-29).
+The figure shows a recorded request under the plain layout.
+Treat probabilities as inputs to an application policy: act, request review, or ask a follow-up question.
+A [manual threshold](/docs/concepts/probabilities/) is your policy; it does not create a certificate.
 
 ## 3. Teach, then certify, then route
 
+Start with an ordinary request.
+When you ask the same question repeatedly, [teach a task](/docs/tasks/) from examples labelled by people, then [certify it](/docs/tasks/certify/) at your error target.
+
 ::figure{name="teach-flow-all"}
 
-On the support inbox, :value{name="inbox-certified-5"} of the messages were answered on their own at a 5% error target (BANKING77, Gemma 4 31B; [Certify answers](/docs/tasks/certify/)).
-
-::source{name="teach-certify"}
-
-- After upgrading decisio, certify your tasks again.
-- A certificate covers one task on one serving setup. Certify again when you change either.
+Your application checks each answer's `certified` and `certificate_kind` fields before acting.
+A gold certificate concerns correctness on traffic like your labelled examples; an agreement certificate concerns how often a learned table agrees with the model.
+Send answers that do not meet your policy to review.
 
 ## 4. Where it runs
+
+Run a [GPU server](/docs/deploy/cloud-gpu/), [MLX on Apple silicon](/docs/deploy/mac/), or the supported [Ollama path](/docs/deploy/mac/#on-a-laptop-with-ollama).
+Your backend sends HTTP requests to the running service.
 
 ::figure{name="layouts"}
 
 ## What repeats
 
-| Model | Asked again, on the same server | Many questions in one request | After a restart |
-| --- | --- | --- | --- |
-| Gemma 4 31B | exactly, on a freshly started server; on one that has already answered, 5 of 200 moved, by at most 0.031, with no top answer changed | the same choice on every item measured; probabilities within 0.0073 | not promised |
-| Gemma 4 12B | the same bits, from the cache or not, with `--batch-invariant on`; off by default, where two reads changed 4 of 622 top answers (0.6%) | the same choice; probabilities within 0.035 | identical on 1,894 of 1,894 reads in FP8 across two fresh starts on one card, 99.37% in bf16; not promised |
-| Qwen3.6-35B-A3B | the same probabilities every time | the same probabilities as each question on its own | an earlier record matched in most starts measured |
+Keep the model and serving settings stable when you need comparable answers.
+Exact probabilities can move across batches, restarts or machines; [Requirements and limits](/docs/limits/#5-repeatability) describes the measured behavior and the settings for repeated reads.
 
-The top answer rarely moves, and exact numbers repeat on one running server. On the 12B with `--batch-invariant on` they repeat whether the text came from the cache or not.
+<span id="under-the-hood"></span>
 
-## Under the hood
+## Good to know
 
-- decisio runs on stock vLLM 0.31.0: a plugin registers its model classes, and no patch is needed.
-- Every model is an official checkpoint, frozen: no training, no fine-tuning, no adapter unless you serve one with `--adapter`.
-- A taught task's intent head reads the model's internal representation of the text at the answer position.
-- On a Mac, the MLX engine answers each question on its own from one shared read of the text.
+- A default request selects among supplied answers; [thinking](/docs/think/) is an optional extra reasoning step.
+- A certificate covers one task and serving setup; certify again after changing either.
+- Your application needs a review path for uncertain answers and service failures, as the [recipes](/docs/use-cases/) show.
 
 ## What next
 
-- [Teach a task](/docs/tasks/): teach decisio your question from labelled examples.
-- [Certify answers](/docs/tasks/certify/): the promise behind a certified answer.
-- [Choosing a model](/docs/bases/): which of the three models to serve.
+- [Write a decision request](/docs/build-request/): choose questions and options for your data.
+- [Use probabilities](/docs/concepts/probabilities/): connect a result to application policy.
+- [Teach a task](/docs/tasks/): improve a recurring question with your own labels.

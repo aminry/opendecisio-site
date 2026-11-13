@@ -54,3 +54,14 @@ Keep Astro, Starlight, the design tokens, static SVG and small progressive enhan
 The documentation is organized around the developer's workflow: first request, question types, examples, teaching, deployment and operation.
 The former evaluation-card address now serves a practical task-evaluation guide, with old fragment identifiers preserved.
 Reference pages cover the supported application surface; verification internals are not part of the reader's guide.
+
+## Addendum: curated reference and complete recipe clients
+
+Select the supported request and response sections of the pinned HTTP reference, with task lifecycle tables for application developers.
+The machine-readable schema checks route and field coverage; explicitly retain extensions documented outside its base request schema.
+Group server flags by purpose and omit the verification-only diagnostic flag from the guide.
+Render change descriptions and issue links without source-commit citations, retaining the build's release pin and artifact identifiers.
+
+Recipe callers and registrations share one question definition and are available as generated plain-text downloads.
+Their tests exercise real HTTP transport, certificate kinds, error fallbacks and labelled-file input without treating fixture responses as model measurements.
+The published-command runner continues to exercise callable examples on the development server; registrations needing the reader's own labels say so.
