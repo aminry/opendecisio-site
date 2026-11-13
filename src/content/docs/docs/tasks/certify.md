@@ -49,7 +49,9 @@ Every answer for the task now says whether it is certified, and why not when it 
 
 ::site-block{name="certificate-answers"}
 
-Act on the certified answers on their own, and send the rest to a person or a larger model.
+Check that `certified` is `true` and `certificate_kind` is `gold` before taking a correctness-based action.
+A learned table can return an `agreement` certificate, which concerns matching the model, mistakes included.
+Send answers that do not meet your policy to a person or larger model, and handle service errors through the same fallback.
 
 ## 4. Have enough examples
 
@@ -76,8 +78,6 @@ Set `certify.min_examples` above the floor to refuse a certificate that thin.
 4. **Expect a few answers near the threshold to change sides** between two fresh starts of the same server: judge the certificate by its rate over many answers, not by one.
 5. **On the 12B with several replicas or fresh nodes, make cold starts agree** with `--deterministic-compile on`, then certify again: the setting is part of what a certificate covers, and the first start compiles from cold. Leave it off on the 31B, whose cold starts already agreed in the same check and whose answers it changes.
 6. **Expect a repeated request to differ slightly from its first read.** A request about a text the server has read before is computed on the blocks the prefix cache kept, which can move an answer near the threshold across it. On the 12B, `--batch-invariant on`, off by default, removes this: a request read from the cache gives the same bits as one read without it.
-
-::source[`--deterministic-compile`: decisio's card check on vLLM 0.31.0, one RTX PRO 6000, one session, 300 hard choice questions after each cold start with the compile caches cleared: on the 12B in FP8, 300 of 300 identical in every pair of starts with it, none without it, at about 1% in time per read. On the 31B in FP8, 300 of 300 identical without it, and 24 top answers changed by turning it on. Repeated reads, with batch-invariant kernels: vLLM 0.31.0, one RTX PRO 5000, the 12B in bf16 and FP8 and an adapter applied at run time, the same bits with the prefix cache on and off on 622 and 979 requests; without them, two reads of the 622 differed on 145 by more than 0.01 and changed 4 top answers.]
 
 What is certified: choice and yes/no questions on text, asked in one order.
 Score questions and requests with images carry no certificate.

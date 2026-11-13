@@ -84,29 +84,35 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 
 ## 3. Set up for production
 
-1. **Give `--max-model-len` the same value on every card.** The length served is part of what a certificate covers. On an RTX PRO 6000, 98,304 against 32,768 changed 6 of 200 top answers.
-2. **After upgrading decisio, certify your tasks again.** A certificate covers the release it was made on.
-3. **A certificate covers one task on one serving setup.** The setup is the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length and the serving flags. When any of it changes, the task's answers stop being certified until you certify again.
-4. **Keep the cache type you certified on.** `--kv-cache-dtype fp8` suspends a certificate made without it.
-5. **On a Mac, run one model server at a time.** Two servers can add up to more memory than the Mac has.
-6. **Think when unsure on a card only, with the engine in the server's process.** It needs the vLLM engine and the default `--engine-process in`; the Mac build and `--engine-process separate` refuse `--think` at start.
-7. **If you served with thinking on before upgrading, check its answers again.** Thinking now writes reasoning on a default server, so thinking answers change, and are usually faster: check your `--think-factor` against measured answers, and certify again the tasks you certify under thinking.
-8. **Size a thinking server for its slowest request.** A thinking request holds the server for its whole call, so other requests wait behind it: use thinking where requests arrive one at a time, or run more servers.
-9. **Certify with the think setting you serve with.** A certificate made with thinking off is suspended on a server that thinks (`think_mode_changed`), and the other way round, until you certify again.
-10. **Batch concurrent requests on a card or the CPU stand-in.** `--concurrency batched` needs the vLLM engine or the stand-in in separate mode; the Mac build and `--mode packed` refuse it at start.
-11. **Certify on the mode you serve with.** A certificate made on a serial server is suspended on a batching one (`concurrency_changed`), and the other way round, until you certify again.
-12. **Batch concurrent requests for throughput, and measure on your traffic.** On one RTX 5090 the Gemma 4 12B in FP8 answered 8.9 and 9.2 requests a second batched, at 8 and 16 clients, against 7.2 one at a time, on requests about new states of about 1,000 tokens; a request that arrives alone is answered as on a serial server. The gain depends on the card, the base and how often states repeat.
-13. **Expect requests in arrival order.** Under load a request waits for the requests that arrived before it, first come, first served, on every server.
-14. **Run one stack across replicas that certify.** With a shared task store, a certificate is suspended on a replica whose engine, card or settings differ, so a fleet with certified answers runs the same stack everywhere.
-15. **Watch each replica on its own.** The traffic monitors of a certified task are per replica, not shared: sum the `decisio_task_*` metrics across replicas.
-16. **Expect a taught task on the other replicas within seconds, not at once.** They pick it up within the poll interval; a client that must read its own change asks the replica that made it.
-17. **Check your object store at the first start.** The shared store was checked on RustFS, SeaweedFS and MinIO, not on AWS S3, R2, GCS or Azure; a replica refuses to start on a store that does not enforce conditional writes.
-18. **Certify under the layout your clients send.** A task is fitted under one [prompt layout](/docs/layout/) and certifies only that layout's requests; a question asked under the other gets `certified_reason: "layout_mismatch"`. A server that loads tasks fitted under plain keeps plain as its default and says so.
-19. **Ask for the plain layout for a series of questions about one text.** Under the header layout, the Gemma models' default, a later request with other questions reads the text again; a request with `"layout": "plain"` reads it from the cache.
-20. **Certify on the flavor and the read-twice setting you serve.** A task registered, or a certificate made, under one flavor or one `--read-twice-under` setting is not applied under another.
-21. **Expect FP8 servers to emulate bf16 rounding.** By default an FP8 server keeps each bf16 rounding step in its compiled kernels (`--emulate-precision-casts`), so two cold starts agree more often, though not always. It is part of what a certificate covers, and `--emulate-precision-casts off` turns it off.
-22. **Turn on batch-invariant kernels where exact repeats matter.** With `--batch-invariant on`, off by default, each row is computed with kernels whose result does not depend on what else is in the batch or on the prefix cache; without it, two reads of 622 requests on the 12B changed 4 top answers (0.6%) and probabilities moved in the last digits. Its cost grows with the input: 1.03 times a short read on FP8 and 1.6 times on bf16, and about 30% slower on FP8 requests over 1,000 tokens in a field report not yet measured on a fixed set. A certificate made under one setting is suspended under the other, and a text longer than vLLM's batch budget is read in several engine steps, which repeats but is other arithmetic, so the budget is part of what a certificate covers.
-23. **Certify with the default adapter you serve.** A certificate made under another `--default-adapter`, or none, is suspended.
+Keep one serving setup for each certified task.
+After an upgrade or a change to the model, engine, hardware, precision, cache type, prompt ceiling, layout or serving flags, certify the task again.
+
+| Need | Set up and check |
+| --- | --- |
+| The same prompt ceiling across cards | Set `--max-model-len` explicitly and check `/health` |
+| Repeated 12B reads independent of batch/cache | Consider `--batch-invariant on`, off by default; measure its added cost and certify again |
+| Consistent 12B cold starts on replicas | Use the [certification guidance](/docs/tasks/certify/#5-keep-it-valid) for `--deterministic-compile`; leave it off on the 31B |
+| Task persistence on one server | `--tasks-dir` on a persistent volume, with `--require-tasks` |
+| Shared tasks across replicas | One `--task-store`, the same stack, synchronized clocks and per-replica monitoring |
+| Private access | An authenticated proxy with rate and request-size limits; [Operate](/docs/operating/#5-secure-it) |
+
+### Optional features
+
+- Thinking requires the vLLM engine in the server process; a thinking request can hold up other requests.
+- Batched concurrency requires vLLM or the development model in separate mode; MLX and packed mode reject it.
+- A certificate made under another thinking or concurrency setting is suspended until you certify again.
+- Tasks apply under their registered layout; another layout can produce `layout_mismatch`.
+- Read-twice settings, flavors and a default adapter are also part of the serving setup.
+- FP8 servers emulate bf16 rounding by default; changing that setting changes the setup too.
+
+### Replicas
+
+A shared-store write takes time to reach the other replicas; wait for the poll or read back from the writer.
+If the store is unavailable, replicas keep serving their loaded records and task writes return 503.
+The store must support conditional writes; check it before routing traffic, and collect task metrics from every replica.
+
+On a Mac, run one model server at a time.
+Choose its memory budget before starting another process that needs the same memory.
 
 ## 4. What was measured on what
 
@@ -132,7 +138,7 @@ At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right agains
 - Latency depends on the host's CPU and the card's power limit, as well as the card.
 - Most published figures of the 31B were measured on Google's weights converted to FP8 as they load; the stored FP8 checkpoint it serves scores the same within noise: 213 of JevBench's 231 published questions right with each, and 162 of 200 suite requests (vLLM 0.31.0).
 
-[The evaluation card](/docs/evaluation-card/) has every measurement and its record.
+[Evaluate a task](/docs/evaluation-card/) walks through testing your own question before automatic actions.
 
 ## 5. Repeatability
 
@@ -157,6 +163,6 @@ On the 12B, `--batch-invariant on`, off by default, makes a repeated request giv
 
 ## What next
 
-- [The evaluation card](/docs/evaluation-card/): every measurement, with its record.
+- [Evaluate a task](/docs/evaluation-card/): check your own question and application policy.
 - [Certify answers](/docs/tasks/certify/): certify a task, and what its certificate covers.
 - [Upgrade](/docs/upgrading/): move to a new release, and certify your tasks again.

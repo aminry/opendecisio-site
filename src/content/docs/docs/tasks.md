@@ -8,7 +8,8 @@ description: Teach decisio a question you ask again and again, from your own lab
 ::covers{links="docs/tasks.md README.md#teach-it-your-question docs/tasks.md#what-a-task-is=1-check-that-it-is-a-task docs/tasks.md#why-register-one=what-it-does docs/tasks.md#what-you-need=2-gather-your-examples docs/tasks.md#walk-through=3-register docs/tasks.md#3-read-the-response=4-read-what-it-kept docs/tasks.md#5-list-export-reload-delete=6-keep-it-across-restarts docs/tasks.md#saved-to-disk---tasks-dir=6-keep-it-across-restarts docs/tasks.md#what-you-get=what-it-does docs/tasks.md#when-it-helps-and-when-it-does-not=what-it-does docs/tasks.md#what-it-costs=what-it-costs"}
 
 Register the question once, with labelled examples, and every later request that asks it is answered with what the server learned.
-With the example task from decisio's repository, one request teaches it:
+Run this from the root of a release checkout, with your server running.
+The supplied ticket fixture gives you a complete registration to try:
 
 ::upstream{file="README.md" section="Teach it your question" block="1"}
 
@@ -51,7 +52,7 @@ The answer has one record for each correction, `calibration` and `head`:
 | `applied` | `true` when later questions with this option list are answered with the correction |
 | `reason` | why, in words: "cross-validated gain" when it was kept, because it helped on examples it was not fitted on, or what was missing |
 
-The server keeps a correction only when it helps on your own examples, checked by scoring each fifth of them with a fit made on the other four.
+The server keeps a correction only when it helps on examples held out from fitting.
 When it declines one, the question is answered exactly as before:
 - **Too few examples:** add more, up to 20 for the correction or 10 per option for the head, and register again. When the head is declined for this, `short_options` names the options that have too few, each with its count.
 - **The plain answer is already as good:** common for a clear yes/no question.

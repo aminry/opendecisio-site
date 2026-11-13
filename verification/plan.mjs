@@ -120,13 +120,7 @@ export const plan = [
 	{ page: '/docs/concepts/noul/', n: 2, mode: 'example', expect: '{"type": "noul",' },
 	{ page: '/docs/concepts/score/', n: 1, mode: 'run', expect: 'curl --fail-with-body', assert: (stdout) => questionAnswer(stdout, 'impact', 'score', ['0', '1', '2', '3']), note: "the answer is the stand-in's, not a model-quality measurement" },
 	{ page: '/docs/concepts/score/', n: 2, mode: 'example', expect: '{\n  "type": "score",' },
-	{
-		page: '/docs/api/', n: 1, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/v1/models', show: (stdout) => stdout.replace(/\}\{/g, '}\n{'),
-		assert(stdout) {
-			if (!stdout.includes('"ok":true') && !stdout.includes('"ok": true')) throw new Error('/health did not answer ok');
-			if (!stdout.includes('"category"')) throw new Error('the choice question was not answered');
-		},
-	},
+	{ page: '/docs/api/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 3] },
 	// Call it from your code, on the stand-in: the recorded support ticket sent from each language (src/lib/site-blocks.mjs),
 	// then decisio's programs for the frameworks (docs/integrations.md), the Python ones run with the versions they name.
 	{ page: '/docs/use-from/', n: 1, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone', assert: recordedAnswers, note: "the answers are the stand-in's, not the default model's" },
@@ -194,48 +188,48 @@ export const plan = [
 	// The use-case recipes, on the stand-in: each asks its question and routes on the certificate (src/lib/use-cases.mjs);
 	// the stand-in certifies nothing, so every answer takes the person's branch, which the assertion accepts like the other.
 	{
-		page: '/docs/use-cases/support-routing/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request', show: asPrinted,
+		page: '/docs/use-cases/support-routing/', n: 1, mode: 'python', expect: 'import json\nimport os', show: asPrinted,
 		assert(stdout) {
 			if (!stdout.trim()) throw new Error('the support-routing recipe printed no route');
 		},
 	},
-	{ page: '/docs/use-cases/support-routing/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "support-routing",' },
+	{ page: '/docs/use-cases/support-routing/', n: 2, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own human-labelled JSONL file; the recipe transport tests check its request shape' },
 	{
-		page: '/docs/use-cases/gatekeeper/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request', show: asPrinted,
+		page: '/docs/use-cases/gatekeeper/', n: 1, mode: 'python', expect: 'import json\nimport os', show: asPrinted,
 		assert(stdout) {
 			if (!stdout.trim()) throw new Error('the gatekeeper recipe printed no route');
 		},
 	},
-	{ page: '/docs/use-cases/gatekeeper/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "gatekeeper",' },
+	{ page: '/docs/use-cases/gatekeeper/', n: 2, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own human-labelled JSONL file; the recipe transport tests check its request shape' },
 	{
-		page: '/docs/use-cases/issue-triage/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request', show: asPrinted,
+		page: '/docs/use-cases/issue-triage/', n: 1, mode: 'python', expect: 'import json\nimport os', show: asPrinted,
 		assert(stdout) {
 			if (!stdout.trim()) throw new Error('the issue-triage recipe printed no route');
 		},
 	},
-	{ page: '/docs/use-cases/issue-triage/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "issue-triage",' },
+	{ page: '/docs/use-cases/issue-triage/', n: 2, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own human-labelled JSONL file; the recipe transport tests check its request shape' },
 	{
-		page: '/docs/use-cases/guardrails/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request', show: asPrinted,
+		page: '/docs/use-cases/guardrails/', n: 1, mode: 'python', expect: 'import json\nimport os', show: asPrinted,
 		assert(stdout) {
 			if (!stdout.trim()) throw new Error('the guardrails recipe printed no route');
 		},
 	},
-	{ page: '/docs/use-cases/guardrails/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "guardrails",' },
+	{ page: '/docs/use-cases/guardrails/', n: 2, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own human-labelled JSONL file; the recipe transport tests check its request shape' },
 	{
-		page: '/docs/use-cases/rag-gate/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request', show: asPrinted,
+		page: '/docs/use-cases/rag-gate/', n: 1, mode: 'python', expect: 'import json\nimport os', show: asPrinted,
 		assert(stdout) {
 			if (!stdout.trim()) throw new Error('the rag-gate recipe printed no route');
 		},
 	},
-	{ page: '/docs/use-cases/rag-gate/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "rag-gate",' },
+	{ page: '/docs/use-cases/rag-gate/', n: 2, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own human-labelled JSONL file; the recipe transport tests check its request shape' },
 	{
-		page: '/docs/use-cases/document-classification/', n: 1, mode: 'python', expect: 'import json\nimport urllib.request', show: asPrinted,
+		page: '/docs/use-cases/document-classification/', n: 1, mode: 'python', expect: 'import json\nimport os', show: asPrinted,
 		assert(stdout) {
 			if (!stdout.trim()) throw new Error('the document-classification recipe printed no route');
 		},
 	},
-	{ page: '/docs/use-cases/document-classification/', n: 2, mode: 'example', expect: 'POST /v1/tasks\n{"id": "document-classification",' },
-	{ page: '/docs/use-cases/', n: 1, mode: 'same-as', expect: 'import json\nimport urllib.request', of: ['/docs/use-cases/support-routing/', 1] },
+	{ page: '/docs/use-cases/document-classification/', n: 2, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own human-labelled JSONL file; the recipe transport tests check its request shape' },
+	{ page: '/docs/use-cases/', n: 1, mode: 'same-as', expect: 'import json\nimport os', of: ['/docs/use-cases/support-routing/', 1] },
 	// Operate and Troubleshoot, on the stand-in.
 	{
 		page: '/docs/operating/', n: 1, mode: 'run', expect: 'until curl -sf http://127.0.0.1:8000/health',
@@ -256,8 +250,6 @@ export const plan = [
 		},
 	},
 	// How it works, on the stand-in.
-	{ page: '/docs/how-it-works/', n: 1, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/use-from/', 1] },
-	{ page: '/docs/how-it-works/', n: 2, mode: 'output', expect: '{\n  "answers": {' },
 	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
 	// Batch concurrent requests: the server's mode read from /health on the stand-in (serial, the default); the batched
@@ -274,13 +266,12 @@ export const plan = [
 	{ page: '/docs/deploy/tuned-12b/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with an NVIDIA card that supports FP8, which this check does not have' },
 	{ page: '/docs/deploy/tuned-12b/', n: 3, mode: 'shown', expect: 'pip install "decisio[mlx]', why: 'it needs a Mac with Apple silicon, which this check does not have' },
 	// Teach a task whose options change: the registration as decisio's docs give it.
-	{ page: '/docs/tasks/dynamic/', n: 1, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/tasks', why: 'it shows the shape with one example, as decisio\'s docs/tasks.md does; a registration that certifies needs more, 59 held out at the defaults' },
+	{ page: '/docs/tasks/dynamic/', n: 1, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own complete dynamic-task.json with labelled requests; transport tests check the registration' },
 	// Answer short tasks faster: the registration as decisio's docs give it.
-	{ page: '/docs/tasks/context/', n: 1, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/tasks', why: "it is decisio's docs/tasks.md request with the policy and the examples left out" },
-	{ page: '/docs/tasks/fast-table/', n: 1, mode: 'shown', expect: "pip install 'decisio[table]'", why: 'it leaves the examples out, as decisio\'s docs/tasks.md does; a registration needs at least 100 to fit and about 600 or more held out at the defaults' },
-	{ page: '/docs/tasks/fast-table/', n: 2, mode: 'shown', expect: '# static, base (31 MB)', why: "it fetches the students from the Hugging Face Hub, 1 GB in all, at the revisions decisio's docs/tasks.md pins; decisio's registration refusal names the same commands" },
-	{ page: '/docs/tasks/fast-table/', n: 3, mode: 'shown', expect: "pip install 'decisio[table]'", why: "it is decisio's docs/tasks.md request with the criteria left out; a learned table certifies only after hundreds of requests through a model" },
-	{ page: '/docs/tasks/fast-table/', n: 4, mode: 'shown', expect: 'python -m decisio.bench.table_latency', why: "it needs a running server with a model and the reader's own labelled examples; docs/tasks.md gives the command" },
+	{ page: '/docs/tasks/context/', n: 1, mode: 'shown', expect: 'import json\nimport os', why: 'it needs a complete labelled task.json and a context.txt policy supplied by the reader; transport tests check both files' },
+	{ page: '/docs/tasks/fast-table/', n: 1, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the table extra and the reader’s own complete labelled task.json; transport tests check the registration' },
+	{ page: '/docs/tasks/fast-table/', n: 2, mode: 'shown', expect: 'import json\nimport os', why: 'a learned table needs traffic through the running model; the code sends a complete question' },
+	{ page: '/docs/tasks/fast-table/', n: 3, mode: 'shown', expect: 'python -m decisio.bench.table_latency', why: 'it needs a running server and the reader’s own labelled examples and probes' },
 	// Choose the prompt layout: the layout read from /health on the stand-in (the Qwen model's default, plain), a request that asks for plain, and the start
 	// with --layout plain is decisio's command on a card.
 	{
@@ -449,9 +440,6 @@ export const plan = [
 
 	// Shapes and recorded output.
 	{ page: '/docs/api/', n: 2, mode: 'example', expect: '{"model": "decisio-gemma-4-31b-it-letters",' },
-	{ page: '/docs/api/', n: 3, mode: 'example', expect: '{"id": "ticket-routing",' },
-	{ page: '/docs/api/', n: 4, mode: 'example', expect: '{"id": "...",' },
-	{ page: '/docs/flags/', n: 1, mode: 'example', expect: 'uv run python -m decisio.serve.vllm_engine [flags]' },
 	// Move from System One: decisio's docs/migrating.md blocks, TypeSafe's SDK against the stand-in, then the two reads.
 	{ page: '/docs/migrating/', n: 1, mode: 'run', expect: 'export TYPESAFE_BASE_URL=', note: 'sets the variables the SDK reads' },
 	{
@@ -476,5 +464,5 @@ export const plan = [
 	{ page: '/', n: 4, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/deploy/mac/', 6] },
 	{ page: '/', n: 5, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 7] },
 	{ page: '/', n: 6, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/use-from/', 1] },
-	{ page: '/', n: 7, mode: 'same-as', expect: '{\n  "answers": {', of: ['/docs/how-it-works/', 2] },
+	{ page: '/', n: 7, mode: 'output', expect: '{\n  "answers": {' },
 ];

@@ -43,6 +43,7 @@ const ollamaRequest = (model) => `curl http://localhost:11434/v1/systemone \\
 import { questionExample } from './question-examples.mjs';
 import { recordedRequest, recordedResponse } from './docs-figures.mjs';
 import { pin, readUpstream } from './upstream.mjs';
+import { taskRegistration, learningRegistration } from './task-clients.mjs';
 import { recipeIds, routeScript, teachBody } from './use-cases.mjs';
 import { certificate, health } from './recorded.mjs';
 
@@ -155,45 +156,10 @@ const concurrencyStart = () => `pip install "decisio[serve]==${version()}"\npyth
 const tunedStart = () => `python3.12 -m venv .venv && . .venv/bin/activate\npip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-calibrated@baa731aa`;
 const tunedFp8Start = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-fp8-calibrated@d77c2790`;
 const tunedMlxStart = () => `pip install "decisio[mlx]==${version()}"\npython -m decisio.serve.vllm_engine --backend mlx --base tachara-ai/Decisio-12b-tuned-mlx8-calibrated`;
-const dynamicRegister = () => `curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
-  "id": "brand",
-  "options": "dynamic",
-  "match": "instructions",
-  "examples": [
-    {
-      "request": {
-        "state": "Apple iPhone 13 Pro 256GB graphite",
-        "questions": {
-          "q": {
-            "type": "choice",
-            "instructions": "Which of these is the brand of the product in this listing?",
-            "criteria": { "1": "Apple", "2": "Samsung", "3": "Google", "none": "none of these" }
-          }
-        }
-      },
-      "answer": "1"
-    }
-  ],
-  "certify": {}
-}'`;
-const fastTableRegister = () => `pip install 'decisio[table]'
-curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
-  "id": "assistant-commands",
-  "examples": [ ... ],
-  "certify": { "alpha": 0.05, "delta": 0.1 },
-  "fast_table": true
-}'`;
+const dynamicRegister = () => taskRegistration('dynamic');
+const fastTableRegister = () => taskRegistration('table');
 // Answer short tasks faster: a task that learns its table from its traffic, decisio's docs/tasks.md request laid out for a phone.
-const fastTableLearn = () => `pip install 'decisio[table]'
-curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d '{
-  "id": "queue",
-  "question": {
-    "type": "choice",
-    "instructions": "Which team should handle this message?",
-    "criteria": { "billing": "...", "tech": "...", "sales": "..." }
-  },
-  "fast_table": { "learn": true }
-}'`;
+const fastTableLearn = () => learningRegistration();
 // Answer short tasks faster: decisio's table-latency bench, as docs/tasks.md gives it.
 const fastTableBench = () => `python -m decisio.bench.table_latency \\
   --url http://127.0.0.1:8000 \\
@@ -328,9 +294,10 @@ export const siteBlocks = {
 	get 'tuned-start'() { return { lang: 'bash', text: tunedStart() }; },
 	get 'tuned-fp8-start'() { return { lang: 'bash', text: tunedFp8Start() }; },
 	get 'tuned-mlx-start'() { return { lang: 'bash', text: tunedMlxStart() }; },
-	get 'dynamic-register'() { return { lang: 'bash', text: dynamicRegister() }; },
-	get 'fast-table-register'() { return { lang: 'bash', text: fastTableRegister() }; },
-	get 'fast-table-learn'() { return { lang: 'bash', text: fastTableLearn() }; },
+	get 'context-register'() { return { lang: 'python', text: taskRegistration('context') }; },
+	get 'dynamic-register'() { return { lang: 'python', text: dynamicRegister() }; },
+	get 'fast-table-register'() { return { lang: 'python', text: fastTableRegister() }; },
+	get 'fast-table-learn'() { return { lang: 'python', text: fastTableLearn() }; },
 	get 'fast-table-bench'() { return { lang: 'bash', text: fastTableBench() }; },
 	get 'layout-start'() { return { lang: 'bash', text: layoutStart() }; },
 	get 'layout-health'() { return { lang: 'bash', text: layoutHealth() }; },
@@ -367,5 +334,5 @@ export function siteBlock(name) {
 // The use-case recipes: each one's routing script and its registration (src/lib/use-cases.mjs).
 for (const id of recipeIds) {
 	Object.defineProperty(siteBlocks, `route-${id}`, { get: () => ({ lang: 'python', text: routeScript(id) }), enumerable: true });
-	Object.defineProperty(siteBlocks, `teach-${id}`, { get: () => ({ lang: 'text', text: teachBody(id) }), enumerable: true });
+	Object.defineProperty(siteBlocks, `teach-${id}`, { get: () => ({ lang: 'python', text: teachBody(id) }), enumerable: true });
 }

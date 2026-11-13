@@ -38,7 +38,7 @@ On the 31B, against the plain layout, on the same items:
 | hard390 | 52.31 | 59.74 | +7.44 [3.08, 11.79] |
 | dev500 | 67.40 | 67.00 | -0.40 [-3.0, 2.2] |
 
-::source[Measured by decisio on one RTX PRO 6000, the 31B in FP8 on load, on the commit that added the header layout, as decisio 0.26.0's docs/running.md states it. The multi-domain sample is scored by its own kit; H776, hard390 and dev500 are decisio's own proxy sets.]
+::source[Measured by decisio on one RTX PRO 6000, the 31B in FP8 on load, on the build documented at release, as decisio 0.26.0's docs/running.md states it. The multi-domain sample is scored by its own kit; H776, hard390 and dev500 are decisio's own proxy sets.]
 
 - **On the 12B the gain was smaller.** It was +3.84 on the multi-domain sample, mostly in requests that ask many questions about one text, +3.60 on dev500 and +0.90 on H776, which is within noise. Weighting each of the sample's 41 families equally, it was +1.75 with an interval of [-0.77, 4.50], which crosses 0.
 - **The header costs tokens.** Single questions read 3 to 10% more input tokens, counted in `usage.input_tokens`, and the 31B's median latency rose by 1 to 10%.
@@ -66,7 +66,7 @@ curl -s http://127.0.0.1:8000/v1/systemone \
 }'
 ```
 
-- **`"layout"` is `"plain"` or `"header"`,** on `/v1/systemone` and `/v1/answer`. Absent or `null`, the request gets the server's layout; any other value is a 422.
+- **`"layout"` is `"plain"` or `"header"`,** on `/v1/systemone`. Absent or `null`, the request gets the server's layout; any other value is a 422.
 - **The request is built token for token** as a server started with that `--layout` builds it, and `x-decisio-prompt` says which layout was read.
 - **On the tuned 12B a later, different question about the same text took 177 to 185 ms under plain** and 434 to 436 ms under the header, which reads the text again. A repeated request took about 147 ms against about 391 ms for the first read, in either layout.
 - **What plain gives up is the header's gain in the answers,** not their speed: the tables in step 1.
@@ -116,17 +116,11 @@ To make the header the default, export the tasks if you want the records, regist
 
 ## 6. Read short requests twice
 
-`--read-twice-under N` writes each question's prompt twice when a request is short, the second copy after `Read the same input again before answering:`, for more accuracy at more tokens.
-It is off by default.
+`--read-twice-under N` repeats a short request's input before answering.
+It is off by default and costs more input tokens; measure whether it helps your own labelled task before enabling it.
 
-- **Short** means at most N counted input tokens read once: the header, the text and each question's own text, as `usage.input_tokens` counts them.
-- **`--read-twice-max-questions R`** reads a request with more than R questions once, because a doubled request costs more with every question. Set R from a timing run on your card: the largest question count whose doubled request stays under about 900 ms.
-- **On the 31B with the header,** N = 2,000 gained 1.8 points on the public multi-domain sample, at about 1.5 times the tokens and an estimated p80 of about 866 ms; that threshold was checked on the sample itself. On our proxies it gained 3.24, the smallest threshold within 0.25 points of the best.
-- **On the 12B in FP8** it added nothing within noise.
-- **It costs tokens:** short requests read up to about twice the input tokens, and `usage.input_tokens` counts both copies, so it is off by default.
-- **Tasks and certificates are per setting:** a task registered under one N and R is not applied under another.
-
-::source[Measured by decisio on one RTX PRO 6000, the 31B with the header layout, as decisio 0.27.0's docs/running.md states it.]
+Use `--read-twice-max-questions R` to keep requests with many questions at one read.
+A changed read-twice setting changes the setup a task or certificate covers, so register and certify again under the setting you serve.
 
 ## 7. Know what happens when the header does not fit
 

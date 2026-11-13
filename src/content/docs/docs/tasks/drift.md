@@ -54,6 +54,12 @@ curl -s http://127.0.0.1:8000/metrics | grep '^decisio_task_'
 It also counts each task's answers and certified answers.
 The counters live in memory and start again when the server does.
 
+## When an alert fires
+
+Keep accepting suggestions for review while `certified` is `false`.
+Inspect the task's reason and serving setup, collect representative new labels, then certify again when the task and setup are ready.
+A drift alarm detects a shift; it cannot establish whether individual answers are correct.
+
 ## 4. Check it with labels
 
 The checks cannot see a wrong answer, because they have no labels.
