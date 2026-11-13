@@ -1,0 +1,50 @@
+{
+  "schema": "certified_walkthrough/1",
+  "dataset": "banking77",
+  "model": "g31",
+  "k": 10,
+  "draw": 1,
+  "recordedOn": "0.14.0",
+  "note": "Selected test messages illustrate three outcomes; they are not a representative sample. Zero-based indices refer to the recorded BANKING77 test-message order.",
+  "cases": [
+    {
+      "id": "clear",
+      "name": "Clear match",
+      "testIndex": 955,
+      "text": "When should I receive my virtual card?",
+      "answer": "getting_virtual_card",
+      "label": "getting_virtual_card",
+      "answerName": "Getting a virtual card",
+      "labelName": "Getting a virtual card",
+      "probability": 0.96158
+    },
+    {
+      "id": "borderline",
+      "name": "Borderline match",
+      "testIndex": 182,
+      "text": "I have a 1 euro fee on my statement.",
+      "answer": "extra_charge_on_statement",
+      "label": "extra_charge_on_statement",
+      "answerName": "Extra charge on statement",
+      "labelName": "Extra charge on statement",
+      "probability": 0.83128
+    },
+    {
+      "id": "mistake",
+      "name": "Known mistake",
+      "testIndex": 255,
+      "text": "How do I change currencies to euros?",
+      "answer": "exchange_via_app",
+      "label": "fiat_currency_support",
+      "answerName": "Exchanging currency in the app",
+      "labelName": "Supported currencies",
+      "probability": 0.95534
+    }
+  ],
+  "source": {
+    "dataset": "BANKING77",
+    "licence": "CC BY 4.0",
+    "url": "https://github.com/PolyAI-LDN/task-specific-datasets",
+    "credit": "Casanueva, Temcinas, Gerz, Henderson and Vulic, Efficient Intent Detection with Dual Sentence Encoders (2020), PolyAI"
+  }
+}
