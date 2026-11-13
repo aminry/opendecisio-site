@@ -1,3 +1,4 @@
+import examples from '../data/fast-path-examples.json' with {type:'json'};
 // Shared by the build, browser and film: an illustration, never a benchmark replay.
 import timing from '../data/fast-path-timing.json' with {type: 'json'};
 export const STATIC_TIMING = Object.freeze(timing);
@@ -28,4 +29,14 @@ export function timingView(mode, fastShare = STATIC_TIMING.fastShare) {
     modelWidth: 592 * modelContributionMs / scaleMs,
     totalWidth: 592 * totalMs / scaleMs,
     baselineWidth: 592 * modelMs / scaleMs };
+}
+
+export const STREAMS = examples;
+export function streamView(domain, index, phase) {
+  if (!Object.hasOwn(STREAMS,domain) || !Number.isInteger(index) || index<0 || ![0,1,2].includes(phase)) throw new Error('Unknown example stream state');
+  const task=STREAMS[domain], position=index%task.cases.length, current=task.cases[position];
+  return {...current,label:task.label,question:task.question,context:task.context,
+    position,completed:phase===2,
+    stage:phase===0?'New request':phase===1?'CPU fast path reads it':current.route==='table'?'Answer returned. Model skipped.':'Passed to decisio.',
+    examples:Array.from({length:3},(_,i)=>task.cases[(position+i+1)%task.cases.length])};
 }

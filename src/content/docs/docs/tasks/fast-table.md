@@ -1,5 +1,7 @@
 ---
 title: Give recurring decisions a fast path
+template: splash
+tableOfContents: false
 description: Let a small CPU classifier answer eligible requests before the model. Keep shared instructions in task context and send only the facts that change.
 ---
 
@@ -7,19 +9,37 @@ description: Let a small CPU classifier answer eligible requests before the mode
 
 ::covers{links="docs/tasks.md#a-fast-table-in-front-of-decisio-opt-in=2-register-the-task docs/tasks.md#a-fast-table-that-learns-from-traffic=5-start-without-human-labels"}
 
-A **decision fast path** learns a recurring choice or yes/no task, then answers the requests it can certify on the server's CPU.
+A **decision fast path** learns a recurring choice or yes/no task, then answers the requests it can certify on the server’s CPU.
 The decisio model handles requests the classifier passes on.
 The API calls this feature `fast_table`.
 
-Teach it from labelled examples, or let model-answered traffic supply the examples.
-A candidate starts answering only after it passes certification and the saving check on your host.
-[Watch the 54-second walkthrough](#watch-the-walkthrough), or explore the request routes below.
-
 ::figure{name="table-fallback"}
 
-<span class="fp-anchor" id="1-see-where-it-works-great"></span>
+## Watch the walkthrough
 
-## 1. Separate shared rules from changing facts
+One support ticket, a faster answer, and the model still available when needed.
+Then see the same pattern handle a support inbox, a moderation queue and refund checks.
+
+::figure{name="table-film"}
+
+## Same pattern. Different decisions.
+
+Your application still receives a typed answer.
+The fast path changes which requests need a model read.
+
+::figure{name="table-jobs"}
+
+## Teach it. Check it. Let it answer.
+
+Start with human-labelled examples or let model-answered traffic supply them.
+A candidate learns the recurring decision, checks separate examples and becomes active only when it qualifies.
+
+::figure{name="table-learning"}
+
+<span class="fp-anchor" id="1-see-where-it-works-great"></span>
+<span class="fp-anchor" id="1-separate-shared-rules-from-changing-facts"></span>
+
+## Shared rules stay put. New facts keep flowing.
 
 The task can use a long policy, rubric or catalogue.
 Register that fixed material once as `context`, and send only the changing facts in each request's `state`.
@@ -27,26 +47,28 @@ The fast path encodes the state alone; the model reads the context together with
 
 ::figure{name="table-context"}
 
-This pattern works across different kinds of decisions:
 
-| Decision | Shared `context` | Changing `state` | Question |
-| --- | --- | --- | --- |
-| Refund eligibility | Refund policy | Order, delivery and return facts | Eligible, yes or no? |
-| Moderation | Community policy | New post and necessary local context | Allow, review or block? |
-| Incident routing | Ownership rules and runbook | This incident's relevant facts | Which team? |
+Move genuinely shared material into context, and keep every changing fact the decision needs in state.
+Changing the context changes the task and requires teaching and certification again.
 
-These are illustrative task shapes, not measured results for these examples.
-Focus the changing input on what the decision needs; its length alone does not determine whether a fast path qualifies.
+## See what changes your time budget
 
-## Watch the walkthrough
+The default static path uses token-vector lookups and a classifier.
+Static embedding + classifier work costs about 0.05 ms for short texts; the model is skipped on the requests that qualify.
+Use the calculator to explore an assumed fast-path share against a roughly 50 ms model budget.
 
-Follow one request from teaching to a fast answer, see when decisio takes over, and compare a simple workload budget.
+::figure{name="table-budget"}
 
-::figure{name="table-film"}
+## Add it to your app
+
+The file-based example below uses refund eligibility.
+Replace the policy, examples and facts with your own task.
 
 <span class="fp-anchor" id="3-ask-for-it"></span>
 
-## 2. Register the task
+<span class="fp-anchor" id="2-register-the-task"></span>
+
+### Register the task
 
 On the serving host, install the `decisio[table]` extra or use the [table container](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access).
 Without the extra, registration returns 422.
@@ -75,7 +97,9 @@ Each example is read with the same context the task will use when serving.
 
 <span class="fp-anchor" id="4-read-what-it-kept"></span>
 
-## 3. Check whether a fast path qualified
+<span class="fp-anchor" id="3-check-whether-a-fast-path-qualified"></span>
+
+### Check whether a fast path qualified
 
 Registration fits a candidate, checks its certificate and times the classifier and model on your host.
 It keeps the classifier only if it clears `min_saving`, 10% by default.
@@ -91,7 +115,9 @@ If none qualifies, the task continues through decisio.
 The saving includes the classifier's cost on every request and the model's cost on the requests passed on.
 A retained table is a result for this task and host, not a promised speedup for other traffic.
 
-## 4. Send new facts, then read the answer
+<span class="fp-anchor" id="4-send-new-facts-then-read-the-answer"></span>
+
+### Send new facts, then read the answer
 
 Save the new order's facts as `state.json`.
 For example, this is a complete illustrative input, not a training set:
@@ -124,13 +150,14 @@ The [support-routing recipe](/docs/use-cases/support-routing/) shows that applic
 
 <span class="fp-anchor" id="5-learn-from-your-traffic-with-no-labels"></span>
 
-## 5. Start without human labels
+<span class="fp-anchor" id="5-start-without-human-labels"></span>
+
+### Start without human labels
 
 You can also let model-answered traffic supply the learning data.
 Until a candidate qualifies, decisio answers every request.
 A candidate becomes active only after certification and the host saving check pass.
 
-::figure{name="table-learning"}
 
 For this route, replace `task.json` with a complete question registration such as this:
 
@@ -158,7 +185,11 @@ The explore share sends some table-eligible requests to the model, 0.02 by defau
 Spot checks also send some table answers to the model, so allow for those model reads when sizing the service.
 Refits continue as traffic arrives; a failed candidate leaves the current serving path available.
 
-## 6. Keep the changing input focused and sufficient
+## Run it reliably
+
+<span class="fp-anchor" id="6-keep-the-changing-input-focused-and-sufficient"></span>
+
+### Keep the changing input focused and sufficient
 
 - Put only genuinely shared rules, definitions or catalogue text in `context`.
 - Keep delivery age, item condition, new messages and other changing facts in `state`.
@@ -171,7 +202,9 @@ Changing the context changes the task and requires teaching and certification ag
 
 <span class="fp-anchor" id="2-choose-a-student"></span>
 
-## 7. Choose another student when needed
+<span class="fp-anchor" id="7-choose-another-student-when-needed"></span>
+
+### Choose another student when needed
 
 The student turns the changing state into features for the classifier.
 Use `fast_table: true` for the default, or an object with a `kind`.
@@ -192,7 +225,9 @@ Use the [table image](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access)
 
 <span class="fp-anchor" id="7-measure-it-on-your-own-host"></span>
 
-## 8. Measure the paths on your host
+<span class="fp-anchor" id="8-measure-the-paths-on-your-host"></span>
+
+### Measure the paths on your host
 
 Registration measures one request at a time.
 Measure caller-visible latency under your expected load too, including requests passed on to the model:
@@ -205,7 +240,9 @@ Compare the same text-length and concurrency cells, using wall-clock p50 and p95
 
 <span class="fp-anchor" id="9-operating-notes"></span>
 
-## 9. Keep it running
+<span class="fp-anchor" id="9-keep-it-running"></span>
+
+### Keep it running
 
 Inspect `GET /v1/tasks/{id}` and `status.fast_table` for this replica's live state:
 
@@ -246,6 +283,10 @@ A read-only replica serves tables without logging rows or training.
 - A deferred request pays both the CPU classifier cost and the model cost; test that path too.
 - Set `fast_table.min_saving` from 0.01 to 0.90 if your deployment needs a different required mean saving.
 - Install the extra and provide CPU headroom on every replica, and certify again after changing the context or serving setup.
+
+## Video transcript
+
+::figure{name="table-transcript"}
 
 ## What next
 

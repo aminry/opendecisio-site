@@ -1,22 +1,38 @@
 WEBVTT
 
-00:00:00.000 --> 00:00:07.000
-Give recurring choices a faster route. The model stays available for everything the fast path passes on.
+00:00:00.000 --> 00:00:08.000
+[Upbeat instrumental music]
+One customer. Two charges. Your application asks the model which team should handle the ticket. The answer is billing.
 
-00:00:07.000 --> 00:00:15.000
-Teach from human labels, or learn from decisio’s answers. Certify on separate examples and check the saving before serving.
+00:00:08.000 --> 00:00:16.000
+A small CPU fast path can return familiar answers. For short texts, embedding and classification take about fifty microseconds.
 
-00:00:15.000 --> 00:00:23.000
-Register shared rules once as context. Each state contains the facts that change. The model keeps both.
+00:00:16.000 --> 00:00:24.000
+Different words can lead to the same decision. A learned classifier recognizes the recurring task, beyond exact text repeats.
 
-00:00:23.000 --> 00:00:31.000
-The default static embedding plus classifier costs about 0.05 ms, or 50 microseconds, for short texts. No neural network runs on the CPU.
+00:00:24.000 --> 00:00:32.000
+Not every request qualifies. Pass those requests to decisio. The model stays available, and the application keeps its answer interface.
 
-00:00:31.000 --> 00:00:39.000
-A fallback pays for the static check, then the model read. With an illustrative 50 ms model budget, that is about 50.05 ms.
+00:00:32.000 --> 00:00:40.000
+Teach from human-labelled requests, or collect model answers. These examples train a small candidate for one recurring decision.
 
-00:00:39.000 --> 00:00:47.000
-Assume 80% of requests skip a 50 ms model read. The estimated mean is 10.05 ms. This share and model budget are assumptions, not a combined benchmark.
+00:00:40.000 --> 00:00:48.000
+Check separate examples and the saving on your host. Activate only a candidate that qualifies. Otherwise, keep the model path.
 
-00:00:47.000 --> 00:00:54.000
-Use it for support routing, moderation or refund eligibility. Enable fast_table, then measure and certify on your task and host.
+00:00:48.000 --> 00:00:56.000
+Register shared rules once as context. Send changing facts as state. The classifier reads facts; the model gets both.
+
+00:00:56.000 --> 00:01:04.000
+Route recurring billing and access requests on the CPU. Keep unfamiliar support requests on the model path.
+
+00:01:04.000 --> 00:01:12.000
+Moderation works the same way. Keep the policy fixed, classify each new post, and send ambiguous cases to the model.
+
+00:01:12.000 --> 00:01:20.000
+For refunds, keep the policy fixed. Send delivery age and item condition. Answer yes or no; pass exceptions on.
+
+00:01:20.000 --> 00:01:28.000
+Register the task, shared context and fast table option. Ask with the same task identifier and new facts.
+
+00:01:28.000 --> 00:01:36.000
+Let familiar decisions take the shorter route. Keep the model for everything else. Start with one task, and see what qualifies.

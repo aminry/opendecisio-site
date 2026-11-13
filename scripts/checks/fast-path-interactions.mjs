@@ -26,6 +26,23 @@ try {
   const levels = await page.locator('main h1,main h2,main h3,main h4').evaluateAll(nodes => nodes.map(n => Number(n.tagName.slice(1))));
   let previous = 0;
   for (const level of levels) { assert.ok(level <= previous + 1, 'The guide skips a heading level'); previous = level; }
+  const stream=page.locator('[data-fast-stream]');
+  assert.equal(await stream.count(),1);
+  assert.equal(await page.locator('html').getAttribute('data-has-sidebar'),null);
+  assert.ok((await page.locator('.fp-hero').boundingBox()).width>1000,'Opening still uses the narrow docs column');
+  assert.ok((await stream.boundingBox()).x>(await page.locator('.fp-hero-copy').boundingBox()).x+300,'Hero has not become a side-by-side explanation');
+  await stream.getByRole('button',{name:'Moderation',exact:true}).click();
+  assert.match(await stream.locator('[data-stream-message]').textContent(),/explanation/);
+  await stream.getByRole('button',{name:'Refund checks',exact:true}).click();
+  assert.match(await stream.locator('[data-stream-message]').textContent(),/12 days/);
+  await stream.getByRole('button',{name:'Support routing',exact:true}).click();
+  const first=await stream.locator('[data-stream-message]').textContent();
+  await stream.getByRole('button',{name:'Next example',exact:true}).click();
+  assert.notEqual(await stream.locator('[data-stream-message]').textContent(),first);
+  await stream.getByRole('button',{name:'Next example',exact:true}).click();
+  await stream.getByRole('button',{name:'Next example',exact:true}).click();
+  assert.equal(await stream.getAttribute('data-route'),'decisio');
+  assert.match(await stream.locator('[data-stream-stage]').textContent(),/request|reads|Passed/);
   const timing = page.locator('[data-fast-timing]');
   await timing.scrollIntoViewIfNeeded();
   assert.match(await timing.locator('[data-timing-total]').textContent(), /0.05/);
@@ -45,8 +62,7 @@ try {
   await share.fill('80');
   assert.match(await timing.locator('[data-timing-summary]').textContent(), /79.9%/);
   assert.equal(await timing.locator('button[aria-pressed=true]').count(),1);
-  assert.equal(await timing.locator('[data-flow-route=fast]').count(),1);
-  assert.equal(await timing.locator('[data-flow-route=fallback]').count(),1);
+
   const race=await timing.evaluate(el=>el.getAnimations({subtree:true}).filter(a=>a.effect.target.hasAttribute('data-timing-marker')).map(a=>({duration:a.effect.getTiming().duration,end:a.effect.getKeyframes()[1].offset})));
   assert.equal(race.length,2);assert.ok(race.every(a=>a.duration===4000));
   assert.ok(race[1].end<race[0].end/4,'Estimated average does not finish proportionally earlier');
@@ -82,22 +98,42 @@ try {
   assert.equal(await video.getAttribute('autoplay'),null);
   assert.equal(videoRequests,0,'Film downloaded before reader intent');
   await video.scrollIntoViewIfNeeded();
-  await video.evaluate(v=>v.play());
+  await video.evaluate(v=>{v.muted=true;return v.play();});
   await until(()=>video.evaluate(v=>!v.paused&&v.currentTime>0),'Video did not actually decode and play');
-  assert.equal(await video.evaluate(v=>Math.round(v.duration)),54);
-  await video.evaluate(v=>{v.pause();v.currentTime=40;});
-  await until(()=>video.evaluate(v=>!v.seeking&&v.currentTime>=40),'Video could not seek to the workload chapter');
-  assert.ok((await page.locator('.fp-transcript').textContent()).includes('10.05 ms'));
+  assert.equal(await video.evaluate(v=>Math.round(v.duration)),96);
+  await video.evaluate(v=>{v.pause();v.currentTime=41;});
+  await until(()=>video.evaluate(v=>!v.seeking&&v.currentTime>=41),'Video could not seek to the certification chapter');
+  assert.ok((await page.locator('.fp-transcript').textContent()).includes('fifty microseconds'));
   const mediaHeaders=await page.request.head(`${base}/media/decision-fast-path.mp4`);
   assert.equal(mediaHeaders.headers()['accept-ranges'],'bytes');
   const captions=await page.request.get(`${base}/media/decision-fast-path.vtt`);
   assert.equal(captions.status(),200);assert.match(captions.headers()['content-type'],/text\/vtt/);
   await video.evaluate(v=>{v.textTracks[0].mode='hidden';});
-  await until(()=>video.evaluate(v=>v.textTracks[0].cues?.length===7),'Caption track did not load and parse');
-  assert.ok(await video.evaluate(v=>v.textTracks[0].activeCues?.[0]?.text.includes('80%')),'Caption does not match the selected workload chapter');
+  await until(()=>video.evaluate(v=>v.textTracks[0].cues?.length===12),'Caption track did not load and parse');
+  assert.ok(await video.evaluate(v=>v.textTracks[0].activeCues?.[0]?.text.includes('separate examples')),'Caption does not match the selected certification chapter');
   assert.match(await captions.text(),/WEBVTT/);
-  assert.match(await captions.text(),/00:00:47.000 --> 00:00:54.000/);
+  assert.match(await captions.text(),/00:01:28.000 --> 00:01:36.000/);
+  await page.getByRole('button',{name:/0:32.*How it learns/}).click();
+  await until(()=>video.evaluate(v=>v.currentTime>=32&&v.currentTime<34),'Chapter jump did not seek to learning');
+  await video.evaluate(v=>v.pause());
   await page.clock.install();
+  await stream.scrollIntoViewIfNeeded();await page.clock.runFor(100);
+  await until(async()=>await stream.getAttribute('data-playback')==='running','Opening stream did not autoplay');
+  const before=await stream.locator('[data-stream-message]').textContent();
+  await page.clock.runFor(4400);
+  assert.notEqual(await stream.locator('[data-stream-message]').textContent(),before,'Loop highlights without advancing a request');
+  await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));});
+  await page.clock.runFor(10000);assert.equal(await stream.getAttribute('data-playback'),'paused');
+  await page.evaluate(()=>{delete document.hidden;document.dispatchEvent(new Event('visibilitychange'));});
+  await until(async()=>await stream.getAttribute('data-playback')==='running','Stream did not resume in visible tab');
+  await page.evaluate(()=>window.scrollTo(0,document.body.scrollHeight));await page.clock.runFor(100);
+  await until(async()=>await stream.getAttribute('data-playback')==='paused','Stream did not stop offscreen');
+  await stream.scrollIntoViewIfNeeded();await page.clock.runFor(100);
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await until(async()=>await stream.getAttribute('data-playback')==='static','Stream ignored reduced motion');
+  assert.equal(await stream.getAttribute('data-phase'),'2');
+  await page.emulateMedia({reducedMotion:'no-preference'});
+
   for (const scene of await scenes.all()) {
     assert.equal(await scene.getByRole('button', {name:/play|pause|animate/i}).count(), 0, 'An animation control was added');
     await scene.scrollIntoViewIfNeeded();
@@ -132,6 +168,8 @@ try {
   const staticContext=await browser.newContext({ignoreHTTPSErrors:true,javaScriptEnabled:false});
   const staticPage=await staticContext.newPage();await staticPage.goto(`${base}/docs/tasks/fast-table/`);
   assert.equal(await staticPage.locator('[data-fast-loop]').count(),3);
+  assert.match(await staticPage.locator('[data-fast-stream]').textContent(),/billing/);
+  assert.equal(await staticPage.locator('[data-fast-stream] button:visible').count(),0);
   for(const scene of await staticPage.locator('[data-fast-loop]').all()) {
     assert.equal(await scene.locator('[data-fast-phase]:visible').count(),await scene.locator('[data-fast-phase]').count());
     assert.equal(await scene.locator('button:visible,input:visible,textarea:visible').count(),0);

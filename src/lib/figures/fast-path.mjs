@@ -1,5 +1,6 @@
 // Interactive input anatomy and replay of recorded fast-path timing. No inference runs here.
-import { fastPathFilm } from '../fast-path-film.mjs';
+import {proofStrip, jobExamples} from '../fast-path-story.mjs';
+import { fastPathFilm, fastPathTranscript } from '../fast-path-film.mjs';
 import { readUpstream } from '../upstream.mjs';
 import { esc, panel } from './core.mjs';
 import { contextView, timingView, POLICY, FACTS } from '../fast-path-demo.mjs';
@@ -22,14 +23,9 @@ function routes() {
     <svg class="fp-timeline" viewBox="0 0 600 32" aria-hidden="true"><path class="fp-rail" d="M4 16H596"/>
     ${baseline ? `<rect class="fp-model-bar" x="4" y="10" width="${v.baselineWidth}" height="12" rx="3"/>` : `<rect class="fp-cpu-bar" data-timing-cpu x="4" y="10" width="${v.cpuWidth}" height="12" rx="3"/><rect class="fp-model-bar" data-timing-model x="${4+v.cpuWidth}" y="10" width="${v.modelWidth}" height="12" rx="3"/>`}
     <circle class="fp-racer" data-timing-marker="${baseline ? 'baseline' : 'fast'}" cx="${4+(baseline ? v.baselineWidth : v.totalWidth)}" cy="16" r="4"/></svg><span class="fp-returned" data-timing-ready="${baseline ? 'baseline' : 'fast'}" aria-hidden="true">✓ Answer returned</span></div>`;
-  return scene('table-fallback', 'A familiar decision can skip the model read.',
-    'Follow an illustrative support request through the static CPU fast path. It returns an eligible answer or passes the request to decisio. Compare about 50 microseconds of short-text CPU work with an illustrative 50 millisecond model budget, or estimate a workload by changing the assumed fast-path share.',
+  return scene('table-budget', 'How much model work could your traffic skip?',
+    'Compare a static CPU component cost with a model-read budget. Select a fast answer, a model fallback or an estimated workload, and adjust the assumed fast-path share.',
     `<div class="fp-controls" data-fp-controls hidden role="group" aria-label="Request scenario">${[['fast','Classifier answers'],['fallback','Model fallback'],['average','Workload estimate']].map(([key,label])=>`<button type="button" data-timing-mode="${key}" aria-pressed="${key==='fast'}">${label}</button>`).join('')}</div>
-    <div class="fp-message"><p class="fp-label">Illustrative support request</p><strong data-flow-request>“I was charged twice. Can you help?”</strong><p class="fp-small">A learned task picks the support team.</p></div>
-    <div class="fp-flow-neck" aria-hidden="true">↓</div>
-    <div class="fp-static-node"><div><strong class="fp-heading">Static embedding + classifier</strong><p>Read token vectors and classify on the CPU.</p></div><strong class="fp-micro">~50 µs<small>0.05 ms · short texts</small></strong></div>
-    <svg class="fp-flow-fork" viewBox="0 0 600 64" preserveAspectRatio="none" aria-hidden="true"><path d="M300 0V20H150V60m-5-7 5 7 5-7"/><path d="M300 20H450V60m-5-7 5 7 5-7"/><path class="fp-flow-pulse fp-flow-pulse--fast" pathLength="200" d="M300 0V20H150V60"/><path class="fp-flow-pulse fp-flow-pulse--fallback" pathLength="200" d="M300 0V20H450V60"/></svg>
-    <div class="fp-inputs fp-flow-outputs"><div class="fp-branch" data-flow-route="fast"><p class="fp-label">Eligible answer</p><strong class="fp-heading" data-flow-fast>billing</strong><p class="fp-small">Return the classifier’s answer. Skip the model read.</p></div><div class="fp-branch" data-flow-route="fallback"><p class="fp-label">Otherwise → decisio</p><strong class="fp-heading" data-flow-model>Model idle for this request</strong><p class="fp-small">The model reads the policy and facts when needed.</p></div></div>
     <div class="fp-budget"><p class="fp-timing-summary" data-timing-summary role="status">~50 µs of CPU work. No model read.</p><p class="fp-small">Illustrative time budget · model ~50 ms · static short-text path ~0.05 ms</p>
     <div class="fp-race">${lane(true)}${lane(false)}<div class="fp-scale" aria-hidden="true"><span>0 ms</span><span>Same scale · ~50 ms</span></div></div>
     <div class="fp-key"><span><i class="fp-cpu-swatch"></i>Static CPU work</span><span><i class="fp-model-swatch"></i>Model work</span></div>
@@ -56,12 +52,10 @@ function context() {
 }
 
 function learning() {
-  return scene('table-learning', 'Learn a candidate. Activate it only when it qualifies.',
-    'Learning can start from human-labelled examples or from requests answered by the model. A candidate learns patterns in the changing state, is certified on held-out examples and is timed on the host. It becomes a fast path only if certification and the required saving pass. Otherwise the model remains available.',
-    `<div class="fp-starts"><div><strong class="fp-heading">Start with human labels</strong><p>Your examples show the answers you want.</p><p class="fp-wire">Correctness: <code>gold</code></p></div><div><strong class="fp-heading">Or learn from traffic</strong><p>The model answers first and supplies learning data.</p><p class="fp-wire">Model agreement: <code>agreement</code></p></div></div>
-    <ol class="fp-learning">${[['Fit a candidate', 'Learn patterns from the changing state.'], ['Certify it', 'Check separate examples at your error target.'], ['Time it on this host', 'Include the classifier cost and model fallbacks.']].map(([title, text], i) => `<li class="fp-step" data-fast-phase="${i}"><strong class="fp-heading">${title}</strong><p>${text}</p>${arrow}</li>`).join('')}</ol>
-    <div class="fp-gate"><strong>Candidate qualifies?</strong><p>Activate it when certification and saving checks pass. A refit must also improve on the active version; otherwise keep the current serving path.</p></div>`,
-    'An agreement certificate concerns matching the model, including its mistakes. A labelled task can also learn and retain gold certification while it has enough held-out human labels. The animation shows the process, not a training schedule.');
+ return scene('table-learning','Teach it. Check it. Then let it answer.',
+   'Collect human-labelled examples or model answers. Fit a small candidate, certify it on separate examples and check time saving. Activate it only if it qualifies; otherwise keep the model available.',
+   `<ol class="fp-learning">${[['Collect examples','Use human labels or answers supplied by decisio.'],['Fit a candidate','Learn the recurring choice from those examples.'],['Certify and time','Check separate examples and the saving on this host.'],['Activate if qualified','Answer eligible requests; pass the rest to decisio.']].map(([title,body],i)=>`<li class="fp-step" data-fast-phase="${i}"><span class="fp-step-number">${i+1}</span><strong class="fp-heading">${title}</strong><p>${body}</p></li>`).join('')}</ol>`,
+   'If a candidate does not qualify, keep the model path. Learning from model answers gives an agreement certificate, which concerns matching the model, including its mistakes.');
 }
 
-export const fastPathFigures = { 'table-film': fastPathFilm, 'table-fallback': routes, 'table-context': context, 'table-learning': learning };
+export const fastPathFigures = { 'table-film': fastPathFilm, 'table-transcript': fastPathTranscript, 'table-fallback': proofStrip, 'table-jobs': jobExamples, 'table-budget': routes, 'table-context': context, 'table-learning': learning };

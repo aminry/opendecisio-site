@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
 import {readUpstream} from '../../src/lib/upstream.mjs';
-import {contextView, timingView, STATIC_TIMING, POLICY, FACTS} from '../../src/lib/fast-path-demo.mjs';
+import {streamView, contextView, timingView, STATIC_TIMING, POLICY, FACTS} from '../../src/lib/fast-path-demo.mjs';
 test('current static short-text cost and illustrative model budget replace encoder history',()=>{
  assert.equal(STATIC_TIMING.cpuMs,0.05);assert.equal(STATIC_TIMING.modelMs,50);
  const fast=timingView('fast'), fallback=timingView('fallback');
@@ -45,4 +45,19 @@ test('facts are preserved verbatim, including empty input, Unicode and markup',(
   assert.equal(v.modelText,POLICY+'\n\n'+facts);
  }
  assert.throws(()=>contextView('invented','facts'));
+});
+
+test('illustrative streams preserve the request, answer and fallback meaning across stages',()=>{
+ for(const domain of ['support','moderation','refund']){
+  const first=streamView(domain,0,0), answer=streamView(domain,0,2);
+  assert.equal(first.text,answer.text);assert.equal(first.completed,false);assert.equal(answer.completed,true);
+  assert.equal(answer.route,'table');assert.ok(answer.answer.length>0);
+  const fallback=streamView(domain,3,2);
+  assert.equal(fallback.route,'decisio');assert.equal(fallback.answer,'Ask decisio');
+  assert.equal(streamView(domain,4,2).text,answer.text);
+  assert.equal(answer.examples.length,3);
+ }
+ assert.notEqual(streamView('support',0,2).text,streamView('support',1,2).text);
+ assert.equal(streamView('support',0,2).answer,streamView('support',1,2).answer);
+ for(const args of [['unknown',0,0],['support',-1,0],['support',0,9]])assert.throws(()=>streamView(...args));
 });

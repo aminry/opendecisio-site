@@ -1,6 +1,6 @@
 // Only the decision fast path's explanatory scenes loop; other docs figures keep their controls.
 import '../styles/fast-path.css';
-import { contextView, timingView, FACTS } from '../lib/fast-path-demo.mjs';
+import { contextView, timingView, streamView, FACTS } from '../lib/fast-path-demo.mjs';
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-loop]:not([data-fast-timing])')) {
   const phases = [...scene.querySelectorAll<HTMLElement>('[data-fast-phase]')];
@@ -50,10 +50,6 @@ for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-timing]')
       ? `Assume ${v.fastShare}% of requests skip the model. Every request pays ${v.cpuMs} ms on the CPU; ${100-v.fastShare}% also pay the ${v.modelMs} ms model budget: about ${v.displayMs} ms mean processing time. This is an estimate, not a measured result.`
       : mode === 'fast' ? 'The static backend needs no neural-network run on the CPU. An eligible short-text answer uses about 0.05 ms of embedding and classification work; the model read is skipped.'
       : 'The static check costs about 0.05 ms, then decisio handles the request. With a 50 ms model budget, the total is about 50.05 ms. The CPU check adds little to a fallback.';
-    get('[data-flow-request]').textContent = mode === 'average' ? 'An example workload of recurring support requests'
-      : mode === 'fast' ? '“I was charged twice. Can you help?”' : '“My new team cannot open last month’s invoice.”';
-    get('[data-flow-fast]').textContent = mode === 'average' ? `${v.fastShare}% skip the model` : mode === 'fast' ? 'billing' : 'Pass this request on';
-    get('[data-flow-model]').textContent = mode === 'average' ? `${100-v.fastShare}% need decisio` : mode === 'fast' ? 'Model idle for this request' : 'Model reads policy + facts';
     get('[data-timing-cpu]').setAttribute('width', String(v.cpuWidth));
     get('[data-timing-model]').setAttribute('width', String(v.modelWidth));
     scene.querySelectorAll<HTMLButtonElement>('[data-timing-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.timingMode === mode)));
@@ -104,4 +100,52 @@ for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-context]'
   editor.addEventListener('input', render);
   scene.querySelectorAll<HTMLElement>('[data-fp-controls]').forEach(control => { control.hidden = false; });
   render();
+}
+
+// The opening stream shows requests and outcomes, not arbitrary-text inference.
+for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-stream]')) {
+  const get=(s:string)=>scene.querySelector<HTMLElement>(s)!;
+  let domain='support', index=0, phase=0, visible=false, timer:number|undefined, remaining=1000, started=0;
+  const stop=()=>{if(timer!==undefined){clearTimeout(timer);timer=undefined;remaining=Math.max(0,remaining-(performance.now()-started));}};
+  const render=()=>{
+    const v=streamView(domain,index,motion.matches?2:phase);
+    scene.dataset.phase=String(motion.matches?2:phase);scene.dataset.route=v.route;
+    get('[data-stream-message]').textContent=v.text;
+    get('[data-stream-stage]').textContent=v.stage;
+    get('[data-stream-answer]').textContent=v.completed&&v.route==='table'?v.answer:v.route==='table'?'Reading this request…':'Pass to decisio';
+    get('[data-stream-model]').textContent=v.route==='table'?'Ready when needed':v.completed?'Ask decisio':'Model reads policy + facts';
+    scene.querySelectorAll<HTMLElement>('[data-stream-row]').forEach((row,i)=>{
+      const c=v.examples[i];row.dataset.route=c.route;
+      row.querySelector('[data-row-text]')!.textContent=c.text;
+      row.querySelector('[data-row-answer]')!.textContent=c.answer;
+      row.querySelector('[data-row-route]')!.textContent=c.route==='table'?'CPU fast path':'decisio';
+    });
+    scene.querySelectorAll<HTMLButtonElement>('[data-stream-domain]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.streamDomain===domain)));
+  };
+  const sync=()=>{
+    const running=visible&&!document.hidden&&!motion.matches;
+    if(!running)stop();
+    scene.dataset.playback=motion.matches?'static':running?'running':'paused';render();
+    if(running&&timer===undefined){started=performance.now();timer=window.setTimeout(()=>{
+      timer=undefined;
+      if(phase===2){index++;phase=0;}else phase++;
+      remaining=[1000,900,2500][phase];sync();
+    },remaining);}
+  };
+  const reset=()=>{stop();phase=0;remaining=1000;sync();const v=streamView(domain,index,2);get('[data-stream-status]').textContent=`${v.text} ${v.route==='table'?`Illustrated fast answer: ${v.answer}.`:'Illustrated route: pass to decisio.'}`;};
+  scene.querySelectorAll<HTMLButtonElement>('[data-stream-domain]').forEach(b=>b.addEventListener('click',()=>{domain=b.dataset.streamDomain!;index=0;reset();}));
+  get('[data-stream-next]').addEventListener('click',()=>{index++;reset();});
+  scene.querySelectorAll<HTMLElement>('[data-stream-controls]').forEach(el=>{el.hidden=false;});
+  document.addEventListener('visibilitychange',sync);motion.addEventListener('change',sync);
+  new IntersectionObserver(entries=>{visible=entries.some(e=>e.isIntersecting);sync();}).observe(scene);
+  sync();
+}
+
+for(const film of document.querySelectorAll<HTMLElement>('.fp-film')) {
+ const video=film.querySelector<HTMLVideoElement>('video')!;
+ film.querySelectorAll<HTMLButtonElement>('[data-film-seek]').forEach(button=>button.addEventListener('click',async()=>{
+   try { await video.play(); video.currentTime=Number(button.dataset.filmSeek); }
+   catch { video.focus(); }
+ }));
+ film.querySelectorAll<HTMLElement>('[data-film-controls]').forEach(el=>{el.hidden=false;});
 }
