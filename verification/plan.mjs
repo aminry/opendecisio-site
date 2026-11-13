@@ -74,6 +74,7 @@ const asPrinted = (stdout) => stdout;
 const TASKS_DIR = 'decisio-tasks';
 
 export const plan = [
+	{ page: '/docs/build-request/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/v1/models', of: ['/docs/api/', 1] },
 	// Get started, on the stand-in, the path every machine can take: the recorded support ticket (src/lib/site-blocks.mjs).
 	{
 		page: '/docs/', n: 1, mode: 'run-then-server', expect: `git clone --branch ${pin.tag} https://github.com/${pin.repository}`,

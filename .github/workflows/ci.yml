@@ -127,6 +127,10 @@ jobs:
       - name: No page names another decisio release outside source notes, code and Release notes
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/versions.mjs
+      - name: Every guide is discoverable exactly once
+        run: node scripts/checks/docs-navigation.mjs
+      - name: Navigation catches missing and duplicate pages
+        run: node --test scripts/checks/docs-navigation-selftest.mjs
       - name: Every moved page redirects to a built page
         if: ${{ !cancelled() && steps.build.outcome == 'success' }}
         run: node scripts/checks/redirects.mjs

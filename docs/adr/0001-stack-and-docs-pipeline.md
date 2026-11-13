@@ -47,3 +47,10 @@ The site's repository is private until launch, its host must serve custom header
 ## Addendum, 2026-10-15
 
 The repository is now public, so CI runs on GitHub's free minutes for public repositories.
+
+## Addendum: usage-oriented documentation
+
+Keep Astro, Starlight, the design tokens, static SVG and small progressive enhancements.
+The documentation is organized around the developer's workflow: first request, question types, examples, teaching, deployment and operation.
+The former evaluation-card address now serves a practical task-evaluation guide, with old fragment identifiers preserved.
+Reference pages cover the supported application surface; verification internals are not part of the reader's guide.

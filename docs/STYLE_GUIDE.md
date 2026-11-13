@@ -17,7 +17,9 @@ They come with four questions:
 | What can I use it for? | Use cases |
 | How do I size and run it in production? | The deploy, scale and operate how-tos, and "Requirements and limits" |
 
-Internals (the readout, the probabilities, repeatability) live on one page: How it works.
+The documentation teaches use of the system.
+Explain request and answer behavior where it helps a developer; omit verification internals, development gates and implementation tours.
+How it works is a short visual explanation of the public behavior.
 
 ## What every page does
 
@@ -102,7 +104,8 @@ Internals (the readout, the probabilities, repeatability) live on one page: How 
 
 | Kind | Shape |
 | --- | --- |
-| Get started | what you get, then four numbered steps (install, start, ask, read the answer), each with its command |
+| Quickstart | choose GPU, MLX or Ollama, start it, ask, read the answer; CPU development is an optional disclosure |
+| Learning guide | what you can do, a concrete request or figure, how to read the answer, application action, Good to know, What next |
 | Use case | the problem in one line, a Good fit box, the recipe (examples file, teach, certify, route) with working code, the measured demo as proof, What next |
 | How-to | the goal, the steps with commands, how to check it worked, What next |
 | Reference | generated from decisio's files at the tag; a short intro and a table of contents |
@@ -170,3 +173,18 @@ After:
 
 - Existing checks stay: one figure per page, no ranks or comparisons, at most three sentences per paragraph, every command verified, nothing internal on any page.
 - New checks: no link from a docs page to decisio's docs on GitHub; every page opens with a paragraph and then a code block or figure; every animated figure has a pause control, a reduced-motion frame and alt text.
+
+## Navigation and onboarding
+
+Write for backend developers who know HTTP and their own application stack.
+Start with one decision and let the reader add question types as they need them.
+Group guides by the task the reader wants to complete, with advanced groups collapsed until they are relevant.
+Keep existing canonical addresses and old fragment identifiers when reorganizing pages.
+
+The primary starts are GPU, MLX and Ollama.
+CPU development is a secondary way to test client contracts, never the model-quality example.
+Introduce a manual probability threshold separately from a certified answer; a learned table's agreement certificate is not a correctness certificate.
+Put limits last in a short Good to know section, while keeping prerequisites that decide whether a command can run beside the command.
+
+Public documentation never names specific commits or links to commit pages.
+Describe a feature by the application behavior it enables, not by the benchmark or implementation process that motivated it.
