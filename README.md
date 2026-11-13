@@ -13,6 +13,7 @@ Node 22 and `npm ci`, then:
 | `npm run dev` | fetches the pinned release and serves the site with live reload |
 | `npm run build` | fetches the pinned release and builds `dist/` |
 | `npm run preview` | serves `dist/` on `https://127.0.0.1:4321` as Cloudflare would: HTTPS, its `_headers`, compression, 404 page (the certificate is self-signed unless `TLS_CERT` and `TLS_KEY` name real ones) |
+| `node scripts/checks/discovery.mjs` | reconciles canonical sitemap routes, the written page inventory, navigation and robots.txt |
 | `node scripts/checks/content.mjs` | checks `dist/` against `docs/CONTENT_RULES.md` |
 | `node scripts/verify-skills.mjs` | downloads the pinned skills package, checks its manifest and runs the published project-install, update and uninstall commands in isolated fixtures |
 | `node scripts/checks/contrast.mjs` | checks the colour tokens against WCAG 2.2 AA |

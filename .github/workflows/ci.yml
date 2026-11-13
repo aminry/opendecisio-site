@@ -129,6 +129,10 @@ jobs:
         run: node scripts/checks/versions.mjs
       - name: Every guide is discoverable exactly once
         run: node scripts/checks/docs-navigation.mjs
+      - name: Sitemap, canonical pages and the written route inventory agree
+        run: node scripts/checks/discovery.mjs
+      - name: Discovery catches missing and stale routes
+        run: node --test scripts/checks/discovery-selftest.mjs
       - name: Navigation catches missing and duplicate pages
         run: node --test scripts/checks/docs-navigation-selftest.mjs
       - name: Tutorial requests match their downloads and fail on HTTP errors
