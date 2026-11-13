@@ -88,6 +88,8 @@ try {
   await video.evaluate(v=>{v.pause();v.currentTime=40;});
   await until(()=>video.evaluate(v=>!v.seeking&&v.currentTime>=40),'Video could not seek to the workload chapter');
   assert.ok((await page.locator('.fp-transcript').textContent()).includes('10.05 ms'));
+  const mediaHeaders=await page.request.head(`${base}/media/decision-fast-path.mp4`);
+  assert.equal(mediaHeaders.headers()['accept-ranges'],'bytes');
   const captions=await page.request.get(`${base}/media/decision-fast-path.vtt`);
   assert.equal(captions.status(),200);assert.match(captions.headers()['content-type'],/text\/vtt/);
   await video.evaluate(v=>{v.textTracks[0].mode='hidden';});
