@@ -617,10 +617,6 @@
 	display: grid;
 	visibility: hidden;
 }
-.js .ca-motion-toggle[hidden] {
-	display: inline-flex;
-	visibility: hidden;
-}
 .js .ca-play-controls[hidden] {
 	display: flex;
 	visibility: hidden;
@@ -662,20 +658,6 @@
 .ca-hero-flow blockquote, .ca-ticket blockquote { min-block-size: 2.8em; }
 .ca-hero-flow .ca-prediction, .ca-ticket .ca-prediction { min-block-size: 3.2em; }
 
-.ca-motion-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  min-height: 44px;
-  font-size: .85rem;
-  color: var(--d-muted);
-  cursor: pointer;
-}
-.ca-motion-toggle input {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--d-accent-line);
-}
 .ca-credits {
   border-top: 1px solid var(--d-line-strong);
   padding-top: 1.5rem;

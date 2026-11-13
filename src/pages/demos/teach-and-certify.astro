@@ -72,11 +72,11 @@ const events = [
 
 <div class="wrap">
 <CertifiedWalkthrough record={record} source={`${datasetName(ib.dataset)}, ${baseName(ib.model)} FP8 on one RTX PRO 6000 Blackwell. Recorded on decisio ${d.decisio}, ${d.dates.join(', ')}, plain layout. ${ib.k} examples per intent, draw ${ib.draw}.`} />
-<section class="ca-drift ca-player" id="drift" data-player="drift" data-playback="idle" aria-labelledby="drift-title" data-table-notes>
- <div class="ca-section-head"><div><p class="ca-eyebrow">When traffic changes</p><h2 id="drift-title">Predictions continue. Certification can pause.</h2></div><div class="ca-play-controls" data-enhance hidden><button type="button" class="chip" data-play>Play</button><button type="button" class="chip" data-pause disabled>Pause</button><button type="button" class="chip" data-step>Step</button><button type="button" class="chip" data-all>Show all</button></div></div>
+<section class="ca-drift ca-player" id="drift" data-player="drift" data-loop data-playback="idle" aria-labelledby="drift-title" data-table-notes>
+ <div class="ca-section-head"><div><p class="ca-eyebrow">When traffic changes</p><h2 id="drift-title">Predictions continue. Certification can pause.</h2></div></div>
  <p>A separate recorded traffic stream shows the confidence alarm responding to a change in traffic. The monitor detects a shift across messages; it cannot tell whether one particular prediction is wrong.</p>
  <ol class="ca-event-list">{events.map((event, i) => <li class="ca-event" data-phase={i}><strong>{event.title}</strong><span>{event.at}</span><p>{event.note}</p></li>)}</ol>
- <p class="ca-play-status" data-player-status aria-live="polite">All recorded events are shown. Playback illustrates their order, not elapsed time.</p>
+ <p class="ca-play-status">All recorded events are shown. The repeating sequence illustrates their order, not elapsed time.</p>
  <p class="ca-drift-note">Detection takes time. In this recording, {jump.wrong_before} wrong predictions were certified before the pause. While certification is paused, your application should request review.</p>
  <p class="src-note">Recorded confidence-alarm jump stream on decisio {r16.version} release candidate, {baseName('g31')} FP8, one RTX PRO 6000 Blackwell. Event positions come from the recorded stream. They are not timings promised for new traffic.</p>
  <p data-monitor-note>Current behavior: the confidence alarm can suspend certification; an answer-mix alert only reports a change. <a href="/docs/tasks/drift/">Read how monitoring works</a>.</p>

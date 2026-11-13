@@ -4,13 +4,11 @@ const $$ = <T extends Element = HTMLElement>(selector: string, root: ParentNode 
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const n = (x: number) => x.toLocaleString('en-US');
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
-const players: Array<{ finish: (announce?: boolean) => void }> = [];
 let routeMotion: Animation | undefined;
 
-// The teaching sequence loops automatically while visible. Labels never disappear.
+// Both explanatory sequences loop while visible. Labels never disappear.
 for (const panel of $$<HTMLElement>('[data-loop]')) {
   const phases = $$<HTMLElement>('[data-phase]', panel);
-  const pause = panel.querySelector<HTMLInputElement>('[data-loop-pause]')!;
   let position = 0, visible = false, timer: number | undefined, remaining = 2400, started = 0;
   const stop = () => {
     if (timer === undefined) return;
@@ -18,7 +16,7 @@ for (const panel of $$<HTMLElement>('[data-loop]')) {
     remaining = Math.max(0, remaining - (performance.now() - started));
   };
   const sync = () => {
-    const running = visible && !document.hidden && !motion.matches && !pause.checked;
+    const running = visible && !document.hidden && !motion.matches;
     if (!running) stop();
     panel.dataset.playback = motion.matches ? 'static' : running ? 'running' : 'paused';
     phases.forEach((phase, i) => phase.classList.toggle('is-current', !motion.matches && i === position));
@@ -30,66 +28,10 @@ for (const panel of $$<HTMLElement>('[data-loop]')) {
       }, remaining);
     }
   };
-  pause.addEventListener('change', sync);
   document.addEventListener('visibilitychange', sync);
   motion.addEventListener('change', sync);
   new IntersectionObserver(entries => { visible = entries.some(e => e.isIntersecting); sync(); }).observe(panel);
   sync();
-}
-
-// A finite sequence keeps its remaining time when paused. It never starts on scroll.
-for (const panel of $$<HTMLElement>('[data-player]:not([data-loop])')) {
-  const phases = $$<HTMLElement>('[data-phase]', panel);
-  const play = panel.querySelector<HTMLButtonElement>('[data-play]')!;
-  const pause = panel.querySelector<HTMLButtonElement>('[data-pause]')!;
-  const output = panel.querySelector<HTMLElement>('[data-player-status]')!;
-  let position = -1, timer: number | undefined, remaining = 2400, started = 0;
-  let wanted = false, held = false, visible = false;
-  const stop = () => { if (timer !== undefined) { clearTimeout(timer); timer = undefined; remaining = Math.max(0, remaining - (performance.now() - started)); } };
-  const buttons = () => {
-    const running = wanted && !held && visible && !document.hidden && !motion.matches;
-    play.disabled = motion.matches || running;
-    pause.disabled = !running;
-    play.textContent = wanted ? running ? 'Playing' : 'Resume' : panel.dataset.playback === 'finished' ? 'Replay' : 'Play';
-  };
-  const highlight = () => {
-    phases.forEach((phase, i) => { phase.classList.toggle('is-current', i === position); if (i === position) phase.setAttribute('aria-current', 'step'); else phase.removeAttribute('aria-current'); });
-    if (position < 0) delete panel.dataset.position; else panel.dataset.position = String(position);
-  };
-  const finish = (announce = true) => {
-    stop(); wanted = held = false; remaining = 2400; position = -1;
-    panel.dataset.playback = 'finished'; highlight(); buttons();
-    if (announce) output.textContent = 'Complete diagram shown. All steps remain available.';
-  };
-  const sync = () => {
-    const running = wanted && !held && visible && !document.hidden && !motion.matches;
-    if (running) {
-      panel.dataset.playback = 'running';
-      if (timer === undefined) {
-        started = performance.now();
-        timer = window.setTimeout(() => {
-          timer = undefined; remaining = 2400; position++;
-          if (position >= phases.length) finish(); else { highlight(); output.textContent = `${position + 1} of ${phases.length}. ${phases[position].querySelector('h3,strong')!.textContent}`; sync(); }
-        }, remaining);
-      }
-    } else if (wanted) { stop(); panel.dataset.playback = 'paused'; }
-    buttons();
-  };
-  play.addEventListener('click', () => {
-    if (motion.matches) return;
-    if (!wanted) { position = 0; remaining = 2400; highlight(); wanted = true; }
-    held = false; output.textContent = `Playing ${phases.length} steps once.`; sync();
-  });
-  pause.addEventListener('click', () => { held = true; sync(); output.textContent = 'Paused. Resume to continue.'; });
-  panel.querySelector('[data-step]')!.addEventListener('click', () => {
-    const next = (position + 1) % phases.length; finish(false); position = next; highlight(); panel.dataset.playback = 'stepped';
-    output.textContent = `${position + 1} of ${phases.length}. ${phases[position].querySelector('h3,strong')!.textContent}`; buttons();
-  });
-  panel.querySelector('[data-all]')!.addEventListener('click', () => finish());
-  document.addEventListener('visibilitychange', sync);
-  new IntersectionObserver(entries => { visible = entries.some(e => e.isIntersecting); sync(); }, { threshold: 0 }).observe(panel);
-  motion.addEventListener('change', () => { if (motion.matches) finish(); buttons(); });
-  players.push({ finish }); buttons();
 }
 
 // All labels, eligibility and whole-test totals are a view of the same immutable recording.
@@ -128,7 +70,7 @@ if (root) {
       { opacity: 0, transform: `translate(135px,${r.eligible ? -25 : 25}px)` },
     ], { duration: 850, easing: 'ease-in-out' });
   };
-  const change = () => { players.forEach(p => p.finish(false)); render(true); };
+  const change = () => render(true);
   for (const button of $$<HTMLButtonElement>('[data-target-select]', root)) button.addEventListener('click', () => { alpha = button.dataset.targetSelect!; change(); });
   for (const button of $$<HTMLButtonElement>('[data-case]', root)) button.addEventListener('click', () => { caseId = button.dataset.case!; change(); });
   motion.addEventListener('change', () => { if (motion.matches) routeMotion?.cancel(); });
