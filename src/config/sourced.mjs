@@ -612,6 +612,13 @@ export const sourced = [
 	]),
 	// Decision fast path
 	...fromPage('/docs/tasks/fast-table/', [
+		['82% lower mean time', 'runs/2026-10-30_fast-table/summary.json', '"saving": 82'],
+		['71 ms', tasksDoc, 'The 71 ms in the table above is the mean over the 200 timed requests, of which 26 (13%) were handed to the model'],
+		['21.1 ms', tasksDoc, 'a request the table answers takes **21.1 ms**'],
+		['384 ms', tasksDoc, "384 for the model's read"],
+		['AMD EPYC 9755', 'runs/2026-10-30_fast-table/summary.json', 'AMD EPYC 9755, 4 threads'],
+	]),
+	...fromPage('/docs/tasks/fast-table/', [
 		['The task can use a long policy, rubric or catalogue.', tasksDoc, 'a policy, a rubric, a catalogue, a set of definitions, a long instruction'],
 		['The fast path encodes the state alone', tasksDoc, 'A fast table encodes the state alone'],
 		['the model reads the context together with the state', tasksDoc, 'a long, fixed text that the server reads before the state of every request of the task'],

@@ -25,14 +25,59 @@ try {
   const levels = await page.locator('main h1,main h2,main h3,main h4').evaluateAll(nodes => nodes.map(n => Number(n.tagName.slice(1))));
   let previous = 0;
   for (const level of levels) { assert.ok(level <= previous + 1, 'The guide skips a heading level'); previous = level; }
+  const timing = page.locator('[data-fast-timing]');
+  await timing.scrollIntoViewIfNeeded();
+  assert.match(await timing.locator('[data-timing-total]').textContent(), /71/);
+  assert.match(await timing.locator('[data-timing-summary]').textContent(), /82%/);
+  await timing.getByRole('button', {name:'Classifier answers',exact:true}).click();
+  assert.match(await timing.locator('[data-timing-total]').textContent(), /21.1/);
+  assert.match(await timing.locator('[data-timing-explanation]').textContent(), /skipped/);
+  const fastWidth=Number(await timing.locator('[data-timing-cpu]').getAttribute('width'));
+  await timing.getByRole('button', {name:'Model fallback',exact:true}).click();
+  assert.match(await timing.locator('[data-timing-total]').textContent(), /405/);
+  assert.equal(Number(await timing.locator('[data-timing-cpu]').getAttribute('width')),fastWidth);
+  assert.match(await timing.locator('[data-timing-summary]').textContent(), /slower/i);
+  await timing.getByRole('button', {name:'Timed average',exact:true}).click();
+  assert.match(await timing.locator('[data-timing-explanation]').textContent(), /26 of 200/);
+  assert.equal(await timing.locator('button[aria-pressed=true]').count(),1);
+  const race=await timing.evaluate(el=>el.getAnimations({subtree:true}).filter(a=>a.effect.target.hasAttribute('data-timing-marker')).map(a=>({duration:a.effect.getTiming().duration,end:a.effect.getKeyframes()[1].offset})));
+  assert.equal(race.length,2);
+  assert.ok(race.every(a=>a.duration===4000));
+  assert.ok(race[1].end<race[0].end/5,'Average marker does not finish proportionally earlier');
+  const anatomy=page.locator('[data-fast-context]');
+  await anatomy.scrollIntoViewIfNeeded();
+  const editor=anatomy.getByLabel('Changing facts');
+  const original=await editor.inputValue();
+  const modelBefore=await anatomy.locator('[data-model-input]').textContent();
+  assert.equal(await anatomy.locator('[data-cpu-input]').textContent(),original);
+  await anatomy.getByRole('button',{name:'Repeat policy in state',exact:true}).click();
+  assert.equal(await anatomy.locator('[data-model-input]').textContent(),modelBefore);
+  assert.equal(await anatomy.locator('[data-cpu-input]').textContent(),modelBefore);
+  await anatomy.getByRole('button',{name:'Use task context',exact:true}).click();
+  assert.equal(await anatomy.locator('[data-cpu-input]').textContent(),original);
+  const custom='  café 🧾\n<script>example</script>  ';
+  await editor.fill(custom);
+  assert.equal(await anatomy.locator('[data-cpu-input]').textContent(),custom);
+  assert.match(await anatomy.locator('[data-cpu-count]').textContent(),new RegExp(String([...custom].length)));
+  await anatomy.getByRole('button',{name:'Repeat policy in state',exact:true}).click();
+  assert.equal(await editor.inputValue(),custom,'Switching packaging destroyed reader edits');
+  assert.ok((await anatomy.locator('[data-model-input]').textContent()).endsWith(custom));
+  assert.equal(await anatomy.locator('[data-model-input] script').count(),0,'Reader text was inserted as HTML');
+  await anatomy.getByRole('button',{name:'Order B',exact:true}).click();
+  assert.match(await editor.inputValue(),/45 days/);
+  await editor.fill('');
+  await anatomy.getByRole('button',{name:'Use task context',exact:true}).click();
+  assert.equal(await anatomy.locator('[data-cpu-input]').textContent(),'');
+  assert.match(await anatomy.locator('[data-cpu-count]').textContent(),/^0 /);
+  await anatomy.getByRole('button',{name:'Order A',exact:true}).click();
   await page.clock.install();
   for (const scene of await scenes.all()) {
-    assert.equal(await scene.locator('button,input').count(), 0, 'An animation control was added');
+    assert.equal(await scene.getByRole('button', {name:/play|pause|animate/i}).count(), 0, 'An animation control was added');
     await scene.scrollIntoViewIfNeeded();
     await until(async () => await scene.getAttribute('data-playback') === 'running', 'Scene did not autoplay');
     const count = await scene.locator('[data-fast-phase]').count();
-    assert.ok(count >= 2);
-    await page.clock.runFor((count + 1) * 2400);
+    assert.ok(count >= 2 || await scene.getAttribute('data-fast-timing') !== null);
+    await page.clock.runFor(Math.max(8000,(count + 1) * 2400));
     assert.equal(await scene.getAttribute('data-playback'), 'running', 'Scene stopped after one cycle');
     await page.evaluate(() => { Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange')); });
     await page.clock.runFor(10000);assert.equal(await scene.getAttribute('data-playback'),'paused');
@@ -45,8 +90,12 @@ try {
     await page.emulateMedia({reducedMotion:'reduce'});
     await until(async()=>await scene.getAttribute('data-playback')==='static','Reduced motion did not stop scene');
     assert.equal(await scene.locator('.is-current').count(),0);
+    assert.equal(await scene.evaluate(el=>el.getAnimations({subtree:true}).filter(a=>a.playState==='running').length),0,'Motion continued with reduced motion');
     await page.emulateMedia({reducedMotion:'no-preference'});
     await until(async()=>await scene.getAttribute('data-playback')==='running','Scene did not resume after motion preference');
+  }
+  for (const arrow of await page.locator('.fp-scene .fp-arrow').all()) {
+    const box=await arrow.boundingBox();assert.ok(box.width<=80&&box.height<=80,'A flow arrow lost its size constraints');
   }
   const fragments=['1-see-where-it-works-great','2-choose-a-student','3-ask-for-it','4-read-what-it-kept','5-learn-from-your-traffic-with-no-labels','6-learn-across-replicas','7-measure-it-on-your-own-host','8-when-to-use-something-else','9-operating-notes','what-next'];
   for(const id of fragments)assert.equal(await page.locator(`[id="${id}"]`).count(),1,`Missing old fragment ${id}`);
@@ -58,9 +107,10 @@ try {
   assert.equal(await staticPage.locator('[data-fast-loop]').count(),3);
   for(const scene of await staticPage.locator('[data-fast-loop]').all()) {
     assert.equal(await scene.locator('[data-fast-phase]:visible').count(),await scene.locator('[data-fast-phase]').count());
-    assert.equal(await scene.locator('button,input').count(),0);
+    assert.equal(await scene.locator('button:visible,input:visible,textarea:visible').count(),0);
   }
   assert.match(await staticPage.locator('[data-fp-context]').textContent(),/policy/i);
-  assert.match(await staticPage.locator('[data-fp-state]').first().textContent(),/days/i);
-  console.log(`fast-path-interactions: three autoplay scenes, visibility, reduced motion, aliases and no-JS pass in ${engine}`);
+  assert.match(await staticPage.locator('[data-cpu-input]').textContent(),/days/i);
+  assert.match(await staticPage.locator('[data-timing-summary]').textContent(),/82%/);
+  console.log(`fast-path-interactions: timing choices, editable inputs, autoplay, visibility, reduced motion, aliases and no-JS pass in ${engine}`);
 } finally { await browser?.close(); server.kill('SIGTERM'); }

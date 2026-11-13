@@ -1,7 +1,8 @@
 // Only the decision fast path's explanatory scenes loop; other docs figures keep their controls.
 import '../styles/fast-path.css';
+import { contextView, timingView, FACTS } from '../lib/fast-path-demo.mjs';
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
-for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-loop]')) {
+for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-loop]:not([data-fast-timing])')) {
   const phases = [...scene.querySelectorAll<HTMLElement>('[data-fast-phase]')];
   let position = 0, visible = false, timer: number | undefined, remaining = 2400, started = 0;
   const stop = () => {
@@ -25,4 +26,74 @@ for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-loop]')) 
   motion.addEventListener('change', sync);
   new IntersectionObserver(entries => { visible = entries.some(entry => entry.isIntersecting); sync(); }).observe(scene);
   sync();
+}
+
+// A common clock and scale make the early finish visible, including the fallback cost.
+for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-timing]')) {
+  const record = JSON.parse(scene.dataset.timingRecord!);
+  const get = <T extends Element = HTMLElement>(selector: string) => scene.querySelector<T>(selector)!;
+  let mode = 'average', visible = false, animations: Animation[] = [];
+  const sync = () => {
+    const running = visible && !document.hidden && !motion.matches;
+    scene.dataset.playback = motion.matches ? 'static' : running ? 'running' : 'paused';
+    for (const animation of animations) running ? animation.play() : animation.pause();
+  };
+  const render = () => {
+    const v = timingView(record, mode);
+    get('[data-timing-total]').textContent = `${v.displayMs} ms`;
+    get('[data-timing-summary]').textContent = mode === 'average' ? `${v.savingPercent}% lower mean time`
+      : mode === 'fast' ? 'The model is skipped.' : 'Fallback is slower.';
+    get('[data-timing-explanation]').textContent = mode === 'average'
+      ? `The CPU check runs on every request. Only ${v.modelRequests} of ${v.requestCount} needed the model: ${v.cpuMs} ms + ${Math.round(100*v.modelRequests/v.requestCount)}% × ${v.modelMs} ms ≈ ${v.displayMs} ms on average.`
+      : mode === 'fast' ? `CPU classifier: ${v.cpuMs} ms. No model work is needed on this route. The model read is skipped.`
+      : `CPU classifier: ${v.cpuMs} ms, then model: ${v.modelMs} ms. Together, about ${v.displayMs} ms. Falling back adds work; the saving comes from requests that skip the model.`;
+    get('[data-timing-cpu]').setAttribute('width', String(v.cpuWidth));
+    get('[data-timing-model]').setAttribute('width', String(v.modelWidth));
+    scene.querySelectorAll<HTMLButtonElement>('[data-timing-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.timingMode === mode)));
+    animations.forEach(animation => animation.cancel());
+    animations = [];
+    for (const [name, ms, width] of [['baseline', v.modelMs, v.baselineWidth], ['fast', v.totalMs, v.totalWidth]] as const) {
+      const marker = get<SVGCircleElement>(`[data-timing-marker="${name}"]`);
+      marker.setAttribute('cx', String(4+width));
+      if (!motion.matches) {
+        marker.setAttribute('cx','4');
+        const end = `translateX(${width}px)`;
+        animations.push(marker.animate([{transform:'translateX(0)',offset:0}, {transform:end,offset:0.85*ms/v.scaleMs}, {transform:end,offset:1}], {duration:4000,iterations:Infinity,easing:'linear'}));
+      }
+      const ready = get(`[data-timing-ready="${name}"]`);
+      if (!motion.matches) {
+        const finish=0.85*ms/v.scaleMs;
+        animations.push(ready.animate([{opacity:0,offset:0},{opacity:0,offset:finish-0.001},{opacity:1,offset:finish},{opacity:1,offset:1}],{duration:4000,iterations:Infinity}));
+      }
+    }
+    sync();
+  };
+  scene.querySelectorAll<HTMLButtonElement>('[data-timing-mode]').forEach(button => button.addEventListener('click', () => { mode = button.dataset.timingMode!; render(); }));
+  scene.querySelectorAll<HTMLElement>('[data-fp-controls]').forEach(control => { control.hidden = false; });
+  document.addEventListener('visibilitychange', sync);
+  motion.addEventListener('change', render);
+  new IntersectionObserver(entries => { visible = entries.some(entry => entry.isIntersecting); sync(); }).observe(scene);
+  render();
+}
+
+for (const scene of document.querySelectorAll<HTMLElement>('[data-fast-context]')) {
+  const get = (selector: string) => scene.querySelector<HTMLElement>(selector)!;
+  const editor = scene.querySelector<HTMLTextAreaElement>('textarea')!;
+  let mode = 'context';
+  const render = () => {
+    const v = contextView(mode, editor.value);
+    get('[data-cpu-input]').textContent = v.cpuText;
+    get('[data-model-input]').textContent = v.modelText;
+    get('[data-cpu-count]').textContent = `${v.cpuCharacters} characters`;
+    get('[data-cpu-note]').textContent = mode === 'context' ? 'Only the changing facts enter the classifier.' : 'The classifier re-reads the policy with every request.';
+    get('[data-context-location]').textContent = mode === 'context' ? 'Registered once as task context.' : 'Repeated in state with every request.';
+    get('[data-context-flow]').textContent = mode === 'context' ? 'Policy stored once + new facts per request' : 'Policy and facts sent together in every state';
+    get('[data-context-summary]').textContent = mode === 'context' ? 'The CPU reads fewer characters. The model still has the full policy.' : 'The CPU reads the policy too. The model receives the same information.';
+    scene.querySelectorAll<HTMLButtonElement>('[data-context-mode]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.contextMode === mode)));
+  };
+  scene.querySelectorAll<HTMLButtonElement>('[data-context-mode]').forEach(button => button.addEventListener('click', () => { mode = button.dataset.contextMode!; render(); }));
+  scene.querySelectorAll<HTMLButtonElement>('[data-facts]').forEach(button => button.addEventListener('click', () => { editor.value = FACTS[button.dataset.facts as keyof typeof FACTS]; render(); }));
+  editor.addEventListener('input', render);
+  scene.querySelectorAll<HTMLElement>('[data-fp-controls]').forEach(control => { control.hidden = false; });
+  render();
 }
