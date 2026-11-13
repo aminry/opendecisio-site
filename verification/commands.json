@@ -4,7 +4,7 @@
 	"date": "2026-11-13",
 	"runner": "darwin-arm64",
 	"blocks": {
-		"a26b3462e1a57699": {
+		"be409db91a39d6e0": {
 			"status": "shown",
 			"why": "personal installation changes your own skill directory; the package tests exercise user scope in isolated homes"
 		},
