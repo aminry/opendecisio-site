@@ -1,3 +1,4 @@
+import { skillsReleaseNote } from './skills-package.mjs';
 // A remark plugin that replaces a leaf directive
 //   ::upstream{file="docs/running.md" section="GPU server"}
 // with that section of the decisio file at the pinned tag, parsed as Markdown,
@@ -153,6 +154,7 @@ export default function remarkUpstream(options = {}) {
 		});
 		// ::covers{links="..."}: read by src/lib/upstream-map.mjs; on the page it is nothing.
 		visit(tree, 'leafDirective', (node, index, parent) => {
+			if (node.name === 'skills-package') { parent.children.splice(index, 1, { type: 'html', value: skillsReleaseNote() }); return index + 1; }
 			if (node.name !== 'covers') return;
 			parent.children.splice(index, 1);
 			return index;

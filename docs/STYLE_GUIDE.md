@@ -215,3 +215,10 @@ Generate downloadable clients from the displayed code so the two cannot drift.
 Put the minimum successful action before optional fitting and deployment detail.
 The API page retains all supported fields and routes, including extensions absent from the base schema, while omitting verification routes and methods.
 Group configuration tables by purpose and link the corresponding usage guide.
+
+## Skill installation examples
+
+Pin the published package and its archive digest; check that its references match the documented decisio release.
+Show project scope first, name both local host discovery paths, and keep personal scope explicit.
+Package-command evidence describes installation checks separately from decision-model runs.
+Use an isolated application for project commands and fixture homes when testing personal scope.

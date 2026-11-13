@@ -45,6 +45,11 @@ To automate only the answers that meet your error target, [certify the task](/do
 - Ollama uses its own serving route and settings; use the decisio server to teach and certify tasks.
 - For client contract tests without model-serving hardware, a [CPU development server](/docs/deploy/development/) is available.
 
+## Use a coding assistant
+
+[Install the decisio skills](/docs/ai-skills/) to have Claude Code or Codex prepare your setup, request or backend integration.
+Choose the workflow for your task and include your hardware or endpoint in the prompt.
+
 ## What next
 
 - [Quickstart](/docs/): choose your hardware and ask your first question.

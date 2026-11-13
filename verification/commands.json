@@ -4,6 +4,10 @@
 	"date": "2026-11-13",
 	"runner": "darwin-arm64",
 	"blocks": {
+		"a26b3462e1a57699": {
+			"status": "shown",
+			"why": "personal installation changes your own skill directory; the package tests exercise user scope in isolated homes"
+		},
 		"a0614007b8f15679": {
 			"status": "cpu",
 			"tag": "v0.46.0",
@@ -109,7 +113,7 @@
 			"status": "cpu",
 			"tag": "v0.46.0",
 			"date": "2026-11-13",
-			"stdout": "answers: 50\nserver ms: 6778.3"
+			"stdout": "answers: 50\nserver ms: 7108.2"
 		},
 		"72182c644904351a": {
 			"status": "cpu",
@@ -121,7 +125,7 @@
 			"status": "cpu",
 			"tag": "v0.46.0",
 			"date": "2026-11-13",
-			"stdout": "first question: 183.6 ms\na different question about the same text: 200.1 ms"
+			"stdout": "first question: 173.8 ms\na different question about the same text: 176.4 ms"
 		},
 		"f88514bde0c31e5b": {
 			"status": "cpu",
@@ -206,7 +210,7 @@
 			"status": "cpu",
 			"tag": "v0.46.0",
 			"date": "2026-11-13",
-			"stdout": "x-decisio-server-ms: 140.1\nx-decisio-route: text\nx-decisio-stages: prepare=0.3;warm=0.0;engine=139.5;wait=0.0",
+			"stdout": "x-decisio-server-ms: 130.0\nx-decisio-route: text\nx-decisio-stages: prepare=0.3;warm=0.0;engine=129.5;wait=0.0",
 			"trimmed": true
 		},
 		"cebbdb4a5cd60b45": {
@@ -328,7 +332,7 @@
 			"status": "cpu",
 			"tag": "v0.46.0",
 			"date": "2026-11-13",
-			"stdout": "My card keeps getting declined when I renew.\n  choice payment_failed; x-decisio-tasks: ticket-routing; route text, 223.3 ms\n  payment_failed 1.000, bug 0.000, billing 0.000"
+			"stdout": "My card keeps getting declined when I renew.\n  choice payment_failed; x-decisio-tasks: ticket-routing; route text, 214.9 ms\n  payment_failed 1.000, bug 0.000, billing 0.000"
 		},
 		"d4a331a0ca20c8ce": {
 			"status": "shown",

@@ -1,3 +1,4 @@
+import { skillsBlock } from './skills-package.mjs';
 // Code blocks the site writes itself, where decisio's docs have none, each
 // shown on a docs page through ::site-block{name="..."} and, if the home page
 // shows it too, from here. Every one is checked like any other block
@@ -326,6 +327,7 @@ export const siteBlocks = {
 
 /** A site-written block by name, or an error naming the unknown one. */
 export function siteBlock(name) {
+	if (name.startsWith('skills-')) return skillsBlock(name);
 	const b = siteBlocks[name];
 	if (!b) throw new Error(`site-blocks: no block named "${name}"`);
 	return b;

@@ -50,7 +50,7 @@ jobs:
           # The files whose change means the examples may differ: the docs' pages (their code samples), the code that writes
           # a sample (site-blocks, the figures' recorded decision, the home page's blocks, the facts they come from), the plan
           # and the runner that runs them, the record, and the release they run against.
-          pattern='^(public/examples/questions/|src/content/docs/|src/lib/(site-blocks|question-examples|use-cases|recipe-clients|task-clients|blocks|home|launch|remark-upstream)\.mjs$|src/lib/figures/core\.mjs$|src/lib/docs-figures\.mjs$|src/data/launch/|verification/|src/data/integrations\.json$|scripts/(verify-commands|verify-integrations|verify-ollama)\.mjs$|scripts/checks/verify-record\.mjs$|upstream\.json$)'
+          pattern='^(public/examples/questions/|src/content/docs/|src/lib/(site-blocks|skills-package|question-examples|use-cases|recipe-clients|task-clients|blocks|home|launch|remark-upstream)\.mjs$|src/lib/figures/core\.mjs$|src/lib/docs-figures\.mjs$|src/data/launch/|verification/|src/data/(integrations|skills)\.json$|scripts/(verify-commands|verify-integrations|verify-ollama|verify-skills)\.mjs$|scripts/checks/verify-record\.mjs$|upstream\.json$)'
           case "$EVENT" in
             pull_request) files=$(gh pr diff "$PR" --repo "$REPO" --name-only) ;;
             push)
@@ -137,6 +137,10 @@ jobs:
         run: node --test scripts/checks/figure-math-selftest.mjs
       - name: Recipe clients, task files and release presentation
         run: node --test scripts/checks/recipe-clients-selftest.mjs scripts/checks/task-registration-selftest.mjs scripts/checks/public-reference-selftest.mjs
+      - name: Skill package compatibility and command evidence
+        run: node --test scripts/checks/skills-selftest.mjs
+      - name: The published skills archive and install commands
+        run: node scripts/verify-skills.mjs
       - name: The supported API and flags remain complete
         run: node scripts/checks/reference.mjs
       - name: Every moved page redirects to a built page

@@ -44,6 +44,11 @@ When you need an error target for automated decisions, use a [certified task](/d
 - A field called `model` does not switch the model loaded by a decisio server.
 - A probability threshold you choose by hand is a routing rule, not a certificate.
 
+## Use a coding assistant
+
+[Install the decisio skills](/docs/ai-skills/) to have Claude Code or Codex prepare your setup, request or backend integration.
+Choose the workflow for your task and include your hardware or endpoint in the prompt.
+
 ## What next
 
 - [Call from your code](/docs/use-from/): Python, JavaScript, TypeScript and frameworks.
