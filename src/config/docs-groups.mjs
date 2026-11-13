@@ -16,6 +16,10 @@ export const docsGroups = [
 		collapsed: false,
 		items: [
 			{ slug: 'docs/concepts/questions', label: 'Choose a question type', shape: 'guide' },
+			{ slug: 'docs/concepts/choice', label: 'Choose an option', shape: 'guide' },
+			{ slug: 'docs/concepts/noul', label: 'Ask yes or no', shape: 'guide' },
+			{ slug: 'docs/concepts/score', label: 'Rate on a scale', shape: 'guide' },
+			{ slug: 'docs/concepts/probabilities', label: 'Use the probabilities', shape: 'guide' },
 			{ slug: 'docs/images', label: 'Ask about images', shape: 'guide' },
 			{ slug: 'docs/how-it-works', label: 'How it works', shape: 'guide' },
 		],

@@ -6,11 +6,17 @@ The current release is read from `upstream.json`.
 
 ## Documentation pages
 
+| Route | Purpose |
+| --- | --- |
 | `/docs/` | Quickstart |
 | `/docs/api/` | HTTP API |
 | `/docs/bases/` | Choosing a model |
 | `/docs/build-request/` | Build a request |
+| `/docs/concepts/choice/` | Choose an option |
+| `/docs/concepts/noul/` | Ask yes or no |
+| `/docs/concepts/probabilities/` | Use the probabilities |
 | `/docs/concepts/questions/` | Choose a question type |
+| `/docs/concepts/score/` | Rate on a scale |
 | `/docs/concurrency/` | Batch concurrent requests |
 | `/docs/deploy/adapter/` | Serve your own adapter |
 | `/docs/deploy/cloud-gpu/` | On a cloud GPU |

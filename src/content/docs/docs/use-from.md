@@ -6,7 +6,8 @@ description: Ask decisio from curl, Python, JavaScript or TypeScript, or the fra
 <!-- Site-written: the merged Ways in, Python, JavaScript and Frameworks pages. The scripts send the first recorded decision, as decisio 0.17.0 answered it (src/lib/recorded.mjs); the facts about errors, timeouts and the SDK are decisio's docs/api.md and docs/migrating.md at the pinned release (src/config/sourced.mjs checks them); the frameworks' facts are src/data/integrations.json, and their programs are decisio's docs/integrations.md. -->
 
 Call decisio from any language with one HTTP request, and get a probability for every option back.
-Each script below sends the support ticket from [Get started](/docs/) and prints each question's likeliest option.
+Each script below sends the same support ticket with a choice, a yes or no question and a score.
+For a smaller first request, start with the [quickstart](/docs/).
 
 :::tabs
 
@@ -17,6 +18,8 @@ Each script below sends the support ticket from [Get started](/docs/) and prints
 ::tab{label="Python"}
 
 Python's standard library is all it needs.
+Save it as `ask.py` and run `python3 ask.py` (Python 3.12 or later).
+Set `DECISIO_BASE_URL` to your decisio endpoint; it defaults to `http://127.0.0.1:8000`.
 
 ::site-block{name="python-urllib"}
 
@@ -24,17 +27,20 @@ Python's standard library is all it needs.
 
 Install TypeSafe's SDK on its own: `pip install typesafe-sdk==0.7.2`, the version checked.
 It needs a key; any string works.
+Save the script as `ask-sdk.py` and run `python3 ask-sdk.py` in the environment where you installed the SDK.
 
 ::site-block{name="python-sdk"}
 
 ::tab{label="JavaScript"}
 
+Set `DECISIO_BASE_URL` to your decisio endpoint, or leave the local default.
 Save it as `ask.mjs` and run `node ask.mjs` (Node 22 or later; no package).
 
 ::site-block{name="js-fetch"}
 
 ::tab{label="TypeScript"}
 
+Set `DECISIO_BASE_URL` to your decisio endpoint, or leave the local default.
 Save it as `ask.ts` and run `node --experimental-strip-types ask.ts` (Node 22.6 or later; no package).
 
 ::site-block{name="ts-fetch"}
@@ -53,7 +59,8 @@ In the Python, JavaScript and TypeScript tabs, the comment lines are what the de
 
 ## Handle errors
 
-Every error comes back with a `detail` that names the problem.
+Every server error comes back with a `detail` that names the problem.
+Save this example as `check-error.py` and run `python3 check-error.py` with a server running.
 
 | Status | What it means |
 | --- | --- |

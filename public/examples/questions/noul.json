@@ -1,0 +1,9 @@
+{
+  "state": "My card keeps getting declined when I renew.",
+  "questions": {
+    "refund": {
+      "type": "noul",
+      "instructions": "Does the customer explicitly ask for a refund?"
+    }
+  }
+}

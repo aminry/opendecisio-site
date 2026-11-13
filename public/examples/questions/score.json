@@ -1,0 +1,15 @@
+{
+  "state": "My card keeps getting declined when I renew.",
+  "questions": {
+    "impact": {
+      "type": "score",
+      "instructions": "Rate the business impact using only the reported facts.",
+      "criteria": [
+        "No function impaired",
+        "One user impaired, with a workaround",
+        "One user blocked from a core function",
+        "Many users blocked from a core function"
+      ]
+    }
+  }
+}
