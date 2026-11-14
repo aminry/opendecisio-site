@@ -20,6 +20,9 @@ try {
   const page = await context.newPage(); const errors = []; page.on('pageerror', e => errors.push(e.message));
   let videoRequests=0;page.on('request',request=>{if(request.url().includes('/media/decision-fast-path.mp4'))videoRequests++;});
   await page.goto(`${base}/docs/tasks/fast-table/`); await page.waitForLoadState('networkidle');
+  assert.equal(await page.locator('[data-context-consumer=cpu]').count(),1,'Facts-only CPU path is missing');
+  assert.equal(await page.locator('[data-context-consumer=model]').count(),1,'Combined context and facts path is missing');
+  assert.match(await page.locator('[data-workload-saving]').textContent(),/79\.9%/);
   const scenes = page.locator('[data-fast-loop]');
   assert.equal(await scenes.count(), 3, 'The context, routing and learning scenes are missing');
   assert.equal(await page.getByRole('heading', {level:1}).textContent(), 'Give recurring decisions a fast path');
@@ -121,6 +124,12 @@ try {
   for(const id of fragments)assert.equal(await page.locator(`[id="${id}"]`).count(),1,`Missing old fragment ${id}`);
   assert.equal(await page.locator('.fp-scene details').count(),0);
   assert.deepEqual(errors,[]);
+  for(const width of [390,360]){
+    await page.setViewportSize({width,height:844});
+    const saving=page.locator('[data-workload-saving]');await saving.scrollIntoViewIfNeeded();
+    const number=await saving.locator(':scope>strong').boundingBox(),explanation=await saving.locator(':scope>span').boundingBox();
+    assert.ok(number.x+number.width<=explanation.x+1,`Workload saving overlaps its explanation at ${width}px`);
+  }
   await page.clock.resume();
   const staticContext=await browser.newContext({ignoreHTTPSErrors:true,javaScriptEnabled:false});
   const staticPage=await staticContext.newPage();await staticPage.goto(`${base}/docs/tasks/fast-table/`);

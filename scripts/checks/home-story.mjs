@@ -38,7 +38,7 @@ try {
   assert.match(await page.locator('[data-cert-check]').textContent(),/5%/);
   for(const id of ['teach','certify','use-cases','fit','board','try','ask'])assert.equal(await page.locator('#'+id).count(),1);
   assert.equal(await page.getByRole('tab',{name:'GPU',exact:true}).count(),1);
-  for(const name of ['MLX','Ollama']){await page.getByRole('tab',{name,exact:true}).click();assert.equal(await page.locator('[role=tabpanel]:visible').count(),1);}
+  for(const name of ['Mac (MLX)','Ollama']){await page.getByRole('tab',{name,exact:true}).click();assert.equal(await page.locator('[role=tabpanel]:visible').count(),1);}
   if(engine==='chromium'){
     await context.grantPermissions(['clipboard-read','clipboard-write'],{origin:base});
     const copy=page.locator('.gs__panel.on [data-copy-box]').first(),expected=await copy.locator('..').getAttribute('data-copy-text');

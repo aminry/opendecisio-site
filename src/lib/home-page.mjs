@@ -112,7 +112,7 @@ export function homeBlocks() {
  return {
   tabs: [
    {id:'gpu',label:'GPU',note:'Linux with one NVIDIA GPU. The first start downloads the model.',blocks:[siteBlock('gpu-pip').text],href:'/docs/deploy/cloud-gpu/',guide:'GPU requirements and setup'},
-   {id:'mac',label:'MLX',note:'Apple silicon. Choose a model that fits your memory in the MLX guide.',blocks:[`${siteBlock('mac-install').text}\n${siteBlock('mac-31b-6bit').text}`],href:'/docs/deploy/mac/',guide:'Apple silicon requirements and setup'},
+   {id:'mac',label:'Mac (MLX)',note:'Apple silicon. Choose a model that fits your memory in the MLX guide.',blocks:[`${siteBlock('mac-install').text}\n${siteBlock('mac-31b-6bit').text}`],href:'/docs/deploy/mac/',guide:'Apple silicon requirements and setup'},
    {id:'ollama',label:'Ollama',note:'Local Ollama. Its request below uses port 11434 and names the pulled model.',blocks:[ollama,siteBlock('ollama-request-gemma').text],href:'/docs/deploy/mac/#on-a-laptop-with-ollama',guide:'Ollama setup and supported versions'},
   ],
   request:siteBlock('question-choice').text,

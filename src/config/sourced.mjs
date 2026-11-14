@@ -302,6 +302,10 @@ export const sourced = [
 	...fromPage('/docs/upgrading/', [
 		["A server takes 0.90 of its card's memory by default", running, '| 0.90 (the default) | 33.85 GiB |'],
 	]),
+	...fromPage('/demos/teach-and-certify/', [
+		['a small task head learns from the model’s representation', tasksDoc, "fits a small linear layer on the model's internal representation of the text: it learns what your labels mean in your data."],
+		['These labels are never used for task tuning', tasksDoc, 'The held-out examples are never used to fit anything.'],
+	]),
 	// Homepage facts follow the compact product explanation; detailed limits remain in their guides.
 	...fromPage('/', [
 		['A certificate covers one task on one serving setup', readme, 'a certificate holds for one task on one serving setup'],

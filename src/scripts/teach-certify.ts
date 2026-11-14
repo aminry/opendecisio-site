@@ -9,7 +9,8 @@ let routeMotion: Animation | undefined;
 // Both explanatory sequences loop while visible. Labels never disappear.
 for (const panel of $$<HTMLElement>('[data-loop]')) {
   const phases = $$<HTMLElement>('[data-phase]', panel);
-  let position = 0, visible = false, timer: number | undefined, remaining = 2400, started = 0;
+  const duration=panel.dataset.player==='learn'?5000:2400;
+  let position = 0, visible = false, timer: number | undefined, remaining = duration, started = 0;
   const stop = () => {
     if (timer === undefined) return;
     clearTimeout(timer); timer = undefined;
@@ -20,11 +21,13 @@ for (const panel of $$<HTMLElement>('[data-loop]')) {
     if (!running) stop();
     panel.dataset.playback = motion.matches ? 'static' : running ? 'running' : 'paused';
     phases.forEach((phase, i) => phase.classList.toggle('is-current', !motion.matches && i === position));
+    const learning=panel.querySelector<HTMLElement>('[data-task-learning]');
+    if(learning){learning.dataset.learningPhase=motion.matches?'2':String(position);learning.querySelector('[data-learning-action]')!.textContent=!motion.matches&&position===0?'Learning from your labels':'Ready for new messages';}
     if (motion.matches) delete panel.dataset.position; else panel.dataset.position = String(position);
     if (running && timer === undefined) {
       started = performance.now();
       timer = window.setTimeout(() => {
-        timer = undefined; remaining = 2400; position = (position + 1) % phases.length; sync();
+        timer = undefined; remaining = duration; position = (position + 1) % phases.length; sync();
       }, remaining);
     }
   };

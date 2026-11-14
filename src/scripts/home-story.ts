@@ -22,6 +22,7 @@ function render(s:Scene){
  }else if(el.hasAttribute('data-home-cert')){
   const items=JSON.parse(el.dataset.records!),v=items[index%items.length];
   text(el,'cert-counter',`Selected case ${index%items.length+1} / ${items.length}`);text(el,'cert-text',v.text);text(el,'cert-answer',v.answerName);
+  el.querySelector<HTMLElement>('[data-task-learning]')!.dataset.learningPhase=String(phase);
   text(el,'learning-action',phase===0?'Learning from your labels':phase===1?'Task head + calibrated scores':'Ready for new messages');
   text(el,'cert-badge',phase===0?'Next: check':phase===1?'Checking…':'Checked');
   el.querySelectorAll<HTMLElement>('[data-teach-stage]').forEach((node,i)=>node.classList.toggle('is-current',!motion.matches&&phase===i));

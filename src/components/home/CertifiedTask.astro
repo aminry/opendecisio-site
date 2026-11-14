@@ -1,4 +1,5 @@
 ---
+import TaskLearning from '../TaskLearning.astro';
 import {inboxStory} from '../../lib/home-page.mjs';
 import cases from '../../data/teach-certify/walkthrough.json';
 import {data} from '../../lib/teach-certify.mjs';
@@ -6,20 +7,13 @@ import {makeWalkthrough,selectResult} from '../../lib/certified-walkthrough.mjs'
 const d=data(),record=makeWalkthrough(d.inbox,cases,d.decisio);
 const items=record.cases.map(c=>{const result=selectResult(record,'0.05',c.id);return {...c,eligible:result.eligible};});
 const first=items[0], learning=inboxStory().learn;
-const percent=(n)=>`${(n*100).toFixed(1)}%`;
-const labels=['card_arrival','exchange_rate','lost_or_stolen_card'];
 ---
 <section class="hp-section hp-feature" id="teach" aria-labelledby="hp-teach-title">
  <div class="wrap hp-feature-grid"><div class="hp-feature-copy"><p class="hp-label">Teach &amp; Certify</p><h2 id="hp-teach-title">Teach your task.<br/>Choose what gets automated.</h2><p>Your labels teach decisio what your categories mean. For tasks with at least 10 options and enough examples, it can fit a small task head on the model’s representation; the base weights stay fixed.</p><p>Task tuning adapts the choices and calibrates their probabilities. Choose an error target. Separate examples check which predictions qualify; your application routes those and sends the rest for review.</p><div class="hp-feature-links"><a href="/demos/teach-and-certify/">Watch the full demonstration</a><a href="/docs/tasks/certify/">Teach and certify a task</a></div></div>
  <figure class="decision-visual hp-cert" id="certify" data-home-cert data-records={JSON.stringify(items)} data-motion-scene data-playback="idle" data-phase="2" data-parity="0">
   <div class="dv-top"><strong>Teach. Check. Use in your app.</strong><span>Recorded cases</span></div>
   <ol class="hp-teach-steps"><li data-teach-stage="0"><b>01</b><strong>Learn your task</strong></li><li data-teach-stage="1"><b>02</b><strong>Certify separately</strong></li><li data-teach-stage="2"><b>03</b><strong>Use the answer</strong></li></ol>
-  <div class="hp-learning" data-task-learning>
-   <div class="hp-label-stack"><span class="dv-label">Your labelled messages</span>{labels.map((label,i)=><div class="hp-training-card" style={`--card:${i}`}><span>Message + correct category</span><strong>{label.replaceAll('_',' ')}</strong></div>)}<small>{learning.examples} examples · {learning.labels} categories</small></div>
-   <svg class="hp-learn-wire" viewBox="0 0 48 160" preserveAspectRatio="none" aria-hidden="true"><path d="M0 115H48"/><path class="hp-label-packet" d="M0 115H48"/><path d="m38 109 7 6-7 6"/></svg>
-   <div class="hp-task-model"><div class="hp-fixed-base"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="17" width="22" height="17" rx="4"/><path d="M14 17V11a6 6 0 0 1 12 0v6M20 24v4"/></svg><strong>Base model</strong><small>Base weights stay fixed</small></div><div class="hp-task-head"><span class="hp-head-weights" aria-hidden="true">{Array.from({length:12},(_,i)=><i style={`--weight:${i};--strength:${.35+(i%4)*.2}`}/> )}</span><strong>Small task head</strong><small data-learning-action>Fits your categories</small></div></div>
-  </div>
-  <div class="hp-learning-gain" data-teaching-gain><div class="hp-gain-title"><strong>Recorded test accuracy</strong><span class="hp-gain-delta">+{((learning.after-learning.before)*100).toFixed(1)} points</span></div><div class="hp-gain-row"><span>Before teaching</span><i style={`--accuracy:${learning.before}`} aria-hidden="true"/><b>{percent(learning.before)}</b></div><div class="hp-gain-row hp-gain-row--after"><span>After teaching</span><i style={`--accuracy:${learning.after}`} aria-hidden="true"/><b>{percent(learning.after)}</b></div></div>
+  <TaskLearning learning={learning}/>
   <div class="hp-cert-check" data-cert-check><svg viewBox="0 0 72 54" aria-hidden="true"><rect class="hp-check-sheet" x="2" y="13" width="22" height="29" rx="3"/><path class="hp-check-sheet" d="M8 21h10M8 28h10M8 35h6M28 27h12"/><path class="hp-check-shield" d="M45 8h22v22L56 43 45 30zM50 25l5 5 8-12"/></svg><div><strong>Separate examples check the certificate</strong><small>Never used for task tuning. Error target: 5%.</small></div><span class="hp-cert-badge" data-cert-badge>Checked</span></div>
   <div class="dv-input"><span class="dv-label" data-cert-counter>Selected case 1 / {items.length}</span><p data-cert-text>{first.text}</p><i class="dv-progress" aria-hidden="true"></i></div>
   <div class="hp-prediction"><span class="dv-label">Predicted category</span><strong data-cert-answer>{first.answerName}</strong></div>

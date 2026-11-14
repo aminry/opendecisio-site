@@ -1,0 +1,40 @@
+/* Labelled examples adapt the task head; the base model remains fixed. */
+.hp-learning {display:grid;grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr);align-items:center;padding:.7rem;border:1px solid var(--dv-line);border-radius:9px;background:linear-gradient(#14213d55,transparent);}
+.hp-label-stack>.dv-label {font-size:.66rem;}
+.hp-training-card {padding:.4rem .5rem;margin:.4rem 0;border:1px solid #536885;border-left:3px solid var(--dv-blue);border-radius:5px;background:linear-gradient(115deg,#1b2c47,#080e1b);box-shadow:2px 2px 0 #0009;}
+.hp-training-card span {display:block;font-size:.55rem;color:var(--dv-muted);}
+.hp-training-card strong {display:block;font-size:.67rem;line-height:1.4;}
+.hp-label-stack>small {display:block;color:var(--dv-muted);font-size:.6rem;}
+.task-learning .hp-learn-wire {display:block;width:100%;height:100%;align-self:stretch;overflow:visible;grid-column:auto;grid-row:auto;max-width:100%;margin:0;}
+.hp-learn-wire path {stroke:var(--dv-line);stroke-width:1.5;fill:none;}
+.hp-learn-wire .hp-label-packet {stroke:var(--dv-gold);stroke-width:4;stroke-dasharray:8 48;opacity:0;}
+.hp-task-model {border:1px solid #8c6528;border-radius:12px;background:#03060d;overflow:hidden;box-shadow:3px 3px 0 #0009;}
+.hp-fixed-base {position:relative;padding:.65rem .4rem;text-align:center;border-bottom:1px dashed var(--dv-line);}
+.task-learning .hp-fixed-base svg {width:27px;height:27px;display:block;margin:auto;fill:#14213d;stroke:var(--dv-blue);stroke-width:1.8;}
+.hp-fixed-base strong,.hp-task-head strong {display:block;font-size:.8rem;line-height:1.4;}
+.hp-fixed-base small,.hp-task-head small {display:block;font-size:.6rem;line-height:1.4;color:var(--dv-muted);min-height:2.8em;}
+.hp-task-head {padding:.65rem .4rem;text-align:center;background:linear-gradient(120deg,#fca31120,#fca31108);}
+.hp-task-head strong {color:var(--dv-gold);}
+.hp-head-weights {display:grid;grid-template-columns:repeat(6,1fr);gap:4px;max-width:110px;margin:0 auto .55rem;}
+.hp-head-weights i {aspect-ratio:1;border:1px solid #fca31199;border-radius:2px;background:var(--dv-gold);opacity:var(--strength);}
+.hp-learning-gain {margin:.8rem 0;padding:.7rem .8rem;background:#03060dbb;border:1px solid var(--dv-line);border-radius:8px;}
+.hp-gain-title {display:flex;justify-content:space-between;gap:.5rem;margin-bottom:.55rem;}
+.hp-gain-title strong {font-size:.7rem;}
+.hp-gain-title span {font-size:.6rem;color:var(--dv-muted);}
+.hp-gain-row {display:grid;grid-template-columns:105px minmax(0,1fr) 45px;gap:.5rem;align-items:center;margin:.4rem 0;font-size:.68rem;color:var(--dv-muted);}
+.hp-gain-row i {height:8px;display:block;border-radius:2px;background:linear-gradient(90deg,#8fb3d955,var(--dv-blue));width:calc(var(--accuracy)*100%);transform-origin:left;}
+.hp-gain-row b {font:600 .75rem var(--d-font-mono);color:var(--dv-ink);}
+.hp-gain-row--after i {background:linear-gradient(90deg,#fca31155,var(--dv-gold));box-shadow:0 0 10px #fca31133;}
+.hp-gain-row--after b {color:var(--dv-gold);}
+[data-learning-phase="0"] .hp-training-card {animation:hp-label-teach 1.6s calc(var(--card)*.32s) infinite var(--dv-ease);}
+[data-learning-phase="0"] .hp-label-packet {opacity:1;animation:hp-label-flow 1.2s linear infinite;}
+[data-learning-phase="0"] .hp-head-weights i {animation:hp-weight-fit 1.6s calc(var(--weight)*.1s) infinite alternate;}
+[data-learning-phase="0"] .hp-gain-row--after i {animation:hp-gain-glow 1.6s ease-in-out infinite;}
+@keyframes hp-label-teach {0%,100%{transform:translateX(0);border-left-color:var(--dv-blue)}35%{transform:translateX(4px);border-left-color:var(--dv-gold);box-shadow:0 0 14px #fca31130}}
+@keyframes hp-label-flow {to{stroke-dashoffset:-56}}
+@keyframes hp-weight-fit {from{opacity:.2;background:#14213d}to{opacity:1;background:var(--dv-gold);box-shadow:0 0 8px #fca31170}}
+@keyframes hp-gain-glow {50%{box-shadow:0 0 14px #fca31188}}
+
+.hp-gain-title .hp-gain-delta{color:var(--dv-gold);font-weight:600}
+@media(max-width:640px){.hp-learning{padding:.6rem;grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr)}.hp-training-card strong{font-size:.62rem}.hp-gain-title{display:block}.hp-gain-title span{display:block}.hp-gain-row{grid-template-columns:95px minmax(0,1fr) 43px;font-size:.63rem}}
+@media(prefers-reduced-motion:reduce){.task-learning *{animation:none!important;transition:none!important}}

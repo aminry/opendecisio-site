@@ -1,0 +1,15 @@
+---
+// One source-backed learning illustration, shared by the homepage and the full walkthrough.
+import '../styles/task-learning.css';
+const {learning}=Astro.props;
+const percent=(n:number)=>`${(n*100).toFixed(1)}%`;
+const labels=['card_arrival','exchange_rate','lost_or_stolen_card'];
+---
+<div class="task-learning" data-task-learning data-learning-phase="2">
+  <div class="hp-learning">
+   <div class="hp-label-stack"><span class="dv-label">Your labelled messages</span>{labels.map((label,i)=><div class="hp-training-card" style={`--card:${i}`}><span>Message + correct category</span><strong>{label.replaceAll('_',' ')}</strong></div>)}<small>{learning.examples} examples · {learning.labels} categories</small></div>
+   <svg class="hp-learn-wire" viewBox="0 0 48 160" preserveAspectRatio="none" aria-hidden="true"><path d="M0 115H48"/><path class="hp-label-packet" d="M0 115H48"/><path d="m38 109 7 6-7 6"/></svg>
+   <div class="hp-task-model"><div class="hp-fixed-base"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="17" width="22" height="17" rx="4"/><path d="M14 17V11a6 6 0 0 1 12 0v6M20 24v4"/></svg><strong>Base model</strong><small>Base weights stay fixed</small></div><div class="hp-task-head"><span class="hp-head-weights" aria-hidden="true">{Array.from({length:12},(_,i)=><i style={`--weight:${i};--strength:${.35+(i%4)*.2}`}/> )}</span><strong>Small task head</strong><small data-learning-action>Fits your categories</small></div></div>
+  </div>
+  <div class="hp-learning-gain" data-teaching-gain><div class="hp-gain-title"><strong>Recorded test accuracy</strong><span class="hp-gain-delta">+{((learning.after-learning.before)*100).toFixed(1)} points</span></div><div class="hp-gain-row"><span>Before teaching</span><i style={`--accuracy:${learning.before}`} aria-hidden="true"/><b>{percent(learning.before)}</b></div><div class="hp-gain-row hp-gain-row--after"><span>After teaching</span><i style={`--accuracy:${learning.after}`} aria-hidden="true"/><b>{percent(learning.after)}</b></div></div>
+</div>
