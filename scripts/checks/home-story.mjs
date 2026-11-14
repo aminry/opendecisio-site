@@ -76,12 +76,13 @@ try {
     await page.emulateMedia({reducedMotion:'no-preference'});
   }
   assert.deepEqual(errors,[]);
-  for(const width of [390,360]){
+  for(const width of [390,360,320]){
     await page.setViewportSize({width,height:844});
     for(const scene of await scenes.all()){
       await scene.scrollIntoViewIfNeeded();await until(async()=>await scene.getAttribute('data-playback')==='running','Phone scene does not start');
       const heights=[];
       for(let i=0;i<52;i++){await page.clock.runFor(1000);heights.push(await scene.evaluate(el=>el.clientHeight));}
+      assert.ok(await scene.locator('.dv-route>strong').evaluateAll(nodes=>nodes.every(el=>el.scrollWidth<=el.clientWidth+2)),`Route label spills into its card padding at ${width}px`);
       assert.ok(Math.max(...heights)-Math.min(...heights)<=2,`Scene changes height through its cases at ${width}px: ${Math.min(...heights)}–${Math.max(...heights)}`);
     }
   }

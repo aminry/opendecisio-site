@@ -126,3 +126,4 @@
 @keyframes hp-speed-a {to{transform:translateX(100%)}}
 @keyframes hp-speed-b {to{transform:translateX(100%)}}
 @media(max-width:640px){.hp-core-types{gap:.4rem;margin-top:.5rem}.hp-core-types span{font-size:.6rem;padding:.2rem .5rem}.hp-core .dv-node{min-height:54px}.hp-core .dv-node [data-core-question]{min-height:2.9em}.hp-core-speed{gap:.4rem;margin-top:.4rem;padding-top:.4rem}.hp-core-speed>svg{width:24px;height:24px}.hp-core-speed>strong{font-size:1.3rem}.hp-core-speed>strong small{font-size:.65rem}.hp-core-speed>span b{font-size:.58rem}.hp-core-speed>span small{font-size:.55rem}}
+@media(max-width:350px){.hp-cert .dv-route>strong{font-size:.9rem}}
