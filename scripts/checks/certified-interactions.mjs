@@ -104,6 +104,11 @@ try {
   assert.equal(await page.getByRole('heading', { name: 'How it was run', exact: true }).count(), 0);
   assert.equal(await page.locator('#method').isVisible(), true, 'Dataset credits must remain visible');
   assert.deepEqual(errors, []);
+  for(const width of [430,390,360,320]){
+    await page.setViewportSize({width,height:844});
+    for(const selector of ['.ca-destination h3','.tc-rules'])for(const item of await page.locator(selector).all())
+      assert.ok(await item.evaluate(el=>el.scrollWidth<=el.clientWidth+2),`${selector} overflows its card at ${width}px`);
+  }
   await page.setViewportSize({width:390,height:844});
   const learningDiagram=page.locator('[data-task-learning]');
   await learningDiagram.scrollIntoViewIfNeeded();
