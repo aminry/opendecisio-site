@@ -1,36 +1,32 @@
 ---
+import '../styles/decision-visuals.css';
+import '../styles/feature-story.css';
+import TaskLearning from './TaskLearning.astro';
+import {inboxStory} from '../lib/home-page.mjs';
+import {teachCertifyFilm} from '../lib/teach-certify-film.mjs';
+const learning=inboxStory().learn;
 import { selectResult } from '../lib/certified-walkthrough.mjs';
 const { record, source } = Astro.props;
 const result = selectResult(record, '0.05', 'clear');
 const n = (x: number) => x.toLocaleString('en-US');
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
-const stages = [
-  { title: 'Teach your categories', note: 'Give decisio examples with the correct labels. It learns your task without retraining the base model.', top: 'Labelled examples', bottom: 'A task that recognises your categories' },
-  { title: 'Certify on separate examples', note: 'Choose an error target. Examples held back from teaching let decisio find a probability cutoff it can certify.', top: 'Separate labelled examples', bottom: 'A certificate at your error target' },
-  { title: 'Let your application act', note: 'The model predicts a category. Your backend checks the certificate, routes the ticket or asks for review.', top: 'New message → prediction', bottom: 'Certificate check → route or review' },
-];
+
 ---
 <div class="ca-walkthrough" data-ca data-record={JSON.stringify(record)} data-target="0.05" data-eligible="true">
-<section class="ca-hero" aria-labelledby="demo-title">
-  <div><p class="ca-eyebrow">Certified answers</p><h1 id="demo-title">Automate part of your inbox. Review the rest.</h1><p>Teach decisio your categories with labelled examples. Choose an error target. Your application routes certified predictions and sends the rest for review.</p><p class="ca-small">Explore recorded predictions. Your choices change the routing policy; they do not run a live model.</p><nav class="ca-hero-links" aria-label="On this page"><a href="#how-title">See how it works</a><a href="#inbox">Try a recorded prediction</a><a href="#method">Dataset credits</a></nav></div>
-  <figure class="ca-hero-flow"><p class="ca-label">One recorded ticket</p><blockquote data-case-text>{result.example.text}</blockquote><p class="ca-label">Predicted category</p><p class="ca-prediction" data-prediction>{result.example.answerName}</p><svg viewBox="0 0 360 140" role="img" aria-label="Your application checks the certificate, then routes the ticket or requests human review."><text x="180" y="22" text-anchor="middle">Valid correctness certificate?</text><path class="ca-svg-line" data-branch="route" d="M180 30v25H85v25m-6-6 6 6 6-6"/><path class="ca-svg-line ca-svg-line--muted" data-branch="review" d="M180 55h95v25m-6-6 6 6 6-6"/><rect class="ca-svg-box" data-hero-route x="10" y="88" width="150" height="42" rx="8"/><text data-hero-route-text x="85" y="114" text-anchor="middle">Route automatically</text><rect class="ca-svg-box" data-hero-review x="200" y="88" width="150" height="42" rx="8"/><text data-hero-review-text x="275" y="114" text-anchor="middle">Human review</text></svg><figcaption class="ca-small">Recorded prediction. Your application owns the action.</figcaption></figure>
+<section class="ca-hero feature-hero" aria-labelledby="demo-title">
+  <div><p class="ca-eyebrow">Certified answers</p><h1 id="demo-title"><span class="feature-title-accent">Automate part of your inbox.</span> Review the rest.</h1><p>Teach decisio your categories with labelled examples. Choose an error target. Your application routes certified predictions and sends the rest for review.</p><p class="ca-small">Explore recorded predictions. Your choices change the routing policy; they do not run a live model.</p><nav class="ca-hero-links" aria-label="On this page"><a href="#walkthrough-video">Watch the walkthrough</a><a href="#inbox">Try a recorded prediction</a><a href="#method">Dataset credits</a></nav></div>
+  <figure class="ca-hero-flow decision-visual"><p class="ca-label">One recorded ticket</p><blockquote data-case-text>{result.example.text}</blockquote><p class="ca-label">Predicted category</p><p class="ca-prediction" data-prediction>{result.example.answerName}</p><svg viewBox="0 0 360 140" role="img" aria-label="Your application checks the certificate, then routes the ticket or requests human review."><text x="180" y="22" text-anchor="middle">Valid correctness certificate?</text><path class="ca-svg-line" data-branch="route" d="M180 30v25H85v25m-6-6 6 6 6-6"/><path class="ca-svg-line ca-svg-line--muted" data-branch="review" d="M180 55h95v25m-6-6 6 6 6-6"/><rect class="ca-svg-box" data-hero-route x="10" y="88" width="150" height="42" rx="8"/><text data-hero-route-text x="85" y="114" text-anchor="middle">Route automatically</text><rect class="ca-svg-box" data-hero-review x="200" y="88" width="150" height="42" rx="8"/><text data-hero-review-text x="275" y="114" text-anchor="middle">Human review</text></svg><figcaption class="ca-small">Recorded prediction. Your application owns the action.</figcaption></figure>
 </section>
-  <section class="ca-learn ca-player" data-player="learn" data-loop data-playback="idle" aria-labelledby="how-title">
+  <section class="ca-film-section" id="walkthrough-video" aria-labelledby="teach-film-title"><h2 id="teach-film-title">Teach your task. See what gets automated.</h2><p>A short walkthrough of teaching, separate certification and your application’s review path.</p><div set:html={teachCertifyFilm()}/></section>
+  <section class="ca-learn ca-player decision-visual" data-player="learn" data-loop data-playback="idle" aria-labelledby="how-title">
     <div class="ca-section-head"><div><p class="ca-eyebrow">How it works</p><h2 id="how-title">Teach. Certify. Use it in your app.</h2></div>
     </div>
     <div class="ca-stages">
-      {stages.map((stage, i) => <article class="ca-stage" data-stage={i} data-phase={i}>
-        <p class="ca-stage-number">{i + 1}</p><h3>{stage.title}</h3>
-        <svg viewBox="0 0 320 154" role="img" aria-label={`${stage.top}. ${stage.bottom}.`}>
-          <rect class="ca-svg-box" x="10" y="6" width="300" height="43" rx="7"/><text x="160" y="33" text-anchor="middle">{stage.top}</text>
-          <path class="ca-svg-line" d="M160 50v48m-6-6 6 6 6-6"/>
-          <circle class="ca-packet" cx="160" cy="57" r="5"/>
-          <rect class="ca-svg-end" x="10" y="103" width="300" height="43" rx="7"/><text class="ca-svg-end-text" x="160" y="130" text-anchor="middle">{stage.bottom}</text>
-        </svg>
-        <p>{stage.note}</p>
-      </article>)}
+      <article class="ca-stage ca-stage-learning" data-stage="0" data-phase="0"><div class="ca-learning-copy"><p class="ca-stage-number">1 · Your labels teach the task</p><h3>Small task tuning. Visible gains.</h3><p>Give decisio messages with their correct categories. For tasks with at least 10 options and enough examples, a small task head learns from the model’s representation while the base weights stay fixed.</p><p>The fitted task also calibrates its probabilities. The bars show the recorded test accuracy before and after teaching this banking task.</p></div><TaskLearning learning={learning}/></article>
+      <article class="ca-stage" data-stage="1" data-phase="1" data-cert-separate><p class="ca-stage-number">2 · Check separate evidence</p><h3>Certify on examples held back.</h3><svg viewBox="0 0 420 170" role="img" aria-label="Separate labelled examples check an error target and produce a certified probability cutoff."><rect class="ca-svg-box" x="12" y="20" width="112" height="64" rx="7"/><path class="ca-svg-line ca-svg-line--muted" d="M28 39h75M28 53h60M28 67h75M124 52h58"/><circle class="ca-packet" cx="151" cy="52" r="5"/><path class="ca-cert-shield" d="M190 20h54v48l-27 23-27-23zM203 51l10 10 21-25"/><text x="217" y="118" text-anchor="middle">Check your error target</text><path class="ca-svg-line" d="M251 52h42"/><rect class="ca-svg-end" x="297" y="20" width="110" height="64" rx="8"/><text class="ca-svg-end-text" x="352" y="48" text-anchor="middle">Checked</text><text class="ca-svg-end-text" x="352" y="68" text-anchor="middle">cutoff</text><text x="68" y="118" text-anchor="middle">Separate labels</text></svg><p>These labels are never used for task tuning. Choose an error target; this separate evidence checks which predictions can qualify for a certificate.</p></article>
+      <article class="ca-stage" data-stage="2" data-phase="2"><p class="ca-stage-number">3 · Your backend acts</p><h3>Automate qualifying answers.</h3><svg viewBox="0 0 420 170" role="img" aria-label="A new prediction reaches a certificate check. Qualifying answers route automatically; other predictions go to review."><rect class="ca-svg-box" x="115" y="8" width="190" height="43" rx="8"/><text x="210" y="35" text-anchor="middle">New prediction</text><path class="ca-svg-line" d="M210 51v30H100v30M210 81h110v30"/><circle class="ca-packet" cx="210" cy="56" r="5"/><rect class="ca-svg-end" x="8" y="113" width="185" height="43" rx="8"/><text class="ca-svg-end-text" x="100" y="140" text-anchor="middle">Qualifies: route</text><rect class="ca-svg-box" x="228" y="113" width="185" height="43" rx="8"/><text x="320" y="140" text-anchor="middle">Otherwise: review</text></svg><p>Check the correctness certificate on each new answer. Route qualifying predictions and keep other answers as suggestions for human review.</p></article>
     </div>
-    <p class="ca-play-status">The diagrams illustrate the steps. Each stage keeps its explanation visible.</p>
+    <p class="ca-play-status">Labels flow into the task head, separate evidence checks the certificate, then your application acts. The sequence repeats automatically; the learning flow is schematic.</p><p class="src-note">Recorded accuracy: {source}</p>
   </section>
 
   <section class="ca-inbox" id="inbox" aria-labelledby="inbox-title" data-table-keys>

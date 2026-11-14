@@ -1,0 +1,41 @@
+WEBVTT
+
+00:00:00.250 --> 00:00:02.234 line:88%
+[Upbeat instrumental music]
+Want your app to sort messages your way?
+
+00:00:02.354 --> 00:00:05.511 line:88%
+Start with examples and the right category for each one.
+
+00:00:08.250 --> 00:00:09.893 line:88%
+The base model stays fixed.
+
+00:00:10.013 --> 00:00:12.253 line:88%
+A small task head learns from your labels.
+
+00:00:12.373 --> 00:00:14.698 line:88%
+Here, that improves the task's accuracy.
+
+00:00:16.250 --> 00:00:18.021 line:88%
+Next, choose an error target.
+
+00:00:18.141 --> 00:00:20.829 line:88%
+Separate examples check which answers qualify.
+
+00:00:20.949 --> 00:00:23.146 line:88%
+Those examples never train the task.
+
+00:00:24.250 --> 00:00:27.642 line:88%
+When an answer qualifies, your app can route it automatically.
+
+00:00:27.762 --> 00:00:31.069 line:88%
+Otherwise, keep the prediction as a suggestion for review.
+
+00:00:32.250 --> 00:00:34.981 line:88%
+Here, over thirteen hundred messages qualify.
+
+00:00:35.101 --> 00:00:36.274 line:88%
+Some are still wrong.
+
+00:00:36.394 --> 00:00:39.210 line:88%
+Keep a review path, and watch for changing traffic.

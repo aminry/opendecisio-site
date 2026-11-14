@@ -1,72 +1,33 @@
 ---
-// The home page, benefits first: the hero (three measured numbers and where they were measured, and a recorded
-// decision), teaching one task end to end, the threshold line on that task's certificates, the use cases, the one
-// Good fit box, the public board's one dated result, Get started and the closing. Every comparison with another
-// system is on Benchmarks, dated, except the board's result here.
-import Closing from '../components/home/Closing.astro';
+import DecisionModel from '../components/home/DecisionModel.astro';
+import CertifiedTask from '../components/home/CertifiedTask.astro';
+import FastPath from '../components/home/FastPath.astro';
 import GetStarted from '../components/home/GetStarted.astro';
-import GoodFit from '../components/home/GoodFit.astro';
-import HomeDemo from '../components/home/HomeDemo.astro';
-import Proof from '../components/home/Proof.astro';
-import TeachIt from '../components/home/TeachIt.astro';
-import Threshold from '../components/home/Threshold.astro';
-import UseCases from '../components/home/UseCases.astro';
-import { site } from '../config/site';
+import {site} from '../config/site';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { oneSentence } from '../lib/home.mjs';
-import { heroStats } from '../lib/home-page.mjs';
+import {oneSentence} from '../lib/home.mjs';
+import {stable,jevbench,BOARD_URL} from '../lib/launch.mjs';
+import {pin} from '../lib/upstream.mjs';
 import '../styles/home.css';
-import { pin } from '../lib/upstream.mjs';
-
-const hero = heroStats();
-const jsonLd = {
-	'@context': 'https://schema.org',
-	'@type': 'SoftwareSourceCode',
-	name: site.name,
-	description: oneSentence(),
-	url: site.url,
-	codeRepository: site.repository,
-	programmingLanguage: 'Python',
-	license: 'https://www.apache.org/licenses/LICENSE-2.0',
-	version: pin.tag.replace(/^v/, ''),
-};
+import '../styles/decision-visuals.css';
+import '../styles/home-story.css';
+const evidence=stable('composite_v161');
+const boardRelease=jevbench().ours.display.match(/decisio (v[\d.]+)/)?.[1];
+if(!boardRelease)throw Error('Board recording must identify its release');
+const jobs=[
+ {title:'Route a ticket',message:'I was charged twice for my order.',answer:'billing',href:'/docs/use-cases/support-routing/',note:'Send requests to the right team.'},
+ {title:'Apply a policy',message:'Buy followers now. Visit our discount site.',answer:'block',href:'/docs/use-cases/guardrails/',note:'Make a consistent moderation choice.'},
+ {title:'Check eligibility',message:'Home item. Delivered 12 days ago. Unopened.',answer:'yes',href:'/docs/tasks/fast-table/',note:'Evaluate new facts against shared rules.'},
+ {title:'Gate an agent action',message:'An agent proposes a shell command.',answer:'allow / ask / block',href:'/docs/use-cases/gatekeeper/',note:'Let your backend enforce its action policy.'},
+];
+const jsonLd={'@context':'https://schema.org','@type':'SoftwareSourceCode',name:site.name,description:oneSentence(),url:site.url,codeRepository:site.repository,programmingLanguage:'Python',license:'https://www.apache.org/licenses/LICENSE-2.0',version:pin.tag.replace(/^v/,'')};
 ---
-<SiteLayout bodyClass="home" title={`${site.name}: decisions you can trust, on your own hardware`} description={oneSentence()} jsonLd={jsonLd}>
-	<section class="hero">
-		<div class="hero__glow" aria-hidden="true"></div>
-		<div class="wrap hero__grid">
-			<div class="hero__copy">
-				<a class="pill" href="/docs/releases/"><b>{pin.tag}</b> Release notes</a>
-				<h1>Decisions you can trust, on <em class="hl">your own hardware</em>. Open source.</h1>
-				<p class="lede">Send a text and a question with its options. Get back a <a class="gloss" href="/docs/glossary/#probability">probability</a> for every option, in one call. Teach it your task, and it certifies which answers to trust.</p>
-				<ul class="chips" data-launch="stats">
-					{hero.stats.map((s) => <li class="chip2"><b>{s.n}</b> {s.l}</li>)}
-				</ul>
-				<p class="hero__cond">{hero.conditions} <a href="/benchmarks/#many-questions">How these were measured</a>.</p>
-				<div class="actions hero__try">
-					<a class="button button--primary" href="/docs/">Get started</a>
-					<a class="button" href="/docs/use-cases/">See use cases</a>
-					<a class="button" href={site.repository}>GitHub</a>
-				</div>
-			</div>
-			<HomeDemo />
-		</div>
-	</section>
-
-	<TeachIt />
-
-	<Threshold />
-
-	<UseCases />
-
-	<GoodFit />
-
-	<Proof />
-
-	<GetStarted />
-
-	<Closing />
-	<script>
-		import '../scripts/home.ts';
-	</script>
+<SiteLayout bodyClass="home home-story" title={`${site.name}: a decision model for your application`} description="An open-source decision model for structured choices. Teach your task, certify qualifying answers and give recurring decisions a fast path on your own hardware." jsonLd={jsonLd}>
+ <section class="hp-hero" aria-labelledby="hp-title"><div class="wrap hp-hero-grid"><div class="hp-hero-copy"><p class="hp-label">Open-source decision model</p><h1 id="hp-title">A <span class="hp-title-accent">decision model</span> for your application.</h1><p class="hp-lede">Send text, a question and its options. Get a choice, yes/no answer or score, with probabilities. Run it on your own hardware.</p><div class="actions"><a class="button button--primary" href="#try">Get started</a><a class="button" href="#teach">See how it works</a></div><p class="hp-hero-note">Your model returns a decision. Your backend decides what happens next.</p></div><DecisionModel/></div>
+ <div class="wrap hp-anatomy"><span>Text + question + options</span><span aria-hidden="true">→</span><strong>{site.name}</strong><span aria-hidden="true">→</span><span>Typed answer + probabilities</span><a href="/docs/how-it-works/">How the model works</a></div></section>
+ <section class="hp-section hp-jobs" id="use-cases" aria-labelledby="hp-jobs-title"><div class="wrap"><div class="hp-section-head"><h2 id="hp-jobs-title">Decisions your backend already makes.</h2><p>One question, asked of each new item. Put the answer to work in your routing, policy or approval logic.</p></div><div class="hp-job-grid">{jobs.map(j=><article class="hp-job"><h3><a href={j.href}>{j.title}</a></h3><p class="hp-job-input">{j.message}</p><div class="hp-job-answer"><span>Decision</span><b>{j.answer}</b></div><p>{j.note}</p></article>)}</div><p class="hp-jobs-note">Illustrative jobs and outcomes. Explore <a href="/docs/use-cases/issue-triage/">issue triage</a>, <a href="/docs/use-cases/rag-gate/">RAG gates</a> and <a href="/docs/use-cases/">all recipes</a>.</p></div></section>
+ <CertifiedTask/><FastPath/><GetStarted/>
+ <section class="hp-section hp-details" id="fit" aria-labelledby="hp-fit-title"><div class="wrap hp-details-grid"><div><h2 id="hp-fit-title">Good to know.</h2><ul><li>Structured decisions for your application: choices, yes/no answers and scores.</li><li>A certificate covers one task on one serving setup, for traffic like your examples.</li><li>Ollama builds its own prompt and applies no calibration. Check the requirements for your backend.</li></ul><p><a href="/docs/limits/">Requirements and limits</a> · <a href="/docs/tasks/">Teaching and example requirements</a></p></div><div id="board"><h3>Explore the evidence.</h3><p>Recorded task results, model measurements and complete conditions are available in the demos and benchmarks.</p><p class="hp-board-claim" data-launch="lead">{evidence.text}</p><p class="hp-evidence-source src-note">Source: JevBench v1.6.1 file, read {evidence.date.slice(0,10)}; its {site.name} 31B row is decisio {boardRelease}.</p><p><a href="/benchmarks/">Measurements and methods</a> · <a href={BOARD_URL}>Public board</a></p></div></div></section>
+ <section class="hp-close"><div class="wrap"><h2>Start with one decision.</h2><div class="actions"><a class="button button--primary" href="/docs/">Get started</a><a class="button" href="/demos/teach-and-certify/">Teach &amp; Certify</a><a class="button" href="/docs/tasks/fast-table/">Decision fast path</a></div><p><a href="/docs/releases/">{pin.tag} release notes</a> · <a href={site.repository}>GitHub</a></p></div></section>
+ <script>import '../scripts/home-story.ts';</script>
 </SiteLayout>

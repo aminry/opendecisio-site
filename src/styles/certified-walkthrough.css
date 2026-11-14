@@ -663,3 +663,6 @@
   padding-top: 1.5rem;
   scroll-margin-top: 6rem;
 }
+
+/* Keep long destination labels readable on narrow phones. */
+@media(max-width:400px){.ca-destinations{grid-template-columns:minmax(0,1fr)}}

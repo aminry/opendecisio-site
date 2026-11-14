@@ -145,62 +145,35 @@ async function stubBeacon(context) {
 	await context.route(/https:\/\/(static\.)?cloudflareinsights\.com\//, (route) => (/beacon\.min\.js/.test(route.request().url()) ? route.fulfill({ status: 200, contentType: 'application/javascript', body: '/* the analytics beacon is not run in the checks */' }) : route.fulfill({ status: 204, body: '' })));
 }
 
-// The home page's Teach it story, stepped on Playwright's clock rather than in real time: it starts when the stage comes
-// into view (the taught accuracy back at its untaught value), the counter never runs past its final value, and the story
-// ends on the value the page is built with and shows without scripts. Then the threshold line: each of its stops sets the
-// share answered on its own to the stop's own value, from the stops the page carries.
+// The homepage's current teaching story: verify recorded predictions and destinations,
+// not an obsolete accuracy counter or the retired threshold calculator.
 async function teachTiles(engineName, browser) {
-	const context = await browser.newContext({ viewport: widths.desktop, ignoreHTTPSErrors: true });
-	await stubBeacon(context);
-	await context.addInitScript(observe, 'light');
-	const page = await context.newPage();
-	await page.clock.install();
-	const errors = [];
-	page.on('pageerror', (e) => errors.push(e.message));
-	page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
-	await page.goto(`${base}/`, { waitUntil: 'load' });
-	const fail = (message) => report(engineName, '/', 'teach tiles', message);
-	// The final value as built, read before the story starts and resets it.
-	const final = await page.evaluate(() => {
-		const b = document.querySelector('[data-teach-count]');
-		return b ? { to: Number(b.dataset.teachCount), from: Number(b.dataset.from), text: b.textContent } : null;
-	});
-	if (!final) { fail('the teaching counter has no counted value'); await context.close(); return; }
-	if (final.text !== `${final.to.toFixed(1)}%`) fail(`the counter shows "${final.text}" without scripts, not its final value`);
-	const read = () => page.evaluate(() => Number(document.querySelector('[data-teach-count]').textContent.replace('%', '')));
-	await page.locator('[data-teach]').scrollIntoViewIfNeeded();
-	// The story starts from an IntersectionObserver, which runs on the browser's real frames, not on the installed clock:
-	// each step gives the browser real time as well (a slow Firefox runner once delivered it after the steps had ended).
-	let started = false;
-	for (let i = 0; i < 80 && !started; i++) {
-		await page.clock.runFor(50);
-		await new Promise((resolve) => setTimeout(resolve, 50));
-		started = (await read()) === final.from;
-	}
-	if (!started) fail('the story did not start when the stage came into view');
-	const past = [];
-	let last;
-	for (let t = 0; t <= 16000; t += 100) {
-		await page.clock.runFor(100);
-		last = await read();
-		if (last > final.to + 1e-9 || last < final.from - 1e-9) past.push(`${last}% at ${t} ms`);
-	}
-	if (past.length) fail(`the counter leaves its range: ${past.slice(0, 3).join('; ')}`);
-	if (last !== final.to) fail(`the story ends on ${last}%, not ${final.to}%`);
-	// The threshold line.
-	const stops = await page.evaluate(() => JSON.parse(document.querySelector('[data-cert]')?.dataset.cert ?? '[]'));
-	if (!stops.length) fail('the threshold line carries no stops');
-	for (const s of stops) {
-		await page.locator(`[data-cert] [data-alpha="${s.alpha}"]`).click();
-		const shown = await page.evaluate(() => document.querySelector('[data-cert="share"]').textContent);
-		const want = `${((100 * s.covered) / s.n).toFixed(1)}%`;
-		if (shown !== want) fail(`at ${s.alpha} the threshold line shows ${shown}, not ${want}`);
-	}
-	const seen = await page.evaluate(() => ({ csp: window.__csp, select: window.__cspSelect }));
-	const own = ownProblems(engineName, browser, seen.csp, seen.select, errors, '/ (teach tiles)');
-	for (const c of own.csp) fail(`CSP violation: ${c}`);
-	for (const e of own.errors) fail(`console error: ${e}`);
-	await context.close();
+ const context=await browser.newContext({viewport:widths.desktop,ignoreHTTPSErrors:true,reducedMotion:'no-preference'});
+ await stubBeacon(context);await context.addInitScript(observe,'light');
+ const page=await context.newPage();await page.clock.install();const errors=[];
+ page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>m.type()==='error'&&errors.push(m.text()));
+ await page.goto(base+'/');const fail=message=>report(engineName,'/','teaching story',message);
+ const scene=page.locator('[data-home-cert]');
+ if(await scene.count()!==1){fail('combined Teach & Certify explanation is missing');await context.close();return;}
+ await scene.scrollIntoViewIfNeeded();
+ for(let i=0;i<80&&await scene.getAttribute('data-playback')!=='running';i++){await page.clock.runFor(50);await new Promise(r=>setTimeout(r,30));}
+ if(await scene.getAttribute('data-playback')!=='running')fail('teaching story did not start onscreen');
+ const records=JSON.parse(await scene.getAttribute('data-records'));
+ for(let i=0;i<records.length;i++){
+  await page.clock.runFor(i===0?10100:16000);
+  const step=Number(await scene.getAttribute('data-step')),record=records[Math.floor(step/3)%records.length];
+  if((await scene.locator('[data-cert-answer]').textContent())!==record.answerName)fail('prediction changed outside recorded cases');
+  const route=scene.locator('[data-cert-route].dv-selected');
+  if(step%3===2&&(await route.getAttribute('data-cert-route'))!==(record.eligible?'auto':'review'))fail('application destination disagrees with recorded eligibility');
+  if(record.answer!==record.label&&!(await scene.locator('[data-cert-truth]').textContent()).includes('wrong'))fail('known certified mistake was hidden');
+ }
+ await page.emulateMedia({reducedMotion:'reduce'});
+ for(let i=0;i<40&&await scene.getAttribute('data-playback')!=='static';i++){await page.clock.runFor(25);await new Promise(r=>setTimeout(r,25));}
+ if(await scene.getAttribute('data-playback')!=='static')fail('reduced motion ignored');
+ const seen=await page.evaluate(()=>({csp:window.__csp,select:window.__cspSelect}));
+ const own=ownProblems(engineName,browser,seen.csp,seen.select,errors,'/ (teaching story)');
+ for(const c of own.csp)fail('CSP violation: '+c);for(const e of own.errors)fail('console error: '+e);
+ await context.close();
 }
 
 // A layout shift seen once is measured again in a fresh window: a shift the

@@ -1,0 +1,65 @@
+{
+  "title": "Teach your task. Keep control of automation.",
+  "duration": 40,
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "silent": false,
+  "hasMusic": true,
+  "hasNarration": true,
+  "narration": {
+    "model": "Kokoro v1.0",
+    "voice": "af_heart",
+    "modelLicense": "Apache-2.0",
+    "runtimeLicense": "MIT",
+    "modelSource": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "runtimeSource": "https://github.com/thewh1teagle/kokoro-onnx"
+  },
+  "storySha256": "801fa575e62790d27f62495121e27f0c4f2dc0cf186c78fb3713b55571f3bd04",
+  "assets": {
+    "mp4": {
+      "path": "/media/teach-and-certify.mp4",
+      "sha256": "0613fe47d6ad1c63312e82357d0a59c779fb0bf8667b9409a3b12281eae8cba3"
+    },
+    "webp": {
+      "path": "/media/teach-and-certify.webp",
+      "sha256": "871ed80ad4e67c41c2d25fe5f480781e78bba8cbc452501a5dbd94c118f903ef"
+    },
+    "vtt": {
+      "path": "/media/teach-and-certify.vtt",
+      "sha256": "fd6cdc1e10eace60a4d15d2a6eb4b220aff4e07c86bbe842114317bf518c6875"
+    }
+  },
+  "chapters": [
+    {
+      "title": "Show it what your categories mean.",
+      "text": "Want your app to sort messages your way? Start with examples and the right category for each one.",
+      "start": 0,
+      "end": 8
+    },
+    {
+      "title": "Small task tuning. Visible improvement.",
+      "text": "The base model stays fixed. A small task head learns from your labels. Here, that improves the task's accuracy.",
+      "start": 8,
+      "end": 16
+    },
+    {
+      "title": "Certify with separate examples.",
+      "text": "Next, choose an error target. Separate examples check which answers qualify. Those examples never train the task.",
+      "start": 16,
+      "end": 24
+    },
+    {
+      "title": "Automate qualifying answers. Review the rest.",
+      "text": "When an answer qualifies, your app can route it automatically. Otherwise, keep the prediction as a suggestion for review.",
+      "start": 24,
+      "end": 32
+    },
+    {
+      "title": "Less manual work. A visible review path.",
+      "text": "Here, over thirteen hundred messages qualify. Some are still wrong. Keep a review path, and watch for changing traffic.",
+      "start": 32,
+      "end": 40
+    }
+  ]
+}

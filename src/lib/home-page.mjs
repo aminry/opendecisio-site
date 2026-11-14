@@ -106,29 +106,23 @@ export function useCaseCards() {
 	return ids.map((id) => ({ id, href: `/docs/use-cases/${id}/`, ...CARDS[id], proof: proof[id][0], source: proof[id][1], measured: id !== 'document-classification' }));
 }
 
-/**
- * The Get started tabs, each a block that runs from a clean machine of its kind, and the one request and answer under them.
- * The blocks are the deploy guides' own (src/lib/site-blocks.mjs, decisio's docs/running.md), so verification/plan.mjs
- * checks them as the same text; the Mac tab joins the Mac guide's install and its default model's start.
- */
+/** Homepage setup routes reuse pinned GPU/MLX/Ollama blocks, followed by the verified one-choice request. */
 export function homeBlocks() {
-	const ollama = /^## Ollama\n+```bash\n([\s\S]*?)\n```/m.exec(readUpstream('docs/running.md'))?.[1] ?? fail("docs/running.md's Ollama section no longer opens with its pull block");
-	return {
-		tabs: [
-			{ id: 'gpu', label: 'Cloud GPU', note: 'Linux with one NVIDIA card.', blocks: [siteBlock('gpu-pip').text], href: '/docs/deploy/cloud-gpu/', guide: 'On a cloud GPU' },
-			{ id: 'docker', label: 'Docker', note: 'A GPU host with Docker and the NVIDIA Container Toolkit.', blocks: [siteBlock('docker-run').text], href: '/docs/deploy/docker/', guide: 'With Docker' },
-			{ id: 'mac', label: 'Mac', note: 'A Mac with Apple silicon; the guide says which build fits yours.', blocks: [`${siteBlock('mac-install').text}\n${siteBlock('mac-31b-6bit').text}`], href: '/docs/deploy/mac/', guide: 'On a Mac' },
-			{ id: 'ollama', label: 'Ollama', note: 'A quick try on a laptop. It works on Ollama 0.35.1 through 0.40.3. Ollama builds its own prompt, so its numbers are not the ones on this page.', blocks: [ollama, siteBlock('ollama-request-gemma').text], href: '/docs/deploy/mac/#on-a-laptop-with-ollama', guide: 'With Ollama' },
-		],
-		request: siteBlock('first-decision-request').text,
-		response: siteBlock('first-decision-response').text,
-	};
+ const ollama = /^## Ollama\n+```bash\n([\s\S]*?)\n```/m.exec(readUpstream('docs/running.md'))?.[1] ?? fail('Missing Ollama start');
+ return {
+  tabs: [
+   {id:'gpu',label:'GPU',note:'Linux with one NVIDIA GPU. The first start downloads the model.',blocks:[siteBlock('gpu-pip').text],href:'/docs/deploy/cloud-gpu/',guide:'GPU requirements and setup'},
+   {id:'mac',label:'Mac (MLX)',note:'Apple silicon. Choose a model that fits your memory in the MLX guide.',blocks:[`${siteBlock('mac-install').text}\n${siteBlock('mac-31b-6bit').text}`],href:'/docs/deploy/mac/',guide:'Apple silicon requirements and setup'},
+   {id:'ollama',label:'Ollama',note:'Local Ollama. Its request below uses port 11434 and names the pulled model.',blocks:[ollama,siteBlock('ollama-request-gemma').text],href:'/docs/deploy/mac/#on-a-laptop-with-ollama',guide:'Ollama setup and supported versions'},
+  ],
+  request:siteBlock('question-choice').text,
+ };
 }
 
 /** Every block the home page shows, in page order, for src/lib/blocks.mjs. */
 export function homeBlockTexts() {
 	const b = homeBlocks();
-	return [...b.tabs.flatMap((t) => t.blocks), b.request, b.response];
+	return [...b.tabs.flatMap((t) => t.blocks), b.request];
 }
 
 export { fmt, pct };
