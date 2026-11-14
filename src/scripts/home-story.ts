@@ -10,16 +10,24 @@ function render(s:Scene){
  el.dataset.phase=String(phase);el.dataset.parity=String(index%2);el.dataset.step=String(s.step);
  if(el.hasAttribute('data-home-core')){
   const items=JSON.parse(el.dataset.records!),v=items[index%items.length];
-  text(el,'core-counter',`Support ticket ${index%items.length+1} / ${items.length}`);text(el,'core-text',v.text);text(el,'core-question',v.question);
-  text(el,'core-options',`${v.options.slice(0,3).join(' · ')} · +${v.options.length-3}`);text(el,'core-answer',phase===2?v.answer:'Checking…');
-  text(el,'core-probability',phase===2?v.probability.toFixed(3):'…');
+  text(el,'core-counter',`${v.typeName} · example ${index%items.length+1} / ${items.length}`);text(el,'core-text',v.text);text(el,'core-question',v.question);
+  s.durations=[900,v.serverMs,5100-v.serverMs];
+  el.dataset.answerType=v.type;
+  el.querySelectorAll<HTMLElement>('[data-core-type]').forEach(node=>node.classList.toggle('is-current',node.dataset.coreType===v.type));
+  text(el,'core-options',v.options.length>3?`${v.options.slice(0,3).join(' · ')} · +${v.options.length-3}`:v.options.join(' · '));
+  text(el,'core-result-label',`Returned ${v.typeName.toLowerCase()}`);
+  text(el,'core-detail-label',v.detailLabel);
+  text(el,'core-latency',v.serverMs.toFixed(1));text(el,'core-timing-scope',`Whole ${v.questionCount}-question request`);text(el,'core-answer',phase===2?v.answer:'Checking…');
+  text(el,'core-probability',phase===2?v.detail:'…');
  }else if(el.hasAttribute('data-home-cert')){
   const items=JSON.parse(el.dataset.records!),v=items[index%items.length];
   text(el,'cert-counter',`Selected case ${index%items.length+1} / ${items.length}`);text(el,'cert-text',v.text);text(el,'cert-answer',v.answerName);
+  text(el,'learning-action',phase===0?'Learning from your labels':phase===1?'Task head + calibrated scores':'Ready for new messages');
+  text(el,'cert-badge',phase===0?'Next: check':phase===1?'Checking…':'Checked');
   el.querySelectorAll<HTMLElement>('[data-teach-stage]').forEach((node,i)=>node.classList.toggle('is-current',!motion.matches&&phase===i));
   el.querySelectorAll<HTMLElement>('[data-cert-route]').forEach(node=>node.classList.toggle('dv-selected',phase===2&&node.dataset.certRoute===(v.eligible?'auto':'review')));
   el.querySelector('[data-cert-path]')!.setAttribute('d',v.eligible?'M250 0v20Q250 30 230 30H145Q125 30 125 50v6':'M250 0v20Q250 30 270 30H355Q375 30 375 50v6');
-  text(el,'cert-status',phase===0?'Teach categories from labelled examples.':phase===1?'Check the target on separate held-back examples.':v.eligible?'Correctness certificate qualifies. Your backend can route.':'Below the recorded cutoff. Your backend requests review.');
+  text(el,'cert-status',phase===0?'Your labels fit a small task head. Base model weights stay fixed.':phase===1?'Check the target on separate held-back examples.':v.eligible?'Correctness certificate qualifies. Your backend can route.':'Below the recorded cutoff. Your backend requests review.');
   text(el,'cert-truth',v.answer===v.label?'this test prediction was right.':'this prediction was wrong, despite qualifying.');
  }else{
   // All four cases belong to the support task whose context stays fixed above the facts.

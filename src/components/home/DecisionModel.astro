@@ -1,21 +1,18 @@
 ---
+import {heroDecisions} from '../../lib/home-decision.mjs';
 import {recordedExamples} from '../../lib/launch.mjs';
 import {site} from '../../config/site';
 const recording=recordedExamples();
-const items=recording.items.filter(it=>it.kind==='Support ticket').map(it=>{
- const q=it.questions.find(q=>q.type==='choice');
- if(!q)throw Error('Home decision needs a recorded choice');
- return {text:it.state,question:q.ask,answer:q.result,probability:q.bars.find(b=>b.top).p,options:q.bars.map(b=>b.label)};
-});
-if(!items.length)throw Error('No recorded support tickets');
+const items=heroDecisions(recording);
 const first=items[0];
 ---
 <figure class="decision-visual hp-core" data-home-core data-records={JSON.stringify(items)} data-motion-scene data-playback="idle" data-phase="2" data-parity="0">
- <div class="dv-top"><strong>From a request to a decision</strong><span>Recorded output</span></div>
- <div class="dv-input"><span class="dv-label" data-core-counter>Support ticket 1 / {items.length}</span><p data-core-text>{first.text}</p><i class="dv-progress" aria-hidden="true"></i></div>
+ <div class="dv-top"><strong>Real questions. Typed answers.</strong><span>Recorded output</span></div>
+ <div class="hp-core-types" aria-label="Answer types"><span data-core-type="choice" class="is-current">Choice</span><span data-core-type="yes/no">Yes/no</span><span data-core-type="score">Score</span></div>
+ <div class="dv-input"><span class="dv-label" data-core-counter>Choice · example 1 / {items.length}</span><p data-core-text>{first.text}</p><i class="dv-progress" aria-hidden="true"></i></div>
  <svg class="dv-wire" viewBox="0 0 400 26" aria-hidden="true"><path d="M200 0v26"/><path class="dv-trace" d="M200 0v26"/></svg>
  <div class="dv-node"><strong>{site.name}</strong><small data-core-question>{first.question}</small><small class="hp-options" data-core-options>{first.options.slice(0,3).join(' · ')} · +{first.options.length-3}</small></div>
  <svg class="dv-wire" viewBox="0 0 400 26" aria-hidden="true"><path d="M200 0v26"/><path class="dv-trace" d="M200 0v26"/></svg>
- <div class="dv-answer"><span class="dv-label">Returned choice</span><div class="dv-result-top"><strong data-core-answer>{first.answer}</strong><span class="dv-probability"><span data-core-probability>{first.probability.toFixed(3)}</span><small>Option probability</small></span></div></div>
- <figcaption class="dv-caption src-note">{recording.boxLabel}, {recording.run.date}, plain layout. One choice from each recorded request. Automatically replayed; no live inference. <a href="/docs/use-from/">Request and response</a>.</figcaption>
+ <div class="dv-answer"><span class="dv-label" data-core-result-label>Returned choice</span><div class="dv-result-top"><strong data-core-answer>{first.answer}</strong><span class="dv-probability"><span data-core-probability>{first.detail}</span><small data-core-detail-label>{first.detailLabel}</small></span></div><div class="hp-core-speed"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="18" r="11"/><path d="M12 3h8M16 3v4M16 11v7l5 3"/></svg><strong><span data-core-latency>{first.serverMs.toFixed(1)}</span><small>ms</small></strong><span><b>Recorded server time</b><small data-core-timing-scope>Whole {first.questionCount}-question request</small></span><i class="hp-speed-flash" aria-hidden="true"></i></div></div>
+ <figcaption class="dv-caption src-note">{recording.boxLabel}, {recording.run.date}, plain layout. One result shown per recorded request; timing includes all its questions. Playback pauses to explain the result; no live inference. <a href="/docs/use-from/">Request and response</a>.</figcaption>
 </figure>

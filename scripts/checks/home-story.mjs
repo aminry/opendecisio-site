@@ -1,4 +1,4 @@
-// Exercise the decision fast path guide under the published headers.
+// Exercise the homepage explanations under the published headers.
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { get } from 'node:https';
@@ -23,9 +23,19 @@ try {
   const scenes=page.locator('[data-home-core],[data-home-cert],[data-home-fast]');
   assert.equal(await scenes.locator('button,input').count(),0,'Explanations depend on controls');
   assert.equal(await page.locator('[data-home-core] .dv-answer').count(),1);
+  for(const type of ['choice','yes/no','score'])assert.equal(await page.locator(`[data-core-type="${type}"]`).count(),1);
+  assert.equal(await page.locator('[data-core-latency]').count(),1,'Hero does not show decision speed');
   assert.match(await page.locator('[data-home-fast]').textContent(),/50 µs/);
   assert.match(await page.locator('[data-home-fast]').textContent(),/50 ms/);
   assert.match(await page.locator('[data-home-cert]').textContent(),/certified/);
+  const learning=page.locator('[data-task-learning]');
+  assert.equal(await learning.count(),1,'Task adaptation is missing');
+  assert.match(await learning.textContent(),/labelled messages/i);
+  assert.match(await learning.textContent(),/base weights stay fixed/i);
+  assert.match(await learning.textContent(),/small task head/i);
+  assert.match(await page.locator('[data-teaching-gain]').textContent(),/77\.6%[\s\S]*84\.2%/,'Recorded teaching gain missing');
+  assert.match(await page.locator('[data-cert-check]').textContent(),/separate examples/i);
+  assert.match(await page.locator('[data-cert-check]').textContent(),/5%/);
   for(const id of ['teach','certify','use-cases','fit','board','try','ask'])assert.equal(await page.locator('#'+id).count(),1);
   assert.equal(await page.getByRole('tab',{name:'GPU',exact:true}).count(),1);
   for(const name of ['MLX','Ollama']){await page.getByRole('tab',{name,exact:true}).click();assert.equal(await page.locator('[role=tabpanel]:visible').count(),1);}
@@ -36,6 +46,25 @@ try {
     assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),expected,'Copied command differs from the displayed block');
   }
   await page.clock.install();
+  const core=page.locator('[data-home-core]');await core.scrollIntoViewIfNeeded();
+  await until(async()=>await core.getAttribute('data-playback')==='running','Hero does not start');
+  const heroRecords=JSON.parse(await core.getAttribute('data-records')),seenTypes=new Set();
+  for(let i=0;i<28;i++){
+    await page.clock.runFor(1000);const step=Number(await core.getAttribute('data-step')),record=heroRecords[Math.floor(step/3)%heroRecords.length];
+    assert.equal(await core.locator('[data-core-type].is-current').getAttribute('data-core-type'),record.type);
+    assert.equal(await core.locator('[data-core-latency]').textContent(),record.serverMs.toFixed(1));
+    assert.equal(await core.locator('[data-core-timing-scope]').textContent(),`Whole ${record.questionCount}-question request`);
+    if(step%3===2){seenTypes.add(record.type);assert.equal(await core.locator('[data-core-answer]').textContent(),record.answer);assert.equal(await core.locator('[data-core-probability]').textContent(),record.detail);assert.equal(await core.locator('[data-core-detail-label]').textContent(),record.detailLabel);}
+  }
+  assert.deepEqual(seenTypes,new Set(['choice','yes/no','score']),'Hero did not show all question types automatically');
+  const taught=page.locator('[data-home-cert]');await taught.scrollIntoViewIfNeeded();
+  await until(async()=>await taught.getAttribute('data-playback')==='running','Teaching does not start');
+  for(let i=0;await taught.getAttribute('data-phase')!=='0';i++){assert.ok(i<17);await page.clock.runFor(1000);}
+  assert.notEqual(await taught.locator('.hp-label-packet').evaluate(el=>getComputedStyle(el).animationName),'none','Labels do not flow into the task head');
+  assert.notEqual(await taught.locator('.hp-head-weights i').first().evaluate(el=>getComputedStyle(el).animationName),'none','Task head does not visibly adapt');
+  for(let i=0;await taught.getAttribute('data-phase')!=='1';i++){assert.ok(i<6);await page.clock.runFor(1000);}
+  assert.equal(await taught.locator('[data-cert-badge]').textContent(),'Checking…');
+  assert.equal(await taught.locator('[data-cert-route].dv-selected').count(),0,'Certification check is presented as an app action');
   for(const scene of await scenes.all()){
     await scene.scrollIntoViewIfNeeded();await until(async()=>await scene.getAttribute('data-playback')==='running','Scene does not start');
     const before=await scene.getAttribute('data-step');await page.clock.runFor(19000);assert.notEqual(await scene.getAttribute('data-step'),before);

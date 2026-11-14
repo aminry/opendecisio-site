@@ -62,3 +62,9 @@
 .decision-visual .ca-svg-line--muted {stroke:var(--dv-blue);}
 .dv-route[data-fast-route=decisio] .dv-time,.fp-demo.decision-visual [data-stream-output=decisio] .fp-route-time {color:var(--dv-blue);}
 .fp-demo.decision-visual [data-stream-output=table] .fp-route-time {color:var(--dv-gold);}
+
+/* Shared stage depth and attention cues across the homepage and both feature guides. */
+.decision-visual {background:radial-gradient(ellipse at 15% 0,#8fb3d90d,transparent 50%),linear-gradient(135deg,#14213d55,transparent 65%),var(--dv-panel);border-color:#637086;box-shadow:8px 8px 0 #14213d,0 18px 48px #00000028,inset 0 1px 0 #ffffff12;}
+.decision-visual .dv-node {background:radial-gradient(ellipse at 50% 0,#fca31120,transparent 85%),var(--dv-bg);}
+.decision-visual .dv-selected,.decision-visual[data-phase="2"] .dv-answer {background:linear-gradient(120deg,#fca31124,#fca3110a),var(--dv-bg);border-color:var(--dv-gold);box-shadow:0 0 0 3px #fca31120,0 0 32px #fca31130,inset 0 1px 0 #ffcf8b33;}
+.decision-visual[data-phase="1"] .dv-node {box-shadow:0 0 0 4px #fca31120,0 0 32px #fca31140;}

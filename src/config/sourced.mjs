@@ -308,6 +308,7 @@ export const sourced = [
 		['Ollama builds its own prompt and applies no calibration', readme, 'Ollama builds its own prompt and applies no calibration'],
 		['The CPU reads the facts; the model still gets both.', tasksDoc, 'A fast table encodes the state alone'],
 		['A learned table can match the model’s mistakes', tasksDoc, "The table learns decisio's answers, including decisio's mistakes"],
+		['it can fit a small task head on the model’s representation', tasksDoc, "fits a small linear layer on the model's internal representation of the text: it learns what your labels mean in your data."],
 		['Separate examples check which predictions qualify', tasksDoc, 'The held-out examples are never used to fit anything.'],
 	]),
 	// Call it from your code
