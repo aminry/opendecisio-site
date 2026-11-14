@@ -1,0 +1,7 @@
+{
+  "backend": "static",
+  "cpuMs": 0.05,
+  "modelMs": 50,
+  "fastShare": 80,
+  "basis": "Illustrative processing-time budget, not a measured combined workload. Static cost: published short-text embedding plus classifier p50. Model cost: an illustrative approximately 50 ms request budget. Fast-path share: reader-selected assumption. Network, queueing and monitoring reads are excluded."
+}

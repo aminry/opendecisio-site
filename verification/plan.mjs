@@ -277,9 +277,11 @@ export const plan = [
 	{ page: '/docs/tasks/dynamic/', n: 1, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own complete dynamic-task.json with labelled requests; transport tests check the registration' },
 	// Answer short tasks faster: the registration as decisio's docs give it.
 	{ page: '/docs/tasks/context/', n: 1, mode: 'shown', expect: 'import json\nimport os', why: 'it needs a complete labelled task.json and a context.txt policy supplied by the reader; transport tests check both files' },
-	{ page: '/docs/tasks/fast-table/', n: 1, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the table extra and the reader’s own complete labelled task.json; transport tests check the registration' },
-	{ page: '/docs/tasks/fast-table/', n: 2, mode: 'shown', expect: 'import json\nimport os', why: 'a learned table needs traffic through the running model; the code sends a complete question' },
-	{ page: '/docs/tasks/fast-table/', n: 3, mode: 'shown', expect: 'python -m decisio.bench.table_latency', why: 'it needs a running server and the reader’s own labelled examples and probes' },
+	{ page: '/docs/tasks/fast-table/', n: 1, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the table extra, a running server, a complete task.json and a context.txt policy; transport tests execute the registration with fixture data' },
+	{ page: '/docs/tasks/fast-table/', n: 2, mode: 'example', expect: '{' },
+	{ page: '/docs/tasks/fast-table/', n: 3, mode: 'shown', expect: 'import json\nimport os', why: 'it needs a registered task, its task.json and a new state.json; transport tests execute the call and check the exact question and task id' },
+	{ page: '/docs/tasks/fast-table/', n: 4, mode: 'example', expect: '{' },
+	{ page: '/docs/tasks/fast-table/', n: 5, mode: 'shown', expect: 'python -m decisio.bench.table_latency', why: 'it needs a running server and the reader’s own labelled examples and probes' },
 	// Choose the prompt layout: the layout read from /health on the stand-in (the Qwen model's default, plain), a request that asks for plain, and the start
 	// with --layout plain is decisio's command on a card.
 	{

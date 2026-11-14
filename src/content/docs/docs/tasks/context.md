@@ -56,5 +56,5 @@ Run this Python script from the directory containing both files, with `DECISIO_B
 ## What next
 
 - [Teach a task](/docs/tasks/): register a task and read what it kept.
-- [Answer short tasks faster](/docs/tasks/fast-table/): a classifier on the server's CPU, before the model.
+- [Add a decision fast path](/docs/tasks/fast-table/): a classifier on the server's CPU, before the model.
 - [The HTTP API](/docs/api/): the task routes, field by field.

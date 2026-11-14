@@ -1,0 +1,17 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:08.000
+[Upbeat instrumental music]
+Here's a ticket we've seen before: I was charged twice. It needs billing. Do we need another model read?
+
+00:00:08.000 --> 00:00:16.000
+The fast path learns that choice. Short-text CPU work takes about fifty microseconds, skipping the model read.
+
+00:00:16.000 --> 00:00:24.000
+A request that doesn't qualify goes to decisio. So the model stays available for the cases that need it.
+
+00:00:24.000 --> 00:00:32.000
+Save your shared policy as context. Send just the facts that change. When needed, the model can still read both.
+
+00:00:32.000 --> 00:00:40.000
+Teach with examples. Check separate examples and time savings. If it qualifies, switch the fast path on.

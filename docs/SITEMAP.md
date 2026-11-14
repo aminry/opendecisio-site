@@ -43,7 +43,7 @@ The current release is read from `upstream.json`.
 | `/docs/tasks/context/` | Send a fixed text once |
 | `/docs/tasks/drift/` | Watch for drift |
 | `/docs/tasks/dynamic/` | Teach a task whose options change |
-| `/docs/tasks/fast-table/` | Answer short tasks faster |
+| `/docs/tasks/fast-table/` | Add a decision fast path |
 | `/docs/think/` | Think when unsure |
 | `/docs/troubleshooting/` | Troubleshoot |
 | `/docs/upgrading/` | Upgrade |

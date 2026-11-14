@@ -3,6 +3,7 @@ import { readUpstream } from '../upstream.mjs';
 import { questionExample } from '../question-examples.mjs';
 import { RECIPES } from '../use-cases.mjs';
 import { esc, panel } from './core.mjs';
+import { fastPathFigures } from './fast-path.mjs';
 
 const needs = (file, phrase) => {
 	if (!readUpstream(file).includes(phrase)) throw new Error(`Guide figure: ${file} no longer says ${phrase}`);
@@ -34,13 +35,6 @@ function dynamic() {
 		['Read this answer', 'Its probability keys are the options in this request.'],
 	]) + `<details><summary>Compare two complete example requests</summary><div class="fig__cols">${requests.map((request, i) => `<div class="fig__col"><p class="fig__colhead">Request ${i + 1}</p><pre class="fig__json" tabindex="0"><code>${esc(JSON.stringify(request, null, 2))}</code></pre><p>Answer probability keys: ${Object.keys(request.questions.category.criteria).map((key) => `<code>${esc(key)}</code>`).join(', ')}.</p></div>`).join('')}</div></details>`;
 	return panel({ name: 'dynamic-options', label: 'Changing options', title: 'Keep the instruction stable while the candidate list changes.', desc: 'Two illustrative choice requests share an instruction. The first offers billing, access and bug; the second billing, access and refunds. Each answer uses its own request’s keys.', body, interactive: true, legend: 'Register the dynamic task with a certificate before using its certified-answer path.', source: 'Illustrative requests, using the choice tutorial. Matching behavior: the pinned task and API guides.' });
-}
-
-function fastTable() {
-	needs('docs/tasks.md', 'a small learned classifier on the server\'s CPU');
-	needs('docs/tasks.md', 'The certificate is an agreement certificate.');
-	const body = flow([['New text', 'Send the question your task was registered for.'], ['CPU classifier', 'A fitted classifier tries the task first.']]) + `<p class="learn__junction">The request follows one of these paths:</p><div class="learn__branches"><section><h3>Accepted by the classifier</h3><p>Return its typed answer and certificate information.</p></section><section><h3>Deferred to the model</h3><p>Decisio answers the request; your backend reads the same answer fields.</p></section></div><p>A gold certificate concerns labelled answers. A learned table’s agreement certificate concerns agreement with the model.</p>`;
-	return panel({ name: 'table-fallback', label: 'A classifier before the model', title: 'The classifier answers the requests it accepts and passes the rest to decisio.', desc: 'Text goes first to the fitted CPU classifier. Accepted requests get its answer. Deferred requests go to the decisio model. Gold and agreement certificates have different meanings.', body, interactive: true, source: 'Source: the fast-table section of the pinned task guide. This diagram has no timing scale.' });
 }
 
 function concurrency() {
@@ -82,7 +76,7 @@ function recipe(id) {
 export const guideFigures = {
 	'fixed-context': context,
 	'dynamic-options': dynamic,
-	'table-fallback': fastTable,
+	...fastPathFigures,
 	'concurrent-requests': concurrency,
 	'request-layout': layouts,
 	'shared-read': sharedRead,

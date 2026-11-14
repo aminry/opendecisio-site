@@ -1,5 +1,6 @@
 // Figures render their complete useful state first. Enhance them with explicit finite playback,
 // field selection and illustrative controls; respect motion preferences and page visibility.
+import './fast-path.ts';
 import { weightedScore, manualAction } from '../lib/figure-math.mjs';
 const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => [...r.querySelectorAll<T>(s)];
 

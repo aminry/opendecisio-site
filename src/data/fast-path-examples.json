@@ -1,0 +1,83 @@
+{
+  "support": {
+    "label": "Support routing",
+    "question": "Which team should handle this ticket?",
+    "context": "Billing handles payments and invoices. Access handles sign-in problems. Send unusual requests to the model.",
+    "cases": [
+      {
+        "text": "I was charged twice for the same order.",
+        "answer": "billing",
+        "route": "table"
+      },
+      {
+        "text": "Two payments came out for one purchase.",
+        "answer": "billing",
+        "route": "table"
+      },
+      {
+        "text": "I cannot sign in after resetting my password.",
+        "answer": "access",
+        "route": "table"
+      },
+      {
+        "text": "Our new team cannot open last month’s invoice.",
+        "answer": "Ask decisio",
+        "route": "decisio"
+      }
+    ]
+  },
+  "moderation": {
+    "label": "Moderation",
+    "question": "Allow, review or block this post?",
+    "context": "Allow ordinary discussion, block obvious unsolicited advertising, and review ambiguous policy exceptions.",
+    "cases": [
+      {
+        "text": "Thanks for the explanation. That fixed my problem.",
+        "answer": "allow",
+        "route": "table"
+      },
+      {
+        "text": "Buy followers now. Visit our discount site.",
+        "answer": "block",
+        "route": "table"
+      },
+      {
+        "text": "Here is how I solved the setup error.",
+        "answer": "allow",
+        "route": "table"
+      },
+      {
+        "text": "Can I share a link to a community workshop?",
+        "answer": "Ask decisio",
+        "route": "decisio"
+      }
+    ]
+  },
+  "refund": {
+    "label": "Refund checks",
+    "question": "Is this return eligible under the policy?",
+    "context": "For this example, unopened home items delivered within 30 days are eligible. Send policy exceptions to the model.",
+    "cases": [
+      {
+        "text": "Home item. Delivered 12 days ago. Unopened.",
+        "answer": "yes",
+        "route": "table"
+      },
+      {
+        "text": "Home item. Delivered 45 days ago. Opened.",
+        "answer": "no",
+        "route": "table"
+      },
+      {
+        "text": "Home item. Delivered 8 days ago. Unopened.",
+        "answer": "yes",
+        "route": "table"
+      },
+      {
+        "text": "Replacement item with an exceptional return agreement.",
+        "answer": "Ask decisio",
+        "route": "decisio"
+      }
+    ]
+  }
+}

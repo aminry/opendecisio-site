@@ -1,6 +1,7 @@
 ---
 // The top of a docs page, set like shad0w's: a breadcrumb with the group, the reading time and the date the page was
 // last changed, the title, and the page's one-sentence description as its lede.
+import { requestStream } from '../../lib/fast-path-story.mjs';
 import { groupOf } from '../../config/docs-groups.mjs';
 import { readingMinutes } from '../../lib/docs-meta.mjs';
 
@@ -9,14 +10,34 @@ const group = groupOf(entry.id.replace(/\/index$/, '').replace(/^index$/, ''));
 const minutes = readingMinutes(entry);
 const date = lastUpdated ? lastUpdated.toISOString().slice(0, 10) : undefined;
 const description = entry.data.description;
+const fastPath = entry.id.replace(/\/index$/, '') === 'docs/tasks/fast-table';
 ---
 <div class="pt">
 	<div class="pt__row">
 		<p class="pt__crumb"><a href="/docs/">Docs</a>{group && <><span aria-hidden="true"> / </span><span>{group}</span></>}</p>
 		<p class="pt__meta">{minutes} min read{date && <> · updated <time datetime={date}>{date}</time></>}</p>
 	</div>
-	<h1 id="_top">{entry.data.title}</h1>
-	{description && <p class="pt__lede">{description}</p>}
+	{fastPath ? (
+		<div class="fp-hero">
+			<div class="fp-hero-copy">
+				<p class="fp-hero-label">Decision fast path</p>
+				<h1 id="_top">{entry.data.title}</h1>
+				<p class="fp-hero-lede">Handle familiar decisions on the CPU in microseconds. Keep decisio for the rest.</p>
+				<div class="fp-hero-actions">
+					<a href="#add-it-to-your-app">Add it to your app</a>
+					<a href="#watch-the-walkthrough">Watch the walkthrough</a>
+				</div>
+				<p class="fp-hero-note">A small classifier learns your recurring choices and yes/no decisions. The API calls it <code>fast_table</code>.</p>
+			</div>
+			<div set:html={requestStream()} />
+		</div>
+	) : (
+		<>
+			<h1 id="_top">{entry.data.title}</h1>
+			{description && <p class="pt__lede">{description}</p>}
+		</>
+	)}
+
 </div>
 <script>
 	import '../../scripts/docs-figures.ts';

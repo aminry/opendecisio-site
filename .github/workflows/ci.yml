@@ -141,6 +141,8 @@ jobs:
         run: node --test scripts/checks/figure-math-selftest.mjs
       - name: Recipe clients, task files and release presentation
         run: node --test scripts/checks/recipe-clients-selftest.mjs scripts/checks/task-registration-selftest.mjs scripts/checks/public-reference-selftest.mjs
+      - name: Recorded timing arithmetic and context inputs
+        run: node --test scripts/checks/fast-path-demo-selftest.mjs
       - name: Recorded certification targets and explanation cases
         run: node --test scripts/checks/certified-walkthrough-selftest.mjs
       - name: Skill package compatibility and command evidence
@@ -261,6 +263,11 @@ jobs:
       - name: Certified walkthrough, recorded cases and motion preferences
         if: matrix.shard == '1/2'
         run: node scripts/checks/certified-interactions.mjs
+        env:
+          ENGINE: ${{ matrix.engine }}
+      - name: Decision fast path examples and looping scenes
+        if: matrix.shard == '1/2'
+        run: node scripts/checks/fast-path-interactions.mjs
         env:
           ENGINE: ${{ matrix.engine }}
       - name: Figure controls, motion preferences and static fallbacks

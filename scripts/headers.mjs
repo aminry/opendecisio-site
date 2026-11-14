@@ -62,6 +62,9 @@ const headers = `/*
 /media/*
   Cache-Control: public, max-age=86400
 
+/media/decision-fast-path.mp4
+  Accept-Ranges: bytes
+
 /posters/*
   Cache-Control: public, max-age=86400
 `;

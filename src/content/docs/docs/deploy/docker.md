@@ -59,7 +59,7 @@ A fast table of kind `static`, base or multilingual, is then fitted and served w
 - **Nothing else changes:** the user, the entry point, the health check and the flags are the release image's, and it has its own digest and attestations in the release notes.
 
 The encoder student (`"kind": "encoder"`, bge-base, 436 MB) is not built in.
-Build it into the image from a clone of the release, or fetch its files into the volume as [Answer short tasks faster](/docs/tasks/fast-table/#3-ask-for-it) shows:
+Build it into the image from a clone of the release, or fetch its files into the volume as [Add a decision fast path](/docs/tasks/fast-table/#3-ask-for-it) shows:
 
 ::site-block{name="docker-build-table-encoder"}
 

@@ -1,0 +1,66 @@
+{
+  "title": "Give recurring decisions a fast path",
+  "duration": 40,
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "silent": false,
+  "hasMusic": true,
+  "hasNarration": true,
+  "narration": {
+    "model": "Kokoro v1.0",
+    "voice": "af_heart",
+    "modelLicense": "Apache-2.0",
+    "runtimeLicense": "MIT",
+    "modelSource": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "runtimeSource": "https://github.com/thewh1teagle/kokoro-onnx"
+  },
+  "timingSha256": "96dab87a85d9267ee0a95d7a4c6618c992283c37231d9a67fd926cdb64977b60",
+  "examplesSha256": "a74f5c52b9e057757578f5cb53c5983bbb9eb429114c3dc6d264110cbfd20541",
+  "assets": {
+    "mp4": {
+      "path": "/media/decision-fast-path.mp4",
+      "sha256": "94c43447de2b51862ef12f56d056a19f40825640ff25a3c1b4a2d5fb1f479ef6"
+    },
+    "webp": {
+      "path": "/media/decision-fast-path.webp",
+      "sha256": "dbbc1b4f7b73970f3806b645a768686cb76afb3276a2128eb88aedd2952a3b04"
+    },
+    "vtt": {
+      "path": "/media/decision-fast-path.vtt",
+      "sha256": "400ddac3f6d59660f006be224b648d2c88c8b2839fc54a803866bf9fc8c3f24a"
+    }
+  },
+  "chapters": [
+    {
+      "start": 0,
+      "end": 8,
+      "title": "One ticket. Two ways to answer.",
+      "text": "Here's a ticket we've seen before: I was charged twice. It needs billing. Do we need another model read?"
+    },
+    {
+      "start": 8,
+      "end": 16,
+      "title": "Familiar request? Take the fast path.",
+      "text": "The fast path learns that choice. Short-text CPU work takes about fifty microseconds, skipping the model read."
+    },
+    {
+      "start": 16,
+      "end": 24,
+      "title": "Something unfamiliar? Ask decisio.",
+      "text": "A request that doesn't qualify goes to decisio. So the model stays available for the cases that need it."
+    },
+    {
+      "start": 24,
+      "end": 32,
+      "title": "Keep the policy. Send new facts.",
+      "text": "Save your shared policy as context. Send just the facts that change. When needed, the model can still read both."
+    },
+    {
+      "start": 32,
+      "end": 40,
+      "title": "Teach. Check. Then switch it on.",
+      "text": "Teach with examples. Check separate examples and time savings. If it qualifies, switch the fast path on."
+    }
+  ]
+}

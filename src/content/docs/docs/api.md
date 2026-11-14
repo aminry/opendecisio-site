@@ -102,7 +102,7 @@ Each decision says `certified`, `certificate`, `certificate_kind` and, when rele
 
 A response's `fast_table_report` says what was kept; each answer's `answered_by` is `table` or `decisio`.
 A table learned from model answers has an `agreement` certificate; a certificate based on human labels is `gold`.
-See [Answer short tasks faster](/docs/tasks/fast-table/) for installation, learning, states and rollback.
+See [Add a decision fast path](/docs/tasks/fast-table/) for installation, learning, states and rollback.
 
 ### Task records and errors
 
