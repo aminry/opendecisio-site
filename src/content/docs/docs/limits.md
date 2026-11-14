@@ -1,12 +1,13 @@
 ---
 title: Requirements and limits
-description: What decisio needs to run each model, how long a text it reads, the setup steps that keep a certificate valid, and what was measured on what.
+description: What decisio needs to run each model, and how long a text and how many options it reads.
 ---
 
 <!-- Site-written: the one page of requirements and limits. Every number is EVAL_CARD.md's, docs/running.md's, docs/api.md's or docs/tasks.md's at the pinned release (src/config/sourced.mjs checks them); the research detail behind them stays in the evaluation card. -->
 
-::covers{links="docs/running.md#precision-casts---emulate-precision-casts=3-set-up-for-production docs/running.md#batch-invariance---batch-invariant=3-set-up-for-production docs/running.md#the-context-length=2-how-long-a-text-and-how-many-options docs/running.md#states-over-the-limit=2-how-long-a-text-and-how-many-options"}
+::covers{links="docs/running.md#the-context-length=how-long-a-text-and-how-many-options docs/running.md#states-over-the-limit=how-long-a-text-and-how-many-options docs/tasks.md#a-task-under-a-layout=what-is-kept-for-each-prompt-layout docs/running.md#refitting-the-bases-temperatures-for-a-layout=what-is-kept-for-each-prompt-layout docs/running.md#a-header-over-the-context---header-limit=what-happens-when-the-header-does-not-fit"}
 
+Find your machine below to see which model it runs and how long a text it reads.
 Your own server says which model it serves and how long a text it accepts.
 
 ```bash
@@ -20,7 +21,9 @@ curl -s http://127.0.0.1:8000/health
 | `max_model_len_source` | why: for example, the largest length that fits this card |
 | `max_model_len_ceiling` | the most the model allows |
 
-## 1. Pick your machine
+<span id="1-pick-your-machine" aria-hidden="true"></span>
+
+## Pick your machine
 
 | Machine | Model and build | Memory it takes | Longest text | Measured |
 | --- | --- | --- | --- | --- |
@@ -51,7 +54,9 @@ curl -s http://127.0.0.1:8000/health
 
 The guides have the commands: [on a cloud GPU](/docs/deploy/cloud-gpu/), [with Docker](/docs/deploy/docker/), [on a Mac or a laptop](/docs/deploy/mac/) and [for development](/docs/deploy/development/).
 
-## 2. How long a text, and how many options
+<span id="2-how-long-a-text-and-how-many-options" aria-hidden="true"></span>
+
+## How long a text, and how many options
 
 | Model | Longest text, with no flag | Ceiling |
 | --- | --- | --- |
@@ -80,89 +85,42 @@ A long text takes longer to read the first time: on the 31B, 3,370 ms at 16,000 
 
 ::source[Measured on decisio 0.11.1, one RTX PRO 6000 at 600 W, 2026-10-14.]
 
-At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right against 25 of 30 short; a 30-item check is a smoke test, not an accuracy measurement.
+## What is kept for each prompt layout
 
-## 3. Set up for production
+The [prompt layout](/docs/layout/) is part of the serving setup, so these follow it:
 
-Keep one serving setup for each certified task.
-After an upgrade or a change to the model, engine, hardware, precision, cache type, prompt ceiling, layout or serving flags, certify the task again.
+- **Tasks and certificates.** A task is registered under one layout, with `"layout"` or the server's by default, and applies only to that layout's requests. [Certify answers](/docs/tasks/certify/#6-certify-under-the-layout-your-clients-send) has the rest.
+- **Fast tables.** A fast table, labelled or learned, never answers a request of the other layout, and a task that learns from traffic logs none.
+- **What answers.** An adapter, a tuned model, a temperatures file or a flavor fitted under one layout still answers a request of the other, as asked, and the response carries `layout_note`.
+- **Batching.** With `--concurrency batched`, requests of the two layouts are never scored in one engine call.
+- **A task's examples.** A task is fitted one question at a time, so a request with several questions reads a longer header than the task was fitted on.
+- **Images and packed mode.** A request with images is read on the plain layout and refuses the `layout` field with a 422. `--mode packed` reads the plain layout only, and refuses `"layout": "header"` with a 422.
+- **Temperatures.** The models' temperatures were fitted on the plain layout; `--temperatures-file` serves ones you refit, from your own labelled reads under the layout you serve.
 
-| Need | Set up and check |
-| --- | --- |
-| The same prompt ceiling across cards | Set `--max-model-len` explicitly and check `/health` |
-| Repeated 12B reads independent of batch/cache | Consider `--batch-invariant on`, off by default; measure its added cost and certify again |
-| Consistent 12B cold starts on replicas | Use the [certification guidance](/docs/tasks/certify/#5-keep-it-valid) for `--deterministic-compile`; leave it off on the 31B |
-| Task persistence on one server | `--tasks-dir` on a persistent volume, with `--require-tasks` |
-| Shared tasks across replicas | One `--task-store`, the same stack, synchronized clocks and per-replica monitoring |
-| Private access | An authenticated proxy with rate and request-size limits; [Operate](/docs/operating/#5-secure-it) |
+## What happens when the header does not fit
 
-### Optional features
+A request with many questions and long instructions can make the header longer than the context.
+Such a request is answered, not refused: the server lists as many of its questions as fit, in the request's order, and none when no line fits, which is the plain layout's prompt.
 
-- Thinking requires the vLLM engine in the server process; a thinking request can hold up other requests.
-- Batched concurrency requires vLLM or the development model in separate mode; MLX and packed mode reject it.
-- A certificate made under another thinking or concurrency setting is suspended until you certify again.
-- Tasks apply under their registered layout; another layout can produce `layout_mismatch`.
-- Read-twice settings, flavors and a default adapter are also part of the serving setup.
-- FP8 servers emulate bf16 rounding by default; changing that setting changes the setup too.
+- **A request whose prompts fit is not touched.**
+- **The response says what was listed:** `header_limited` in the body and the `x-decisio-layout` header, and `usage.input_tokens` counts the header that was read.
+- **A certified task's answer in such a request is not certified** (`header_limited`).
+- **What a shorter header costs the answers is not measured:** where an answer matters, compare it with `--layout plain`.
+- **`--header-limit off`** refuses such a request with a 422 instead, and a number caps the header's tokens.
 
-### Replicas
+<span id="3-set-up-for-production" aria-hidden="true"></span>
+<span id="4-what-was-measured-on-what" aria-hidden="true"></span>
+<span id="5-repeatability" aria-hidden="true"></span>
+<span id="6-what-was-not-tested" aria-hidden="true"></span>
 
-A shared-store write takes time to reach the other replicas; wait for the poll or read back from the writer.
-If the store is unavailable, replicas keep serving their loaded records and task writes return 503.
-The store must support conditional writes; check it before routing traffic, and collect task metrics from every replica.
+## Limits
 
-On a Mac, run one model server at a time.
-Choose its memory budget before starting another process that needs the same memory.
-
-## 4. What was measured on what
-
-:::sources
-| What | Model | Machine | Conditions | Date |
-| --- | --- | --- | --- | --- |
-| Accuracy and calibration | Qwen3.6-35B-A3B, FP8 | one RTX PRO 6000 Blackwell, 96 GB | vLLM 0.30.0 | 2026-10-03 |
-| Accuracy and calibration | Gemma 4 12B, bf16 | one RTX PRO 6000 Blackwell | vLLM 0.30.0 | 2026-10-04 |
-| Accuracy and calibration | Gemma 4 31B, FP8 on load | one RTX PRO 6000 Blackwell | vLLM 0.30.0 | 2026-10-04 |
-| Latency, one to four questions | all three | one RTX PRO 6000 at 585 W, AMD Ryzen Threadripper 9960X | decisio 0.8.1 | 2026-10-06 |
-| Latency by text length | all three | one RTX PRO 6000 at 600 W, AMD EPYC 9534 | decisio 0.11.1, vLLM 0.30.0 | 2026-10-14 |
-| Context length against the card's share | Gemma 4 31B, FP8; Gemma 4 12B | one H100 PCIe, 80 GB | vLLM 0.31.0 | 2026-10-15 |
-| Mac memory | Gemma 4 31B and 12B, MLX builds | one Apple M5 Pro, 64 GB | MLX | 2026-10-05 to 2026-10-16 |
-| Ollama memory | Gemma 4 12B, `q4_k_m` | one Apple M5 Pro | Ollama 0.35.1 | 2026-10-07 |
-| The 12B in FP8 against bf16, and on a 32 GB card | Gemma 4 12B, FP8 and bf16 | one RTX 5090, 32 GB | vLLM 0.31.0, 4,096 tokens, 0.95 of the card | 2026-10-21 |
-| Batched throughput | Gemma 4 12B, FP8 | one RTX 5090, 32 GB | vLLM 0.31.0, 0.95 of the card, 4,096 tokens, requests about new 1,000-token states, 8 and 16 clients | 2026-10-21 |
-| The header layout against the plain one | Gemma 4 31B, FP8 on load; Gemma 4 12B, FP8 | one RTX PRO 6000 Blackwell; one RTX 5090 | decisio's proxy sets and a public multi-domain sample | before decisio 0.26.0 |
-:::
-
-- One card and one run per configuration.
-- Every figure above other than the layout comparison was measured on the plain layout, the text then the question; the Gemma models now serve the header layout by default.
-- Each model's default settings were tuned on decisio's own 1,400-item suite, so its calibration errors on that suite are a best case.
-- Latency depends on the host's CPU and the card's power limit, as well as the card.
-- Most published figures of the 31B were measured on Google's weights converted to FP8 as they load; the stored FP8 checkpoint it serves scores the same within noise: 213 of JevBench's 231 published questions right with each, and 162 of 200 suite requests (vLLM 0.31.0).
-
-[Evaluate a task](/docs/evaluation-card/) walks through testing your own question before automatic actions.
-
-## 5. Repeatability
-
-A request repeats exactly on a freshly started server.
-Asked again on a server that has already answered it, it can move slightly: on the 31B, 5 of 200 items, by at most 0.031, with no top answer changed.
-Across restarts and machines, answers are not promised to repeat.
-
-On the 12B, `--batch-invariant on`, off by default, makes a repeated request give the same bits, from the prefix cache or not.
-
-## 6. What was not tested
-
-- The image route on either Gemma model; a Mac does not serve images.
-- A 48 GB or 32 GB Mac, or a 16 GB laptop, as machines: their figures are read on a 64 GB Mac.
-- NVIDIA cards other than the RTX PRO 6000 Blackwell and the H100 PCIe, and, for the 12B, the RTX 5090.
-- The 12B in FP8's accuracy and calibration: its answers were compared with the bf16 12B's on 200 questions only, and its temperatures are the bf16 12B's.
-- Accuracy at long length on a full test set: no set has a text over 32,768 tokens.
-- The 31B's 6-bit Mac build on MMLU-Pro, and its server times.
-- Latency with the intent head on a second engine.
-- Ollama's answers: Ollama builds its own prompt and applies no calibration.
-- Fine-tuned adapters under the header layout, which is why one that records no layout is served plain.
-- The header layout on the HF and MLX engines, which build the same prompt; only the vLLM engine was tested with it.
+- A row marked "read on the 64 GB Mac" was not run on that machine.
+- A figure is one card and one run, not a promise for your workload.
+- What was not tested is listed on [What was measured on what](/docs/measured/#what-was-not-tested).
 
 ## What next
 
+- [Set up for production](/docs/production/): one serving setup per certified task, and what to do after a change.
+- [What was measured on what](/docs/measured/): the machines, versions and dates behind these figures.
 - [Evaluate a task](/docs/evaluation-card/): check your own question and application policy.
-- [Certify answers](/docs/tasks/certify/): certify a task, and what its certificate covers.
-- [Upgrade](/docs/upgrading/): move to a new release, and certify your tasks again.

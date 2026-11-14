@@ -3,7 +3,7 @@ title: Call it from your code
 description: Ask decisio from curl, Python, JavaScript or TypeScript, or the framework you already use. Every way sends the same JSON to one route.
 ---
 
-<!-- Site-written: the merged Ways in, Python, JavaScript and Frameworks pages. The scripts send the first recorded decision, as decisio 0.17.0 answered it (src/lib/recorded.mjs); the facts about errors, timeouts and the SDK are decisio's docs/api.md and docs/migrating.md at the pinned release (src/config/sourced.mjs checks them); the frameworks' facts are src/data/integrations.json, and their programs are decisio's docs/integrations.md. -->
+<!-- Site-written: the merged Ways in, Python, JavaScript and Frameworks pages. The scripts send the first recorded decision, as decisio 0.17.0 answered it (src/lib/recorded.mjs); the facts about errors, timeouts and the SDK are decisio's docs/api.md and docs/migrating.md at the pinned release (src/config/sourced.mjs checks them). The frameworks have their own page, use-from/frameworks. -->
 
 Call decisio from any language with one HTTP request, and get a probability for every option back.
 Each script below sends the same support ticket with a choice, a yes or no question and a score.
@@ -51,12 +51,6 @@ In the Python, JavaScript and TypeScript tabs, the comment lines are what the de
 
 ::recorded-label{shows="printed"}
 
-## Keep the server private
-
-- The server has no authentication: it accepts the `Authorization` header and any API key, and ignores them.
-- Run it on `127.0.0.1`, or behind a reverse proxy that authenticates the caller.
-- Call it from your backend, not from a web page: the server sets no CORS headers, so a browser cannot call it.
-
 ## Handle errors
 
 Every server error comes back with a `detail` that names the problem.
@@ -99,45 +93,19 @@ except urllib.error.HTTPError as error:
 
 ## Use a framework
 
-Five frameworks that speak TypeSafe's format work with decisio once they point at the server.
-Each was checked against a running server, and every check passed.
-
-::integrations-table
-
-- Every one needs an API key; any string works.
-- Only the Vercel AI SDK wants `/v1` at the end of the base URL; the others add it themselves.
-- Tasks and certified answers are decisio's own routes: none of these frameworks calls them, so call those routes directly.
-
-Each program below asks two questions about one ticket and prints the answers.
-
-:::tabs
-
-::tab{label="LangChain"}
-
-::upstream{file="docs/integrations.md" section="LangChain"}
-
-::tab{label="Vercel AI SDK"}
-
-::upstream{file="docs/integrations.md" section="Vercel AI SDK"}
-
-::tab{label="n8n"}
-
-::upstream{file="docs/integrations.md" section="n8n"}
-
-::tab{label="TanStack AI"}
-
-::upstream{file="docs/integrations.md" section="TanStack AI"}
-
-::tab{label="Pipecat"}
-
-::upstream{file="docs/integrations.md" section="Pipecat"}
-
-:::
+LangChain, the Vercel AI SDK, n8n, TanStack AI and Pipecat work with decisio once they point at the server.
+[Call it from a framework](/docs/use-from/frameworks/) has a checked program for each.
 
 ## Use a coding assistant
 
 [Install the decisio skills](/docs/ai-skills/) to have Claude Code or Codex prepare your setup, request or backend integration.
 Choose the workflow for your task and include your hardware or endpoint in the prompt.
+
+## Keep the server private
+
+- The server has no authentication: it accepts the `Authorization` header and any API key, and ignores them.
+- Run it on `127.0.0.1`, or behind a reverse proxy that authenticates the caller.
+- Call it from your backend, not from a web page: the server sets no CORS headers, so a browser cannot call it.
 
 ## What next
 

@@ -11,6 +11,14 @@ Four steps: pick your machine, start a server, ask a question and read the answe
 
 ::figure{name="first-question"}
 
+## TL;DR
+
+With a server running on `http://127.0.0.1:8000`, one `POST` asks which team should handle a ticket:
+
+::site-block{name="question-choice"}
+
+No server yet? The steps below pick one for your machine, start it and read the answer.
+
 ## 1. Pick your machine
 
 | Your machine | Its guide |
@@ -51,11 +59,8 @@ curl -s http://127.0.0.1:8000/health
 
 ## 3. Ask your first question
 
-One `POST` to `/v1/systemone`: the text goes in `state`, and each question has a name you choose, a `type` and `instructions`.
-
-::site-block{name="question-choice"}
-
-This asks which team should handle one ticket and supplies billing, access and bug as the possible answers.
+The request in the TL;DR is one `POST` to `/v1/systemone`: the text goes in `state`, and each question has a name you choose, a `type` and `instructions`.
+It asks which team should handle one ticket and supplies billing, access and bug as the possible answers.
 [Download this request as JSON](/examples/questions/choice.json) for your own client.
 
 ## 4. Read the answer
@@ -85,15 +90,16 @@ It is a recorded Gemma 4 31B result, labelled with its release, hardware and dat
 
 </details>
 
-## Good to know
-
-- A request the server cannot read gets status 422, with a `detail` that names what is wrong.
-- The `model` field does not choose a model: a server serves the one model it was started with.
-
 ## Use a coding assistant
 
 [Install the decisio skills](/docs/ai-skills/) to have Claude Code or Codex prepare your setup, request or backend integration.
 Choose the workflow for your task and include your hardware or endpoint in the prompt.
+
+## Good to know
+
+- A request the server cannot read gets status 422, with a `detail` that names what is wrong.
+- The `model` field does not choose a model: a server serves the one model it was started with.
+- The words used here are defined in the [glossary](/docs/glossary/).
 
 ## What next
 

@@ -1,4 +1,4 @@
-// Round 6's shared pointer light (technique adapted from shad0w's site.js, Apache-2.0; NOTICE): a spotlight under the
+// Round 6's shared pointer light : a spotlight under the
 // pointer on every .tile, and figures whose dots travel run only while on screen. Under prefers-reduced-motion nothing
 // moves. Only CSS custom properties are set (through the CSSOM), so the page's Content-Security-Policy, which allows no
 // style attributes, holds.

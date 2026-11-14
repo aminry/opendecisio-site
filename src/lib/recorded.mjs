@@ -75,7 +75,7 @@ export function example5Table() {
 	const e = example5();
 	const heads = ['Keep at or above', 'Answered on its own', 'Right among those (95% interval)', 'Wrong answers escalated'];
 	const rows = e.sweep.map((s) => [String(s.keep_at), `${n0(s.kept)} (${pc(s.kept / e.questions)})`, `${pc(s.accuracy_kept)} (${pc(s.accuracy_kept_ci95[0])} to ${pc(s.accuracy_kept_ci95[1])})`, `${s.errors_escalated} of ${s.errors}`]);
-	return `<div class="table-wrap"><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+	return `<div class="table-wrap"${heads.length >= 3 ? ' tabindex="0" role="region" aria-label="Table, scrolls sideways when it does not fit"' : ''}><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 
 /** The 31B's /health on the pinned release, as the replay's server answered it, trimmed to the fields a reader checks. */

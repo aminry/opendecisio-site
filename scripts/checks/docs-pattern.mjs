@@ -51,7 +51,7 @@ for (const g of docsGroups) {
 				const nextLinks = nextAt === -1 ? 0 : kids.slice(nextAt + 1).flatMap((n) => n.querySelectorAll?.('a') ?? []).length;
 				if (nextLinks < 2) problems.push(`${where}: no "What next" with two links or more`);
 			}
-			for (const f of doc.querySelectorAll('.fig[data-live]')) if (!f.querySelector('[data-fig-pause]')) problems.push(`${where}: a moving figure has no Pause button`);
+			for (const f of doc.querySelectorAll('.fig[data-loop]')) if (f.querySelector('[data-fig-play], [data-fig-pause], [data-fig-step]')) problems.push(`${where}: a looping figure has a play, pause or step control`);
 			continue;
 		}
 		const firstH2 = kids.findIndex((n) => n.tagName === 'H2' || n.classList?.contains('sl-heading-wrapper'));
@@ -75,7 +75,7 @@ for (const g of docsGroups) {
 		if (!/updated \d{4}-\d{2}-\d{2}/.test(meta)) problems.push(`${where}: no last-updated date`);
 		const actions = doc.querySelector('.site-foot__actions')?.text ?? '';
 		if (!/View as Markdown/.test(actions) || !/Edit this page on GitHub/.test(actions)) problems.push(`${where}: the foot lacks its source and Markdown links`);
-		for (const f of doc.querySelectorAll('.fig[data-live]')) if (!f.querySelector('[data-fig-pause]')) problems.push(`${where}: a moving figure has no Pause button`);
+		for (const f of doc.querySelectorAll('.fig[data-loop]')) if (f.querySelector('[data-fig-play], [data-fig-pause], [data-fig-step]')) problems.push(`${where}: a looping figure has a play, pause or step control`);
 	}
 }
 // The site's own pages: no wall of text there either (a table's or a figure's text aside).

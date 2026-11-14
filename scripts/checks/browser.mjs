@@ -308,21 +308,21 @@ try {
 						window.scrollTo({ top: y, behavior: 'instant' });
 						return under;
 					})(),
-					// No table scrolls sideways or is clipped, on any page, at any width: it ends inside its box, no
-					// cell is wider than itself, and below 1024px a stacking table (and, in a docs column under 36rem,
-					// a docs table of three columns or more, and under 60rem one of six or more) is stacked, its header row hidden.
+					// No table is clipped and the page never scrolls sideways, at any width: a docs table of three columns or more may scroll
+					// inside its own focusable frame, no cell is wider than itself, and below 1024px a stacking table is stacked, its header row hidden.
 					wideTables: [...document.querySelectorAll('main table')]
 						.flatMap((t) => {
 							const box = t.closest('.table-scroll, .table-wrap') ?? t.parentElement;
 							const name = t.querySelector('caption')?.textContent?.trim() || t.closest('[aria-label]')?.getAttribute('aria-label') || t.closest('section')?.querySelector('h2')?.textContent?.trim() || 'a table';
 							const out = [];
-							if (box.scrollWidth > box.clientWidth + 1) out.push(`${name} scrolls: ${box.scrollWidth}px in a ${box.clientWidth}px box`);
-							if (t.getBoundingClientRect().right > box.getBoundingClientRect().right + 1) out.push(`${name} runs ${Math.round(t.getBoundingClientRect().right - box.getBoundingClientRect().right)}px past its box`);
+							const framed = t.classList.contains('docs-table') && t.querySelector('tr > :nth-child(3)');
+							if (!framed && box.scrollWidth > box.clientWidth + 1) out.push(`${name} scrolls: ${box.scrollWidth}px in a ${box.clientWidth}px box`);
+							if (framed && box.scrollWidth > box.clientWidth + 1 && box.getAttribute('tabindex') !== '0') out.push(`${name} scrolls inside its frame but the frame is not keyboard-focusable`);
+							if (!framed && t.getBoundingClientRect().right > box.getBoundingClientRect().right + 1) out.push(`${name} runs ${Math.round(t.getBoundingClientRect().right - box.getBoundingClientRect().right)}px past its box`);
 							const clipped = [...t.querySelectorAll('th, td')].filter((c) => c.scrollWidth > c.clientWidth + 1);
 							if (clipped.length) out.push(`${name} has ${clipped.length} clipped cells, the first: "${clipped[0].textContent.trim().slice(0, 40)}"`);
 							const headHeight = t.querySelector('thead')?.getBoundingClientRect().height ?? 0;
 							if (window.innerWidth < 1024 && t.classList.contains('data-table--stack') && headHeight > 1) out.push(`${name} is not stacked below 1024px`);
-							if (t.classList.contains('docs-table') && headHeight > 1 && ((box.clientWidth < 576 && t.querySelector('tr > :nth-child(3)')) || (box.clientWidth < 960 && t.querySelector('tr > :nth-child(6)')))) out.push(`${name} is not stacked in a ${box.clientWidth}px column`);
 							return out;
 						}),
 					// A code block scrolls its long lines sideways and never breaks one inside a word or a path: its text keeps

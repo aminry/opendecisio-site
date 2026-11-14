@@ -1,15 +1,17 @@
 ---
 title: Choose the prompt layout
-description: The Gemma models list a request's questions before its text, which answered more accurately on most of what was measured; a request can ask for the plain layout to keep a text cached across a series of questions.
+description: Choose whether a request's questions come before its text, as on the Gemma models, or after it, so a text stays cached across a series of questions.
 ---
 
 <!-- Site-written: the Choose the prompt layout guide. Its facts are decisio's docs/running.md ("The header layout"), docs/upgrading.md, docs/cli.md, docs/api.md and EVAL_CARD.md at the pinned release (src/config/sourced.mjs checks them). The 31B's figures are decisio's A/B on one RTX PRO 6000 and the 12B's its pre-registered A/B on one RTX 5090, as running.md states them. No board is named or linked; the public sample is described, not named. -->
 
-::covers{links="docs/running.md#the-header-layout---layout docs/running.md#a-layout-per-request-layout=2-ask-for-plain-for-a-series-of-questions-about-one-text docs/tasks.md#a-task-under-a-layout=4-know-what-is-kept-per-layout docs/running.md#refitting-the-bases-temperatures-for-a-layout=4-know-what-is-kept-per-layout docs/running.md#a-header-over-the-context---header-limit=7-know-what-happens-when-the-header-does-not-fit docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r=6-read-short-requests-twice docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r-for-decision-index-runs=6-read-short-requests-twice"}
+::covers{links="docs/running.md#the-header-layout---layout docs/running.md#a-layout-per-request-layout=when-should-you-ask-for-plain docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r=how-do-you-read-short-requests-twice docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r-for-decision-index-runs=how-do-you-read-short-requests-twice"}
 
 On the Gemma models the prompt lists every question of the request, then the text, then the question being answered.
 The model reads the text knowing what will be asked, and the 31B answered more accurately that way on most of what was measured.
 The Qwen model keeps the plain layout, the text then the question.
+
+::figure{name="request-layout"}
 
 Each request can choose its layout, so one server serves both kinds of client.
 
@@ -24,9 +26,9 @@ This reads the layout your server gives a request that names none, and why:
 
 The CPU stand-in serves the Qwen model, so it says `plain`; a Gemma server with nothing taught says `header`.
 
-::figure{name="request-layout"}
+<span class="fp-anchor" id="1-know-what-the-header-changes"></span>
 
-## 1. Know what the header changes
+## What does the header change?
 
 Answers change.
 On the 31B, against the plain layout, on the same items:
@@ -47,8 +49,11 @@ On the 31B, against the plain layout, on the same items:
 ::source[The 12B: decisio's pre-registered A/B on one RTX 5090, the 12B in FP8, decisio 0.25.0's readout, one request at a time, as decisio 0.26.0's docs/running.md states it.]
 
 These are our proxies and a public sample, on one card per model: measure on your own traffic, and keep `plain` where the header does not help.
+What the figures were not measured on is on [What was measured on what](/docs/measured/#what-was-not-tested).
 
-## 2. Ask for plain for a series of questions about one text
+<span class="fp-anchor" id="2-ask-for-plain-for-a-series-of-questions-about-one-text"></span>
+
+## When should you ask for plain?
 
 Under the header, a text read for one set of questions is not reused for another.
 Two requests about the same text with different questions share only what comes before their first difference, so the second reads the text again.
@@ -69,20 +74,24 @@ curl -s http://127.0.0.1:8000/v1/systemone \
 - **`"layout"` is `"plain"` or `"header"`,** on `/v1/systemone`. Absent or `null`, the request gets the server's layout; any other value is a 422.
 - **The request is built token for token** as a server started with that `--layout` builds it, and `x-decisio-prompt` says which layout was read.
 - **On the tuned 12B a later, different question about the same text took 177 to 185 ms under plain** and 434 to 436 ms under the header, which reads the text again. A repeated request took about 147 ms against about 391 ms for the first read, in either layout.
-- **What plain gives up is the header's gain in the answers,** not their speed: the tables in step 1.
+- **What plain gives up is the header's gain in the answers,** not their speed: the tables above.
 - **The two layouts share no cached text.** A client that switches layouts about one text reads it again on each change.
 
 ::source[The tuned 12B's times: decisio 0.43.0's release notes, measured on one RTX PRO 5000. The 31B's: decisio's docs/running.md, "First-question latency by state length".]
-
-- **Asking every question in one request** reads the text once on either layout ([Scale](/docs/scale/)).
-- **A workload that asks the same questions of many texts,** or one question per text, loses nothing under the header.
-- **Every response says what its prompt cost**, in `x-decisio-prompt: layout=header; tokens=1523; cached=1440`: the mean prompt tokens the engine read per question, and the mean of them the cache served. A low `cached` under the header means a text was read again for a new set of questions.
 
 To serve plain to every request that names none, start the server with `--layout plain`:
 
 ::site-block{name="layout-start"}
 
-## 3. Know what holds a server at plain
+## When should you keep the header?
+
+- **Asking every question in one request** reads the text once on either layout ([Scale](/docs/scale/)).
+- **A workload that asks the same questions of many texts,** or one question per text, loses nothing under the header.
+- **Every response says what its prompt cost**, in `x-decisio-prompt: layout=header; tokens=1523; cached=1440`: the mean prompt tokens the engine read per question, and the mean of them the cache served. A low `cached` under the header means a text was read again for a new set of questions.
+
+<span class="fp-anchor" id="3-know-what-holds-a-server-at-plain"></span>
+
+## What decides the server's default?
 
 For a request that names no layout, the server decides the layout once, at start:
 
@@ -96,25 +105,11 @@ The start prints `LAYOUT plain (held at plain; this base's default is header): .
 
 Requests may ask for the header meanwhile, with `"layout": "header"`.
 To make the header the default, export the tasks if you want the records, register them again with `"layout": "header"`, start with `--layout header`, and measure.
+What each layout keeps, and what happens when a long header does not fit, are on [Requirements and limits](/docs/limits/#what-is-kept-for-each-prompt-layout).
 
-## 4. Know what is kept per layout
+<span class="fp-anchor" id="6-read-short-requests-twice"></span>
 
-- **Tasks and certificates.** A task is registered under one layout, with `"layout"` or the server's by default, and applies only to that layout's requests. [Certify answers](/docs/tasks/certify/#6-certify-under-the-layout-your-clients-send) has the rest.
-- **Fast tables.** A fast table, labelled or learned, never answers a request of the other layout, and a task that learns from traffic logs none.
-- **What answers.** An adapter, a tuned model, a temperatures file or a flavor fitted under one layout still answers a request of the other, as asked, and the response carries `layout_note`.
-- **Batching.** With `--concurrency batched`, requests of the two layouts are never scored in one engine call.
-- **A task's examples.** A task is fitted one question at a time, so a request with several questions reads a longer header than the task was fitted on.
-- **Images.** A request with images is read on the plain layout and refuses the `layout` field with a 422.
-- **Packed mode.** `--mode packed` reads the plain layout only, and refuses `"layout": "header"` with a 422.
-- **Temperatures.** The models' temperatures were fitted on the plain layout; `--temperatures-file` serves ones you refit, from your own labelled reads under the layout you serve.
-
-## 5. Know what was not measured
-
-- **Fine-tuned adapters under the header.** That is why an adapter that records no layout is served plain.
-- **Other engines.** Only the vLLM engine was measured with the header; the HF and MLX engines build the same prompt.
-- **The Evaluation card.** Its figures were measured on the plain layout.
-
-## 6. Read short requests twice
+## How do you read short requests twice?
 
 `--read-twice-under N` repeats a short request's input before answering.
 It is off by default and costs more input tokens; measure whether it helps your own labelled task before enabling it.
@@ -122,20 +117,23 @@ It is off by default and costs more input tokens; measure whether it helps your 
 Use `--read-twice-max-questions R` to keep requests with many questions at one read.
 A changed read-twice setting changes the setup a task or certificate covers, so register and certify again under the setting you serve.
 
-## 7. Know what happens when the header does not fit
+## Certify under the layout your clients send
 
-A request with many questions and long instructions can make the header longer than the context.
-Such a request is answered, not refused: the server lists as many of its questions as fit, in the request's order, and none when no line fits, which is the plain layout's prompt.
+<span class="fp-anchor" id="6-certify-under-the-layout-your-clients-send"></span>
 
-- **A request whose prompts fit is not touched.**
-- **The response says what was listed:** `header_limited` in the body and the `x-decisio-layout` header, and `usage.input_tokens` counts the header that was read.
-- **A certified task's answer in such a request is not certified** (`header_limited`).
-- **What a shorter header costs the answers is not measured:** where an answer matters, compare it with `--layout plain`.
-- **`--header-limit off`** refuses such a request with a 422 instead, and a number caps the header's tokens.
+A task is fitted under one layout and certifies only that layout's requests.
+One server holds tasks of both layouts, each answering its own layout's requests.
+
+- **Name the layout when you register,** with `"layout": "plain"` or `"layout": "header"`; without it, the task takes the server's. An example whose request names the other layout is refused with a 422.
+- **A question of the task asked under the other layout** gets decisio's own read, with `certified: false` and `certified_reason: "layout_mismatch"`, and the traffic monitor does not count it.
+- **To certify both kinds of client, register the question under each layout.** That makes two tasks, each serving its own layout's requests, and neither replaces the other; removing one leaves the other.
+- **A certificate is checked against its own layout's serving setup,** so a header task certified on a header server stays certified for header requests on a plain server that is otherwise the same.
+- **`POST /v1/tasks/{id}/certify` certifies again under the task's own layout,** and tasks of both layouts load from `--tasks-dir`, `--task-store`, `--tasks-file` and the import routes.
 
 ## What next
 
 - [Scale](/docs/scale/): every question about a text in one request, and the first read.
+- [Certify answers](/docs/tasks/certify/): the promise a certificate makes.
 - [Teach a task](/docs/tasks/): tasks are fitted under a layout, the server's unless the registration names one.
+- [Requirements and limits](/docs/limits/#what-is-kept-for-each-prompt-layout): what each layout keeps, and when the header does not fit.
 - [Server flags](/docs/flags/#every-flag): `--layout` and `--temperatures-file` in full.
-- [Release notes](/docs/releases/): who an upgrade affects, and what to do.

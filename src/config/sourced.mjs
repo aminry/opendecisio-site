@@ -87,7 +87,6 @@ export const sourced = [
 		['Decisio-31b-<flavor>, Decisio-12b-<flavor> or Decisio-12b-fp8-<flavor>', upgrading, 'named `Decisio-31b-<flavor>`, `Decisio-12b-<flavor>` or `Decisio-12b-fp8-<flavor>`'],
 	]),
 	...fromPage('/docs/limits/', [
-		['On the 12B, --batch-invariant on, off by default, makes a repeated request give the same bits, from the prefix cache or not', running, 'With it on, a read gives the same bits whatever the server read before it: from the prefix cache or not'],
 		["Under the header layout the list of the request's questions takes room too, so the text keeps what the longest prompt leaves.", running, 'Under the header layout a row also holds the list of every question of the request, so the room for the state is smaller by that list'],
 	]),
 	// Choose the prompt layout
@@ -117,6 +116,9 @@ export const sourced = [
 		['The two layouts share no cached text. A client that switches layouts about one text reads it again on each change.', running, 'a client that alternates layouts about one state pays a first read on each change'],
 		['Requests may ask for the header meanwhile, with "layout": "header".', running, 'Requests may ask for the header meanwhile (`"layout": "header"`)'],
 		['register them again with "layout": "header", start with --layout header', running, 'register the tasks again under it (`"layout": "header"` in the registration; export them first if you want the records) and start with `--layout header`'],
+	]),
+	// The prompt layout's limits
+	...fromPage('/docs/limits/', [
 		['A task is registered under one layout, with "layout" or the server\'s by default, and applies only to that layout\'s requests.', tasksDoc, 'Absent, the task is fitted under the server\'s layout'],
 		['A fast table, labelled or learned, never answers a request of the other layout, and a task that learns from traffic logs none.', tasksDoc, 'A fast table, labelled or learned from traffic, never answers a request of the other layout, and a task that learns from traffic logs no row from one'],
 		['still answers a request of the other, as asked, and the response carries layout_note', running, 'A request that asks for the other is served as asked, never refused, and the response says so in `layout_note`'],
@@ -125,6 +127,8 @@ export const sourced = [
 		['--mode packed reads the plain layout only, and refuses "layout": "header" with a 422.', running, '`--mode packed` reads the plain layout only (422 for `"header"`)'],
 		['A task is fitted one question at a time, so a request with several questions reads a longer header than the task was fitted on.', running, 'a request with several questions reads a longer header than the one the task was fitted on'],
 		['A request with images is read on the plain layout', running, 'a request with images keeps the plain layout'],
+	]),
+	...fromPage('/docs/measured/', [
 		['Only the vLLM engine was measured with the header; the HF and MLX engines build the same prompt.', running, 'only the vLLM path was measured with it'],
 		['Its figures were measured on the plain layout.', card, '**Every figure in this card was measured with the plain layout**'],
 		['That is why an adapter that records no layout is served plain.', running, 'The fine-tuned adapters have **not** been measured under the header: that is why they are served plain until their repository or file records otherwise.'],
@@ -165,7 +169,6 @@ export const sourced = [
 	]),
 	...fromPage('/docs/limits/', [
 		['Gemma 4 12B in FP8 the largest that fits the card, 32,768 to 65,536 tokens 65,536', cli, 'it takes every value of the `gemma-4-12b` column below'],
-		["its answers were compared with the bf16 12B's on 200 questions only, and its temperatures are the bf16 12B's", cli, "none of them measured on FP8 yet (its temperatures are the bf16 12B's until they are refitted)"],
 	]),
 	// Choosing a model: the 12B in FP8
 	...fromPage('/docs/bases/', [
@@ -203,16 +206,22 @@ export const sourced = [
 		['replicas keep serving what they have, and teaching answers 503 until it is back', operating, 'a store outage stops teaching (503) and not serving'],
 		['/health says so under systemone.task_store', tasksDoc, '`/health` stays 200 and `systemone.task_store` says `ok: false`'],
 	]),
-	...fromPage('/docs/tasks/certify/', [
+	...fromPage('/docs/layout/', [
+		['so a header task certified on a header server stays certified for header requests on a plain server that is otherwise the same', tasksDoc, 'so a header task certified on a header server stays certified for header requests on a plain server whose stack is otherwise the same'],
 		['An example whose request names the other layout is refused with a 422.', tasksDoc, 'An example whose request names another layout than the task\'s is refused with 422'],
 		['gets decisio\'s own read, with certified: false and certified_reason: "layout_mismatch", and the traffic monitor does not count it', tasksDoc, 'the traffic monitor does not count it'],
 		['That makes two tasks, each serving its own layout\'s requests, and neither replaces the other; removing one leaves the other.', tasksDoc, 'the same question registered under each layout is two tasks, each serving its own layout\'s requests, and neither replaces the other'],
-		['so a header task certified on a header server stays certified for header requests on a plain server that is otherwise the same', tasksDoc, 'so a header task certified on a header server stays certified for header requests on a plain server whose stack is otherwise the same'],
 		['POST /v1/tasks/{id}/certify certifies again under the task\'s own layout', tasksDoc, '`POST /v1/tasks/{id}/certify` certifies a task again under the layout it was fitted under'],
 		['tasks of both layouts load from --tasks-dir, --task-store, --tasks-file and the import routes', tasksDoc, 'Tasks of both layouts load from `--tasks-dir`, `--task-store` and `--tasks-file`'],
+	]),
+	...fromPage('/docs/production/', [
+		['POST /v1/tasks/{id}/certify, on new labelled examples', tasksDoc, 'Re-certify with an explicit call, `POST /v1/tasks/{id}/certify`, on new labelled examples'],
+		['every answer of the task is certified: false with the reason serving_stack_changed', tasksDoc, 'every answer of the task is `certified: false` with the reason `serving_stack_changed`'],
 		['--deterministic-compile on, then certify again', upgrading, 'Start with `--deterministic-compile on`, then certify again'],
 		['On the 12B, --batch-invariant on, off by default, removes this', tasksDoc, 'off again since 0.45.0'],
 		['a request read from the cache gives the same bits as one read without it', tasksDoc, 'requests read with the cache on gave the same bits as with the cache off'],
+	]),
+	...fromPage('/docs/tasks/certify/', [
 		['A threshold applies only on the served name it was fitted for', upgrading, 'An abstention task now applies only on the served name it was fitted for'],
 	]),
 	...fromPage('/docs/limits/', [
@@ -435,6 +444,10 @@ export const sourced = [
 		['PNG, JPEG or WebP, 20 MB each', card, '(PNG, JPEG or WebP, up to 20 MB each)'],
 		["it starts and answers, an H100 PCIe; the full measurements are the 96 GB card's", running, 'it is measured in full on a 96 GB card, and it also started and answered on an 80 GB H100'],
 		['3,370 ms at 16,000 tokens and 8,880 ms at 32,000', running, '3,370 ms at 16,000 and 8,880 ms at 32,000 on the 31B'],
+	]),
+	...fromPage('/docs/measured/', [
+		['On the 12B, --batch-invariant on, off by default, makes a repeated request give the same bits, from the prefix cache or not', running, 'With it on, a read gives the same bits whatever the server read before it: from the prefix cache or not'],
+		["its answers were compared with the bf16 12B's on 200 questions only, and its temperatures are the bf16 12B's", cli, "none of them measured on FP8 yet (its temperatures are the bf16 12B's until they are refitted)"],
 		['answered a check at 85,000 tokens, 23 of 30 right against 25 of 30 short', running, 'answered a check at a state of 85,000 tokens (23 of 30 items right against 25 of 30 for the same items short'],
 		['One card and one run per configuration.', card, 'One card per run and one run per configuration.'],
 		["so its calibration errors on that suite are a best case", card, "so the suite's ECE figures are in-sample"],
@@ -478,8 +491,6 @@ export const sourced = [
 		['With 75 examples, four of five test tasks certified nothing at 5% or 10%', tasksDoc, 'With 75 examples the bounded procedure certified nothing on four of the five tasks at `alpha` 0.05 or 0.1'],
 		['certify.min_examples', tasksDoc, 'Set `certify.min_examples` above the floor'],
 		['The server warns when a choice task has no such option', tasksDoc, 'Registration says so in the certificate (`warnings`, and its summary) when a choice task has no option whose key says it.'],
-		['every answer of the task is certified: false with the reason serving_stack_changed', tasksDoc, 'every answer of the task is `certified: false` with the reason `serving_stack_changed`'],
-		['POST /v1/tasks/{id}/certify, on new labelled examples', tasksDoc, 'Re-certify with an explicit call, `POST /v1/tasks/{id}/certify`, on new labelled examples'],
 		['choice and yes/no questions on text, asked in one order', tasksDoc, 'on text requests, in the single-order form the certificate was made on'],
 		['Score questions and requests with images carry no certificate', tasksDoc, 'Score questions are not certified'],
 		['so it does not share the read of the text with the other questions of its request', tasksDoc, 'This costs the request\'s certified questions the shared-prefix saving'],

@@ -34,7 +34,7 @@ function requestFlow() {
 <text class="ft ft-k" x="22" y="120">Your text</text>
 ${text.map((l, i) => `<text class="ft ft-s f-pop fd-1" x="22" y="${144 + i * 20}">${esc(l)}</text>`).join('')}</g>
 <path class="f-line fd-2" d="M204 165L262 165" pathLength="1"/>
-<g data-phase="1"><rect class="f-node f-node--on fd-2" x="262" y="118" width="134" height="94" rx="12"/>
+<g data-phase="1" data-side="model"><rect class="f-node fd-2" x="262" y="118" width="134" height="94" rx="12"/>
 <text class="ft ft-b" x="329" y="156" text-anchor="middle">Decisio</text>
 <text class="ft ft-d" x="329" y="178" text-anchor="middle">reads it once</text>
 <text class="ft ft-n f-pop fd-3" x="329" y="198" text-anchor="middle">${it.serverMs.toFixed(1)} ms</text></g>
@@ -43,7 +43,7 @@ ${rows}
 	return panel({
 		name: 'request-flow', label: 'Request flow', title: 'The text is read once; every question is answered from that one read.',
 		desc: `A support ticket goes into Decisio, which reads it once in ${it.serverMs.toFixed(1)} milliseconds. Three questions fan out of that read: ${qs.map((q) => `${q.name} (${q.type}) answers ${barLabel(q)} at ${p2(topBar(q).p)}`).join('; ')}.`,
-		body, live: 7.5,
+		body,
 		legend: `One request, three questions, ${it.serverMs.toFixed(1)} ms on the server. Each bar is the likeliest option's probability.`,
 		source: sourceLine(r),
 	});
@@ -63,8 +63,9 @@ import { deployFigures } from './figures/deploy.mjs';
 import { tasksFigures } from './figures/tasks.mjs';
 import { useFromFigures } from './figures/use-from.mjs';
 import { thinkFigures } from './figures/think.mjs';
+import { apiFigures } from './figures/api.mjs';
 
-export const figures = { 'request-flow': requestFlow, 'first-decision': firstDecision, ...learningFigures, ...guideFigures, ...useFromFigures, ...thinkFigures, ...runItFigures, ...understandFigures, ...deployFigures, ...tasksFigures };
+export const figures = { 'request-flow': requestFlow, 'first-decision': firstDecision, ...learningFigures, ...guideFigures, ...useFromFigures, ...thinkFigures, ...runItFigures, ...understandFigures, ...deployFigures, ...tasksFigures, ...apiFigures };
 
 export function docsFigure(name) {
 	const f = figures[name];

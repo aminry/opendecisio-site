@@ -1513,7 +1513,7 @@ main code {
 .buyer__src dd {
 	margin: 0 0 var(--d-space-2);
 }
-/* Round 6 depth, shared by the site's pages (after shad0w, Apache-2.0; NOTICE). A raised tile: layered surfaces, a
+/* Round 6 depth, shared by the site's pages . A raised tile: layered surfaces, a
    highlight on its top edge, a hard offset shadow in navy, and a spotlight that follows the pointer (--mx and --my,
    set by src/scripts/depth.ts); the active tile glows in the accent. */
 .tile {

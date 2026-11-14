@@ -185,7 +185,7 @@ export default function remarkUpstream(options = {}) {
 			if (node.name !== 'teach-gains') return;
 			const heads = ['Intent set', 'Right, untaught', 'Right, taught', 'Measured on'];
 			const rows = taskGains().map((g) => [`${g.name}, ${g.options} intents`, `${(g.plain * 100).toFixed(1)}%`, `<b>${(g.taught * 100).toFixed(1)}%</b>`, `${g.per} labelled examples per intent; ${g.items} test messages; mean of ${g.draws} draws; taught in ${g.seconds} s; ${runOf('gemma-4-31b')}`]);
-			const html = `<div class="table-wrap"><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+			const html = `<div class="table-wrap"${heads.length >= 3 ? ' tabindex="0" role="region" aria-label="Table, scrolls sideways when it does not fit"' : ''}><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 			parent.children.splice(index, 1, { type: 'html', value: html });
 			return index + 1;
 		});
@@ -199,7 +199,7 @@ export default function remarkUpstream(options = {}) {
 			const ms = (v) => (/^[\d,.]+$/.test(v) ? `${v} ms` : v);
 			const heads = ['Text, tokens', 'Gemma 4 31B', 'Gemma 4 12B', 'Qwen3.6-35B-A3B'];
 			const rows = m[1].trim().split('\n').map((l) => l.split('|').slice(1, -1).map((c) => c.trim())).map((c) => [c[0], ms(c[1]), ms(c[3]), ms(c[5])]);
-			const html = `<div class="table-wrap"><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+			const html = `<div class="table-wrap"${heads.length >= 3 ? ' tabindex="0" role="region" aria-label="Table, scrolls sideways when it does not fit"' : ''}><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((r) => `<tr>${r.map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 			parent.children.splice(index, 1, { type: 'html', value: html });
 			return index + 1;
 		});

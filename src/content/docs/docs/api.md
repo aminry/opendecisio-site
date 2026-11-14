@@ -12,8 +12,8 @@ With a server running, send one choice question:
 
 ::site-block{name="question-choice"}
 
-- A request the server cannot read is answered with 422, and one the model cannot answer with 400, each with a `detail` naming the problem.
-- The answer's `confidence` field is System One's own figure, the top probability rescaled; thresholds and certificates use the top probability itself, the largest of `probabilities`.
+A 422 or 400 carries a `detail` naming the problem; see [Errors](#errors).
+The answer's `confidence` field is System One's own figure, the top probability rescaled; thresholds and certificates use the top probability itself, the largest of `probabilities`.
 
 ## Reference
 
@@ -24,6 +24,7 @@ With a server running, send one choice question:
 | Register, inspect or move tasks | [Task routes](#tasks) |
 | Manage an abstain option | [Abstention routes](#abstention) |
 | Check readiness and task metrics | [Health and metrics](#get-health) |
+| Read an error | [Errors](#errors) |
 
 ## POST /v1/systemone
 
@@ -104,20 +105,22 @@ A response's `fast_table_report` says what was kept; each answer's `answered_by`
 A table learned from model answers has an `agreement` certificate; a certificate based on human labels is `gold`.
 See [Add a decision fast path](/docs/tasks/fast-table/) for installation, learning, states and rollback.
 
-### Task records and errors
+### Task records
 
 A task record includes `format`, `id`, `key`, `type`, `options`, `fingerprint`, `calibration`, `head`, `certificate`, `context` and `status`.
 The `calibration` and `head` results say `applied` and `reason`; a declined correction leaves the original model answer available.
 The complete export includes the data needed to import the record.
 
 With a shared store, `store_version` names the version served.
-A concurrent write returns 409; read the current version before replacing it, using `x-decisio-replaces` when needed, or explicit `?replace=1` to replace it.
-A read-only replica rejects writes with 409, an unreachable store with 503, and a failed persistent write with 500; these failures do not make the requested change.
+
+<span id="task-records-and-errors"></span>
 
 ## Abstention
 
 An abstention threshold tells the server when to choose a designated can't-tell option.
 It is separate from a certificate and its application review policy.
+
+::figure{name="abstention-gate"}
 
 | Method and route | Request or result |
 | --- | --- |
@@ -138,6 +141,17 @@ Each example carries `request` and `answer`; `null` means unanswerable.
 An exact option-set task takes precedence over an option-keys task.
 The server abstains above the fitted threshold and otherwise chooses among the remaining options; reported probabilities stay unchanged.
 Abstention tasks do not take a fixed `context`.
+
+## Errors
+
+| What you see | Why | What to do |
+| --- | --- | --- |
+| 422 with `detail` | The server cannot read the request | Fix what `detail` names |
+| 400 with `detail` | The model cannot answer this request | Change the request |
+| 404 | `DELETE /v1/tasks/{task_id}` names no task | Check the task id |
+| 409 | A concurrent write, or a write to a read-only replica | Read the current version, then replace it, using `x-decisio-replaces` when needed or `?replace=1` |
+| 503 | The store is unreachable | The change was not made |
+| 500 | A persistent write failed | The change was not made |
 
 <span id="get-health"></span>
 

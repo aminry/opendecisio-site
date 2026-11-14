@@ -53,7 +53,7 @@ Your backend sends HTTP requests to the running service.
 ## What repeats
 
 Keep the model and serving settings stable when you need comparable answers.
-Exact probabilities can move across batches, restarts or machines; [Requirements and limits](/docs/limits/#5-repeatability) describes the measured behavior and the settings for repeated reads.
+Exact probabilities can move across batches, restarts or machines; [What was measured on what](/docs/measured/#repeatability) describes the measured behavior and the settings for repeated reads.
 
 <span id="under-the-hood"></span>
 

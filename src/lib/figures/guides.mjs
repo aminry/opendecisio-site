@@ -8,7 +8,9 @@ import { fastPathFigures } from './fast-path.mjs';
 const needs = (file, phrase) => {
 	if (!readUpstream(file).includes(phrase)) throw new Error(`Guide figure: ${file} no longer says ${phrase}`);
 };
-const flow = (items) => `<ol class="learn__flow learn__flow--${items.length}">${items.map(([title, note]) => `<li><b>${esc(title)}</b><span>${esc(note)}</span></li>`).join('')}</ol>`;
+// Steps in a row. Each step is [title, note] or [title, note, 'model'] for the model's side; `at` numbers the steps across
+// several rows so the figure's loop walks them all in order.
+const flow = (items, at = 0) => `<ol class="learn__flow learn__flow--${items.length}">${items.map(([title, note, side], i) => `<li data-phase="${at + i}"${side ? ` data-side="${side}"` : ''}><b>${esc(title)}</b><span>${esc(note)}</span></li>`).join('')}</ol>`;
 const drawing = (name, title, items, legend, source) => panel({ name, label: 'How to use it', title, desc: items.map(([title, note]) => `${title}: ${note}.`).join(' '), body: flow(items), legend, source, interactive: true });
 
 function context() {
@@ -39,7 +41,7 @@ function dynamic() {
 
 function concurrency() {
 	needs('docs/running.md', 'scores all their rows in one engine call');
-	const body = `<section class="learn__schedule"><h3>Serial</h3>${flow([['Call for A', 'One request uses the engine.'], ['Call for B', 'The next request follows.'], ['Call for C', 'The next request follows.']])}</section><section class="learn__schedule"><h3>Batched, when eligible requests are waiting</h3>${flow([['Requests A, B, C', 'Several clients have requests waiting.'], ['One shared call', 'Eligible requests share the engine call.'], ['Separate answers', 'Each client receives its own response.']])}</section>`;
+	const body = `<section class="learn__schedule"><h3>Serial</h3>${flow([['Call for A', 'One request uses the engine.'], ['Call for B', 'The next request follows.'], ['Call for C', 'The next request follows.']], 0)}</section><section class="learn__schedule"><h3>Batched, when eligible requests are waiting</h3>${flow([['Requests A, B, C', 'Several clients have requests waiting.'], ['One shared call', 'Eligible requests share the engine call.', 'model'], ['Separate answers', 'Each client receives its own response.']], 3)}</section>`;
 	return panel({ name: 'concurrent-requests', label: 'Request scheduling', title: 'Serial handles requests one at a time; batched can combine eligible waiting requests.', desc: 'A schematic, not a timing chart. Serial calls handle A, B and C in turn. Batched can put eligible waiting requests in one shared engine call, returning separate responses.', body, interactive: true, legend: 'An idle server still answers a lone request at once. Certified-task reads, thinking and image requests take their documented separate paths.', source: 'Source: concurrency in the pinned running guide. Box widths do not represent latency or a speed ratio.' });
 }
 
@@ -70,7 +72,7 @@ const recipeCopy = {
 function recipe(id) {
 	const spec = RECIPES[id];
 	const [input, result, action] = recipeCopy[id];
-	return drawing(`recipe-${id}`, 'The model judges the input; your code chooses the action.', [['Input', input], ['Question', spec.instructions], ['Typed answer', result], ['Your code', action]], `The answer is under answers.${spec.key}. Check the certificate required by your application before automating the action.`, `Source: this recipe’s question and application policy. No model result is illustrated here.`);
+	return drawing(`recipe-${id}`, 'The model judges the input; your code chooses the action.', [['Input', input], ['Question', spec.instructions], ['Typed answer', result, 'model'], ['Your code', action]], `The answer is under answers.${spec.key}. Check the certificate required by your application before automating the action.`, `Source: this recipe’s question and application policy. No model result is illustrated here.`);
 }
 
 export const guideFigures = {

@@ -19,7 +19,7 @@ const ATTR = /(\w+)="([^"]*)"/g;
 const SITE_PAGES = {
 	'docs/comparison.md': { path: '/benchmarks/', anchor: 'compares' },
 	'docs/demos/README.md': { path: '/demos/', anchor: '' },
-	'docs/integrations.md': { path: '/docs/use-from/', anchor: 'use-a-framework' },
+	'docs/integrations.md': { path: '/docs/use-from/frameworks/', anchor: '' },
 	'docs/handoffs/tasks.md': { path: '/docs/tasks/', anchor: '' },
 };
 // The site's own pages outside the docs, by path, for a link's words.

@@ -42,7 +42,7 @@
 .fp-scene :is(.fp-route-top,.fp-routes,.fp-inputs,.fp-starts,.fp-learning)>* { margin-top: 0; }
 
 /* The fast-path guide opens as a product story, with the same global docs header. */
-:root:has(.fp-hero) { --sl-content-width: 72rem; }
+:root:has(.fp-hero) { --sl-content-width: 72rem; --d-prose-max: 72rem; }
 .fp-hero, .fp-hero * { box-sizing: border-box; min-width: 0; }
 .fp-hero { display: grid; grid-template-columns: minmax(0,.95fr) minmax(0,1.05fr); gap: clamp(2rem,5vw,4.5rem); align-items: center; margin-block: 2rem 1rem; }
 .fp-hero-label { font-size: .95rem; font-weight: 650; color: var(--d-accent); }

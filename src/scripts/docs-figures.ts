@@ -4,100 +4,46 @@ import './fast-path.ts';
 import { weightedScore, manualAction } from '../lib/figure-math.mjs';
 const $$ = <T extends Element = HTMLElement>(s: string, r: ParentNode = document) => [...r.querySelectorAll<T>(s)];
 
-// Playback starts only on request, runs once, and holds whenever it cannot be seen.
+// A figure with numbered parts (data-phase) lights them in turn, forever, with no controls. It holds while it is offscreen or
+// the tab is hidden, and follows prefers-reduced-motion live: reduced motion shows the complete still drawing.
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
-for (const fig of $$('.fig[data-live]')) {
-	const play = fig.querySelector<HTMLButtonElement>('[data-fig-play]')!;
-	const pause = fig.querySelector<HTMLButtonElement>('[data-fig-pause]')!;
-	const step = fig.querySelector<HTMLButtonElement>('[data-fig-step]')!;
-	const all = fig.querySelector<HTMLButtonElement>('[data-fig-all]')!;
-	const out = fig.querySelector<HTMLElement>('[data-fig-status]')!;
-	const steps: string[] = JSON.parse(fig.dataset.figSteps ?? '[]');
-	const duration = Number(fig.dataset.live) * 1000;
+const STEP_MS = 1800;
+for (const fig of $$('.fig[data-loop]')) {
+	const phases = [...new Set($$('[data-phase]', fig).map((el) => Number(el.dataset.phase)))].sort((a, b) => a - b);
+	if (phases.length < 2) continue;
+	let index = 0;
 	let timer: number | undefined;
 	let started = 0;
-	let left = duration;
-	let wanted = false;
-	let held = false;
+	let left = STEP_MS;
 	let visible = false;
-	let position = -1;
-	fig.dataset.playback = 'idle';
-	step.disabled = all.disabled = false;
-	const stop = () => {
-		if (timer !== undefined) {
+	const show = (on: boolean) => {
+		for (const el of $$('[data-phase]', fig)) el.classList.toggle('is-current', on && Number(el.dataset.phase) === phases[index]);
+	};
+	const sync = () => {
+		const running = visible && !document.hidden && !motion.matches;
+		if (!running && timer !== undefined) {
 			clearTimeout(timer);
 			timer = undefined;
 			left = Math.max(0, left - (performance.now() - started));
 		}
-	};
-	const buttons = () => {
-		const running = wanted && !held && visible && !document.hidden && !motion.matches;
-		play.disabled = motion.matches || running;
-		pause.disabled = !running;
-		play.textContent = wanted ? 'Resume' : fig.dataset.playback === 'finished' ? 'Replay' : 'Play';
-	};
-	const finish = (announce = true) => {
-		stop();
-		wanted = held = false;
-		left = duration;
-		position = -1;
-		fig.classList.remove('is-run', 'is-paused');
-		delete fig.dataset.step;
-		for (const phase of $$('[data-phase]', fig)) phase.classList.remove('is-current');
-		fig.dataset.playback = 'finished';
-		if (announce) out.textContent = 'Complete diagram shown.';
-		buttons();
-	};
-	const sync = () => {
-		if (wanted && !held && visible && !document.hidden && !motion.matches) {
-			fig.classList.remove('is-paused');
-			if (timer === undefined) {
-				started = performance.now();
-				timer = window.setTimeout(() => finish(), left);
-			}
-			fig.dataset.playback = 'running';
-		} else if (wanted) {
-			stop();
-			fig.classList.add('is-paused');
-			fig.dataset.playback = 'paused';
+		fig.dataset.playback = motion.matches ? 'static' : running ? 'running' : 'paused';
+		show(!motion.matches);
+		if (running && timer === undefined) {
+			started = performance.now();
+			timer = window.setTimeout(() => {
+				timer = undefined;
+				index = (index + 1) % phases.length;
+				left = STEP_MS;
+				sync();
+			}, left);
 		}
-		buttons();
 	};
-	play.addEventListener('click', () => {
-		if (motion.matches) return;
-		if (!wanted) {
-			finish(false);
-			fig.classList.remove('is-run');
-			void fig.offsetWidth;
-			fig.classList.add('is-run');
-			wanted = true;
-		}
-		held = false;
-		out.textContent = 'Playing the request sequence once.';
-		sync();
-	});
-	pause.addEventListener('click', () => {
-		held = true;
-		out.textContent = 'Paused. Resume to continue.';
-		sync();
-	});
-	step.addEventListener('click', () => {
-		const next = (position + 1) % steps.length;
-		finish(false);
-		position = next;
-		fig.dataset.step = String(position);
-		fig.dataset.playback = 'stepped';
-		for (const phase of $$('[data-phase]', fig)) phase.classList.toggle('is-current', phase.dataset.phase === String(position));
-		out.textContent = `${position + 1} of ${steps.length}. ${steps[position]}`;
-	});
-	all.addEventListener('click', () => finish());
-	motion.addEventListener('change', () => { if (motion.matches) finish(); buttons(); });
 	document.addEventListener('visibilitychange', sync);
+	motion.addEventListener('change', sync);
 	new IntersectionObserver((entries) => {
 		visible = entries.some((entry) => entry.isIntersecting);
 		sync();
 	}, { threshold: 0.2 }).observe(fig);
-	buttons();
 }
 
 // A short field chooser works with click, touch and ordinary keyboard buttons.
@@ -154,25 +100,6 @@ for (const fig of $$('.fig--manual-threshold')) {
 		fig.querySelector('[data-threshold-out]')!.textContent = `${accepted} act, ${cases.length - accepted} review at a manual threshold of ${line.toFixed(2)}.`;
 		for (const marker of $$<SVGElement>('[data-threshold-line]', fig)) marker.setAttribute('d', `M${line * 100} 0V16`);
 	});
-}
-
-// Inspect recorded drift events; the frame data contains only the measured stream's events.
-for (const fig of $$('.fig--drift-replay')) {
-	const frames = JSON.parse(fig.querySelector<HTMLElement>('[data-drift]')!.dataset.frames!);
-	const controls = $$<HTMLButtonElement>('[data-drift-select]', fig);
-	for (const control of controls) {
-		control.disabled = false;
-		control.addEventListener('click', () => {
-			const frame = frames.find((item: { key: string }) => item.key === control.dataset.driftSelect);
-			for (const other of controls) other.setAttribute('aria-pressed', String(other === control));
-			for (const event of $$('[data-drift-event]', fig)) {
-				if (event.dataset.driftEvent === frame.key) event.setAttribute('aria-current', 'step');
-				else event.removeAttribute('aria-current');
-			}
-			fig.querySelector('[data-drift-cursor]')!.setAttribute('d', `M${frame.x} 20V186`);
-			fig.querySelector('[data-drift-out]')!.textContent = frame.note;
-		});
-	}
 }
 
 // Latency: three views of measured points; a tooltip line names the point under the pointer or the focus.
