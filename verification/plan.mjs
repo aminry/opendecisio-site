@@ -469,10 +469,8 @@ export const plan = [
 
 	// The home page's Get started: each tab's block is a deploy guide's own, and the request and its answer are Get started's.
 	{ page: '/', n: 1, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/deploy/cloud-gpu/', 1] },
-	{ page: '/', n: 2, mode: 'same-as', expect: 'docker run -d --gpus all', of: ['/docs/deploy/docker/', 1] },
-	{ page: '/', n: 3, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model" },
-	{ page: '/', n: 4, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/deploy/mac/', 6] },
-	{ page: '/', n: 5, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 7] },
-	{ page: '/', n: 6, mode: 'same-as', expect: 'curl http://127.0.0.1:8000/v1/systemone', of: ['/docs/use-from/', 1] },
-	{ page: '/', n: 7, mode: 'output', expect: '{\n  "answers": {' },
+	{ page: '/', n: 2, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model" },
+	{ page: '/', n: 3, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/deploy/mac/', 6] },
+	{ page: '/', n: 4, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 7] },
+	{ page: '/', n: 5, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 3] },
 ];

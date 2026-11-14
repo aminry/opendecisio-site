@@ -302,22 +302,13 @@ export const sourced = [
 	...fromPage('/docs/upgrading/', [
 		["A server takes 0.90 of its card's memory by default", running, '| 0.90 (the default) | 33.85 GiB |'],
 	]),
-	// Home: the Good fit box.
+	// Homepage facts follow the compact product explanation; detailed limits remain in their guides.
 	...fromPage('/', [
-		['a task can certify which brand a product title names, or which of these tools fits a command', api, 'such as which brand a product title names or which of a request\'s tools to call'],
-		['118 or more, at the defaults, for a task you want certified', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
-		['certification pauses on its own while the confidence alert is on', 'docs/tasks.md', '**By default this suspends certification:** every answer of the task is `certified: false` with the reason `traffic_changed` while the alert is on'],
-		['up to 255 per question', readme, 'and 255 options per question'],
-		['at least 32,768 tokens on a Gemma model on a card, and up to 98,304 on the 31B, as the card allows', readme, 'on the Gemma bases, of the largest length the card holds, at least 32,768 and at most 98,304 on the 31B'],
-		['the default model runs on one NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or on a 64 GB Mac', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
-		['the default model runs on one NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or on a 64 GB Mac', readme, 'measured on a 96 GB card; it also runs on an 80 GB H100'],
-		['the default model runs on one NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or on a 64 GB Mac', readme, 'runs from its 6-bit MLX conversion on a 64 GB Mac'],
-		['every answer is a probability for each option', api, 'probabilities'],
-		['below 59 held-out examples it will not certify', readme, 'Below 59 held-out examples (at the defaults) the server refuses to certify at all'],
-		['a certificate covers one task on one serving setup', readme, 'a certificate holds for one task on one serving setup'],
+		['A certificate covers one task on one serving setup', readme, 'a certificate holds for one task on one serving setup'],
 		['Ollama builds its own prompt and applies no calibration', readme, 'Ollama builds its own prompt and applies no calibration'],
-		['there the 31B is documented for texts up to 16,383 tokens', readme, 'both are documented for states up to 16,383 tokens'],
-		['the other two on decisio v0.11.1 at 600 W', readme, '- decisio v0.11.1 on vLLM 0.30.0 (the 31B and the 12B at their repositories\' pins)'],
+		['The CPU reads the facts; the model still gets both.', tasksDoc, 'A fast table encodes the state alone'],
+		['A learned table can match the model’s mistakes', tasksDoc, "The table learns decisio's answers, including decisio's mistakes"],
+		['Separate examples check which predictions qualify', tasksDoc, 'The held-out examples are never used to fit anything.'],
 	]),
 	// Call it from your code
 	{ page: '/docs/use-from/', says: 'pip install typesafe-sdk==0.7.2', file: migrating, source: "TypeSafe's Python SDK 0.7.2" },

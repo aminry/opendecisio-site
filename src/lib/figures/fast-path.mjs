@@ -12,7 +12,7 @@ function scene(name, title, desc, body, note, attributes = '', sourceNote = sour
     if (!tasks.includes(phrase)) throw new Error(`Decision fast path: the task guide no longer says ${phrase}`);
   }
   return panel({ name, label: 'Decision fast path', title, desc, interactive: true,
-    body: `<div class="fp-scene" data-fast-loop data-playback="idle" ${attributes}>${body}</div><p class="fp-caption">${note}</p>`, source: sourceNote });
+    body: `<div class="fp-scene decision-visual" data-fast-loop data-playback="idle" ${attributes}>${body}</div><p class="fp-caption">${note}</p>`, source: sourceNote });
 }
 
 function routes() {

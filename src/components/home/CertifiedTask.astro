@@ -1,0 +1,22 @@
+---
+import cases from '../../data/teach-certify/walkthrough.json';
+import {data} from '../../lib/teach-certify.mjs';
+import {makeWalkthrough,selectResult} from '../../lib/certified-walkthrough.mjs';
+const d=data(),record=makeWalkthrough(d.inbox,cases,d.decisio);
+const items=record.cases.map(c=>{const result=selectResult(record,'0.05',c.id);return {...c,eligible:result.eligible};});
+const first=items[0];
+---
+<section class="hp-section hp-feature" id="teach" aria-labelledby="hp-teach-title">
+ <div class="wrap hp-feature-grid"><div class="hp-feature-copy"><p class="hp-label">Teach &amp; Certify</p><h2 id="hp-teach-title">Teach your task.<br/>Choose what gets automated.</h2><p>Give decisio labelled examples of your categories. It learns the task without retraining the base model.</p><p>Choose an error target. Separate examples check which predictions qualify; your application routes those and sends the rest for review.</p><div class="hp-feature-links"><a href="/demos/teach-and-certify/">Watch the full demonstration</a><a href="/docs/tasks/certify/">Teach and certify a task</a></div></div>
+ <figure class="decision-visual hp-cert" id="certify" data-home-cert data-records={JSON.stringify(items)} data-motion-scene data-playback="idle" data-phase="2" data-parity="0">
+  <div class="dv-top"><strong>Teach. Check. Use in your app.</strong><span>Recorded cases</span></div>
+  <ol class="hp-teach-steps"><li data-teach-stage="0"><b>1</b><strong>Teach</strong><svg class="hp-mini" viewBox="0 0 160 52" aria-hidden="true"><rect x="6" y="9" width="39" height="27" rx="4"/><rect x="11" y="14" width="39" height="27" rx="4"/><path d="M60 26h41m-5-5 5 5-5 5"/><rect x="112" y="9" width="36" height="34" rx="12"/><path class="dv-trace" d="M60 26h41"/></svg><small>Labelled examples</small></li><li data-teach-stage="1"><b>2</b><strong>Certify</strong><svg class="hp-mini" viewBox="0 0 160 52" aria-hidden="true"><rect x="6" y="9" width="39" height="27" rx="4"/><rect x="11" y="14" width="39" height="27" rx="4"/><path d="M60 26h41m-5-5 5 5-5 5"/><path d="M114 9h29v22l-14 13-15-13zM121 25l6 6 11-12"/><path class="dv-trace" d="M60 26h41"/></svg><small>Different held-back examples</small></li><li data-teach-stage="2"><b>3</b><strong>Act</strong><svg class="hp-mini" viewBox="0 0 160 52" aria-hidden="true"><rect x="6" y="15" width="39" height="27" rx="4"/><path d="M45 28h32V12h27M77 28v14h27"/><rect x="111" y="3" width="36" height="18" rx="4"/><rect x="111" y="33" width="36" height="18" rx="4"/><path class="dv-trace" d="M45 28h32V12h27"/></svg><small>Check each new prediction</small></li></ol>
+  <div class="dv-input"><span class="dv-label" data-cert-counter>Selected case 1 / {items.length}</span><p data-cert-text>{first.text}</p><i class="dv-progress" aria-hidden="true"></i></div>
+  <div class="hp-prediction"><span class="dv-label">Predicted category</span><strong data-cert-answer>{first.answerName}</strong></div>
+  <svg class="hp-fork" viewBox="0 0 500 56" preserveAspectRatio="none" aria-hidden="true"><path d="M250 0v20Q250 30 230 30H145Q125 30 125 50v6"/><path d="M250 20Q250 30 270 30H355Q375 30 375 50v6"/><path class="dv-trace" data-cert-path d="M250 0v20Q250 30 230 30H145Q125 30 125 50v6"/></svg>
+  <div class="dv-routes"><div class="dv-route dv-selected" data-cert-route="auto"><span class="dv-label">Qualifying prediction</span><strong>Route automatically</strong><small>Application accepts the category</small></div><div class="dv-route" data-cert-route="review"><span class="dv-label">Other predictions</span><strong>Human review</strong><small>Keep the model’s suggestion</small></div></div>
+  <p class="hp-status" data-cert-status>Correctness certificate qualifies. Your backend can route.</p>
+  <figcaption class="dv-caption src-note">Selected BANKING77 cases, Gemma 4 31B FP8, RTX PRO 6000 Blackwell, decisio {d.decisio}, {d.dates[0]}. Error target 5%, default 90% confidence. A certified prediction can still be wrong; <span data-cert-truth>this test prediction was right.</span> <a href="/demos/teach-and-certify/#method">Dataset credits</a>.</figcaption>
+ </figure></div>
+ <div class="wrap"><p class="hp-feature-note">The certificate concerns the error rate across certified answers on traffic like your examples. If traffic changes, predictions continue while certification can pause.</p></div>
+</section>

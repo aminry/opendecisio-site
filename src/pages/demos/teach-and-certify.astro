@@ -72,7 +72,7 @@ const events = [
 
 <div class="wrap">
 <CertifiedWalkthrough record={record} source={`${datasetName(ib.dataset)}, ${baseName(ib.model)} FP8 on one RTX PRO 6000 Blackwell. Recorded on decisio ${d.decisio}, ${d.dates.join(', ')}, plain layout. ${ib.k} examples per intent, draw ${ib.draw}.`} />
-<section class="ca-drift ca-player" id="drift" data-player="drift" data-loop data-playback="idle" aria-labelledby="drift-title" data-table-notes>
+<section class="ca-drift ca-player decision-visual" id="drift" data-player="drift" data-loop data-playback="idle" aria-labelledby="drift-title" data-table-notes>
  <div class="ca-section-head"><div><p class="ca-eyebrow">When traffic changes</p><h2 id="drift-title">Predictions continue. Certification can pause.</h2></div></div>
  <p>A separate recorded traffic stream shows the confidence alarm responding to a change in traffic. The monitor detects a shift across messages; it cannot tell whether one particular prediction is wrong.</p>
  <ol class="ca-event-list">{events.map((event, i) => <li class="ca-event" data-phase={i}><strong>{event.title}</strong><span>{event.at}</span><p>{event.note}</p></li>)}</ol>

@@ -492,9 +492,6 @@
 			"status": "shown",
 			"why": "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model"
 		},
-		"643e9b3102b8e77e": {
-			"status": "output"
-		},
 		"0a8e31684a788e7e": {
 			"status": "shown",
 			"why": "it needs the table extra, a running server, a complete task.json and a context.txt policy; transport tests execute the registration with fixture data"

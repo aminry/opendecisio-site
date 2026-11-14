@@ -1,5 +1,6 @@
 // Automatic illustrations pause off screen and respect reduced motion.
 import '../styles/fast-path.css';
+import '../styles/decision-visuals.css';
 import { autoStream, contextExample } from '../lib/fast-path-demo.mjs';
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 function loop(scene: HTMLElement, durations: number[], render: (step: number) => void) {

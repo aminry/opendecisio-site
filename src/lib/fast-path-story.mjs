@@ -2,7 +2,7 @@ import {esc} from './figures/core.mjs';
 import {STREAMS, autoStream} from './fast-path-demo.mjs';
 export function requestStream() {
   const v=autoStream(0,2);
-  return `<figure class="fp-demo" data-fast-stream data-playback="idle" data-phase="2" data-route="table" data-example-parity="0" aria-label="Illustrative request stream: a CPU fast path answers familiar decisions and passes other requests to decisio.">
+  return `<figure class="fp-demo decision-visual" data-fast-stream data-playback="idle" data-phase="2" data-route="table" data-example-parity="0" aria-label="Illustrative request stream: a CPU fast path answers familiar decisions and passes other requests to decisio.">
     <div class="fp-demo-top"><strong>Watch a request find its answer</strong><span>Illustration</span></div>
     <div class="fp-demo-domains" aria-label="Example tasks">${Object.entries(STREAMS).map(([id,task])=>`<span data-stream-domain="${id}" class="${id==='support'?'is-current':''}">${esc(task.label)}</span>`).join('')}</div>
     <div class="fp-incoming"><div class="fp-arrival-label"><span data-stream-counter>New example 01 / 12</span><span data-stream-task>Support routing</span></div><p data-stream-message>${esc(v.text)}</p><div class="fp-example-progress" aria-hidden="true"></div></div>

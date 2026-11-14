@@ -1,0 +1,17 @@
+---
+import {autoStream,STATIC_TIMING} from '../../lib/fast-path-demo.mjs';
+const first=autoStream(0,2);
+---
+<section class="hp-section hp-feature" id="fast-path" aria-labelledby="hp-fast-title"><div class="wrap hp-feature-grid hp-feature-grid--reverse">
+ <div class="hp-feature-copy"><p class="hp-label">Decision fast path</p><h2 id="hp-fast-title">Familiar decisions.<br/>A much shorter route.</h2><p>A small CPU classifier learns recurring choices. Eligible requests get an answer without another model read; decisio handles the requests passed on.</p><p>Store shared rules once as context. Send only the changing facts as state. The CPU reads the facts; the model still gets both.</p><div class="hp-feature-links"><a href="/docs/tasks/fast-table/">See the fast path in action</a><a href="/docs/tasks/fast-table/#add-it-to-your-app">Add it to your app</a></div></div>
+ <figure class="decision-visual hp-fast" data-home-fast data-motion-scene data-playback="idle" data-phase="2" data-parity="0" data-route="table">
+  <div class="dv-top"><strong>One task. Two answer routes.</strong><span>Illustration</span></div>
+  <div class="hp-context"><span class="dv-label">Shared context stays fixed</span><p>Billing: payments and invoices. Access: sign-in problems.</p></div>
+  <div class="dv-input"><span class="dv-label" data-fast-counter>New facts 1 / 4</span><p data-fast-text>{first.text}</p><i class="dv-progress" aria-hidden="true"></i></div>
+  <svg class="dv-wire" viewBox="0 0 400 26" aria-hidden="true"><path d="M200 0v26"/><path class="dv-trace" d="M200 0v26"/></svg>
+  <div class="dv-node"><strong>CPU fast path checks the facts</strong><small>API option: fast_table</small></div>
+  <svg class="hp-fork" viewBox="0 0 500 56" preserveAspectRatio="none" aria-hidden="true"><path d="M250 0C250 30 125 20 125 56"/><path d="M250 0C250 30 375 20 375 56"/><path class="dv-trace" data-fast-path-line d="M250 0C250 30 125 20 125 56"/></svg>
+  <div class="dv-routes"><div class="dv-route dv-selected" data-fast-route="table"><span class="dv-label">CPU fast answer</span><b class="dv-time">~50 µs</b><strong data-fast-answer>{first.answer}</strong><small>Static short-text component cost</small></div><div class="dv-route" data-fast-route="decisio"><span class="dv-label">decisio model</span><b class="dv-time">~{STATIC_TIMING.modelMs} ms</b><strong data-fast-model>Read avoided</strong><small>Illustrative model budget</small></div></div>
+  <p class="hp-status" data-fast-status>Model read skipped for this request.</p>
+  <figcaption class="dv-caption">Illustrative flow, slowed for clarity. Static short-text p50 on Apple M5 Pro, median 22 tokens; longer texts cost more. Network and queueing excluded. <a href="/docs/tasks/fast-table/">Scope and timing details</a>.</figcaption>
+ </figure></div><div class="wrap"><p class="hp-feature-note">For choice and yes/no text tasks. A learned table can match the model’s mistakes; model agreement differs from correctness checked against labels.</p></div></section>
