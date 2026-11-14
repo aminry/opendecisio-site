@@ -213,3 +213,8 @@
 :is(.fp-demo,.fp-scene)[data-playback=idle] * { animation:none!important; }
 .fp-cost-dots>* { margin:0!important; }
 .fp-demo .fp-saving { margin:.75rem 0 0; padding:.5rem .7rem; border-left:3px solid var(--dv-gold,#fca311); background:#1e1c13; color:#ffce68; font-size:.78rem; font-weight:650; min-height:2.3rem; }
+/* Hold both result notes and the fallback explanation steady across narrow-phone cases. */
+@media(max-width:400px){
+ .fp-demo-answers :is([data-stream-fast-note],[data-stream-model-note]){display:block;line-height:1.5;min-height:4.5em}
+ .fp-demo .fp-saving{min-height:calc(2.8em + 1rem)}
+}
