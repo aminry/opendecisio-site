@@ -3,6 +3,7 @@ import '../styles/decision-visuals.css';
 import '../styles/feature-story.css';
 import TaskLearning from './TaskLearning.astro';
 import {inboxStory} from '../lib/home-page.mjs';
+import {teachCertifyFilm} from '../lib/teach-certify-film.mjs';
 const learning=inboxStory().learn;
 import { selectResult } from '../lib/certified-walkthrough.mjs';
 const { record, source } = Astro.props;
@@ -13,9 +14,10 @@ const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
 ---
 <div class="ca-walkthrough" data-ca data-record={JSON.stringify(record)} data-target="0.05" data-eligible="true">
 <section class="ca-hero feature-hero" aria-labelledby="demo-title">
-  <div><p class="ca-eyebrow">Certified answers</p><h1 id="demo-title"><span class="feature-title-accent">Automate part of your inbox.</span> Review the rest.</h1><p>Teach decisio your categories with labelled examples. Choose an error target. Your application routes certified predictions and sends the rest for review.</p><p class="ca-small">Explore recorded predictions. Your choices change the routing policy; they do not run a live model.</p><nav class="ca-hero-links" aria-label="On this page"><a href="#how-title">See how it works</a><a href="#inbox">Try a recorded prediction</a><a href="#method">Dataset credits</a></nav></div>
+  <div><p class="ca-eyebrow">Certified answers</p><h1 id="demo-title"><span class="feature-title-accent">Automate part of your inbox.</span> Review the rest.</h1><p>Teach decisio your categories with labelled examples. Choose an error target. Your application routes certified predictions and sends the rest for review.</p><p class="ca-small">Explore recorded predictions. Your choices change the routing policy; they do not run a live model.</p><nav class="ca-hero-links" aria-label="On this page"><a href="#walkthrough-video">Watch the walkthrough</a><a href="#inbox">Try a recorded prediction</a><a href="#method">Dataset credits</a></nav></div>
   <figure class="ca-hero-flow decision-visual"><p class="ca-label">One recorded ticket</p><blockquote data-case-text>{result.example.text}</blockquote><p class="ca-label">Predicted category</p><p class="ca-prediction" data-prediction>{result.example.answerName}</p><svg viewBox="0 0 360 140" role="img" aria-label="Your application checks the certificate, then routes the ticket or requests human review."><text x="180" y="22" text-anchor="middle">Valid correctness certificate?</text><path class="ca-svg-line" data-branch="route" d="M180 30v25H85v25m-6-6 6 6 6-6"/><path class="ca-svg-line ca-svg-line--muted" data-branch="review" d="M180 55h95v25m-6-6 6 6 6-6"/><rect class="ca-svg-box" data-hero-route x="10" y="88" width="150" height="42" rx="8"/><text data-hero-route-text x="85" y="114" text-anchor="middle">Route automatically</text><rect class="ca-svg-box" data-hero-review x="200" y="88" width="150" height="42" rx="8"/><text data-hero-review-text x="275" y="114" text-anchor="middle">Human review</text></svg><figcaption class="ca-small">Recorded prediction. Your application owns the action.</figcaption></figure>
 </section>
+  <section class="ca-film-section" id="walkthrough-video" aria-labelledby="teach-film-title"><h2 id="teach-film-title">Teach your task. See what gets automated.</h2><p>A short walkthrough of teaching, separate certification and your application’s review path.</p><div set:html={teachCertifyFilm()}/></section>
   <section class="ca-learn ca-player decision-visual" data-player="learn" data-loop data-playback="idle" aria-labelledby="how-title">
     <div class="ca-section-head"><div><p class="ca-eyebrow">How it works</p><h2 id="how-title">Teach. Certify. Use it in your app.</h2></div>
     </div>

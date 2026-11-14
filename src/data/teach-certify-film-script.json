@@ -1,0 +1,26 @@
+{
+  "title": "Teach your task. Keep control of automation.",
+  "duration": 40,
+  "chapters": [
+    {
+      "title": "Show it what your categories mean.",
+      "text": "Want your app to sort messages your way? Start with examples and the right category for each one."
+    },
+    {
+      "title": "Small task tuning. Visible improvement.",
+      "text": "The base model stays fixed. A small task head learns from your labels. Here, that improves the task's accuracy."
+    },
+    {
+      "title": "Certify with separate examples.",
+      "text": "Next, choose an error target. Separate examples check which answers qualify. Those examples never train the task."
+    },
+    {
+      "title": "Automate qualifying answers. Review the rest.",
+      "text": "When an answer qualifies, your app can route it automatically. Otherwise, keep the prediction as a suggestion for review."
+    },
+    {
+      "title": "Less manual work. A visible review path.",
+      "text": "Here, over thirteen hundred messages qualify. Some are still wrong. Keep a review path, and watch for changing traffic."
+    }
+  ]
+}

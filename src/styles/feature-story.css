@@ -64,3 +64,12 @@
 .fp-read-map .fp-context-processor{margin-top:.35rem}
 .ca-learn>.src-note{font-size:.7rem;line-height:1.5;color:var(--dv-muted);margin-top:.6rem}
 @media(max-width:800px){.ca-learn .ca-stage{display:block}.ca-learn .ca-stage-learning .task-learning{margin-top:1.2rem}.ca-learn .ca-stage-number{margin-bottom:.7rem}}
+
+.ca-film-section{padding:1.5rem 0 2.5rem;scroll-margin-top:6rem}
+.ca-film-section>p{color:var(--d-muted);margin:.8rem 0 1.2rem;max-width:70ch}
+.ca-film{margin:0}
+.ca-film video{display:block;width:100%;height:auto;aspect-ratio:16/9;border:1px solid #637086;border-radius:12px;box-shadow:7px 7px 0 #14213d;background:#000}
+.ca-film figcaption{margin-top:1rem;color:var(--d-muted);font-size:.82rem;line-height:1.6}
+.ca-film figcaption p{margin:.3rem 0}
+.ca-film .src-note{font-size:.7rem}
+@media(max-width:640px){.ca-film-section{padding:1rem 0 2rem}.ca-film video{border-radius:8px;box-shadow:4px 4px 0 #14213d}.ca-film figcaption{font-size:.75rem}}
