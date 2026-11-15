@@ -131,7 +131,7 @@ A small object in a large image is found better after you crop to its region and
 
 A first read, with the image new to the server, was a median of this many milliseconds for one image, on one RTX PRO 6000 Blackwell at 600 W, with generated 512 by 512 pictures:
 
-| Model and budget | One image | Four images | Sixteen images |
+| Model and budget | One image (ms) | Four images (ms) | Sixteen images (ms) |
 | --- | ---: | ---: | ---: |
 | Gemma 4 12B, 280 | 85 | 202 | 727 |
 | Gemma 4 12B, 560 | 117 | 353 | 1,379 |

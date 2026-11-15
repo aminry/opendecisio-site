@@ -19,11 +19,6 @@ const photo = (name) => {
 	used.add(name);
 	return `/media/images-guide/${name}`;
 };
-const credit = (key, label) => {
-	const p = credits.photos[key];
-	return `<a href="${p.page}">${esc(label)}</a> by ${esc(p.author)}, <a href="${p.licenceUrl}">${esc(p.licence)}</a>`;
-};
-const CREDITS = `Photographs: ${credit('parcel', 'Damaged fragile parcel delivered to doorstep')} and ${credit('mug', 'Bright turquoise mug sits on a wooden table')}, on Wikimedia Commons.`;
 
 const api = () => readUpstream('docs/api.md');
 const needs = (text, file, phrases) => {
@@ -70,7 +65,6 @@ ${text('ft ft-d', 16, 412, 'A photo in the list with no place opens the state, s
 		desc: "A request has two questions. A photo in the state is read once and shared, so both questions read it. A photo in question 2's own text is read by question 2 alone and is not in question 1's prompt. A photo sent in a list with no place opens the state, so both questions read it.",
 		body, interactive: false,
 		legend: "The state's photos sit in the part of the prompt every question shares; a question's own photo sits in that question's part only.",
-		source: `An illustration of docs/api.md, "Images on Gemma 4": no model ran. ${CREDITS}`,
 	});
 }
 
@@ -114,7 +108,6 @@ ${text('ft ft-code', 540, P.y + 109 + 22, 'the whole image')}${text('ft ft-n', 5
 		desc: `A Box question for the turquoise mug answers with a box: top ${b.top}, bottom ${b.bottom}, left ${b.left}, right ${b.right}, as fractions of the photo, at an example confidence of 0.93. Multiplying the edges by the image size gives the crop. A Box question for a red umbrella that is not in the parcel photo answers with the whole image at confidence 0.`,
 		body, interactive: false,
 		legend: 'The edges are fractions of the image you sent. A Box always has a box, so read the confidence, or ask a yes/no question beside it.',
-		source: `An illustration of docs/box.md: no model ran, and the box is the mug's outline measured on the photograph. ${CREDITS}`,
 	});
 }
 
@@ -152,7 +145,6 @@ ${text('ft ft-k', x + 4, 272, `budget ${bud}`)}${text('ft ft-b', x + 4, 296, `${
 		desc: `One square picture of a parcel read at each budget: ${budgets.map((bud, i) => `${bud} is ${tokens[i].toLocaleString('en-US')} tokens, a ${sides[i]} by ${sides[i]} grid of 48 pixel blocks`).join('; ')}. The small print on the label gets sharper as the budget grows. The 12B reads at 560 by default, the 31B at 280, and the 12B refuses 1120.`,
 		body, interactive: false,
 		legend: 'The picture is scaled to fill the budget and cut to blocks of 48 by 48 pixels; each block is one token, and a begin and an end token wrap them.',
-		source: `The token counts for a square picture are those of docs/api.md, "What an image costs"; add two to each for the begin and end tokens. The close-ups are the photograph scaled to what each budget reads. ${CREDITS}`,
 	});
 }
 
