@@ -1,50 +1,50 @@
 {
-	"version": "0.1.1",
-	"decisioVersion": "0.46.0",
-	"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
-	"date": "2026-11-13",
+	"version": "0.1.2",
+	"decisioVersion": "0.48.0",
+	"sha256": "fb180d7ab4e8a5995a772017167258b3635e71acd83ef2268be64c5c73fb3160",
+	"date": "2026-11-15",
 	"blocks": {
-		"62bd3a0efcba4998": {
+		"9fed7da1ebb6bc78": {
 			"status": "skills",
-			"version": "0.1.1",
-			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
-			"date": "2026-11-13"
+			"version": "0.1.2",
+			"sha256": "fb180d7ab4e8a5995a772017167258b3635e71acd83ef2268be64c5c73fb3160",
+			"date": "2026-11-15"
 		},
-		"a414db5537e2e441": {
+		"a21d654ccce0df1f": {
 			"status": "skills",
-			"version": "0.1.1",
-			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
-			"date": "2026-11-13"
+			"version": "0.1.2",
+			"sha256": "fb180d7ab4e8a5995a772017167258b3635e71acd83ef2268be64c5c73fb3160",
+			"date": "2026-11-15"
 		},
-		"80b298026cf0394e": {
+		"bcc3927346788cd4": {
 			"status": "skills",
-			"version": "0.1.1",
-			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
-			"date": "2026-11-13"
+			"version": "0.1.2",
+			"sha256": "fb180d7ab4e8a5995a772017167258b3635e71acd83ef2268be64c5c73fb3160",
+			"date": "2026-11-15"
 		},
-		"0de71b0d6aab980b": {
+		"0b7125f7fc45918e": {
 			"status": "skills",
-			"version": "0.1.1",
-			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
-			"date": "2026-11-13"
+			"version": "0.1.2",
+			"sha256": "fb180d7ab4e8a5995a772017167258b3635e71acd83ef2268be64c5c73fb3160",
+			"date": "2026-11-15"
 		},
-		"0a3521267b96b65e": {
+		"35a2fa3cedc9c95e": {
 			"status": "skills",
-			"version": "0.1.1",
-			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
-			"date": "2026-11-13"
+			"version": "0.1.2",
+			"sha256": "fb180d7ab4e8a5995a772017167258b3635e71acd83ef2268be64c5c73fb3160",
+			"date": "2026-11-15"
 		},
-		"d712084e092a849a": {
+		"bcb069d02adf3d0e": {
 			"status": "skills",
-			"version": "0.1.1",
-			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
-			"date": "2026-11-13"
+			"version": "0.1.2",
+			"sha256": "fb180d7ab4e8a5995a772017167258b3635e71acd83ef2268be64c5c73fb3160",
+			"date": "2026-11-15"
 		},
-		"09c15633d716f063": {
+		"d674355f71951b5f": {
 			"status": "skills",
-			"version": "0.1.1",
-			"sha256": "802f56e3038db1060f3985c4ae48c23fff8694e06f058ece116d007bdce54aa7",
-			"date": "2026-11-13"
+			"version": "0.1.2",
+			"sha256": "fb180d7ab4e8a5995a772017167258b3635e71acd83ef2268be64c5c73fb3160",
+			"date": "2026-11-15"
 		}
 	}
 }
