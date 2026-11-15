@@ -1,0 +1,33 @@
+---
+// The about page: who develops Decisio, what the company works on and where to write, as tiles under the site's page hero.
+import PageHero from '../components/PageHero.astro';
+import { company, site } from '../config/site';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { breadcrumbs } from '../lib/jsonld.mjs';
+---
+<SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'About', path: '/about/' }])} title={`About: ${site.name}`} description={`${site.name} is developed by ${company.name}, a company founded in ${company.founded} that builds low-latency, low-cost AI for production.`}>
+	<PageHero label="About" lede={`${site.name} is developed by ${company.name}, a company working to make AI cheap enough to use in every business application in production.`}>Low-latency AI, <em class="hl">cheap in production</em></PageHero>
+	<section class="section psec" aria-label="About the company">
+		<div class="wrap">
+			<ul class="ptiles ptiles--pairs privacy">
+				<li class="ptile tile">
+					<h2 id="company">{company.name}</h2>
+					<p>{company.name} is a company founded in {company.founded}. It develops {site.name}.</p>
+				</li>
+				<li class="ptile tile">
+					<h2 id="work">What we work on</h2>
+					<p>Low-latency, low-cost AI solutions. We want using AI to cost little enough that every business application can run it in production.</p>
+				</li>
+				<li class="ptile tile">
+					<h2 id="project">{site.name}</h2>
+					<p>{site.name} is an open-source decision model for backend applications. Send it a text and a question with its options, and it returns a choice, a yes or no, or a score, with probabilities. <a href="/docs/">Read the docs</a>.</p>
+				</li>
+				<li class="ptile tile">
+					<h2 id="contact">Contact</h2>
+					<p>Questions about {site.name}: <a href={`mailto:${company.projectEmail}`}>{company.projectEmail}</a>.</p>
+					<p>About the company: <a href={`mailto:${company.email}`}>{company.email}</a>.</p>
+				</li>
+			</ul>
+		</div>
+	</section>
+</SiteLayout>

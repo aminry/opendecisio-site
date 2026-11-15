@@ -1,5 +1,5 @@
 ---
-import { independence, site } from '../../config/site';
+import { company, independence, site } from '../../config/site';
 import { pin } from '../../lib/upstream.mjs';
 ---
 <footer class="site-footer">
@@ -11,8 +11,12 @@ import { pin } from '../../lib/upstream.mjs';
 			<li><a href="/docs/">Docs</a></li>
 			<li><a href="/docs/releases/">Releases</a></li>
 			<li><a href={`${site.repository}/blob/${pin.tag}/CONTRIBUTING.md`}>Contributing</a></li>
+			<li><a href="/about/">About</a></li>
 			<li><a href="/privacy/">Privacy</a></li>
 		</ul>
+		<p class="site-footer__company">
+			{site.name} is developed by <a href="/about/">{company.name}</a>, founded in {company.founded}. Questions about {site.name}: <a href={`mailto:${company.projectEmail}`}>{company.projectEmail}</a>.
+		</p>
 		<p class="site-footer__meta">
 			{site.licence}. The documentation is built from <a href={`${site.repository}/tree/${pin.tag}`}>{site.name} {pin.tag}</a>.
 		</p>

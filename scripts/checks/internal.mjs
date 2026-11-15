@@ -22,7 +22,8 @@ const MARKERS = [
 	['how cards are rented', /\btraining box\b|\brented box\b|\bvast\.ai\b/],
 	['an internal records path', /\bexperiments\/20\d\d-\d\d-\d\d_/],
 	['a local path', /\/Users\/[a-z]|\/home\/[a-z]+\/|~\/\.claude\b/],
-	['an email address', /\b[\w.+-]+@(?!example\.)[\w-]+\.(com|org|net|io|dev|ai)\b/],
+	// The two published contact addresses (src/config/site.ts, the footer and the About page) are the only ones allowed.
+	['an email address', /\b(?!(?:info@opendecisio\.com|info@tachara\.tech)(?![\w-]|\.\w))[\w.+-]+@(?!example\.)[\w-]+\.(com|org|net|io|dev|ai|tech)\b/],
 	['a token', /\b(ghp|gho|github_pat|hf)_[A-Za-z0-9_]{16,}|\bsk-[A-Za-z0-9]{20,}/],
 ];
 const SKIP = /(^|\/)package-lock\.json$|\.(png|jpe?g|webp|gif|mp4|webm|woff2?|ico|pdf|gz)$/;

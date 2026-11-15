@@ -509,6 +509,10 @@ p {
 	list-style: none;
 }
 
+.site-footer__company {
+	max-width: 44rem;
+}
+
 .site-footer a {
 	color: inherit;
 }

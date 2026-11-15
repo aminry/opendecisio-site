@@ -11,6 +11,14 @@ export const site = {
 	licence: 'Apache-2.0',
 } as const;
 
+// The company behind the project, and where to write.
+export const company = {
+	name: 'Tachara LLC',
+	founded: 2023,
+	email: 'info@tachara.tech',
+	projectEmail: 'info@opendecisio.com',
+} as const;
+
 export const independence = `${site.name} is an independent open-source project, not affiliated with or endorsed by TypeSafe. Jev is TypeSafe's product name.`;
 
 // Cloudflare Web Analytics: the site's visits are counted by the beacon in src/components/Analytics.astro, which is

@@ -79,7 +79,7 @@ for (const g of docsGroups) {
 	}
 }
 // The site's own pages: no wall of text there either (a table's or a figure's text aside).
-const SITE_PAGES = { '/benchmarks/': 'dist/benchmarks/index.html', '/demos/': 'dist/demos/index.html', '/demos/teach-and-certify/': 'dist/demos/teach-and-certify/index.html', '/privacy/': 'dist/privacy/index.html', '/404': 'dist/404.html' };
+const SITE_PAGES = { '/benchmarks/': 'dist/benchmarks/index.html', '/demos/': 'dist/demos/index.html', '/demos/teach-and-certify/': 'dist/demos/teach-and-certify/index.html', '/privacy/': 'dist/privacy/index.html', '/about/': 'dist/about/index.html', '/404': 'dist/404.html' };
 for (const [where, file] of Object.entries(SITE_PAGES)) {
 	const main = parse(readFileSync(file, 'utf8')).querySelector('main');
 	if (!main) { problems.push(`${where}: no main`); continue; }
