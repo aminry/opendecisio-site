@@ -7,7 +7,7 @@ description: Send images with a request and ask about them as you ask about text
 
 ::covers{links="docs/api.md#images=2-send-the-images"}
 
-Ask about images as you ask about text: the same questions, the same answers, with the images in the request.
+The questions and answers are the ones you use for text; only the request gains an `images` field.
 This script sends one photo as a data URL, to a server started for images:
 
 ```python
@@ -59,13 +59,17 @@ Use the Qwen base: the image route was measured with it only.
 - A multipart request needs an `X-Decisio-Client` header, any value; without one it is refused with 415.
 - `x-decisio-route: image` or `text` chooses the route explicitly; the answer's `x-decisio-route` header says which served it.
 
-## 3. Know what an image costs
+## What an image costs
+
+<span class="fp-anchor" id="3-know-what-an-image-costs"></span>
 
 The image is resized, keeping its proportions, and costs one token for every 32 by 32 pixels: between 64 and 16,384 tokens.
 A 1,024 by 768 image costs 768 tokens, and a 1,920 by 1,080 one 2,040.
 They count in `usage.input_tokens` and against the 32,768-token length.
 
-## 4. Know what it does not do
+## Limits
+
+<span class="fp-anchor" id="4-know-what-it-does-not-do"></span>
 
 - A request with images carries no certificate.
 - A taught task's examples are text only; an abstention threshold's examples may carry images.

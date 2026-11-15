@@ -73,10 +73,7 @@ Start the server with `--tasks-dir` and every task you teach is saved to disk be
 
 ::upstream{file="docs/tasks.md" section="Saved to disk (--tasks-dir)" block="1"}
 
-- Put the directory on a volume that outlives the server, and add `--require-tasks N`: a server that finds fewer than N usable tasks refuses to start, so a volume that failed to mount does not turn into untaught answers.
-- A save that fails fails the request with 500, and the task is not registered.
-- A task registered under another id for the same question replaces the first on disk too, so a restart serves the task registered last.
-- One directory belongs to one server. For several replicas, see [Operate](/docs/operating/#4-keep-tasks-across-restarts-and-replicas).
+Put the directory on a volume that outlives the server: [Set up for production](/docs/production/#keep-tasks-across-restarts-and-replicas) has the rest, and one directory belongs to one server.
 
 `/health` says where the server saves its tasks, and how many it loaded and applies:
 

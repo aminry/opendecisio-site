@@ -90,7 +90,9 @@ Every page ends with a "Next" card pair (previous, next) and the edit link.
 - Comments are italic and dim, aligned to a shared column when short.
 - Syntax colors come from the palette only: keywords amber, strings a warm grey-amber, numbers and names white, comments dim.
 - One command or one idea per block.
-- Output is a separate block with the label `OUTPUT`: blacker fill, 3px grey bar at the left, smaller radius.
+- Output is a separate panel under the command, titled `RESPONSE` when it is JSON and `OUTPUT` otherwise: blacker fill, 3px grey bar at the left, smaller radius.
+  A quiet note beside the title says what a reader needs (the flag the server started with, that fields are trimmed), never the release, date or machine.
+  JSON is indented by two spaces and uses the colours of the docs' own JSON blocks.
   Never mix a command and its output in one block.
 - A first section named `TL;DR` holds at most two code blocks.
   It needs no special style: it is an ordinary h2 followed by code.
@@ -144,6 +146,8 @@ In Markdown write `:::caution[Heads up]`, `:::note` or `:::tip`.
   The active node has a strong amber border and a 4px soft amber halo.
 - If no part of a flow is the model, use steel for the second actor or leave it out.
 - Use at most seven steps and six boxes.
+- One figure per page.
+- A lead-in table or command may sit between a figure and the first section.
 - Every diagram has a one-sentence takeaway below it and a text alternative.
 - Diagrams loop on their own, about 1.8 seconds a step.
   There are no play, next, scenario or pause controls.
@@ -180,6 +184,26 @@ In Markdown write `:::caution[Heads up]`, `:::note` or `:::tip`.
 - The only hard shadow is the figure stage's.
   Code, tables and callouts are flat.
   Use the amber glow only on the selected or primary object.
+
+## Site pages (not documentation)
+
+The home, Benchmarks, Demos, Privacy, the 404 and the Articles and News pages share the palette, the framed code and tables, the one callout and the motion rules above, with these differences:
+
+- **Hero system.** A mono kicker, a large title (the two-tone amber or steel title is allowed on the home, Demos, Privacy and the 404 page), a lede and a row of chips.
+  Benchmarks, Articles and News use a plain title: they are reading pages.
+- **Display sizes.** Home titles may be up to 72px and section titles 45px, with the soft title shadow.
+  Every other page uses the sizes in Typography.
+- **Hard shadow.** Tiles and cards of the home system (`.tile`, `.ptile`, `.hp-job`) and the primary button may carry the navy offset shadow, 6px.
+  Documentation pages do not.
+- **Code on the home.** A home code box stays dark in both themes and may use a corner Copy button without a header row when it is a single command.
+- **Posts and index pages.** One 780px reading column, 19px prose, hairline above each h2 (64px above the rule, 22px of padding inside it), framed tables, the callout style for a quote, and a closing `What next` that links the other posts and the feed.
+  An index is a list of hairline rows, not a grid of cards.
+- **Tables.** A table of three columns or more keeps its frame and scrolls inside it on a phone, with its first column sticky, on every page.
+- **Charts.** A fixed colour per measured base is allowed and stays the same on every chart.
+  A chart that is an image keeps its text at 11px or more and scrolls inside its card on a phone.
+  A static chart is a framed image: it needs no loop.
+  A chart title states the finding, or describes the data where the finding would repeat a number or rank something.
+- **Stages.** A card that holds only a table is flat, with no shadow: use the stage for drawings.
 
 ## What a page must not do
 

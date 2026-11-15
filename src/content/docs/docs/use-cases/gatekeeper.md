@@ -9,13 +9,15 @@ decisio names the rule a command falls under; your policy maps the rule to an ac
 
 ::figure{name="recipe-gatekeeper"}
 
+## TL;DR
+
 Save the [complete caller](/examples/recipes/gatekeeper.py) as `gatekeeper.py` and run it with Python 3.12 or later.
 Set `DECISIO_BASE_URL` to your server, or leave the local default.
 Until you register and certify this question, the caller sends answers to review.
 
 ::site-block{name="route-gatekeeper"}
 
-
+## Is it a good fit?
 
 :::fit
 - Written rules for what an agent may do, each with an action.
@@ -54,29 +56,23 @@ Check the returned certificate: a `null` threshold means no answer can be certif
 The caller acts only when `certified` is `true` and `certificate_kind` is `gold`, with a certificate id.
 A learned table's `agreement` certificate measures agreement with the model, so it goes to review in this recipe.
 
-
 - A certified answer takes the rule's action: allow, ask or block.
 - Anything else asks a person.
 - In the measured run, a kind of command that no rule named was never certified, so it went to a person ([Watch for drift](/docs/tasks/drift/)).
-
-## Handle unavailable and uncertain answers
-
-An HTTP error, timeout, invalid response or uncertified answer goes to the review path.
-The caller uses a 15-second network timeout; set it to fit your application, and log failures where you call `route`.
-It returns an action for your backend to perform.
 
 ## What it did
 
 ::proof{name="gatekeeper"}
 
-## Good to know
+<span class="fp-anchor" id="handle-unavailable-and-uncertain-answers"></span>
+<span class="fp-anchor" id="good-to-know"></span>
+## Limits
 
-Keep the question and options stable after registration.
-Certify again after changing the task or serving setup, and check new traffic with labelled examples.
-The caller prints an action; connect that action to your own queue, workflow or review interface.
+- An HTTP error, timeout or invalid response goes to the review path, like an uncertified answer ([Handle review and service failures](/docs/use-cases/#handle-review-and-service-failures)).
+- Keep the question and options stable after registration, and certify again after changing the task or serving setup ([Keep a certificate valid](/docs/production/#keep-a-certificate-valid)).
 
 ## What next
 
-- [Certified answers on real tasks](/demos/teach-and-certify/): the gatekeeper's rules, its results and its drift test.
 - [Certify answers](/docs/tasks/certify/): the promise, and how to choose the error target.
+- [Certified answers on real tasks](/demos/teach-and-certify/): the gatekeeper's rules, its results and its drift test.
 - [Use cases](/docs/use-cases/): the other recipes.

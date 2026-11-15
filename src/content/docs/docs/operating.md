@@ -5,7 +5,7 @@ description: Keep a decisio server up, know at a glance when it is not, and secu
 
 <!-- Site-written: the Operate guide, merging Deploying and operating with Health and monitoring. Its facts are decisio's docs/running.md ("When the engine dies"), docs/api.md ("What to watch", the response headers), docs/operating.md and SECURITY.md at the pinned release (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/operating.md docs/running.md#when-the-engine-dies=3-know-what-happens-when-the-engine-dies docs/running.md#checking-a-server=2-watch-it docs/api.md#what-to-watch=2-watch-it SECURITY.md#deployment-notes=5-secure-it SECURITY.md#cross-site-requests-from-a-web-page=5-secure-it SECURITY.md#reporting-a-vulnerability=5-secure-it SECURITY.md=5-secure-it docs/tasks.md#replicas-a-shared-store---task-store=4-keep-tasks-across-restarts-and-replicas"}
+::covers{links="docs/operating.md docs/running.md#when-the-engine-dies=know-what-happens-when-the-engine-dies docs/running.md#checking-a-server=watch-it docs/api.md#what-to-watch=watch-it SECURITY.md#deployment-notes=secure-it SECURITY.md#cross-site-requests-from-a-web-page=secure-it SECURITY.md#reporting-a-vulnerability=secure-it SECURITY.md=secure-it"}
 
 Wait until a server is ready, then read what it serves:
 
@@ -16,7 +16,9 @@ curl -s http://127.0.0.1:8000/health
 
 ::figure{name="serve-lifecycle"}
 
-## 1. Run it under a supervisor
+## Run it under a supervisor
+
+<span class="fp-anchor" id="1-run-it-under-a-supervisor"></span>
 
 When its engine dies, the server exits with code 70 and leaves the restart to whatever runs it.
 
@@ -30,7 +32,9 @@ When its engine dies, the server exits with code 70 and leaves the restart to wh
 - **Keep the weights on a volume**, so a restart does not download them again.
 - **Requests sent while the new server loads are refused**, so retry them in your client.
 
-## 2. Watch it
+## Watch it
+
+<span class="fp-anchor" id="2-watch-it"></span>
 
 | Watch | Where | What a bad value means |
 | --- | --- | --- |
@@ -66,7 +70,9 @@ curl -s -D - -o /dev/null http://127.0.0.1:8000/v1/systemone \
 
 The [recipe callers](/docs/use-cases/) demonstrate timeout and review behavior.
 
-## 3. Know what happens when the engine dies
+## Know what happens when the engine dies
+
+<span class="fp-anchor" id="3-know-what-happens-when-the-engine-dies"></span>
 
 The figure above is the sequence: the server checks the engine, answers 503, finishes what is in flight, exits with code 70 about 7 seconds after the failing request, and your supervisor starts it again.
 Once the engine is dead, every request, and `/health`, answers at once with the reason:
@@ -75,17 +81,16 @@ Once the engine is dead, every request, and `/health`, answers at once with the 
 - A death between requests turns `/health` to 503 within a second, before any request arrives.
 - An error caused by the request itself, such as a 422, is answered and does not touch the engine.
 
-## 4. Keep tasks across restarts and replicas
+## Keep tasks across restarts and replicas
 
-- **One server:** start it with `--tasks-dir` on a volume that outlives the container, and `--require-tasks N`, as [Teach a task](/docs/tasks/#6-keep-it-across-restarts) shows. One directory belongs to one server.
-- **Replicas behind a load balancer:** start every one with `--task-store` on object storage, such as `s3://bucket/prefix`. A task taught on one replica reaches the others within `--task-store-poll-seconds`, 5 by default, as the same fitted record, so every replica serves the same numbers.
-- **Two teachers at once:** a second registration of the same task answers 409 instead of overwriting it; read the task again and send it again.
-- **Keep fitting on one replica:** start the others with `--task-store-readonly` and route the task-writing routes to that one.
-- **A task with a fast table:** every replica needs the `decisio[table]` extra and CPU headroom, and decides for itself whether to use it; [Add a decision fast path](/docs/tasks/fast-table/#9-operating-notes) has what each state means.
-- **A fast table that learns from traffic:** on the shared store the replicas learn one table together. One replica trains under a lease, every replica times each new version itself, and a restart loses nothing ([Learn across replicas](/docs/tasks/fast-table/#6-learn-across-replicas)).
-- **If the store goes away:** replicas keep serving what they have, and teaching answers 503 until it is back; `/health` says so under `systemone.task_store`.
+<span class="fp-anchor" id="4-keep-tasks-across-restarts-and-replicas"></span>
 
-## 5. Secure it
+Tasks survive a restart with `--tasks-dir`, and replicas share them with `--task-store`.
+[Set up for production](/docs/production/#keep-tasks-across-restarts-and-replicas) has the settings.
+
+## Secure it
+
+<span class="fp-anchor" id="5-secure-it"></span>
 
 1. **Keep it on a private network, behind your proxy.** The server listens on `127.0.0.1` by default; do not expose it to the internet.
 2. **Put authentication, rate limits and request-size limits in the proxy.** The server has none.

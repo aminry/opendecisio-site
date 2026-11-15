@@ -5,9 +5,8 @@ description: What you see, why it happens, and what to do, from a server that wi
 
 <!-- Site-written: the Troubleshoot guide. Every row is a statement of decisio's docs/troubleshooting.md, docs/api.md, docs/running.md, docs/tasks.md, docs/migrating.md or EVAL_CARD.md at the pinned release (src/lib/figures/run-it.mjs checks each one still says it). -->
 
-::covers{links="docs/troubleshooting.md docs/troubleshooting.md#the-card-is-too-small=1-it-does-not-start docs/troubleshooting.md#the-driver-does-not-support-cuda-130=1-it-does-not-start docs/troubleshooting.md#port-8000-is-already-in-use=1-it-does-not-start docs/troubleshooting.md#the-checkpoint-download-fails-or-stops=1-it-does-not-start"}
+::covers{links="docs/troubleshooting.md docs/troubleshooting.md#the-card-is-too-small=it-does-not-start docs/troubleshooting.md#the-driver-does-not-support-cuda-130=it-does-not-start docs/troubleshooting.md#port-8000-is-already-in-use=it-does-not-start docs/troubleshooting.md#the-checkpoint-download-fails-or-stops=it-does-not-start"}
 
-Find what you see in the tables below, and what to do about it.
 Start with what the server says about itself:
 
 ```bash
@@ -17,21 +16,29 @@ curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8000/health
 curl -s http://127.0.0.1:8000/v1/tasks
 ```
 
-## 1. It does not start
+## It does not start
+
+<span class="fp-anchor" id="1-it-does-not-start"></span>
 
 ::symptoms{group="start"}
 
-## 2. A request fails
+## A request fails
+
+<span class="fp-anchor" id="2-a-request-fails"></span>
 
 Every error comes with a `detail` that names what is wrong: read it first.
 
 ::symptoms{group="request"}
 
-## 3. A task does not apply
+## A task does not apply
+
+<span class="fp-anchor" id="3-a-task-does-not-apply"></span>
 
 ::symptoms{group="tasks"}
 
-## 4. An answer surprises you
+## An answer surprises you
+
+<span class="fp-anchor" id="4-an-answer-surprises-you"></span>
 
 ::symptoms{group="answers"}
 

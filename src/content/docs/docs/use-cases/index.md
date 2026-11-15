@@ -26,8 +26,12 @@ A question that needs reasoning over several steps, or knowledge the text does n
 
 ## Handle review and service failures
 
-The recipe callers have a timeout and return a review action on HTTP errors or malformed answers.
-They require a gold certificate before acting automatically; a learned table's agreement certificate alone does not meet that policy.
+Every recipe caller sends an uncertified answer to review.
+It does the same on an HTTP error, a timeout or a malformed answer.
+It requires a gold certificate before acting on its own: a learned table's agreement certificate alone does not meet that policy.
+
+The callers use a 15-second network timeout; set it to fit your application, and log failures where you call `route`.
+Each caller prints an action for your backend to perform: connect that action to your own queue, workflow or review interface.
 
 ## What next
 
