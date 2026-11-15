@@ -203,19 +203,82 @@ h1#_top {
 	color: inherit;
 }
 
-/* What a block printed when it was run on the stand-in, as the record keeps it: a quiet output panel under the line. */
-.sl-markdown-content .checked__out {
-	margin: 0.4rem 0 0;
-	padding: 0.7rem 0.9rem;
-	max-height: 22rem;
-	overflow: auto;
-	border: 1px solid var(--sl-color-gray-5);
+/* What a command printed: a titled panel under the command. The title says what it is (Response or Output), a quiet note
+   beside it says what a reader needs to know (the flag the server started with, that fields are trimmed), and JSON is set
+   as the docs set any JSON: two-space indent, a colour for keys, strings and numbers. */
+.sl-markdown-content .response {
+	margin: 0.9rem 0 1.25rem;
+	border: 1px solid var(--cb-line);
 	border-left: 3px solid var(--sl-color-gray-3);
 	border-radius: 4px 14px 14px 4px;
 	background: var(--cb-out);
+	overflow: hidden;
+}
+
+.sl-markdown-content .response figcaption {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	gap: 0.15rem 0.75rem;
+	padding: 0.55rem 0.9rem;
+	border-bottom: 1px solid var(--cb-line);
+	background: var(--cb-head);
+}
+
+.sl-markdown-content .response__title {
+	font: 600 0.72rem/1 var(--d-font-mono, 'Geist Mono Site', monospace);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--sl-color-white);
+}
+
+.sl-markdown-content .response__note {
+	font-size: var(--d-step--2);
+	line-height: 1.4;
 	color: var(--sl-color-gray-2);
-	font: var(--d-step--1) / 1.55 var(--d-font-mono, 'Geist Mono Site', monospace);
+}
+
+.sl-markdown-content .checked__out {
+	margin: 0;
+	padding: 0.8rem 0.9rem 0.9rem;
+	max-height: 24rem;
+	overflow: auto;
+	border: 0;
+	background: transparent;
+	color: var(--j-p);
+	font: 13.75px / 1.65 var(--d-font-mono, 'Geist Mono Site', monospace);
 	white-space: pre;
+}
+
+/* The same colours the docs' own JSON code blocks use, in both themes. */
+.sl-markdown-content .checked__out {
+	--j-p: #d6deeb;
+	--j-k: #7fdbca;
+	--j-s: #c789d6;
+	--j-n: #f78c6c;
+}
+
+:root[data-theme='light'] .sl-markdown-content .checked__out {
+	--j-p: #403f53;
+	--j-k: #096e72;
+	--j-s: #7c5686;
+	--j-n: #aa0982;
+}
+
+.sl-markdown-content .checked__out .j-p {
+	color: var(--j-p);
+}
+
+.sl-markdown-content .checked__out .j-k {
+	color: var(--j-k);
+}
+
+.sl-markdown-content .checked__out .j-s {
+	color: var(--j-s);
+}
+
+.sl-markdown-content .checked__out .j-n {
+	color: var(--j-n);
 }
 
 /* A repository path named in code and linked: it should look like a link. */

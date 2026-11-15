@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pin, siteRoot } from './upstream.mjs';
 
-const escHtml = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+import { outputHtml } from './output-format.mjs';
 
 export const blockHash = (text) => createHash('sha256').update(text.trim()).digest('hex').slice(0, 16);
 
@@ -43,6 +43,29 @@ export function checkOf(text, where) {
 // A record named by a full address (a run kept in another repository, at its own commit) is linked as it is.
 const record = (path) => `<a href="${/^https:/.test(path) ? path : `https://github.com/${pin.repository}/tree/${pin.tag}/${path.replace(/\/$/, '')}`}">run record</a>`;
 
+// What a reader needs from a note under a block: what the block needs, or what it prints. Never which release, date or
+// machine it was checked on: the docs describe the current release, and the build checks every command against it.
+const sentence = (t) => (/^decisio/.test(t) ? t : t.charAt(0).toUpperCase() + t.slice(1));
+// The verification plan's own words for a block's conditions, put the way a reader needs them.
+const plain = (t) =>
+	t
+		.replace(/^the clone is the pinned release.*$/i, '')
+		.replace(/^the answers? (is|are) the stand-in['’]s, not (the default model['’]s|a model-quality measurement)/i, (m, w, what) => `The answer${w === 'are' ? 's' : ''} ${w === 'are' ? 'come' : 'comes'} from a small test model, not ${/default/.test(what) ? 'the default model' : 'a model-quality measurement'}`)
+		.replace(/^on the stand-in started with/i, 'on a server started with')
+		.replace(/, the version the page names$/i, '')
+		.replace(/the CPU stand-in cannot write reasoning, only the vLLM engine on a card can/i, 'the vLLM engine writes reasoning');
+const requirement = (why) => {
+	let t = why
+		.replace(/;\s*(decisio['’]s README timed|an image built from|decisio builds the variant|the (recipe )?transport tests|transport tests|the package tests|its lines are|decisio wrote it for its docs).*$/i, '')
+		.replace(/,?\s*which this check (does not have|does not pull)/i, '')
+		.replace(/\s*\(an image built from[^)]*\)/i, '')
+		.replace(/;\s*not run at this release\s*$/i, '')
+		.replace(/;?\s*(the recipe transport tests|transport tests|the package tests)[^;]*$/i, '')
+		.trim();
+	t = plain(t).replace(/^it (needs|is) /i, (m, w) => (w.toLowerCase() === 'needs' ? 'Needs ' : 'It is '));
+	return sentence(t).replace(/\.$/, '');
+};
+
 /** The line shown under a block. */
 export function checkHtml(entry, { moved = false } = {}) {
 	// One element for the text, so a link or code inside it stays in the line
@@ -50,18 +73,24 @@ export function checkHtml(entry, { moved = false } = {}) {
 	// A block shown with its comments moved above their commands says so: the commands are the ones checked.
 	const line = (text, cls = '') => `<p class="checked${cls}"><span>${text}${moved ? ' Its comments are shown above their commands.' : ''}</span></p>`;
 	switch (entry.status) {
-		case 'cpu':
-			return line(`Run against the CPU stand-in at ${entry.tag} on ${entry.date}${entry.note ? `: ${entry.note}` : ''}${entry.stdout ? (entry.trimmed ? '. It printed, trimmed to the fields this page uses:' : '. It printed:') : '.'}`, ' checked--cpu') + (entry.stdout ? `<pre class="checked__out" tabindex="0"><code>${escHtml(entry.stdout)}</code></pre>` : '');
+		case 'cpu': {
+			const note = entry.note ? sentence(plain(entry.note)) : '';
+			if (!entry.stdout) return note ? line(`${note}.`, ' checked--cpu') : '';
+			// What the command printed: a titled panel, the JSON set as the docs set any JSON, and what a reader needs to know of it beside the title.
+			const { html, json } = outputHtml(entry.stdout);
+			const notes = [note, entry.trimmed ? 'Trimmed to the fields this page uses' : '', moved ? 'Its comments are shown above their commands' : ''].filter(Boolean).join('. ');
+			return `<figure class="response"><figcaption><span class="response__title">${json ? 'Response' : 'Output'}</span>${notes ? `<span class="response__note">${notes}</span>` : ''}</figcaption><pre class="checked__out" tabindex="0"><code>${html}</code></pre></figure>`;
+		}
 		case 'skills':
-			return line(`Checked with skills package ${entry.version} on ${entry.date}, in an isolated project.`);
+			return '';
 		case 'verbatim':
-			return line(`Needs ${entry.needs}: taken as it is from decisio's checked docs${entry.record ? `, ${record(entry.record)}` : ''}.`);
+			return line(`Needs ${entry.needs}${entry.record ? `: ${record(entry.record)}` : ''}.`);
 		case 'shown':
-			return line(`Shown, not run: ${entry.why}${entry.record ? `; ${record(entry.record)}` : ''}.`);
+			return line(`${requirement(entry.why)}${entry.record ? `; ${record(entry.record)}` : ''}.`);
 		case 'output':
 			return line(`Recorded output${entry.record ? `, ${record(entry.record)}` : ''}.`);
 		case 'ollama':
-			return line(`Run against Ollama ${entry.ollama} with ${entry.models.join(' and ')}, the listing as published, on ${entry.date}; the answers are Ollama's, not the default model's on a decisio server.`);
+			return line("The answers are Ollama's, not the default model's on a decisio server.");
 		case 'example':
 			return line('A shape to fill in, not a command to run.');
 		default:
