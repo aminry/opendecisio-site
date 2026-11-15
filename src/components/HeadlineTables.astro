@@ -25,7 +25,7 @@ const notes = h.notes.filter((n) => used.has(plain(n).match(/^\(([a-z])\)/)?.[1]
 const added = h.added.filter((a) => used.has(a.letter));
 ---
 <div class="table-scroll" tabindex="0" role="region" aria-label="The headline: scores, scrolls sideways when it does not fit">
-	<table class="data-table data-table--stack compare compare--numbers">
+	<table class="data-table data-table--framed compare compare--numbers">
 		<caption class="sr-only">{site.name}'s three bases beside Jev 1.13 and an open entry, {label(h.best)}, as of 2026-10-05</caption>
 		<thead>
 			<tr>
@@ -61,7 +61,7 @@ const added = h.added.filter((a) => used.has(a.letter));
 
 {systems && (
 	<div class="table-scroll mt-6" tabindex="0" role="region" aria-label="The headline: what each system is, scrolls sideways when it does not fit">
-		<table class="data-table data-table--stack compare compare--systems">
+		<table class="data-table data-table--framed compare compare--systems">
 			<caption class="sr-only">Latency, price or self-hosting cost, context length and what each system is</caption>
 			<thead>
 				<tr>

@@ -476,16 +476,24 @@
 	flex: 1;
 }
 
-/* On a phone a disclosure's count goes under its title. */
+/* On a phone a disclosure's count goes under its title, and a title that wraps stays beside the chevron
+   (a grid: the chevron has its own column, so the title can never push it onto a line of its own). */
 @media (max-width: 40rem) {
 	.disc > summary {
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: 8px minmax(0, 1fr);
+		align-items: baseline;
+		column-gap: 10px;
 		row-gap: 2px;
 	}
 
+	.disc > summary::before {
+		align-self: center;
+		grid-row: 1;
+	}
+
 	.disc__n {
-		flex-basis: 100%;
-		padding-left: 18px;
+		grid-column: 2;
 		line-height: 1.4;
 	}
 }
@@ -714,6 +722,30 @@
 	box-shadow: none;
 }
 
+/* A reading page uses the guide's heading sizes, not the home's display sizes: 27px sections, the hairline above each. */
+.bench .section {
+	padding-block: 64px 80px;
+}
+
+.bench .page-hero h1 {
+	text-shadow: none;
+}
+
+.bench .page-hero .hero__glow {
+	display: none;
+}
+
+.bench .section__head h2 {
+	font-size: 27px;
+	line-height: 1.25;
+	letter-spacing: -0.025em;
+	text-shadow: none;
+}
+
+.bench .section__head {
+	margin-bottom: 36px;
+}
+
 /* A card that holds a chart is a figure stage: panel, 1px line, 14px radius, the one hard shadow. */
 .bench .pcard.tile {
 	padding: 18px 20px 16px;
@@ -731,37 +763,22 @@
 	letter-spacing: 0;
 }
 
-/* A framed table: rounded, bordered, a tinted mono header, hairline rows. It stays a table at every width: below
-   the stacking breakpoint it scrolls sideways inside its frame and the first column stays in view. */
-.bench .table-scroll {
+/* A framed table, on every site page: rounded, bordered, a tinted mono header, hairline rows. It stays a table at
+   every width: when it does not fit it scrolls sideways inside its focusable frame and the first column stays in view. */
+.table-scroll[role='region'] {
 	border: 1px solid var(--h-line);
 	border-radius: 14px;
 	background: var(--d-surface);
 	overflow-x: auto;
 }
 
-.bench .data-table {
+.data-table--framed {
 	min-width: 34rem;
 	font-size: 14.5px;
 	line-height: 1.5;
 }
 
-.bench .data-table--stack thead {
-	position: static;
-	width: auto;
-	height: auto;
-	overflow: visible;
-	clip-path: none;
-}
-
-.bench .data-table--stack tr {
-	display: table-row;
-	padding: 0;
-	border: 0;
-}
-
-.bench .data-table--stack :is(th, td, td.num) {
-	display: table-cell;
+.data-table--framed :is(th, td, td.num) {
 	padding: 11px 14px;
 	border: 0;
 	border-top: 1px solid var(--h-line);
@@ -769,48 +786,32 @@
 	text-align: left;
 }
 
-.bench .data-table--stack :is(td.num, th.num) {
+.data-table--framed :is(td.num, th.num) {
 	text-align: right;
 	white-space: nowrap;
 }
 
-.bench .data-table--stack th.num {
+.data-table--framed th.num {
 	white-space: normal;
 }
 
-.bench .data-table--stack.compare td.prose {
-	display: table-cell;
-	margin: 0;
-}
-
-.bench .data-table--stack.compare td.prose > span,
-.bench .data-table--stack td > span {
-	text-align: inherit;
-}
-
-.bench .data-table--stack td::before {
-	content: none;
-}
-
-.bench .data-table--stack tbody tr:first-child :is(th, td) {
+.data-table--framed tbody tr:first-child :is(th, td) {
 	border-top: 0;
 }
 
-.bench .data-table--stack tbody th {
-	display: table-cell;
-	margin: 0;
+.data-table--framed tbody th {
 	font-weight: 450;
 }
 
-.bench .data-table thead tr {
+.data-table--framed thead tr {
 	background: color-mix(in srgb, var(--d-navy) 50%, var(--d-surface));
 }
 
-:root[data-theme='light'] .bench .data-table thead tr {
+:root[data-theme='light'] .data-table--framed thead tr {
 	background: color-mix(in srgb, var(--d-navy) 8%, var(--d-surface));
 }
 
-.bench .data-table thead th {
+.data-table--framed thead th {
 	border-top: 0;
 	font: 500 11.5px/1.4 var(--d-font-mono, 'Geist Mono Site', monospace);
 	letter-spacing: 0.08em;
@@ -818,28 +819,37 @@
 	color: var(--d-muted);
 }
 
-.bench .data-table thead th :is(.src, code, a) {
+.data-table--framed thead th :is(.src, code, a) {
 	text-transform: none;
 	letter-spacing: 0;
 }
 
-.bench .data-table :is(th, td) code {
+.data-table--framed :is(th, td) code {
 	font-size: 0.96em;
 }
 
-.bench .data-table :is(tbody th, thead th:first-child) {
+.data-table--framed :is(tbody th, thead th:first-child) {
 	position: sticky;
 	left: 0;
 	z-index: 1;
 	background: var(--d-surface);
 }
 
-.bench .data-table thead th:first-child {
+.data-table--framed thead th:first-child {
 	background: color-mix(in srgb, var(--d-navy) 50%, var(--d-surface));
 }
 
-:root[data-theme='light'] .bench .data-table thead th:first-child {
+:root[data-theme='light'] .data-table--framed thead th:first-child {
 	background: color-mix(in srgb, var(--d-navy) 8%, var(--d-surface));
+}
+
+.data-table--framed .head2 {
+	display: inline-grid;
+}
+
+.table-scroll[role='region']:focus-visible {
+	outline: 2px solid var(--d-focus);
+	outline-offset: 2px;
 }
 
 /* Charts: a hairline grid at 8%, mono axis labels, and a width a phone can read (the chart scrolls inside its card). */
@@ -875,8 +885,4 @@
 .bench .lc-fig .lc {
 	display: block;
 	min-width: 36rem;
-}
-
-.bench .data-table--stack .head2 {
-	display: inline-grid;
 }

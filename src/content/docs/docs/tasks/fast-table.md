@@ -47,7 +47,6 @@ The fast path encodes the state alone; the model reads the context together with
 
 ::figure{name="table-context"}
 
-
 Move genuinely shared material into context, and keep every changing fact the decision needs in state.
 Changing the context changes the task and requires teaching and certification again.
 
@@ -74,7 +73,7 @@ On the serving host, install the `decisio[table]` extra or use the [table contai
 Without the extra, registration returns 422.
 
 The default `static` backend uses token-vector lookups and a classifier, with no neural network running on the CPU.
-For short texts, the published embedding-plus-classifier cost is about 0.05 ms (50 µs); longer changing inputs cost more.
+Longer changing inputs cost more than the short-text figure above.
 
 Prepare these files beside the script:
 
@@ -114,6 +113,7 @@ If none qualifies, the task continues through decisio.
 
 The saving includes the classifier's cost on every request and the model's cost on the requests passed on.
 A retained table is a result for this task and host, not a promised speedup for other traffic.
+Set `fast_table.min_saving` from 0.01 to 0.90 if your deployment needs a different required mean saving.
 
 <span class="fp-anchor" id="4-send-new-facts-then-read-the-answer"></span>
 
@@ -158,7 +158,6 @@ You can also let model-answered traffic supply the learning data.
 Until a candidate qualifies, decisio answers every request.
 A candidate becomes active only after certification and the host saving check pass.
 
-
 For this route, replace `task.json` with a complete question registration such as this:
 
 ```json
@@ -177,8 +176,12 @@ Use your real refund policy in `context.txt`, then run the same registration and
 For a question registration, the request script names its answer `decision`; labelled registrations retain the question keys from their examples.
 No human labels are invented or added to the learning registration.
 
+
+:::caution[Heads up]
 A learned table can copy the model's mistakes.
 Its agreement certificate concerns matching the model, not correctness against human labels.
+:::
+
 A labelled task can also learn; its certificate stays gold while it has enough held-out human labels.
 
 The explore share sends some table-eligible requests to the model, 0.02 by default.
@@ -275,13 +278,14 @@ A read-only replica serves tables without logging rows or training.
 
 <span class="fp-anchor" id="8-when-to-use-something-else"></span>
 
-## Good to know
+<span class="fp-anchor" id="good-to-know"></span>
+
+## Limits
 
 - This fast path supports choice and yes/no questions on the text route; scores, images, adapters and changing-option tasks do not use it.
 - Long or difficult changing inputs can certify too little to save time, even with a well-organized context.
 - An option absent from the fitting examples is passed to decisio.
 - A deferred request pays both the CPU classifier cost and the model cost; test that path too.
-- Set `fast_table.min_saving` from 0.01 to 0.90 if your deployment needs a different required mean saving.
 - Install the extra and provide CPU headroom on every replica, and certify again after changing the context or serving setup.
 
 ## What next

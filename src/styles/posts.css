@@ -19,6 +19,13 @@
 	--p-code-head: color-mix(in srgb, var(--d-navy) 8%, var(--d-surface-2));
 }
 
+/* One column, centred: the hero, the list and the article share a 780px measure in the middle of the page, so nothing sits
+   against an empty right half. (The docs keep a left column beside an "On this page" rail; a post has no rail to fill it.) */
+.posts-index .wrap,
+.post .wrap {
+	width: min(100% - 2 * var(--d-gutter), 48.75rem);
+}
+
 /* The hero, quiet: a breadcrumb label, the headline at the guide's h1 size, one lead, no glow. */
 .home .posts-index .page-hero,
 .home .post__head {
@@ -518,13 +525,35 @@
 	border-radius: 14px;
 }
 
+/* A wide chart keeps its text readable on a phone: the image is never narrower than 38rem, and its frame scrolls. */
+.prose .lc--wide {
+	display: block;
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
+	border-radius: 14px;
+}
+
+.prose .lc--wide:focus-visible {
+	outline: 2px solid var(--d-accent-line, currentColor);
+	outline-offset: 2px;
+}
+
+.prose .lc--wide .lc__img {
+	min-width: 38rem;
+}
+
 /* A table: a rounded bordered frame, a mono capital header row, hairline rows, 14.5px cells. It never turns into
    stacked cards: one that does not fit scrolls sideways inside its frame, the first column staying in view. */
 .prose .table-wrap {
 	margin-block: 24px;
 	border: 1px solid var(--p-line);
 	border-radius: 14px;
-	background: var(--d-panel);
+	background:
+		linear-gradient(90deg, var(--d-panel), transparent) 0 0 / 28px 100% no-repeat local,
+		linear-gradient(270deg, var(--d-panel), transparent) 100% 0 / 28px 100% no-repeat local,
+		linear-gradient(90deg, color-mix(in srgb, var(--d-ink) 22%, transparent), transparent) 0 0 / 14px 100% no-repeat scroll,
+		linear-gradient(270deg, color-mix(in srgb, var(--d-ink) 22%, transparent), transparent) 100% 0 / 14px 100% no-repeat scroll,
+		var(--d-panel);
 	overflow-x: auto;
 	overscroll-behavior-x: contain;
 }
@@ -557,6 +586,8 @@
 	color: var(--p-dim);
 	text-align: left;
 	vertical-align: bottom;
+	/* A long header wraps instead of widening its column across the whole table. */
+	max-width: 15rem;
 }
 
 .prose .table-wrap > table td {

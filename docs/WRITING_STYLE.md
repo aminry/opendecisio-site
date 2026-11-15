@@ -98,7 +98,7 @@ Budget: 300 to 600 words.
 5. Steps: numbered, each begins with a verb, each has one code block and one sentence on what to expect.
 6. What comes back: the result and how to read it.
    An optional "How it behaves" or "Measured result" section may follow for a cost, sizing or recorded result.
-7. Limits: at most five bullets, named "Limits" (the older "Good to know" is the same section).
+7. Limits: at most five bullets, named "Limits" .
 8. What next.
 
 ### Concept
@@ -140,7 +140,7 @@ Budget: 300 to 600 words.
 Over the ceiling, split the page or move detail into a linked page.
 Words are prose words: paragraphs, list items and headings.
 Run `node scripts/prose-words.mjs` to count them per page; it reports and does not fail the build, because pinned facts can keep a page over budget.
-An h3 counts toward its parent section's 200 words.
+An h3 counts toward its parent section's 200 words, except the numbered steps of a how-to, which are exempt.
 Code, tables, source notes, comments and `::` lines are not counted.
 
 ## Titles and headings
@@ -180,6 +180,8 @@ A settings checklist is a reference page: its first-screen artifact may be a tab
   On a guide page the opening example or figure counts as the TL;DR (the `docs-pattern` gate wants a code block or figure before the first heading).
   On a page that opens with a figure, the TL;DR comes right after it.
 - A concept page may put a short table or command between the figure and its first section.
+- A feature page with a splash story may keep its story headings ("Same pattern. Different decisions."); its other sections use plain headings.
+- A caveat inside a paragraph whose sentence is pinned may be wrapped in a callout: the sentence stays verbatim.
 - A callout is written `:::caution[Heads up]`, `:::note` or `:::tip`.
 - A renamed or moved heading keeps its old anchor: add a hidden `fp-anchor` span with the old id, as `docs/evaluation-card` does.
   Prefer plain headings (questions or nouns) to numbered headings, but never break a link to a numbered one.
