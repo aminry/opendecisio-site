@@ -187,15 +187,18 @@ export const sourced = [
 	]),
 	// Taught tasks saved to disk and shared between replicas (0.25.0)
 	...fromPage('/docs/tasks/', [
-		['A task registered under another id for the same question replaces the first on disk too, so a restart serves the task registered last.', upgrading, 'a restart serves the task registered last'],
 		['every task you teach is saved to disk before the server answers, and loaded again at the next start', upgrading, 'written through atomically before the response and loaded at start'],
+		['/health says where the server saves its tasks, and how many it loaded and applies', tasksDoc, '`GET /v1/tasks`, `GET /v1/abstention/tasks` and `/health` (`systemone.task_store`) carry the same: `saved_to`, per kind `loaded`, `applied`'],
+	]),
+	...fromPage('/docs/production/', [
 		['a server that finds fewer than N usable tasks refuses to start', tasksDoc, '**`--require-tasks N`** refuses to start unless at least N tasks apply to this server'],
 		['so a volume that failed to mount does not turn into untaught answers', tasksDoc, 'a store volume that failed to mount gives a server that starts, answers, and has forgotten everything'],
 		['A save that fails fails the request with 500, and the task is not registered.', tasksDoc, 'The response is a 500 saying the task was not saved and the change was not made; the task is not registered'],
 		['One directory belongs to one server.', tasksDoc, '**One server owns a directory.**'],
-		['/health says where the server saves its tasks, and how many it loaded and applies', tasksDoc, '`GET /v1/tasks`, `GET /v1/abstention/tasks` and `/health` (`systemone.task_store`) carry the same: `saved_to`, per kind `loaded`, `applied`'],
-	]),
-	...fromPage('/docs/operating/', [
+		['A task registered under another id for the same question replaces the first on disk too, so a restart serves the task registered last.', upgrading, 'a restart serves the task registered last'],
+		['--max-model-len 32768 serves only what was measured', running, 'to serve only what was measured, give `--max-model-len 32768`'],
+		['the 31B served 98,304 tokens at 0.90 and 49,152 at 0.85, and did not start at 0.70', running, '| 0.70 | 18.54 GiB | 22,064 | does not start |'],
+		['A prompt longer than the length gets 422, and the server stays up.', api, 'the server stays up'],
 		['on the shared store the replicas learn one table together. One replica trains under a lease, every replica times each new version itself', tasksDoc, 'one replica trains under a lease, and every replica serves the published versions after timing them itself'],
 		['start it with --tasks-dir on a volume that outlives the container, and --require-tasks N', operating, 'put the directory on a volume that outlives the container, and start with `--require-tasks N`'],
 		['start every one with --task-store on object storage, such as s3://bucket/prefix', operating, 'For replicas, start every one with `--task-store'],
@@ -550,9 +553,6 @@ export const sourced = [
 		['median of 10 new texts per length, on one RTX PRO 6000 Blackwell at 600 W, decisio 0.11.1 on vLLM 0.30.0', running, 'median of 10 new documents per length, on one RTX PRO 6000 Blackwell Workstation Edition at 600 W'],
 		['decisio 0.11.1 on vLLM 0.30.0', running, 'decisio 0.11.1 on vLLM 0.30.0'],
 		['under 165 ms at every length, on every model', running, 'The second question stays under 165 ms on every length and base.'],
-		['--max-model-len 32768 serves only what was measured', running, 'to serve only what was measured, give `--max-model-len 32768`'],
-		['the 31B served 98,304 tokens at 0.90 and 49,152 at 0.85, and did not start at 0.70', running, '| 0.70 | 18.54 GiB | 22,064 | does not start |'],
-		['A prompt longer than the length gets 422, and the server stays up.', api, 'the server stays up'],
 		['A choice can have up to 255 options; more gets 422.', api, 'up to 255 options (more is 422)'],
 		["+21 to +34 ms on the 31B's first read, for texts of 300 to 3,000 tokens", running, 'and +21, +34 and +34 ms on Gemma 4 31B (`runs/2026-10-06_latency-585w/`'],
 		['the 31B kept 0.61 and 0.74 of it at 32 and 64 clients', running, 'but the 31B kept only 0.61 and 0.74'],
@@ -632,7 +632,7 @@ export const sourced = [
 		['This fast path supports choice and yes/no questions on the text route', tasksDoc, 'Choice and yes/no questions on the text route, one order'],
 		['A model fallback can still be uncertified', tasksDoc, 'An answer of either stage that reaches its threshold is certified'],
 	]),
-	...fromPage('/docs/operating/', [
+	...fromPage('/docs/production/', [
 		['every replica needs the decisio[table] extra and CPU headroom', operating, 'needs `pip install \'decisio[table]\'` on every replica and CPU headroom on each'],
 	]),
 	...fromPage('/news/fast-table/', [

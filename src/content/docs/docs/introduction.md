@@ -38,17 +38,17 @@ Your backend sends JSON over HTTP; it needs no particular application framework.
 When you ask the same question repeatedly, [teach a task](/docs/tasks/) from your labelled examples.
 To automate only the answers that meet your error target, [certify the task](/docs/tasks/certify/) and handle the remaining answers in your review path.
 
+## Use a coding assistant
+
+[Install the decisio skills](/docs/ai-skills/) to have Claude Code or Codex prepare your setup, request or backend integration.
+Choose the workflow for your task and include your hardware or endpoint in the prompt.
+
 ## Good to know
 
 - Run the server on a private network or behind an authenticated proxy, and call it from your backend.
 - Pick a model that fits your hardware using [Requirements and limits](/docs/limits/).
 - Ollama uses its own serving route and settings; use the decisio server to teach and certify tasks.
 - For client contract tests without model-serving hardware, a [CPU development server](/docs/deploy/development/) is available.
-
-## Use a coding assistant
-
-[Install the decisio skills](/docs/ai-skills/) to have Claude Code or Codex prepare your setup, request or backend integration.
-Choose the workflow for your task and include your hardware or endpoint in the prompt.
 
 ## What next
 

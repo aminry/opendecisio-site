@@ -65,7 +65,7 @@ curl -s http://127.0.0.1:8000/health
 ## What decisio adds
 
 - [Teach a task](/docs/tasks/): teach a question you ask again and again from your own labelled examples, and certify its answers.
-- [Operate](/docs/operating/#2-watch-it): `GET /health` and the `x-decisio-*` headers on every answer, which give the server's time and what answered.
+- [Operate](/docs/operating/#watch-it): `GET /health` and the `x-decisio-*` headers on every answer, which give the server's time and what answered.
 - [How it works](/docs/how-it-works/): decisio reads every option's probability from the model in one pass, instead of generating text.
 
 ## What next

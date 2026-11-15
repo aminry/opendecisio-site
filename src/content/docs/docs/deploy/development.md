@@ -7,19 +7,30 @@ description: Build and test a client on any machine, with no GPU. The CPU stand-
 
 ::covers{links="README.md#cpu-stand-in-for-development docs/running.md#cpu-stand-in-for-development"}
 
-Start it from a clone of the release, on any machine.
+Test a client, a task registration and its tests against a real decisio server, on any machine with no GPU.
+The CPU stand-in answers from a small model, so it checks your integration and never the quality of the answers.
+For real answers, start with [a GPU](/docs/deploy/cloud-gpu/), [a Mac or Ollama](/docs/deploy/mac/).
+
+Start it from a clone of the release:
 
 ::site-block{name="stand-in-start"}
 
-## 1. What you get
+<span class="fp-anchor" id="1-what-you-get"></span>
+
+## What do you get?
 
 - Every route the real server has, so a client, a task registration and its tests run against it unchanged.
-- Answers from `Qwen/Qwen3-0.6B-Base`, a small model for development; they are not decisio's measured answers.
 - A server that is ready 4 to 8 seconds after it starts, once the model is downloaded, and answers a first question in about 0.3 seconds on top (on Apple silicon, 2026-10-14).
 
 The first start downloads the model, about 1.2 GB, once.
 
-## 2. Send it a request
+:::caution[Heads up]
+Answers come from `Qwen/Qwen3-0.6B-Base`, a small model for development; they are not decisio's measured answers.
+:::
+
+<span class="fp-anchor" id="2-send-it-a-request"></span>
+
+## Send it a request
 
 It is ready when `/health` answers:
 
@@ -30,7 +41,9 @@ curl -s http://127.0.0.1:8000/health
 The request from [Get started](/docs/#3-ask-your-first-question) works as it is; only the numbers in the answer differ.
 [Call it from your code](/docs/use-from/) has the same request from Python, JavaScript and TypeScript.
 
-## 3. Teach it a task
+<span class="fp-anchor" id="3-teach-it-a-task"></span>
+
+## Teach it a task
 
 The walk-through of [Teach a task](/docs/tasks/) runs on the stand-in, end to end: register a task, ask it, list it and remove it.
 The site checks every one of its commands this way.

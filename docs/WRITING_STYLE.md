@@ -17,12 +17,18 @@ Update that fact's page key in `sourced.mjs`, the `::covers` aliases, the docs g
 
 Do all of this in one change, and commit the new page before running the `docs-pattern` gate (a new page has no reading time or date until it is committed):
 
-1. Choose the owning page by the reader's job: a fact about running in production goes to the production page, a fact about the request format goes to the layout page.
-2. Move the pinned sentences verbatim and re-key their rows in `src/config/sourced.mjs` to the new page.
-3. Move the `::covers` aliases: an alias maps only to a heading on its own page, so add it to the target page's `::covers` line and remove it from the old one.
-4. Leave a hidden `fp-anchor` span with the old id just above a heading on the page that lost the content (a short pointer section is fine), so old links land somewhere sensible.
-5. A new page also needs its slug, a row in `docs/SITEMAP.md`, an entry in `src/config/docs-groups.mjs`, a decision on any redirect, and `src/lib/upstream-map.mjs` links if decisio's own docs point at it.
-6. Update every inbound link.
+1. Search every page for each pinned sentence first: the same sentence can sit on two pages, and merging or recasing a pinned sentence breaks the `sourced` gate.
+2. Choose the owning page by the reader's job: a fact about running in production goes to the production page, a fact about the request format goes to the layout page.
+3. Move the pinned sentences verbatim and re-key their rows in `src/config/sourced.mjs` to the new page.
+4. Move the `::covers` aliases: an alias maps only to a heading on its own page, so add it to the target page's `::covers` line and remove it from the old one.
+5. Leave a hidden `fp-anchor` span with the old id just above a heading on the page that lost the content (a short pointer section is fine), so old links land somewhere sensible.
+   When a heading is renamed, update its `::covers` alias to the new slug as well: an `fp-anchor` span does not satisfy it.
+6. A new page also needs its slug, a row in `docs/SITEMAP.md`, an entry in `src/config/docs-groups.mjs`, a decision on any redirect, and `src/lib/upstream-map.mjs` links if decisio's own docs point at it.
+7. Update every inbound link, and the old ids in `src/config/redirects.mjs`.
+   Skip `src/content/news`: published posts are not edited.
+8. Every code block is listed in `verification/plan.mjs` by page and position (`n`), and `same-as` entries point at those positions.
+   Moving, adding or removing a block renumbers its entries and any `of:` references.
+   Run `node scripts/verify-commands.mjs --dry-run` (CI runs it too) before you push.
 
 ## What good docs do
 
@@ -70,6 +76,19 @@ Do all of this in one change, and commit the new page before running the `docs-p
 
 ## Page types and their skeletons
 
+### Learning guide
+
+A page that teaches a question type or concept by showing a request first (choice, yes/no, score, probabilities).
+
+1. Title: the thing taught, as a noun phrase.
+2. Lead: what the reader can do with it, in two sentences.
+3. The request (code block), then the answer it returns.
+4. A figure when the idea is a flow or a rule.
+5. How to act on the answer.
+6. Limits, then What next.
+
+Budget: 300 to 600 words.
+
 ### How-to (default)
 
 1. Title: a verb phrase ("Add a fast path to a recurring decision").
@@ -78,8 +97,9 @@ Do all of this in one change, and commit the new page before running the `docs-p
 4. Words you will see (only if three or more new terms).
 5. Steps: numbered, each begins with a verb, each has one code block and one sentence on what to expect.
 6. What comes back: the result and how to read it.
-7. Limits: at most five bullets.
-8. Next.
+   An optional "How it behaves" or "Measured result" section may follow for a cost, sizing or recorded result.
+7. Limits: at most five bullets, named "Limits" (the older "Good to know" is the same section).
+8. What next.
 
 ### Concept
 
@@ -99,6 +119,7 @@ Do all of this in one change, and commit the new page before running the `docs-p
 3. A table of parameters, fields or commands, with defaults.
 4. One minimal example per variant.
 5. Errors, as a table of "what you see, why, what to do".
+6. What next.
 
 ### Evidence
 
@@ -118,7 +139,31 @@ Do all of this in one change, and commit the new page before running the `docs-p
 
 Over the ceiling, split the page or move detail into a linked page.
 Words are prose words: paragraphs, list items and headings.
+Run `node scripts/prose-words.mjs` to count them per page; it reports and does not fail the build, because pinned facts can keep a page over budget.
+An h3 counts toward its parent section's 200 words.
 Code, tables, source notes, comments and `::` lines are not counted.
+
+## Titles and headings
+
+- A how-to title is a verb phrase, but a catalogue page (a recipe, a deploy target) may keep a noun title: the sidebar, sitemap, home cards and link text all use it.
+  Renaming a page means updating every inbound link text.
+- A how-to's section headings are verbs ("Install the skills") or questions ("How do you turn it on?"); pick one style per page.
+- The closing section is always named `What next`.
+- A page may number the steps a reader performs in order and leave its other sections plain.
+
+## Site pages (not documentation)
+
+A landing, gallery, legal or 404 page is not a how-to.
+
+1. A kicker and a title that says what the page is.
+2. A lede that leads with the benefit.
+3. The content in short sections, each with a heading that names its question or its noun.
+4. Limits and caveats last, in one short section when the page has any.
+5. One next step: a row of chips or one primary button.
+
+A legal page may use first person where the notice's wording is fixed (the privacy notice says "We sell or share no personal data"); elsewhere describe what the system does.
+A post keeps its facts, date and wording once published.
+Posts carry no fenced code: every code block in the site is checked and listed in `verification/plan.mjs`, and a post cannot be checked that way.
 
 ## Which type is a page?
 
@@ -131,6 +176,7 @@ A settings checklist is a reference page: its first-screen artifact may be a tab
 - The page description is the lead and is shown under the title.
   The first paragraph of the body must not repeat it.
 - A first section named `TL;DR` holds at most two code blocks.
+  Guide and reference pages need no `TL;DR` heading: code before the first heading satisfies the rule, even when a figure follows it.
   On a guide page the opening example or figure counts as the TL;DR (the `docs-pattern` gate wants a code block or figure before the first heading).
   On a page that opens with a figure, the TL;DR comes right after it.
 - A concept page may put a short table or command between the figure and its first section.
@@ -182,6 +228,7 @@ After:
 - [ ] No verification internals on a beginner page.
 - [ ] Every number carries dataset, version, date and conditions, and is sourced.
 - [ ] Limits are last and short.
-- [ ] The page ends with a next step.
+- [ ] The page ends with a next step named `What next`.
+- [ ] `node scripts/verify-commands.mjs --dry-run` passes.
 - [ ] Within the length budget for its type.
 - [ ] No banned words, no em dashes.

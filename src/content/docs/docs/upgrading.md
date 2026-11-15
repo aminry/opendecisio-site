@@ -65,9 +65,9 @@ The task's `status` should read `ok` for every certified task, with no `suspende
 
 ## 7. Move the traffic
 
-Point your proxy at the new server, and watch `/health` and the server time as the traffic arrives ([Operate](/docs/operating/#2-watch-it)).
+Run the checks below, then point your proxy at the new server, and watch `/health` and the server time as the traffic arrives ([Operate](/docs/operating/#watch-it)).
 
-## Check before cutover
+### Check before cutover
 
 - The new endpoint answers 200 on `/health` and reports the intended model and prompt ceiling.
 - A representative request returns the expected answer shape.

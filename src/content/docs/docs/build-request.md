@@ -38,16 +38,16 @@ For this request, read `answers.category.choice` for the selected option and `an
 Your application maps that option to a queue or a review workflow.
 For automatic decisions at an error target, use a [certified task](/docs/tasks/certify/) and require both `certified: true` and `certificate_kind: "gold"` on its answer.
 
+## Use a coding assistant
+
+[Install the decisio skills](/docs/ai-skills/) to have Claude Code or Codex prepare your setup, request or backend integration.
+Choose the workflow for your task and include your hardware or endpoint in the prompt.
+
 ## Good to know
 
 - A successful request returns answers under the names you supplied; check the HTTP status before reading them.
 - A field called `model` does not switch the model loaded by a decisio server.
 - A probability threshold you choose by hand is a routing rule, not a certificate.
-
-## Use a coding assistant
-
-[Install the decisio skills](/docs/ai-skills/) to have Claude Code or Codex prepare your setup, request or backend integration.
-Choose the workflow for your task and include your hardware or endpoint in the prompt.
 
 ## What next
 
