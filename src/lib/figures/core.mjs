@@ -5,13 +5,17 @@ export const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
 export const p2 = (n) => Number(n).toFixed(2);
 export const p3 = (n) => Number(n).toFixed(3);
 
-/** The panel around a figure's drawing. `live` is the number of seconds the animation takes; without it the figure holds still. */
-export function panel({ name, label, title, desc, body, legend, source, live, steps = ['Text', 'Read the text', 'Answer the questions'], extra = '', interactive = false }) {
-	return `<figure class="fig fig--${name}" data-fig="${name}"${live ? ` data-live="${live}" data-fig-steps="${esc(JSON.stringify(steps))}"` : ''}>
+/**
+ * The panel around a figure's drawing: a mono caption, the stage, a one-sentence takeaway (`legend`) and the source.
+ * A figure whose drawing has `data-phase` parts loops on its own (src/scripts/docs-figures.ts): the parts light in turn,
+ * with no controls. Its still state, with no script or under reduced motion, is the complete drawing as written.
+ */
+export function panel({ name, label, title, desc, body, legend, source, extra = '', interactive = false }) {
+	const loop = /data-phase="/.test(body);
+	return `<figure class="fig fig--${name}" data-fig="${name}"${loop ? ' data-loop data-playback="static"' : ''}>
 <div class="fig__head"><div><p class="fig__kicker">Figure · ${esc(label)}</p><p class="fig__title">${esc(title)}</p></div></div>
-${live ? `<div class="fig__enhance"><div class="fig__controls"><button type="button" data-fig-play disabled>Play</button><button type="button" data-fig-pause disabled>Pause</button><button type="button" data-fig-step disabled>Step</button><button type="button" data-fig-all disabled>Show all</button></div><p class="fig__status" data-fig-status aria-live="polite">Complete diagram shown.</p></div>` : ''}
 <div class="fig__stage"${interactive ? ` role="group" aria-label="${esc(desc)}"` : ` role="img" tabindex="0" aria-label="${esc(desc)}"`}>${body}</div>
-${extra}${legend ? `<p class="fig__legend">${legend}</p>` : ''}${source ? `<p class="fig__source">${source}</p>` : ''}
+${extra}${legend ? `<p class="fig__takeaway">${legend}</p>` : ''}${source ? `<p class="fig__source">${source}</p>` : ''}
 </figure>`;
 }
 

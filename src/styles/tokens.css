@@ -57,8 +57,7 @@
 	--d-radius-panel: 10px;
 	--d-radius-control: 8px;
 
-	/* Colour, dark: a near-black base with deep navy surfaces and one warm amber (after shad0w's palette;
-	   NOTICE). The accent has three jobs: text and links (--d-accent, 4.5:1), lines, bars and marks (--d-accent-line,
+	/* Colour, dark: a near-black base with deep navy surfaces and one warm amber. The accent has three jobs: text and links (--d-accent, 4.5:1), lines, bars and marks (--d-accent-line,
 	   3:1) and fills behind dark text (--d-accent-fill, with --d-on-accent); in dark one amber does all three. */
 	--d-bg: #03050a;
 	--d-navy: #14213d;
@@ -85,9 +84,11 @@
 	/* The accent inside a code block, whose background is dark in both themes. */
 	--d-code-accent: #fba41c;
 	--d-panel: #0b1221;
+	/* The second voice: Note and Tip callouts, and the model's side of a diagram. */
+	--d-steel: #8fb3d9;
 
 	/* Depth: the hard offset shadow under raised things, the highlight on their top edge, the grid behind a hero. */
-	--d-shadow: color-mix(in srgb, var(--d-navy) 85%, transparent);
+	--d-shadow: color-mix(in srgb, var(--d-navy) 80%, transparent);
 	--d-hi: color-mix(in srgb, #ffffff 9%, transparent);
 	--d-grid: color-mix(in srgb, var(--d-ink) 7%, transparent);
 
@@ -122,7 +123,9 @@
 	--sl-text-h3: 1.28rem;
 	--sl-text-h4: 1.1rem;
 	--sl-text-h5: 1rem;
-	--sl-content-width: 46rem;
+	/* The layout width Starlight splits the row by; the reading column itself is capped at --d-prose-max (docs.css). */
+	--sl-content-width: 51rem;
+	--d-prose-max: 48.75rem;
 }
 
 :root[data-theme='light'] {
@@ -147,6 +150,7 @@
 	--d-code-bg: #0e1a2b;
 	--d-code-ink: #e2e8f0;
 	--d-panel: #ffffff;
+	--d-steel: #2d5f99;
 
 	--d-shadow: color-mix(in srgb, var(--d-navy) 18%, transparent);
 	--d-hi: color-mix(in srgb, #ffffff 80%, transparent);

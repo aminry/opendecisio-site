@@ -7,13 +7,15 @@ description: Register a long, fixed text, such as a policy or a rubric, once as 
 
 ::covers{links="docs/tasks.md#task-context docs/tasks.md#what-a-context-buys-on-each-engine=1-see-where-it-works-great docs/tasks.md#the-context-in-the-prefix-cache=1-see-where-it-works-great"}
 
-Every request of a task is often read against the same long text: a policy, a rubric, a catalogue, a set of definitions.
-Register that text once as the task's context, and each request sends only the part that changes; the server puts the context in front of it.
+Register a long, fixed text once as the task's context, and each request sends only the part that changes.
+The text can be a policy, a rubric, a catalogue or a set of definitions; the server puts it in front of every request.
 On a Mac, a 1,176-token moderation policy sent as the context took 373 ms a read, against 1,946 ms when every request carried it:
 
 ::figure{name="fixed-context"}
 
-## 1. See where it works great
+<span class="fp-anchor" id="1-see-where-it-works-great"></span>
+
+## Where does it help?
 
 | Engine | The policy at the start of every request | The policy as the task's context |
 | --- | ---: | ---: |
@@ -26,7 +28,7 @@ On a Mac, a 1,176-token moderation policy sent as the context took 373 ms a read
 - **On vLLM the answers are the same, and the requests smaller.** vLLM's prefix cache already reuses a prefix every request repeats, so the two run at the same speed; the context is held from the task's first request.
 - **A fast table learns from the part that changes,** since it encodes the state alone.
 
-## 2. Register it
+## How do you register it?
 
 Prepare a complete `task.json` registration with your real examples, as [Teach a task](/docs/tasks/#3-register) shows.
 Save the fixed policy in `context.txt`; each example's state contains only the changing input.
@@ -34,18 +36,17 @@ Run this Python script from the directory containing both files, with `DECISIO_B
 
 ::site-block{name="context-register"}
 
-
 - **Add `"context"` to the registration:** a string, or an object or array read as compact JSON. Labelled, dynamic-option and learning registrations take it.
 - **Send only the changing part as each example's state.** The server reads each example with the context, so the task is fitted, certified and timed on exactly what it serves.
 - **Keep in the context only what is the same on every request.** What changes belongs in the state.
 
-## 3. Ask with it
+## How do you ask with it?
 
 - **Send the state without the context.** A state that still starts with the context is read with it twice, and the response carries `x-decisio-warning`.
 - **Name the task when several share a question.** The same question with another context is another task, kept beside the first; `"task": "<id>"` on `/v1/systemone` picks one.
 - **One request, one context.** Questions whose tasks have different contexts go in separate requests.
 
-## 4. Good to know
+## What should you know first?
 
 - **A context over the model's window is refused with 422 before any model work,** on every engine, and so is one that fits but not beside an example's state.
 - **The context is part of the task's identity:** a certificate made under one context does not hold under another.

@@ -5,17 +5,24 @@ description: Run decisio on a Mac with Apple silicon from an MLX build, sized to
 
 <!-- Site-written: the deploy guide for a Mac and for Ollama. The commands are decisio's docs/running.md at the pinned release (src/lib/site-blocks.mjs, ::upstream); the request is the site's, run against Ollama (verification/ollama.json); the numbers are docs/running.md's (src/config/sourced.mjs checks them). -->
 
-::covers{links="README.md#mac-with-mlx docs/running.md#mac-with-mlx docs/running.md#memory-on-a-mac=3-mind-the-memory README.md#ollama=on-a-laptop-with-ollama README.md#on-a-laptop-with-ollama=on-a-laptop-with-ollama docs/running.md#ollama=on-a-laptop-with-ollama"}
+::covers{links="README.md#mac-with-mlx docs/running.md#mac-with-mlx docs/running.md#memory-on-a-mac=mind-the-memory README.md#ollama=on-a-laptop-with-ollama README.md#on-a-laptop-with-ollama=on-a-laptop-with-ollama docs/running.md#ollama=on-a-laptop-with-ollama"}
 
-On a 64 GB Mac, install it and start the default model, Gemma 4 31B.
+Pick the build that fits your Mac's memory, then start it.
+A 64 GB Mac runs the default model, Gemma 4 31B, with two commands.
+
+::figure{name="mac-memory"}
+
+## TL;DR
+
+On a 64 GB Mac, install it and start the default model, Gemma 4 31B:
 
 ::site-block{name="mac-install"}
 
 ::site-block{name="mac-31b-6bit"}
 
-::figure{name="mac-memory"}
+<span class="fp-anchor" id="1-pick-the-build-for-your-mac"></span>
 
-## 1. Pick the build for your Mac
+## Pick the build for your Mac
 
 | Your Mac | Model and build | Memory: weights, then peak | Texts up to | One question on a new text |
 | --- | --- | --- | --- | --- |
@@ -27,9 +34,11 @@ On a 64 GB Mac, install it and start the default model, Gemma 4 31B.
 Measured on one Apple M5 Pro with 64 GB; no smaller Mac was measured, and GB are 10⁹ bytes.
 The Qwen base runs from its 6-bit build too; its 4-bit build is for Macs with more than 32 GB.
 
-## 2. Start it
+<span class="fp-anchor" id="2-start-it"></span>
 
-On a 64 GB Mac, the command above starts the 31B.
+## Start the build that fits
+
+On a 64 GB Mac, the TL;DR command starts the 31B.
 On a smaller Mac, start the build that fits it instead:
 
 :::tabs
@@ -46,7 +55,9 @@ On a smaller Mac, start the build that fits it instead:
 
 :::
 
-## 3. Mind the memory
+<span class="fp-anchor" id="3-mind-the-memory"></span>
+
+## Mind the memory
 
 - The server sets MLX's memory limits itself before it loads the model, and prints them in a start-up line that begins `MLX MEMORY`.
 - When the model cannot fit, it refuses to start, with the numbers, instead of freezing the Mac:
@@ -56,16 +67,10 @@ On a smaller Mac, start the build that fits it instead:
 - Run one model server on a Mac at a time: two servers can each stay under their own limit and still add up to more than the Mac has.
 - `/health` reports the memory under `memory`; watch `physical_footprint_bytes`, the figure Activity Monitor shows, not the resident size.
 
-## 4. What a Mac does not serve
-
-- Images in a question, adapters (`--adapter`), packed mode, or the intent head on a second engine (`--head-engine`).
-- FP8 checkpoints: a Mac always names an MLX build with `--model`.
-- Teaching a task works, slowly: on the 31B 4-bit, about an hour for 770 labelled examples (77 options) and about 2.6 hours for 1,500 (150 options).
-
 ## On a laptop, with Ollama
 
 Ollama runs decisio's Gemma 4 12B listing on Mac, Linux or Windows, and its smallest tag fits a 16 GB laptop.
-It works on Ollama 0.35.1 through 0.40.3; later versions refuse these models on the decision route. On a Mac, use decisio's MLX server instead ([above](#1-pick-the-build-for-your-mac)).
+It works on Ollama 0.35.1 through 0.40.3; later versions refuse these models on the decision route. On a Mac, use decisio's MLX server instead ([above](#pick-the-build-for-your-mac)).
 
 ::upstream{file="docs/running.md" section="Ollama" block="1"}
 
@@ -81,6 +86,14 @@ Then ask it a question on Ollama's decision route, on port 11434, with the listi
 
 Ollama builds its own prompt and applies none of decisio's corrections to the probabilities, so they are not decisio's measured ones.
 To teach and certify tasks, run a decisio server.
+
+<span class="fp-anchor" id="4-what-a-mac-does-not-serve"></span>
+
+## What does a Mac not serve?
+
+- Images in a question, adapters (`--adapter`), packed mode, or the intent head on a second engine (`--head-engine`).
+- FP8 checkpoints: a Mac always names an MLX build with `--model`.
+- Teaching a task works, slowly: on the 31B 4-bit, about an hour for 770 labelled examples (77 options) and about 2.6 hours for 1,500 (150 options).
 
 ## What next
 

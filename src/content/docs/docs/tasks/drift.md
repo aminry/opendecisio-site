@@ -7,12 +7,12 @@ description: Know when live traffic stops looking like the examples a task was c
 
 ::covers{links="docs/tasks.md#the-monitor"}
 
-A certified task watches its own traffic with three checks that need no labels.
-Certification is suspended while the confidence alarm is on, so a shift does not quietly fill your queue with wrong certified answers:
+A certified task runs three checks on its own traffic, and none of them needs a label.
+The checks suspend certification when a shift would otherwise fill your queue with wrong certified answers.
 
 ::figure{name="drift-replay"}
 
-## 1. Know what it watches
+## What does it watch?
 
 | Check | What it sees | What it does |
 | --- | --- | --- |
@@ -20,13 +20,21 @@ Certification is suspended while the confidence alarm is on, so a shift does not
 | The confidences | how often an answer's top probability falls below the certification examples' 5th percentile | suspends certification while it alerts: `traffic_changed`, with `confidence` among its signals |
 | The answer mix | how often each option was chosen in the last 500 answers, checked every 100 | reports `traffic_changed` with `answer_mix`; changes nothing |
 
-- The confidence alert clears once the traffic is back to normal for about 300 answers.
-- While certification is suspended, the answers themselves do not change: they come back marked `certified: false`, with the reason.
-- The answer mix is weak on a task with many options, where a shift spread over them barely moves the mix. That is why only the confidence check suspends.
+The answer mix is weak on a task with many options, where a shift spread over them barely moves the mix.
+That is why only the confidence check suspends.
 
-## 2. Read the status
+## What happens when an alert fires?
+
+While certification is suspended, the answers themselves do not change: they come back marked `certified: false`, with the reason.
+The confidence alert clears once the traffic is back to normal for about 300 answers.
+
+Keep accepting suggestions for review while `certified` is `false`.
+Inspect the task's reason and serving setup, collect representative new labels, then certify again when the task and setup are ready.
+
+## How do you see the status?
 
 `GET /v1/tasks/{id}` gives a task's `status`: `ok`, `suspended` with what changed, or `traffic_changed` with the signals that alerted.
+`GET /v1/tasks` lists every task's status.
 For the task [Certify answers](/docs/tasks/certify/#2-teach-the-task-with-a-certificate) registers:
 
 ```bash
@@ -34,16 +42,13 @@ curl -s http://127.0.0.1:8000/v1/tasks/ticket-routing \
   | uv run python -c 'import json, sys; s = json.load(sys.stdin)["status"]; print(json.dumps({k: s.get(k) for k in ("state", "text")}, indent=1))'
 ```
 
-`GET /v1/tasks` lists every task's status.
-
-## 3. Alert on it
+## How do you alert on it?
 
 `GET /metrics` serves Prometheus text for certified tasks:
 
 ```bash
 curl -s http://127.0.0.1:8000/metrics | grep '^decisio_task_'
 ```
-
 
 | Metric | What it counts |
 | --- | --- |
@@ -54,15 +59,10 @@ curl -s http://127.0.0.1:8000/metrics | grep '^decisio_task_'
 It also counts each task's answers and certified answers.
 The counters live in memory and start again when the server does.
 
-## When an alert fires
-
-Keep accepting suggestions for review while `certified` is `false`.
-Inspect the task's reason and serving setup, collect representative new labels, then certify again when the task and setup are ready.
-A drift alarm detects a shift; it cannot establish whether individual answers are correct.
-
-## 4. Check it with labels
+## When does it not help?
 
 The checks cannot see a wrong answer, because they have no labels.
+A drift alarm detects a shift; it cannot establish whether individual answers are correct.
 The only direct check that the promise holds on live traffic is to label a sample of it and certify again.
 
 - **Give the task an "other" option.** A message that fits none of the options gets a wrong answer, and the checks only notice once enough of them arrive.

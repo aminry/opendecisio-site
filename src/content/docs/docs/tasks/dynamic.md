@@ -7,10 +7,13 @@ description: When your options change with every request, teach the question onc
 
 ::covers{links="docs/tasks.md#tasks-whose-options-change-with-every-request"}
 
-Your options change with every request: which brand a product title names, which of this request's tools to call.
-Teach that question once as a dynamic task, and decisio certifies the answers it can, whatever options a request brings.
+A dynamic task is one question whose options differ on every request, such as which brand a product title names or which of this request's tools to call.
+Teach it once from examples that each bring their own options, and decisio certifies the answers it can, whatever options a later request brings.
 
-Each example carries its own options.
+::figure{name="dynamic-options"}
+
+## TL;DR
+
 Prepare `dynamic-task.json` as a complete registration with `id` and `examples`, each example containing a full one-question `request` and its human-labelled `answer`.
 Use the [task registration format](/docs/tasks/#3-register), keeping the instructions identical while varying candidate options.
 
@@ -18,9 +21,25 @@ Run this Python script beside the file; `DECISIO_BASE_URL` selects your endpoint
 
 ::site-block{name="dynamic-register"}
 
-::figure{name="dynamic-options"}
+## What does registering set?
 
-## 1. See where it works great
+- **`"options": "dynamic"` and `"match": "instructions"`**, the only value, make one task of every later choice question with these instructions.
+- **Each example's `answer` is one of its option keys,** or `null` for the request's none option: the key `none`, or the key you name in `"none_option"`.
+- **The `certify` block is required:** a dynamic task is always certified, which needs 59 held-out examples at the defaults.
+
+## How do you read what it kept?
+
+- **`dynamic.applied` in the registration response** says whether the re-ranker was kept, and why. The server keeps it only when it improves held-out answers.
+- **Every answer carries the usual `certified` fields:** an answer that reaches the threshold is certified, on the model's top probability or, where it was kept, the re-ranker's.
+- **Later choice questions with these instructions** are answered through the task, whatever their options.
+
+## What does the monitor watch?
+
+- **The monitor has no answer mix,** since the options differ. It watches the confidences as for any certified task.
+- **It also watches `unseen_options`,** the share of requests none of whose options your examples contained, but only where options recur. `status.monitor.unseen_options.armed` says whether it is watched.
+- **An alert on either suspends certification** while it lasts.
+
+## Where does it work well?
 
 On questions where the right option can be read from the text, most answers are certified:
 
@@ -35,31 +54,13 @@ On questions where the right option can be read from the text, most answers are 
 
 ::source[Measured offline with the server's own code, on Gemma 4 readouts taken with decisio 0.35.0 and vLLM 0.31.0 on one RTX PRO 6000 Blackwell at 600 W, 2026-10-30, at a 5% error target: the median over three draws of 200 labels, as decisio serves it, with the re-ranker kept where it helps; the pooled figures are the mean over five questions, these three, entity linking and product matching.]
 
-## 2. Register it
-
-- **`"options": "dynamic"` and `"match": "instructions"`**, the only value, make one task of every later choice question with these instructions.
-- **Each example's `answer` is one of its option keys,** or `null` for the request's none option: the key `none`, or the key you name in `"none_option"`.
-- **The `certify` block is required:** a dynamic task is always certified, which needs 59 held-out examples at the defaults.
-
-## 3. Read what it kept
-
-- **`dynamic.applied` in the registration response** says whether the re-ranker was kept, and why. The server keeps it only when it improves held-out answers.
-- **Every answer carries the usual `certified` fields:** an answer that reaches the threshold is certified, on the model's top probability or, where it was kept, the re-ranker's.
-- **Later choice questions with these instructions** are answered through the task, whatever their options.
-
-## 4. Good to know
+## Good to know
 
 - Use choice questions on text, with one order per request; score and image questions do not use this path.
 - Keep the instructions exactly the same; every example and request can supply its own candidates.
 - A fixed-option task matching the exact options takes precedence.
 - Some tasks certify nothing at your target; check the returned threshold before connecting automatic actions.
 - No request or option text is stored in the fitted correction.
-
-## 5. Watch it
-
-- **The monitor has no answer mix,** since the options differ. It watches the confidences as for any certified task.
-- **It also watches `unseen_options`,** the share of requests none of whose options your examples contained, but only where options recur. `status.monitor.unseen_options.armed` says whether it is watched.
-- **An alert on either suspends certification** while it lasts.
 
 ## What next
 

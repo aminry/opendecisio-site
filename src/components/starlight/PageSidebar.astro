@@ -1,0 +1,28 @@
+---
+// The right column: the page's table of contents, then two quiet links, one back to the top and one to the page's own
+// file in the site's repository (the same address the page's foot links to).
+import MobileTableOfContents from 'virtual:starlight/components/MobileTableOfContents';
+import TableOfContents from 'virtual:starlight/components/TableOfContents';
+import { sourceLinks } from '../../lib/docs-meta.mjs';
+
+const { entry, toc } = Astro.locals.starlightRoute;
+const { edit } = sourceLinks(entry);
+---
+{
+	toc && (
+		<>
+			<div class="lg:sl-hidden">
+				<MobileTableOfContents />
+			</div>
+			<div class="right-sidebar-panel sl-hidden lg:sl-block">
+				<div class="sl-container">
+					<TableOfContents />
+					<ul class="toc-actions">
+						<li><a href="#_top"><span aria-hidden="true">&uarr;</span> Back to top</a></li>
+						<li><a href={edit}>Suggest an edit</a></li>
+					</ul>
+				</div>
+			</div>
+		</>
+	)
+}

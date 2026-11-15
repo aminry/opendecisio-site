@@ -2,6 +2,8 @@
 
 How every docs page, and home, Benchmarks and Demos, are written (approved 2026-10-18).
 Articles and News stay as published.
+`WRITING_STYLE.md` sets how a page is shaped, worded and sized, and `DESIGN_STYLE.md` sets how it looks and moves.
+Both bind alongside this guide; where they disagree on motion, `DESIGN_STYLE.md` wins.
 The hard rules on numbers, claims, providers and independence are in `CONTENT_RULES.md` and bind alongside this guide.
 
 ## Who we write for
@@ -172,7 +174,7 @@ After:
 ## How the rules are checked
 
 - Existing checks stay: one figure per page, no ranks or comparisons, at most three sentences per paragraph, every command verified, nothing internal on any page.
-- New checks: no link from a docs page to decisio's docs on GitHub; every page opens with a paragraph and then a code block or figure; every animated figure has a pause control, a reduced-motion frame and alt text.
+- New checks: no link from a docs page to decisio's docs on GitHub; every page opens with a paragraph and then a code block or figure; every animated figure loops without controls and has a reduced-motion frame and alt text.
 
 ## Navigation and onboarding
 
@@ -193,8 +195,8 @@ Describe a feature by the application behavior it enables, not by the benchmark 
 
 A figure renders its complete useful state without JavaScript.
 Enhancement controls appear only when JavaScript is available; they use native buttons and labelled inputs.
-Start playback on an explicit action, run it once and hold on the complete result.
-Pause it out of view or when the tab is hidden, keep a manual pause until resumed, and react when the reader changes their reduced-motion preference.
+A figure that explains a process loops on its own and has no play, step or pause control.
+It holds while out of view or when the tab is hidden, and reacts when the reader changes their reduced-motion preference.
 
 Use a small field chooser to explain JSON; individual members do not each need a keyboard stop.
 Keep scrollable code panels reachable from a keyboard.

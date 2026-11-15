@@ -34,8 +34,10 @@ The current release is read from `upstream.json`.
 | `/docs/introduction/` | What is decisio? |
 | `/docs/layout/` | Choose the prompt layout |
 | `/docs/limits/` | Requirements and limits |
+| `/docs/measured/` | What was measured on what |
 | `/docs/migrating/` | Move from System One |
 | `/docs/operating/` | Operate |
+| `/docs/production/` | Set up for production |
 | `/docs/releases/` | Release notes |
 | `/docs/scale/` | Scale |
 | `/docs/tasks/` | Teach a task |
@@ -55,6 +57,7 @@ The current release is read from `upstream.json`.
 | `/docs/use-cases/rag-gate/` | "RAG: answer or abstain" |
 | `/docs/use-cases/support-routing/` | Support routing |
 | `/docs/use-from/` | Call it from your code |
+| `/docs/use-from/frameworks/` | Call it from a framework |
 
 ## Other pages
 
