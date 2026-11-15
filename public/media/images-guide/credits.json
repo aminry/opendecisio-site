@@ -1,0 +1,42 @@
+{
+  "_note": "Photographs of the Images guide, from Wikimedia Commons. scripts/render-images-guide.py rebuilds the files from the originals and rewrites assets and mugBox.",
+  "photos": {
+    "parcel": {
+      "title": "Damaged fragile parcel delivered to doorstep.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File%3ADamaged_fragile_parcel_delivered_to_doorstep.jpg",
+      "author": "Meanwell Packaging",
+      "licence": "CC BY 2.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceSha256": "131be8065e53f8506283acfdcbd9373d8b0745d84b927d5efafc014cc54c9ec5",
+      "width": 4000,
+      "height": 2667
+    },
+    "mug": {
+      "title": "Bright turquoise mug sits on a wooden table by the window, reflecting morning light, inviting a quiet moment of reflection.jpg",
+      "page": "https://commons.wikimedia.org/wiki/File%3ABright_turquoise_mug_sits_on_a_wooden_table_by_the_window%2C_reflecting_morning_light%2C_inviting_a_quiet_moment_of_reflection.jpg",
+      "author": "Shixart1985",
+      "licence": "CC BY 2.0",
+      "licenceUrl": "https://creativecommons.org/licenses/by/2.0",
+      "sourceSha256": "1c2bc2e02d1bbb1b293cf80f263734d088c22e9b533e5bd8c98e010318861dc0",
+      "width": 6016,
+      "height": 4016
+    }
+  },
+  "mugBox": {
+    "top": 0.31,
+    "bottom": 0.86,
+    "left": 0.36,
+    "right": 0.72
+  },
+  "assets": {
+    "budget-1120.jpg": "cb21fffc3c9f6df688ee074ccacd0751ae62b17b1c3d84f11699fe0a8b1c0c34",
+    "budget-140.jpg": "e035011757294bd9889f0e178b2f6bec141a3f9c32267ec38d5d7460f22a594b",
+    "budget-280.jpg": "0d4132f94e44399ba78975e0a00dd65fa5393a4db314851e31c03fa04c0e4a43",
+    "budget-560.jpg": "644bb04c0d60ab6f325e67c4c14558048fcf5227f903781202af1a381bfe0a55",
+    "budget-70.jpg": "a9bfc352f965ae3d650ba9d31cc922477ace07c76f63c43efe5aa4ee9218d901",
+    "mug.jpg": "f8190c53600cc17bcd3f5f427e97dc58f5951c7b4701909b837ab1844379286f",
+    "parcel-label.jpg": "de7aa352e7795e94b1c462d49b0de00b01621417059e8db1422bac1e193ab15c",
+    "parcel-square.jpg": "bf0e36556beb8961df77d628d7b9e4eebaf1eadf096d3907d8f47961d4a4da4c",
+    "parcel.jpg": "80569251eb8bc26c7bcc6757e0e23c0c9e759009b82d9eb10e26b53355405446"
+  }
+}

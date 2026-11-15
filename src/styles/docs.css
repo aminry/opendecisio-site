@@ -2360,63 +2360,16 @@ a.fig__card:hover {
 	border-inline-start-color: var(--sl-color-accent);
 }
 
-/* The Images guide's figures: drawn pictures, a box that draws itself on one, and a token grid that gets finer with the budget.
-   Everything is drawn in full by default (no script, reduced motion); a figure in motion lights one part at a time. */
-.fig .ib-bg {
-	fill: var(--sl-color-gray-6);
-	stroke: var(--sl-color-gray-5);
+/* The Images guide's figures: real photographs in frames, a box that draws itself on one, a ruler that reads its edges, and a
+   token grid that gets finer with the budget. Everything is drawn in full by default (no script, reduced motion); a figure in
+   motion lights one part at a time. */
+.fig .ib-frame {
+	fill: none;
+	stroke: var(--sl-color-gray-4);
 	stroke-width: 1;
 }
 
-.fig .ib-table {
-	fill: var(--sl-color-gray-5);
-}
-
-.fig .ib-mug {
-	fill: var(--fig-steel, #8fb3d9);
-}
-
-.fig .ib-handle {
-	fill: none;
-	stroke: var(--fig-steel, #8fb3d9);
-	stroke-width: 9;
-	stroke-linecap: round;
-}
-
-.fig .ib-cup {
-	fill: none;
-	stroke: var(--sl-color-gray-3);
-	stroke-width: 4;
-	stroke-dasharray: 5 5;
-}
-
-.fig .ib-book {
-	fill: var(--sl-color-gray-3);
-}
-
-.fig .ib-leaf {
-	fill: var(--sl-color-gray-4);
-}
-
-.fig .ib-pot {
-	fill: var(--sl-color-gray-3);
-}
-
-.fig .ib-sun {
-	fill: var(--sl-color-gray-3);
-}
-
-.fig .ib-hill {
-	fill: var(--sl-color-gray-4);
-}
-
-.fig .ib-photo,
-.fig .ib-scene {
-	overflow: hidden;
-}
-
 .fig .ib-chip,
-.fig .ib-cropframe,
 .fig .ib-tileframe {
 	fill: none;
 	stroke: var(--sl-color-gray-5);
@@ -2430,12 +2383,12 @@ a.fig__card:hover {
 .fig .ib-box {
 	fill: color-mix(in srgb, var(--sl-color-accent) 14%, transparent);
 	stroke: var(--sl-color-accent);
-	stroke-width: 4;
+	stroke-width: 3.5;
 }
 
 .fig .ib-box--whole {
 	fill: none;
-	stroke-dasharray: 10 7;
+	stroke-dasharray: 9 6;
 	stroke-width: 3;
 }
 
@@ -2446,40 +2399,76 @@ a.fig__card:hover {
 	color: var(--sl-color-gray-3);
 }
 
-.fig .ib-link--list {
-	stroke-dasharray: 5 4;
+.fig .ib-link--no {
+	stroke-dasharray: 3 4;
+}
+
+.fig .ib-guide {
+	fill: none;
+	stroke: var(--sl-color-accent);
+	stroke-width: 1;
+	stroke-dasharray: 3 3;
+}
+
+.fig .ib-ruler,
+.fig .ib-tick {
+	fill: none;
+	stroke: var(--sl-color-gray-3);
+	stroke-width: 1.2;
+}
+
+.fig .ib-dot {
+	fill: var(--sl-color-accent);
+}
+
+.fig .ib-x {
+	fill: var(--sl-color-gray-3);
+	font: 700 16px var(--sl-font, 'Geist Site', sans-serif);
+	text-anchor: middle;
 }
 
 .fig .ib-grid {
 	fill: none;
-	stroke: color-mix(in srgb, var(--sl-color-white) 55%, transparent);
-	stroke-width: 0.6;
+	stroke: color-mix(in srgb, var(--sl-color-white) 60%, transparent);
+	stroke-width: 0.55;
 }
 
-.fig .ib-pin {
-	filter: none;
+.fig .ib-region {
+	fill: none;
+	stroke: var(--sl-color-accent);
+	stroke-width: 1.5;
+}
+
+.fig .ib-zoom {
+	fill: none;
+	stroke: var(--sl-color-gray-3);
+	stroke-width: 1;
+	stroke-dasharray: 2 3;
 }
 
 .fig .ib-notes text {
 	transition: fill var(--fig-t, 240ms) var(--fig-ease);
 }
 
-.fig [data-phase].is-current > .ib-link,
 .fig [data-phase].is-current .ib-link {
 	stroke: var(--sl-color-accent);
 	color: var(--sl-color-accent);
 	stroke-width: 2.5;
 }
 
-.fig [data-phase].is-current .ib-photo,
-.fig [data-phase].is-current .ib-pin .ib-bg {
+.fig [data-phase].is-current .ib-x {
+	fill: var(--sl-color-accent);
+}
+
+.fig [data-phase].is-current .ib-frame {
 	stroke: var(--sl-color-accent);
 	stroke-width: 3;
 }
 
 .fig text[data-phase].is-current,
 .fig [data-phase].is-current > .ft-code,
-.fig [data-phase].is-current > .ft-d {
+.fig [data-phase].is-current > .ft-d,
+.fig [data-phase].is-current > .ft-s {
 	fill: var(--sl-color-white);
 }
 
@@ -2494,7 +2483,7 @@ a.fig__card:hover {
 
 .fig [data-phase].is-current .ib-grid {
 	stroke: var(--sl-color-accent);
-	stroke-width: 0.9;
+	stroke-width: 0.8;
 }
 
 .fig [data-phase].is-current .ib-box {
