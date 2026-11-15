@@ -69,6 +69,7 @@ The current release is read from `upstream.json`.
 | `/demos/teach-and-certify/` | Interactive teaching, certification and drift demonstration |
 | `/articles/` | Links to historical articles at their original canonical publications |
 | `/news/` and `/news/<slug>/` | Dated releases, results and announcements |
+| `/about/` | The company behind Decisio and how to reach it |
 | `/privacy/` | Operator, analytics and browser storage |
 | `/404/` | Navigation back from a missing page |
 

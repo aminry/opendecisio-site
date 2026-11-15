@@ -2,7 +2,7 @@
 // The privacy page: who runs the site, what is counted, and that nothing is sold or shared, as tiles under the
 // site's page hero.
 import PageHero from '../components/PageHero.astro';
-import { site } from '../config/site';
+import { company, site } from '../config/site';
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { breadcrumbs } from '../lib/jsonld.mjs';
 const issue = `${site.repository}/issues/new?title=${encodeURIComponent('Privacy question')}`;
@@ -34,7 +34,7 @@ const issue = `${site.repository}/issues/new?title=${encodeURIComponent('Privacy
 				</li>
 				<li class="ptile tile">
 					<h2 id="contact">Contact</h2>
-					<p>Ask on <a href={issue}>an issue in the {site.name} repository</a>.</p>
+					<p>Ask on <a href={issue}>an issue in the {site.name} repository</a>, or write to <a href={`mailto:${company.projectEmail}`}>{company.projectEmail}</a>.</p>
 				</li>
 			</ul>
 		</div>
