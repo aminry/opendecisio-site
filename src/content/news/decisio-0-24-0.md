@@ -45,4 +45,4 @@ It has been checked on one RTX 5090; the release notes give the details.
 If you serve with thinking on, upgrade, check your `--think-factor` against measured answers, and certify again the tasks you certify under thinking.
 Thinking with decisio's default model class now needs the engine in the server's process, the default; `--engine-process separate` with `--think` is refused at start.
 
-The docs have each of these in full: [Choosing a model](/docs/bases/#4-the-12b-in-fp8), [Batch concurrent requests](/docs/concurrency/), [Think when unsure](/docs/think/) and [Requirements and limits](/docs/limits/#3-set-up-for-production). [Release notes](/docs/releases/) has every change.
+The docs have each of these in full: [Choosing a model](/docs/bases/#4-the-12b-in-fp8), [Batch concurrent requests](/docs/concurrency/), [Think when unsure](/docs/think/) and [Requirements and limits](/docs/production/). [Release notes](/docs/releases/) has every change.

@@ -9,6 +9,7 @@ export const docsGroups = [
 			{ slug: 'docs', label: 'Quickstart', shape: 'guide' },
 			{ slug: 'docs/build-request', label: 'Build a request', shape: 'guide' },
 			{ slug: 'docs/use-from', label: 'Call it from your code', shape: 'guide' },
+			{ slug: 'docs/use-from/frameworks', label: 'Call it from a framework', shape: 'guide' },
 			{ slug: 'docs/ai-skills', label: 'Use AI skills', shape: 'guide' },
 		],
 	},
@@ -68,6 +69,7 @@ export const docsGroups = [
 		collapsed: true,
 		items: [
 			{ slug: 'docs/operating', label: 'Operate', shape: 'guide' },
+			{ slug: 'docs/production', label: 'Set up for production', shape: 'reference' },
 			{ slug: 'docs/scale', label: 'Scale', shape: 'guide' },
 			{ slug: 'docs/concurrency', label: 'Batch concurrent requests', shape: 'guide' },
 			{ slug: 'docs/layout', label: 'Choose the prompt layout', shape: 'guide' },
@@ -84,6 +86,7 @@ export const docsGroups = [
 			{ slug: 'docs/api', label: 'HTTP API', shape: 'reference' },
 			{ slug: 'docs/flags', label: 'Server flags', shape: 'reference' },
 			{ slug: 'docs/limits', label: 'Requirements and limits', shape: 'reference' },
+			{ slug: 'docs/measured', label: 'What was measured on what', shape: 'reference' },
 			{ slug: 'docs/glossary', shape: 'reference' },
 			{ slug: 'docs/releases', label: 'Release notes', shape: 'reference' },
 			{ slug: 'docs/evaluation-card', label: 'Evaluate your task', shape: 'guide' },

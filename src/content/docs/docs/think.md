@@ -65,10 +65,10 @@ The [flags reference](/docs/flags/#temperatures-and-outputs) lists per-type over
 - Every question of a request whose text was cut to fit (`--over-limit truncate`): thinking on a text that long can take longer than a caller waits.
 
 The response says why a question did not think.
-Where it runs, how it shares the server and what it does to certificates are in [Requirements and limits](/docs/limits/#3-set-up-for-production).
+Where it runs, how it shares the server and what it does to certificates are in [Set up for production](/docs/production/).
 
 ## What next
 
-- [Requirements and limits](/docs/limits/#3-set-up-for-production): thinking in production.
+- [Set up for production](/docs/production/): thinking in production.
 - [Server flags](/docs/flags/#every-flag): `--think`, `--think-factor`, `--think-budget` and the think temperatures in full.
 - [The HTTP API](/docs/api/): the `think` field and the `thinking` answer.

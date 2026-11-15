@@ -13,7 +13,7 @@ const must = (source, re, what) => {
 
 /** Steps in a row: each { title, note }, the last one lit. */
 function steps(list) {
-	return `<ol class="fig__steps">${list.map((s, i) => `<li class="fig__step${i === list.length - 1 && !s.plain ? ' fig__step--on' : ''} f-pop fd-${Math.min(10, i * 2)}"><b>${esc(s.title)}</b><span>${s.note}</span></li>`).join('')}</ol>`;
+	return `<ol class="fig__steps">${list.map((s, i) => `<li class="fig__step${i === list.length - 1 && !s.plain ? ' fig__step--on' : ''}" data-phase="${i}"><b>${esc(s.title)}</b><span>${s.note}</span></li>`).join('')}</ol>`;
 }
 
 // --- Operating ---------------------------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ export function symptomTable(group) {
 	for (const s of rows) for (const [file, needle] of s.needs) if (!text(file).includes(needle)) throw new Error(`symptoms: ${file} no longer says "${needle}"`);
 	const md = (t) => esc(t).replace(/`([^`]+)`/g, '<code>$1</code>');
 	const heads = ['What you see', 'Why', 'What to do'];
-	return `<div class="table-wrap"><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((s) => `<tr>${[s.sees, s.cause, s.does].map((c, i) => `<td data-label="${heads[i]}">${md(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+	return `<div class="table-wrap"${heads.length >= 3 ? ' tabindex="0" role="region" aria-label="Table, scrolls sideways when it does not fit"' : ''}><table class="docs-table"><thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map((s) => `<tr>${[s.sees, s.cause, s.does].map((c, i) => `<td data-label="${heads[i]}">${md(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 
 export const runItFigures = {

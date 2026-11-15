@@ -32,8 +32,8 @@ function firstQuestion() {
 		{ title: 'Your code', value: 'Route to a queue or ask for review' },
 	];
 	const answer = `<div class="learn__mini-distribution">${Object.entries(choice).map(([key, p]) => `<div><span>${esc(key)}</span><span>${number(p)}</span>${bar(p)}</div>`).join('')}</div><span class="learn__selected">Selected: billing</span>`;
-	const body = `<ol class="learn__flow">${items.map((item, i) => `<li class="f-pop fd-${i * 2}" data-phase="${i}"><b>${esc(item.title)}</b>${i === 2 ? answer : `<span>${esc(item.value)}</span>`}</li>`).join('')}</ol>`;
-	return panel({ name: 'first-question', label: 'Illustrative decision', title: 'Ask a question; use the answer in your backend.', desc: items.map((item) => `${item.title}: ${item.value}.`).join(' '), body, interactive: true, live: 3, steps: items.map((item) => `${item.title}: ${item.value}`), legend: 'The question and possible answers are yours. Your application chooses what happens next.', source });
+	const body = `<ol class="learn__flow">${items.map((item, i) => `<li data-phase="${i}"${i === 2 ? ' data-side="model"' : ''}><b>${esc(item.title)}</b>${i === 2 ? answer : `<span>${esc(item.value)}</span>`}</li>`).join('')}</ol>`;
+	return panel({ name: 'first-question', label: 'Illustrative decision', title: 'Ask a question; use the answer in your backend.', desc: items.map((item) => `${item.title}: ${item.value}.`).join(' '), body, interactive: true, legend: 'The question and possible answers are yours. Your application chooses what happens next.', source });
 }
 
 function choiceDistribution() {

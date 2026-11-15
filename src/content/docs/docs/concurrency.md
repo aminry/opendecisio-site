@@ -51,10 +51,10 @@ Start the server with `--concurrency batched`:
 - `/health` reports the mode under `concurrency`, and in batched mode the calls made and the requests each call held.
 - A request that fails on its own, such as a text over the length, fails alone; the call's other requests are scored again without it.
 
-Where it runs and what it does to certificates are in [Requirements and limits](/docs/limits/#3-set-up-for-production).
+Where it runs and what it does to certificates are in [Set up for production](/docs/production/).
 
 ## What next
 
 - [Scale](/docs/scale/): many questions about one text, and the first read.
-- [Requirements and limits](/docs/limits/#3-set-up-for-production): batching in production.
+- [Set up for production](/docs/production/): batching in production.
 - [Server flags](/docs/flags/#every-flag): `--concurrency` and `--batch-max-requests` in full.

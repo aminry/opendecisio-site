@@ -103,32 +103,32 @@ export const plan = [
 	{ page: '/docs/ai-skills/', n: 6, mode: 'skills', expect: 'node ' },
 	{ page: '/docs/ai-skills/', n: 7, mode: 'skills', expect: 'node ' },
 	{ page: '/docs/ai-skills/', n: 8, mode: 'skills', expect: 'node ' },
-	{ page: '/docs/build-request/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 3] },
+	{ page: '/docs/build-request/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },
 	// Get started, on the stand-in, the path every machine can take: the small choice request (src/lib/site-blocks.mjs).
 	{
-		page: '/docs/', n: 1, mode: 'run-then-server', expect: `git clone --branch ${pin.tag} https://github.com/${pin.repository}`,
+		page: '/docs/', n: 2, mode: 'run-then-server', expect: `git clone --branch ${pin.tag} https://github.com/${pin.repository}`,
 		skip: [`git clone --branch ${pin.tag} https://github.com/${pin.repository}`, 'cd decisio'],
 		note: 'the clone is the pinned release, as the check has it; the install and the server start',
 	},
 	{
-		page: '/docs/', n: 2, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health', show: fields('ok', 'base', 'max_model_len', 'max_model_len_source', 'max_model_len_ceiling'), trimmed: true,
+		page: '/docs/', n: 3, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health', show: fields('ok', 'base', 'max_model_len', 'max_model_len_source', 'max_model_len_ceiling'), trimmed: true,
 		assert(stdout) {
 			if (json(stdout).ok !== true) throw new Error('/health did not answer ok');
 		},
 	},
 	{
-		page: '/docs/', n: 3, mode: 'run', expect: 'curl --fail-with-body',
+		page: '/docs/', n: 1, mode: 'run', expect: 'curl --fail-with-body',
 		note: "the answers are the stand-in's, not the default model's",
 		assert: (stdout) => questionAnswer(stdout, 'category', 'choice', ['billing', 'access', 'bug']),
 	},
 	{ page: '/docs/', n: 4, mode: 'example', expect: '{\n  "type": "choice",' },
-	{ page: '/docs/concepts/choice/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 3] },
+	{ page: '/docs/concepts/choice/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },
 	{ page: '/docs/concepts/choice/', n: 2, mode: 'same-as', expect: '{\n  "type": "choice",', of: ['/docs/', 4] },
 	{ page: '/docs/concepts/noul/', n: 1, mode: 'run', expect: 'curl --fail-with-body', assert: (stdout) => questionAnswer(stdout, 'refund', 'noul'), note: "the answer is the stand-in's, not a model-quality measurement" },
 	{ page: '/docs/concepts/noul/', n: 2, mode: 'example', expect: '{"type": "noul",' },
 	{ page: '/docs/concepts/score/', n: 1, mode: 'run', expect: 'curl --fail-with-body', assert: (stdout) => questionAnswer(stdout, 'impact', 'score', ['0', '1', '2', '3']), note: "the answer is the stand-in's, not a model-quality measurement" },
 	{ page: '/docs/concepts/score/', n: 2, mode: 'example', expect: '{\n  "type": "score",' },
-	{ page: '/docs/api/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 3] },
+	{ page: '/docs/api/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },
 	// Call it from your code, on the stand-in: the recorded support ticket sent from each language (src/lib/site-blocks.mjs),
 	// then decisio's programs for the frameworks (docs/integrations.md), the Python ones run with the versions they name.
 	{ page: '/docs/use-from/', n: 1, mode: 'run', expect: 'curl http://127.0.0.1:8000/v1/systemone', assert: recordedAnswers, note: "the answers are the stand-in's, not the default model's" },
@@ -146,17 +146,17 @@ export const plan = [
 		},
 	},
 	{
-		page: '/docs/use-from/', n: 7, mode: 'python', expect: 'from langchain_typesafe import Choice, Noul, NoulCriteria, TypeSafeClassifier', with: ['langchain-typesafe==0.0.1a3'],
+		page: '/docs/use-from/frameworks/', n: 1, mode: 'python', expect: 'from langchain_typesafe import Choice, Noul, NoulCriteria, TypeSafeClassifier', with: ['langchain-typesafe==0.0.1a3'],
 		note: 'with langchain-typesafe 0.0.1a3, the version the page names',
 		assert(stdout) {
 			if (!/^(billing|access) [0-9.e-]+$/m.test(stdout)) throw new Error('the LangChain program did not print a queue and a probability');
 		},
 	},
-	{ page: '/docs/use-from/', n: 8, mode: 'verbatim', expect: 'import { experimental_decide as decide } from "ai";', needs: 'Node 22 with ai 7.0.131 and @ai-sdk/typesafe-ai 3.0.15' },
-	{ page: '/docs/use-from/', n: 9, mode: 'verbatim', expect: '{\n  "name": "decisio: ask a question about a text",', needs: 'n8n 2.35.7' },
-	{ page: '/docs/use-from/', n: 10, mode: 'verbatim', expect: 'import { boolean, choice, decide } from "@tanstack/ai";', needs: 'Node 22 with @tanstack/ai 0.65.1 and @tanstack/ai-typesafe 0.1.8' },
+	{ page: '/docs/use-from/frameworks/', n: 2, mode: 'verbatim', expect: 'import { experimental_decide as decide } from "ai";', needs: 'Node 22 with ai 7.0.131 and @ai-sdk/typesafe-ai 3.0.15' },
+	{ page: '/docs/use-from/frameworks/', n: 3, mode: 'verbatim', expect: '{\n  "name": "decisio: ask a question about a text",', needs: 'n8n 2.35.7' },
+	{ page: '/docs/use-from/frameworks/', n: 4, mode: 'verbatim', expect: 'import { boolean, choice, decide } from "@tanstack/ai";', needs: 'Node 22 with @tanstack/ai 0.65.1 and @tanstack/ai-typesafe 0.1.8' },
 	{
-		page: '/docs/use-from/', n: 11, mode: 'python', expect: 'import asyncio', with: ['pipecat-ai[jev]==1.12.0'],
+		page: '/docs/use-from/frameworks/', n: 5, mode: 'python', expect: 'import asyncio', with: ['pipecat-ai[jev]==1.12.0'],
 		note: 'with pipecat-ai 1.12.0, the version the page names',
 		assert(stdout) {
 			if (!/choice='(billing|access)'/.test(stdout)) throw new Error('the Pipecat program did not print a choice');
@@ -258,8 +258,8 @@ export const plan = [
 		},
 	},
 	// How it works, on the stand-in.
-	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
-	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
+	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 3] },
+	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 3] },
 	// Batch concurrent requests: the server's mode read from /health on the stand-in (serial, the default); the batched
 	// start is decisio's command on a card.
 	{
@@ -323,8 +323,8 @@ export const plan = [
 	{ page: '/docs/deploy/adapter/', n: 3, mode: 'shown', expect: 'python -m decisio.serve.adapter_temperatures fit --reads', why: "it needs your adapter's readouts on your labelled items" },
 	{ page: '/docs/deploy/adapter/', n: 4, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/systemone', why: 'it needs a server with an adapter loaded, on one NVIDIA card' },
 	{ page: '/docs/deploy/adapter/', n: 5, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/health \\', why: 'it needs a server with an adapter loaded, on one NVIDIA card' },
-	{ page: '/docs/deploy/development/', n: 1, mode: 'same-as', expect: `git clone --branch ${pin.tag}`, of: ['/docs/', 1] },
-	{ page: '/docs/deploy/development/', n: 2, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
+	{ page: '/docs/deploy/development/', n: 1, mode: 'same-as', expect: `git clone --branch ${pin.tag}`, of: ['/docs/', 2] },
+	{ page: '/docs/deploy/development/', n: 2, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 3] },
 
 	{
 		page: '/docs/releases/', n: 1, mode: 'run', expect: 'uv run python -c "from importlib.metadata import version', show: asPrinted,
@@ -465,12 +465,12 @@ export const plan = [
 			if (typeof json(stdout).models?.[0]?.name !== 'string') throw new Error('/v1/models did not list the served name');
 		},
 	},
-	{ page: '/docs/migrating/', n: 4, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 2] },
+	{ page: '/docs/migrating/', n: 4, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 3] },
 
 	// The home page's Get started: each tab's block is a deploy guide's own, and the request and its answer are Get started's.
 	{ page: '/', n: 1, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/deploy/cloud-gpu/', 1] },
 	{ page: '/', n: 2, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model" },
 	{ page: '/', n: 3, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/deploy/mac/', 6] },
 	{ page: '/', n: 4, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 7] },
-	{ page: '/', n: 5, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 3] },
+	{ page: '/', n: 5, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },
 ];

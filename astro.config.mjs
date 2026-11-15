@@ -3,6 +3,7 @@ import sitemap from '@astrojs/sitemap';
 import starlight from '@astrojs/starlight';
 import { defineConfig, fontProviders } from 'astro/config';
 import codeFocus from './src/lib/expressive-code-focus.mjs';
+import codeHeader from './src/lib/expressive-code-header.mjs';
 import rehypeTables from './src/lib/rehype-tables.mjs';
 import rehypeThemedImages from './src/lib/rehype-themed-images.mjs';
 import remarkUpstream from './src/lib/remark-upstream.mjs';
@@ -60,12 +61,13 @@ export default defineConfig({
 				Header: './src/components/starlight/Header.astro',
 				PageTitle: './src/components/starlight/PageTitle.astro',
 				Footer: './src/components/starlight/Footer.astro',
+				PageSidebar: './src/components/starlight/PageSidebar.astro',
 				MobileMenuFooter: './src/components/starlight/MobileMenuFooter.astro',
 			},
 			head: socialTags,
-			// One frame for every code block: a plain panel with its copy button.
+			// One frame for every code block: a panel whose header row holds the language label and the copy button.
 			// A code block scrolls its long lines sideways and never breaks one inside a word or a path.
-			expressiveCode: { plugins: [codeFocus()], defaultProps: { frame: 'code', wrap: false, preserveIndent: true } },
+			expressiveCode: { plugins: [codeFocus(), codeHeader()], defaultProps: { frame: 'code', wrap: false, preserveIndent: true } },
 			sidebar: docsGroups.map((g) => ({ ...g, items: g.items.map(({ legacy, ...item }) => item) })),
 		}),
 		sitemap(),

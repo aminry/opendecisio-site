@@ -19,15 +19,14 @@ function teachFlow(on) {
 	const box = (s, i) => {
 		const x = 12 + i * 236;
 		const lit = on !== 'all' && (s.id === on || (on === 'drift' && s.id === 'route'));
-		return `<rect class="f-node${lit ? ' f-node--on' : ''}" x="${x}" y="12" width="208" height="104" rx="12"/>
+		return `<g data-phase="${i}"${s.id === 'route' ? '' : ' data-side="model"'}><rect class="f-node${lit ? ' f-node--on' : ''}" x="${x}" y="12" width="208" height="104" rx="12"/>
 <text class="ft ft-b" x="${x + 16}" y="40">${esc(s.title)}</text>
-${s.lines.map((l, j) => `<text class="ft ft-s" x="${x + 16}" y="${64 + j * 18}">${esc(l)}</text>`).join('')}
+${s.lines.map((l, j) => `<text class="ft ft-s" x="${x + 16}" y="${64 + j * 18}">${esc(l)}</text>`).join('')}</g>
 ${i < STEPS.length - 1 ? `<path class="f-line" d="M${x + 208} 64L${x + 236} 64" pathLength="1" marker-end="url(#tf)"/>` : ''}`;
 	};
-	const watch = `<rect class="f-node${on === 'drift' ? ' f-node--on' : ''}" x="248" y="136" width="444" height="50" rx="12"/>
+	const watch = `<path class="f-frame" d="M480 116L480 136"/><g data-phase="3"><rect class="f-node${on === 'drift' ? ' f-node--on' : ''}" x="248" y="136" width="444" height="50" rx="12"/>
 <text class="ft ft-b" x="264" y="166">Watched</text>
-<text class="ft ft-s" x="340" y="166">the server suspends certificates when traffic shifts</text>
-<path class="f-frame" d="M480 116L480 136"/>`;
+<text class="ft ft-s" x="340" y="166">the server suspends certificates when traffic shifts</text></g>`;
 	const body = `<svg class="fig__svg" viewBox="0 0 720 196" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><marker id="tf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="f-head" d="M0 0L10 5L0 10z"/></marker></defs>${STEPS.map(box).join('')}${watch}</svg>`;
 	const page = { teach: 'This page is the first step.', certify: 'This page is the second step.', drift: 'This page is the watch over the third.', all: 'Teach a task, Certify answers and Watch for drift each take one of these.' }[on];
 	return panel({
@@ -96,26 +95,27 @@ function drift() {
 	const x = (n) => 24 + (600 * n) / R.messages;
 	const y = (s) => 186 - (s / R.share) * 100;
 	const frames = [
-		{ key: 'stable', title: 'Stable traffic', x: x(Math.max(0, R.start - 1)), note: `Before message ${fmt(R.start)}, no out-of-scope traffic has been added to this stream.` },
-		{ key: 'shift', title: 'Traffic shifts', x: x(R.start), note: `From message ${fmt(R.start)} to ${fmt(R.full)}, out-of-scope traffic rises to ${R.share * 100}%.` },
-		{ key: 'suspended', title: 'Certification pauses', x: x(R.suspended.at), note: `At message ${fmt(R.suspended.at)}, certification is suspended after ${R.suspended.wrong} wrong certified answers. Answers continue, marked not certified.` },
+		{ title: 'Stable traffic', note: `Before message ${fmt(R.start)}, no out-of-scope traffic has been added to this stream.` },
+		{ title: 'Traffic shifts', note: `From message ${fmt(R.start)} to ${fmt(R.full)}, out-of-scope traffic rises to ${R.share * 100}%.` },
+		{ title: 'Certification pauses', note: `At message ${fmt(R.suspended.at)}, certification is suspended after ${R.suspended.wrong} wrong certified answers. Answers continue, marked not certified.` },
 	];
-	// The suspension's label sits above the shaded area, right of its line.
-	const body = `<div data-drift data-frames="${esc(JSON.stringify(frames))}"><div class="fig__enhance"><div class="fig__controls">${frames.map((frame) => `<button type="button" data-drift-select="${frame.key}" aria-pressed="false" disabled>${frame.title}</button>`).join('')}</div></div><svg class="fig__svg" viewBox="0 0 720 222" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+	// The three stages light in turn, the band in the drawing and its line in the list together; the suspension's label sits above the shaded area, right of its line.
+	const bands = [[x(0), x(R.start), 'stable'], [x(R.start), x(R.full), 'shift'], [x(R.suspended.at), x(R.messages), 'paused']];
+	const body = `<div><svg class="fig__svg" viewBox="0 0 720 222" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+${bands.map(([x0, x1, name], i) => `<g data-phase="${i}"><rect class="f-node" x="${x0.toFixed(1)}" y="20" width="${(x1 - x0).toFixed(1)}" height="166" rx="4"/></g><text class="ft ft-d" x="${(x0 + 6).toFixed(1)}" y="14">${name}</text>`).join('\n')}
 <path class="f-area" d="M${x(0)} 186L${x(R.start).toFixed(1)} 186L${x(R.full).toFixed(1)} ${y(R.share).toFixed(1)}L${x(R.messages).toFixed(1)} ${y(R.share).toFixed(1)}L${x(R.messages).toFixed(1)} 186Z"/>
 <path class="f-axis" d="M24 186L${x(R.messages)} 186"/>
-<path data-drift-cursor class="learn__threshold" d="M${x(R.suspended.at).toFixed(1)} 20V186"/>
 <path class="f-mark f-mark--on" d="M${x(R.suspended.at).toFixed(1)} 20L${x(R.suspended.at).toFixed(1)} 186"/>
 <text class="ft ft-b" x="${(x(R.suspended.at) + 8).toFixed(1)}" y="34">certification suspended</text>
 <text class="ft ft-d" x="${(x(R.suspended.at) + 8).toFixed(1)}" y="52">message ${fmt(R.suspended.at)}, after ${R.suspended.wrong} wrong certified answers</text>
 <text class="ft ft-d" x="24" y="208">message 0</text><text class="ft ft-d" x="${x(R.messages)}" y="208" text-anchor="end">${fmt(R.messages)}</text>
 <text class="ft ft-d" x="${(x(R.messages) + 8).toFixed(1)}" y="${(y(R.share) + 4).toFixed(1)}">${R.share * 100}%</text>
 <text class="ft ft-d" x="${(x(R.messages) + 8).toFixed(1)}" y="190">0%</text>
-</svg><p class="fig__field-note" data-drift-out aria-live="polite">The complete recorded stream is shown. Choose an event to inspect it.</p><ol class="drift__events">${frames.map((frame) => `<li data-drift-event="${frame.key}"><b>${frame.title}</b><span>${esc(frame.note)}</span></li>`).join('')}</ol><p>Next, review the changed traffic and certify the task again before resuming automation.</p></div>`;
+</svg><ol class="drift__events">${frames.map((frame, i) => `<li data-phase="${i}"><b>${frame.title}</b><span>${esc(frame.note)}</span></li>`).join('')}</ol></div>`;
 	return panel({
 		name: 'drift-replay', label: 'Watching for drift', title: 'The alarm suspends certification soon after the traffic shifts.',
 		desc: `A certified CLINC150 task on ${R.base}, sent ${fmt(R.messages)} messages, with messages that fit none of its options rising from message ${fmt(R.start)} to ${R.share * 100}% at message ${fmt(R.full)}. Certification was first suspended at message ${fmt(R.suspended.at)}, after ${R.suspended.wrong} wrong certified answers.`,
-		body, interactive: true, legend: 'The shaded area is the share of messages the task has no option for, from 0% to its peak; each of them is a wrong answer. While certification is suspended, answers keep coming, none marked certified.',
+		body, legend: 'The shaded area is the share of messages the task has no option for, from 0% to its peak; each of them is a wrong answer. While certification is suspended, answers keep coming, none marked certified.',
 		source: `Source: the teach-and-certify drift stream, ${R.suspended.model} on ${R.machine.replace(/ \(.*\)$/, '')}, measured on the decisio ${R.suspended.version} release candidate.`,
 	});
 }

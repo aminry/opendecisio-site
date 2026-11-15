@@ -70,7 +70,7 @@ export function integrationsTable() {
 	const heads = ['Framework, as checked', 'Base URL', 'Timeout and retries'];
 	const cells = (it) => [`<b>${esc(it.name)}</b><br><span class="integrations__ver">${esc(what(it))}; ${it.checks} of ${it.checks} checks passed</span>`, `<code>http://127.0.0.1:8000${it.v1 ? '/v1' : ''}</code>`, esc(it.timeout)];
 	const rows = data.items.map((it) => `<tr>${cells(it).map((c, i) => `<td data-label="${heads[i]}">${c}</td>`).join('')}</tr>`).join('');
-	return `<div class="table-wrap"><table class="integrations docs-table">
+	return `<div class="table-wrap" tabindex="0" role="region" aria-label="Table, scrolls sideways when it does not fit"><table class="integrations docs-table">
 <thead><tr>${heads.map((h) => `<th>${h}</th>`).join('')}</tr></thead>
 <tbody>${rows}</tbody>
 </table></div>

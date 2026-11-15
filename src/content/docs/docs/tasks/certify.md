@@ -5,25 +5,16 @@ description: Get answers the server stands behind. You choose the error rate; th
 
 <!-- Site-written: the second Teach and trust guide, rewritten from decisio's docs/tasks.md ("Certified answers") at the pinned release; its worked example's request is decisio's (::upstream) and the certificate and answers are that example recorded on the pinned release on the 31B, as is example 5's line by hand (src/lib/recorded.mjs), with the manual threshold and abstention from the former Use the probability guide and docs/api.md. The slider is the teach-and-certify runs' support inbox (src/lib/figures/tasks.mjs); the facts are docs/tasks.md's (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/tasks.md#certified-answers docs/tasks.md#what-certified-means=1-know-the-promise docs/tasks.md#a-worked-example=2-teach-the-task-with-a-certificate docs/tasks.md#how-many-examples-it-takes=4-have-enough-examples docs/tasks.md#where-it-stops=5-keep-it-valid docs/running.md#deterministic-compile---deterministic-compile=5-keep-it-valid docs/api.md#abstention=let-the-server-abstain"}
+::covers{links="docs/tasks.md#certified-answers docs/tasks.md#what-certified-means=1-know-the-promise docs/tasks.md#a-worked-example=2-teach-the-task-with-a-certificate docs/tasks.md#how-many-examples-it-takes=4-have-enough-examples docs/tasks.md#where-it-stops=limits docs/api.md#abstention=let-the-server-abstain"}
 
 Add a `certify` block when you teach a task, and every answer says whether it is certified.
 Pick how often a certified answer may be wrong; the server finds the threshold that keeps that promise:
 
 ::figure{name="certify-slider"}
 
-## 1. Know the promise
+## TL;DR
 
-Pick an error rate, say 5%: of the answers decisio certifies, at most 5% are wrong, for traffic like your examples, nine times in ten (the default `delta` of 0.1).
-
-- The promise is about the rate: even so, one certified answer can still be wrong.
-- A certificate covers one task on one serving setup: certify again when you change either.
-- A stricter rate certifies fewer answers, and too few examples certify none; the rest go to a person.
-
-## 2. Teach the task with a certificate
-
-Add `certify` to the registration, with your error target as `alpha`.
-With a server running, from the root of the clone ([Teach a task](/docs/tasks/#3-register) has both), add it to the 120 labelled tickets decisio ships and register them:
+With a server running, from the root of the clone ([Teach a task](/docs/tasks/#3-register) has both), add `certify` to the 120 labelled tickets decisio ships and register them:
 
 ```bash
 uv run python -c 'import json; b = json.load(open("examples/tasks/examples.json")); b["certify"] = {"alpha": 0.05}; json.dump(b, open("certify.json", "w"))'
@@ -31,7 +22,20 @@ curl -s http://127.0.0.1:8000/v1/tasks -H 'Content-Type: application/json' -d @c
   | uv run python -c 'import json, sys; c = json.load(sys.stdin)["certificate"]; print(json.dumps({k: c.get(k) for k in ("alpha", "n", "threshold", "certified_n", "errors_at_threshold", "summary")}, indent=1))'
 ```
 
+The reply is the certificate, and every later answer of the task says whether it is certified.
+
+## 1. Know the promise
+
+Pick an error rate, say 5%: of the answers decisio certifies, at most 5% are wrong, for traffic like your examples, nine times in ten (the default `delta` of 0.1).
+
+- The promise is about the rate: even so, one certified answer can still be wrong.
+- A stricter rate certifies fewer answers, and too few examples certify none; the rest go to a person.
+
+## 2. Teach the task with a certificate
+
+Your error target is `alpha`.
 The server holds back half the examples, teaches on the rest, reads the held-back ones as it will serve them, and answers with the certificate.
+
 The CPU stand-in is a small development model, so its certificate is its own.
 On the default model, Gemma 4 31B, decisio's worked example, a three-queue ticket question at an error target of 15%, answered:
 
@@ -42,15 +46,20 @@ Here, :value{name="certify-result"}.
 ::source{value="certify-recorded"}
 
 If no threshold can keep the promise, `threshold` is `null` and the task works as before, with every answer marked not certified.
+Give a choice task an "other" option: a message that fits none of the options gets a wrong answer, and that answer can be certified.
+The server warns when a choice task has no such option.
 
 ## 3. Read each answer
 
-Every answer for the task now says whether it is certified, and why not when it is not:
+Every answer for the task says whether it is certified, and why not when it is not:
 
 ::site-block{name="certificate-answers"}
 
+:::caution[Heads up]
 Check that `certified` is `true` and `certificate_kind` is `gold` before taking a correctness-based action.
 A learned table can return an `agreement` certificate, which concerns matching the model, mistakes included.
+:::
+
 Send answers that do not meet your policy to a person or larger model, and handle service errors through the same fallback.
 
 ## 4. Have enough examples
@@ -70,29 +79,14 @@ That floor is for a task the model always gets right; yours needs more.
 With 75 examples, four of five test tasks certified nothing at 5% or 10%.
 Set `certify.min_examples` above the floor to refuse a certificate that thin.
 
-## 5. Keep it valid
+## Keep it valid
 
-1. **Give the task an "other" option.** A message that fits none of the options gets a wrong answer, and that answer can be certified. The server warns when a choice task has no such option.
-2. **Certify again when the setup changes.** A certificate covers one task on one serving setup: the decisio version, the model and its revision, the engine, the card, the quantisation, the cache type, the context length, the [prompt layout](/docs/layout/) and the serving flags. When any of it changes, every answer of the task is `certified: false` with the reason `serving_stack_changed`. Certify again with `POST /v1/tasks/{id}/certify`, on new labelled examples.
-3. **After upgrading decisio, certify your tasks again.**
-4. **Expect a few answers near the threshold to change sides** between two fresh starts of the same server: judge the certificate by its rate over many answers, not by one.
-5. **On the 12B with several replicas or fresh nodes, make cold starts agree** with `--deterministic-compile on`, then certify again: the setting is part of what a certificate covers, and the first start compiles from cold. Leave it off on the 31B, whose cold starts already agreed in the same check and whose answers it changes.
-6. **Expect a repeated request to differ slightly from its first read.** A request about a text the server has read before is computed on the blocks the prefix cache kept, which can move an answer near the threshold across it. On the 12B, `--batch-invariant on`, off by default, removes this: a request read from the cache gives the same bits as one read without it.
+<span class="fp-anchor" id="5-keep-it-valid"></span>
+<span class="fp-anchor" id="6-certify-under-the-layout-your-clients-send"></span>
 
-What is certified: choice and yes/no questions on text, asked in one order.
-Score questions and requests with images carry no certificate.
-A certified question is scored on its own, the way the certificate was made, so it does not share the read of the text with the other questions of its request.
-
-## 6. Certify under the layout your clients send
-
-A task is fitted under one [prompt layout](/docs/layout/) and certifies only that layout's requests.
-One server holds tasks of both layouts, each answering its own layout's requests.
-
-- **Name the layout when you register,** with `"layout": "plain"` or `"layout": "header"`; without it, the task takes the server's. An example whose request names the other layout is refused with a 422.
-- **A question of the task asked under the other layout** gets decisio's own read, with `certified: false` and `certified_reason: "layout_mismatch"`, and the traffic monitor does not count it.
-- **To certify both kinds of client, register the question under each layout.** That makes two tasks, each serving its own layout's requests, and neither replaces the other; removing one leaves the other.
-- **A certificate is checked against its own layout's serving setup,** so a header task certified on a header server stays certified for header requests on a plain server that is otherwise the same.
-- **`POST /v1/tasks/{id}/certify` certifies again under the task's own layout,** and tasks of both layouts load from `--tasks-dir`, `--task-store`, `--tasks-file` and the import routes.
+A certificate covers one task on one serving setup, so a change to the setup means certifying again.
+[Set up for production](/docs/production/#keep-a-certificate-valid) lists what to pin and when to certify again.
+A task is also fitted under one [prompt layout](/docs/layout/#certify-under-the-layout-your-clients-send) and certifies only that layout's requests.
 
 ## Pick a line by hand
 
@@ -147,6 +141,12 @@ A question can carry a "can't tell" option, and the server can decline to answer
 
 Register the task first and its abstention threshold second, and register both again together.
 A threshold applies only on the served name it was fitted for, so fit it on the model you serve.
+
+## Limits
+
+- Certified: choice and yes/no questions on text, asked in one order.
+- Score questions and requests with images carry no certificate.
+- A certified question is scored on its own, the way the certificate was made, so it does not share the read of the text with the other questions of its request.
 
 ## What next
 

@@ -41,6 +41,69 @@ h1#_top {
 	font-variant-numeric: tabular-nums;
 }
 
+/* A table is a framed object: a rounded bordered container, a mono capital header row tinted like a panel, hairline
+   rows, 14.5px cells, code in a cell as the inline code chip. */
+.sl-markdown-content .table-wrap {
+	margin-block: 1.5rem;
+	border: 1px solid var(--cb-line, color-mix(in srgb, var(--sl-color-text) 12%, transparent));
+	border-radius: 14px;
+	background: var(--sl-color-gray-6);
+	overflow: clip;
+}
+
+.sl-markdown-content .table-wrap > table {
+	border-collapse: collapse;
+	font-size: 0.906rem;
+	line-height: 1.5;
+}
+
+.sl-markdown-content .table-wrap > table thead tr {
+	background: color-mix(in srgb, var(--d-navy) 50%, var(--sl-color-gray-6));
+}
+
+:root[data-theme='light'] .sl-markdown-content .table-wrap > table thead tr {
+	background: var(--sl-color-gray-5);
+}
+
+.sl-markdown-content .table-wrap > table th {
+	padding: 0.7rem 0.875rem;
+	border: 0;
+	font: 500 0.72rem/1.4 var(--d-font-mono, 'Geist Mono Site', monospace);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--sl-color-gray-3);
+}
+
+.sl-markdown-content .table-wrap > table td {
+	padding: 0.6875rem 0.875rem;
+	border: 0;
+	border-top: 1px solid var(--cb-line, color-mix(in srgb, var(--sl-color-text) 12%, transparent));
+	vertical-align: top;
+}
+
+.sl-markdown-content .table-wrap > table tbody tr:first-child td {
+	border-top: 0;
+}
+
+.sl-markdown-content .table-wrap > table tbody tr {
+	background: transparent;
+}
+
+.sl-markdown-content .table-wrap > table tbody tr:last-child {
+	border-bottom: 0 !important;
+}
+
+.sl-markdown-content .table-wrap > table :is(th, td) code {
+	font-size: 0.96em;
+}
+
+.sl-markdown-content .glossary .table-wrap {
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+
 /* WebKit does not size a table column by the breaks overflow-wrap: anywhere and
    word-break: break-word allow (a path in code stayed one unbreakable word), so a
    path or name in code may break between any two characters, which every engine
@@ -79,77 +142,32 @@ h1#_top {
 	height: auto;
 }
 
-@container (max-width: 36rem) {
-	.docs-table:has(tr > :nth-child(3)) :is(thead, tbody, tr, td) {
-		display: block;
-	}
-
-	.docs-table:has(tr > :nth-child(3)) thead {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-	}
-
-	.docs-table:has(tr > :nth-child(3)) tr {
-		padding-block: 0.75rem;
-		border-bottom: 1px solid var(--sl-color-gray-5);
-	}
-
-	.docs-table:has(tr > :nth-child(3)) td {
-		text-align: start;
-		min-width: 0;
-		padding: 0.25rem 0;
-		border: 0;
-	}
-
-	.docs-table:has(tr > :nth-child(3)) td:first-child {
-		font-weight: 600;
-	}
-
-	.docs-table:has(tr > :nth-child(3)) td[data-label]:not(:first-child)::before {
-		content: attr(data-label);
-		display: block;
-		font-size: var(--d-step--2);
-		color: var(--sl-color-gray-3);
-	}
+/* A table of three columns or more that does not fit its column keeps its frame and scrolls sideways inside it, with
+   its first column kept in view. It does not turn into stacked cards: that made a long table several screens tall. The
+   frame is a focusable region (src/lib/rehype-tables.mjs), so the keyboard can scroll it. */
+.sl-markdown-content .table-wrap:has(> .docs-table tr > :nth-child(3)) {
+	overflow-x: auto;
+	overscroll-behavior-x: contain;
 }
 
-@container (max-width: 60rem) {
-	.docs-table:has(tr > :nth-child(6)) :is(thead, tbody, tr, td) {
-		display: block;
+.sl-markdown-content .table-wrap:has(> .docs-table tr > :nth-child(3)):focus-visible {
+	outline: 2px solid var(--d-accent-line, var(--sl-color-accent));
+	outline-offset: 2px;
+}
+
+@container (max-width: 36rem) {
+	.docs-table:has(tr > :nth-child(3)) {
+		min-width: 36rem;
 	}
 
-	.docs-table:has(tr > :nth-child(6)) thead {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
+	.docs-table:has(tr > :nth-child(6)) {
+		min-width: 56rem;
 	}
 
-	.docs-table:has(tr > :nth-child(6)) tr {
-		padding-block: 0.75rem;
-		border-bottom: 1px solid var(--sl-color-gray-5);
-	}
-
-	.docs-table:has(tr > :nth-child(6)) td {
-		text-align: start;
-		min-width: 0;
-		padding: 0.25rem 0;
-		border: 0;
-	}
-
-	.docs-table:has(tr > :nth-child(6)) td:first-child {
-		font-weight: 600;
-	}
-
-	.docs-table:has(tr > :nth-child(6)) td[data-label]:not(:first-child)::before {
-		content: attr(data-label);
-		display: block;
-		font-size: var(--d-step--2);
-		color: var(--sl-color-gray-3);
+	.docs-table:has(tr > :nth-child(3)) :is(th, td):first-child {
+		position: sticky;
+		left: 0;
+		background: var(--sl-color-gray-6);
 	}
 }
 
@@ -390,37 +408,102 @@ h1#_top {
 .pt h1#_top {
 	margin-top: 0.75rem;
 	color: var(--sl-color-white);
-	font-size: clamp(2.4rem, 1.6rem + 2.8vw, 3.75rem);
+	font-size: clamp(2.125rem, 1.6rem + 1.9vw, 3.125rem);
 	font-weight: 700;
-	line-height: 1;
-	letter-spacing: -0.045em;
+	line-height: 1.06;
+	letter-spacing: -0.035em;
 	text-shadow: 0.06em 0.06em 0 var(--d-shadow);
 }
 
 .pt__lede {
-	max-width: 40rem;
+	max-width: 48rem;
 	margin: 1.1rem 0 0;
-	font-size: clamp(1.1rem, 1rem + 0.5vw, 1.3rem);
-	line-height: 1.55;
+	font-size: 1.1875rem;
+	line-height: 1.6;
 	color: var(--sl-color-gray-2);
 }
 
 /* Sections: a hairline above each, the full width of the column (on the heading's wrapper, which also holds its
    anchor link; the heading itself is only as wide as its words), the numbered ones read as steps. */
 .sl-markdown-content .sl-heading-wrapper.level-h2 {
-	margin-top: 3.25rem;
-	padding-top: 2rem;
-	border-top: 1px solid var(--sl-color-gray-5);
+	margin-top: 4rem;
+	padding-top: 1.375rem;
+	border-top: 1px solid var(--cb-line, var(--sl-color-gray-5));
 }
 
 .sl-markdown-content h2 {
-	font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem);
-	letter-spacing: -0.03em;
+	font-size: clamp(1.45rem, 1.25rem + 0.6vw, 1.6875rem);
+	line-height: 1.25;
+	letter-spacing: -0.025em;
 }
 
 .sl-markdown-content > .pt + .sl-heading-wrapper,
 .sl-markdown-content > :first-child {
 	margin-top: 0;
+}
+
+/* The reading scale: paragraphs and list items 19px on a 1.6 line (about 70 characters in the column), 18px between
+   paragraphs, 6px between list items; h3 20px. Direct children only, so a figure's own captions keep their size. */
+.sl-markdown-content > p,
+.sl-markdown-content > :is(ul, ol) > li,
+.sl-markdown-content .steps > ol > li {
+	font-size: 1.1875rem;
+	line-height: 1.6;
+}
+
+.sl-markdown-content > p {
+	margin-bottom: 1.125rem;
+}
+
+.sl-markdown-content .sl-heading-wrapper.level-h2 {
+	margin-bottom: 0.875rem;
+}
+
+.sl-markdown-content > :is(ul, ol) > li + li {
+	margin-top: 0.375rem;
+}
+
+.sl-markdown-content h3 {
+	font-size: 1.25rem;
+	font-weight: 650;
+}
+
+/* Lists: amber bullets, mono numerals. */
+.sl-markdown-content > ul > li::marker {
+	color: var(--sl-color-accent);
+}
+
+.sl-markdown-content > ol {
+	list-style: none;
+	counter-reset: li;
+	padding-inline-start: 0;
+}
+
+.sl-markdown-content > ol > li {
+	counter-increment: li;
+	position: relative;
+	padding-inline-start: 2.25rem;
+}
+
+.sl-markdown-content > ol > li::before {
+	content: counter(li) '.';
+	position: absolute;
+	inset-inline-start: 0;
+	width: 1.75rem;
+	text-align: end;
+	font: 500 0.875rem/1.6 var(--d-font-mono, 'Geist Mono Site', monospace);
+	line-height: 2.1;
+	color: var(--sl-color-accent);
+}
+
+/* Inline code: a chip. */
+.sl-markdown-content :not(pre) > code {
+	font-size: 0.96em;
+	padding: 1px 6px;
+	border: 1px solid var(--cb-line, color-mix(in srgb, var(--sl-color-text) 12%, transparent));
+	border-radius: 6px;
+	background: var(--sl-color-gray-6);
+	color: var(--sl-color-white);
 }
 
 /* A short table of the words a page uses. */
@@ -449,10 +532,136 @@ h1#_top {
 	white-space: nowrap;
 }
 
-/* Code blocks: a language label above the code, the box as it is on the home page. */
+/* Code blocks, a framed object: a header row (the language in amber mono capitals at the left, the copy button at
+   the right), then the code. A block with no language is a command's output: its row says "output", the label is
+   dim and the panel is blacker, with a steel bar, so it never reads as something to run. */
+.expressive-code {
+	--ec-brdRad: 14px;
+	--ec-codeFontSize: 13.75px;
+	--ec-codeLineHt: 1.65;
+	--ec-codePadBlk: 1rem;
+	--ec-codePadInl: 1.25rem;
+	--cb-lang: var(--sl-color-accent);
+	margin-block: 1.25rem;
+}
+
 .expressive-code .frame {
-	box-shadow: 4px 4px 0 var(--d-shadow);
-	border-radius: 12px;
+	border: 1px solid var(--cb-line);
+	border-radius: 14px;
+	background: var(--sl-color-gray-6);
+	box-shadow: inset 0 1px 0 var(--d-hi), inset 0 0 24px color-mix(in srgb, #000 22%, transparent);
+	overflow: hidden;
+	--button-spacing: 0;
+}
+
+.expressive-code .frame .header:empty {
+	display: none;
+}
+
+.expressive-code .frame .cb-head {
+	display: flex;
+	align-items: center;
+	min-height: 2.4rem;
+	padding: 0 0.875rem;
+	border-bottom: 1px solid var(--cb-line);
+	border-radius: 0;
+	background: var(--cb-head);
+	font: 600 0.72rem/1 var(--d-font-mono, 'Geist Mono Site', monospace);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--cb-lang);
+}
+
+.expressive-code .frame pre {
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+}
+
+.expressive-code .frame pre > code {
+	padding-block: var(--ec-codePadBlk);
+}
+
+/* The framed objects' lines and surfaces: code blocks, tables and recorded outputs. */
+:root {
+	--cb-line: color-mix(in srgb, var(--sl-color-text) 12%, transparent);
+	--cb-head: color-mix(in srgb, var(--sl-color-gray-5) 40%, var(--sl-color-gray-6));
+	--cb-out: color-mix(in srgb, #000 55%, var(--sl-color-gray-6));
+}
+
+/* In the light theme an output is the plain page colour, so it still differs from the tinted command panel. */
+:root[data-theme='light'] {
+	--cb-out: var(--sl-color-black);
+}
+
+/* The copy button sits in the header row, always shown, as a small bordered word. */
+.expressive-code .copy {
+	inset-block-start: 0;
+	inset-inline-end: 0.5rem;
+	height: 2.4rem;
+	align-items: center;
+}
+
+.expressive-code .copy button,
+.expressive-code .copy button:not(:hover) {
+	width: auto;
+	height: 1.65rem;
+	align-self: center;
+	padding: 0 0.7rem;
+	border: 1px solid var(--sl-color-gray-4);
+	border-radius: 8px;
+	background: transparent;
+	color: var(--sl-color-text);
+	opacity: 1;
+	font: 500 0.72rem/1 var(--d-font-mono, 'Geist Mono Site', monospace);
+	letter-spacing: 0.04em;
+}
+
+.expressive-code .copy button div,
+.expressive-code .copy button::before {
+	display: none;
+}
+
+.expressive-code .copy button::after {
+	content: 'copy';
+	position: static;
+	inset: auto;
+	display: block;
+	margin: 0;
+	background: none;
+	-webkit-mask: none;
+	mask: none;
+	color: inherit;
+	line-height: 1.65rem;
+}
+
+.expressive-code .copy button:hover {
+	border-color: var(--sl-color-accent);
+	color: var(--sl-color-accent);
+}
+
+.expressive-code .copy button:focus-visible {
+	outline: 2px solid var(--sl-color-accent);
+	outline-offset: 2px;
+}
+
+.expressive-code :nth-child(1 of .ec-line) .code {
+	padding-inline-end: var(--ec-codePadInl);
+}
+
+.expressive-code .frame.is-output {
+	background: var(--cb-out);
+	border-left: 3px solid var(--sl-color-gray-3);
+	border-radius: 4px 14px 14px 4px;
+}
+
+.expressive-code .frame.is-output .cb-head {
+	background: transparent;
+	color: var(--sl-color-gray-3);
+}
+
+.expressive-code .frame.is-output pre > code {
+	color: var(--sl-color-gray-2);
 }
 
 /* The foot. */
@@ -499,9 +708,9 @@ h1#_top {
 	margin: 2rem 0;
 	padding: 1.25rem 1.25rem 1rem;
 	border: 1px solid var(--d-line-strong);
-	border-radius: 16px;
-	background: linear-gradient(180deg, color-mix(in srgb, var(--d-surface-2) 60%, var(--d-surface)), var(--d-surface));
-	box-shadow: inset 0 1px 0 var(--d-hi), 6px 6px 0 var(--d-shadow);
+	border-radius: 14px;
+	background: var(--d-surface-2);
+	box-shadow: 6px 6px 0 var(--d-shadow);
 }
 
 .fig__head {
@@ -527,21 +736,6 @@ h1#_top {
 	color: var(--sl-color-white);
 }
 
-.fig__pause {
-	flex: none;
-	font: 500 0.75rem var(--d-font-mono, 'Geist Mono Site', monospace);
-	padding: 0.4rem 0.75rem;
-	color: var(--sl-color-gray-1);
-	background: transparent;
-	border: 1px solid var(--sl-color-gray-5);
-	border-radius: 8px;
-	cursor: pointer;
-}
-
-.fig__pause:hover {
-	border-color: var(--sl-color-accent);
-}
-
 .fig__stage {
 	margin-top: 1rem;
 	overflow-x: auto;
@@ -557,15 +751,19 @@ h1#_top {
 	min-width: 36rem;
 }
 
-.fig__legend {
-	margin: 0.75rem 0 0;
-	font-size: 0.9rem;
-	color: var(--sl-color-gray-2);
+.fig__takeaway {
+	margin: 1rem 0 0;
+	padding-top: 0.75rem;
+	border-top: 1px solid var(--d-line);
+	font-size: 0.95rem;
+	line-height: 1.5;
+	color: var(--sl-color-white);
 }
 
 .fig__source {
 	margin: 0.5rem 0 0;
-	font-size: 0.75rem;
+	font: 400 0.6875rem/1.5 var(--d-font-mono, 'Geist Mono Site', monospace);
+	letter-spacing: 0.02em;
 	color: var(--sl-color-gray-3);
 }
 
@@ -648,44 +846,64 @@ h1#_top {
 .fd-9 { --d: 4500ms; }
 .fd-10 { --d: 5000ms; }
 
-/* Moving only while the script runs it, and never under reduced motion; held still while paused. */
-@media (prefers-reduced-motion: no-preference) {
-	.fig.is-run :is(.f-pop, .f-node) {
-		animation: f-pop 520ms var(--fig-ease) both;
-		animation-delay: var(--d, 0ms);
-	}
-
-	.fig.is-run .f-line {
-		animation: f-draw 700ms var(--fig-ease) both;
-		animation-delay: var(--d, 0ms);
-	}
-
-	.fig.is-run .f-grow {
-		animation: f-grow 900ms var(--fig-ease) both;
-		animation-delay: var(--d, 0ms);
-	}
-
-	.fig.is-paused :is(.f-pop, .f-node, .f-line, .f-grow) {
-		animation-play-state: paused;
-	}
+/* A looping figure lights its parts in turn (src/scripts/docs-figures.ts): the active path is amber, the model's side is steel.
+   Only colour and a soft glow change, over 240ms, so the panel never changes height. Without script, or under reduced motion,
+   the complete drawing is shown as written. */
+.fig {
+	--fig-steel: #8fb3d9;
 }
 
-@keyframes f-pop {
-	from {
-		opacity: 0;
-		transform: translateY(6px);
-	}
+.fig [data-phase] {
+	transition: border-color 240ms var(--fig-ease), background-color 240ms var(--fig-ease), box-shadow 480ms var(--fig-ease);
 }
 
-@keyframes f-draw {
-	from {
-		stroke-dashoffset: 1;
-	}
+.fig [data-phase][data-side='model']:not(svg *) {
+	border-color: color-mix(in srgb, var(--fig-steel) 55%, transparent);
 }
 
-@keyframes f-grow {
-	from {
-		transform: scaleX(0);
+.fig [data-phase][data-side='model']:not(svg *) > b::before {
+	content: '';
+	display: inline-block;
+	width: 0.5rem;
+	height: 0.5rem;
+	margin-right: 0.45rem;
+	border-radius: 50%;
+	background: var(--fig-steel);
+	vertical-align: 0.05em;
+}
+
+.fig [data-phase].is-current:not(svg *) {
+	border-color: var(--sl-color-accent);
+	background-color: color-mix(in srgb, var(--sl-color-accent) 9%, var(--d-surface));
+	box-shadow: 0 0 0 4px color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
+}
+
+.fig svg [data-phase] > .f-node {
+	transition: stroke 240ms var(--fig-ease), fill 240ms var(--fig-ease);
+}
+
+.fig svg [data-phase][data-side='model'] > .f-node {
+	stroke: color-mix(in srgb, var(--fig-steel) 60%, transparent);
+}
+
+.fig svg [data-phase].is-current > .f-node {
+	stroke: var(--sl-color-accent);
+	stroke-width: 2;
+	fill: color-mix(in srgb, var(--sl-color-accent) 9%, var(--sl-color-gray-6));
+}
+
+.fig [data-phase].is-current .f-bar {
+	fill: var(--sl-color-accent);
+}
+
+.fig .fig__step--on {
+	border-color: color-mix(in srgb, var(--sl-color-accent) 55%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.fig [data-phase],
+	.fig svg [data-phase] > .f-node {
+		transition: none;
 	}
 }
 
@@ -780,6 +998,11 @@ h1#_top {
 	color: var(--sl-color-accent);
 }
 
+/* The reading column is 780px at most; Starlight's layout width above it only decides how the row is shared. */
+.content-panel > .sl-container {
+	max-width: min(var(--sl-content-width), var(--d-prose-max, 48.75rem));
+}
+
 /* The sidebar and the page's own table of contents, set like the reference's: small mono group labels, a quiet
    current page with an accent bar, and "On this page" in the same label style. */
 .sidebar-content summary .large {
@@ -794,10 +1017,19 @@ h1#_top {
 	border-radius: 8px;
 }
 
+/* A group's pages sit flush under its label: no nested rule, no extra indent. The current page is a soft amber fill
+   with a 3px amber bar on its left edge. */
+.sidebar-content ul ul li {
+	margin-inline-start: 0;
+	border-inline-start: 0;
+	padding-inline-start: 0;
+}
+
 .sidebar-content a[aria-current='page'] {
 	background: var(--sl-color-accent-low);
 	color: var(--sl-color-white);
-	box-shadow: inset 2px 0 0 var(--sl-color-accent);
+	border-radius: 0 8px 8px 0;
+	box-shadow: inset 3px 0 0 var(--sl-color-accent);
 }
 
 /* The table of contents comes before the page in the HTML, so a first paint can happen before the page's column
@@ -1389,7 +1621,7 @@ a.fig__card:hover {
 	color: inherit;
 }
 
-/* ---- Round 6 (after shad0w, Apache-2.0; NOTICE): callouts, steps and tabs ---- */
+/* ---- Round 6: callouts, steps and tabs ---- */
 
 /* Callouts: a tinted card with a coloured edge, its kind's icon and name. Note is blue, tip the accent, caution a warm
    red-orange and danger red; violet stays Jev's, so Starlight's purple (its tip) is the accent here. */
@@ -1423,65 +1655,50 @@ a.fig__card:hover {
 	--sl-color-red-high: #7a1219;
 }
 
+/* One callout style, three labels: Heads up (the amber bar; Starlight's caution and danger), Note and Tip (the steel
+   bar). A 3px bar, a panel, a mono capital label, a few lines. No icon, no shadow. */
 .sl-markdown-content .starlight-aside {
-	--a: var(--sl-color-blue);
-	--a-low: var(--sl-color-blue-low);
-	--a-high: var(--sl-color-blue-high);
+	--a: var(--d-steel);
+	--a-high: var(--sl-color-gray-3);
 	margin: 1.5rem 0;
-	padding: 1rem 1.15rem 1.05rem;
-	border: 1px solid color-mix(in srgb, var(--a) 40%, transparent);
-	border-left: 4px solid var(--a);
-	border-radius: 12px;
-	background: var(--a-low);
-	box-shadow: inset 0 1px 0 var(--d-hi), 4px 4px 0 var(--d-shadow);
+	padding: 1rem 1.25rem;
+	border: 0;
+	border-left: 3px solid var(--a);
+	border-radius: 0 12px 12px 0;
+	background: var(--sl-color-gray-6);
+	box-shadow: none;
 	color: var(--sl-color-gray-1);
 }
 
-.sl-markdown-content .starlight-aside--tip {
-	--a: var(--sl-color-purple);
-	--a-low: var(--sl-color-purple-low);
-	--a-high: var(--sl-color-purple-high);
-}
-
-.sl-markdown-content .starlight-aside--caution {
-	--a: var(--sl-color-orange);
-	--a-low: var(--sl-color-orange-low);
-	--a-high: var(--sl-color-orange-high);
-}
-
+.sl-markdown-content .starlight-aside--caution,
 .sl-markdown-content .starlight-aside--danger {
-	--a: var(--sl-color-red);
-	--a-low: var(--sl-color-red-low);
-	--a-high: var(--sl-color-red-high);
+	--a: var(--sl-color-accent);
+	--a-high: var(--sl-color-accent);
 }
 
 .sl-markdown-content .starlight-aside__title {
-	display: flex;
-	align-items: center;
-	gap: 0.55rem;
-	margin: 0 0 0.45rem;
-	font: 600 0.75rem/1.2 var(--d-font-mono, 'Geist Mono Site', monospace);
+	display: block;
+	margin: 0 0 0.4rem;
+	font: 600 0.72rem/1.2 var(--d-font-mono, 'Geist Mono Site', monospace);
 	text-transform: uppercase;
-	letter-spacing: 0.12em;
+	letter-spacing: 0.08em;
 	color: var(--a-high);
 }
 
 .sl-markdown-content .starlight-aside__icon {
-	box-sizing: content-box;
-	width: 14px;
-	height: 14px;
-	padding: 5px;
-	border-radius: 50%;
-	color: var(--a-low);
-	background: var(--a);
+	display: none;
 }
 
 .sl-markdown-content .starlight-aside__content {
 	color: var(--sl-color-gray-1);
 }
 
+.sl-markdown-content .starlight-aside__content > :last-child {
+	margin-bottom: 0;
+}
+
 .sl-markdown-content .starlight-aside__content a {
-	color: var(--a-high);
+	color: var(--sl-color-text-accent);
 }
 
 /* Steps: each number in an accent circle, a line joining it to the next. */
@@ -1776,18 +1993,12 @@ a.fig__card:hover {
 	box-shadow: inset 0 -2px var(--d-accent);
 }
 
-.fig__controls button:disabled {
-	color: var(--d-muted);
-	cursor: default;
-}
-
 .fig__controls button:focus-visible,
 .fig input:focus-visible {
 	outline: 2px solid var(--d-focus);
 	outline-offset: 3px;
 }
 
-.fig__status,
 .fig__field-note {
 	min-block-size: 3em;
 	margin-block: 0.5rem 0;
@@ -2030,10 +2241,6 @@ a.fig__card:hover {
 	font-size: 0.9rem;
 }
 
-.fig .drift__events li[aria-current='step'] {
-	border-inline-start-color: var(--d-accent);
-}
-
 .learn__mini-distribution > div {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) auto;
@@ -2064,4 +2271,91 @@ a.fig__card:hover {
 .fig [data-phase].is-current .f-rail {
 	stroke: var(--d-accent-line);
 	stroke-width: 2.5;
+}
+
+/* The right column's own frame (the page-sidebar component is ours, so Starlight's scoped rules for it are restated). */
+.right-sidebar-panel {
+	padding: 1rem var(--sl-sidebar-pad-x);
+}
+
+.right-sidebar-panel .sl-container {
+	width: calc(var(--sl-sidebar-width) - 2 * var(--sl-sidebar-pad-x));
+}
+
+.right-sidebar-panel h2 {
+	margin-bottom: 0.5rem;
+}
+
+.right-sidebar-panel a {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.35;
+	text-decoration: none;
+	overflow-wrap: anywhere;
+}
+
+.right-sidebar {
+	border-inline-start: 0;
+}
+
+/* "On this page": a 1px rule down the left; the current section is marked on it by a 2px amber bar and brighter text. */
+.right-sidebar-panel starlight-toc nav > ul {
+	border-inline-start: 1px solid var(--d-line);
+}
+
+.right-sidebar-panel starlight-toc nav > ul a {
+	margin-inline-start: -1px;
+	border-radius: 0;
+	border-inline-start: 2px solid transparent;
+	padding-block: 0.3rem;
+	padding-inline-start: calc(0.75rem + 1rem * var(--depth, 0) - 2px);
+	color: var(--sl-color-gray-3);
+}
+
+.right-sidebar-panel starlight-toc nav > ul a:hover {
+	color: var(--sl-color-white);
+}
+
+.right-sidebar-panel starlight-toc nav > ul a[aria-current='true'] {
+	border-inline-start-color: var(--sl-color-accent);
+	color: var(--sl-color-white);
+}
+
+.toc-actions {
+	margin: 1rem 0 0;
+	border-top: 1px solid var(--d-line);
+	padding: 1rem 0 0;
+	list-style: none;
+}
+
+.toc-actions a {
+	display: block;
+	padding: 0.3rem 0;
+	font-size: 0.875rem;
+	color: var(--sl-color-gray-3);
+	text-decoration: none;
+}
+
+.toc-actions a:hover {
+	color: var(--sl-color-white);
+}
+
+/* The drift figure's stage bands are quiet outlines on the panel; only the current band is tinted amber. */
+.fig[data-fig='drift-replay'] svg [data-phase] > .f-node {
+	fill: transparent;
+	stroke: color-mix(in srgb, var(--sl-color-text) 14%, transparent);
+}
+
+.fig[data-fig='drift-replay'] svg [data-phase].is-current > .f-node {
+	fill: color-mix(in srgb, var(--sl-color-accent) 10%, transparent);
+	stroke: var(--sl-color-accent);
+}
+
+.fig[data-fig='drift-replay'] .drift__events li {
+	background: transparent;
+}
+
+.fig[data-fig='drift-replay'] .drift__events li.is-current {
+	background: color-mix(in srgb, var(--sl-color-accent) 9%, transparent);
+	border-inline-start-color: var(--sl-color-accent);
 }

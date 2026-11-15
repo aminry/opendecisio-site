@@ -66,5 +66,5 @@ Then open `https://my-mac.example.ts.net:8443/` on any device in the network.
 
 ## Licence and security
 
-Apache-2.0 (`LICENSE`); `NOTICE` credits the site whose design techniques it adapts.
+Apache-2.0 (`LICENSE`).
 Report a security problem privately, as `SECURITY.md` says.
