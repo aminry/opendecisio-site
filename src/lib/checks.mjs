@@ -7,7 +7,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pin, siteRoot } from './upstream.mjs';
 
-const escHtml = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+import { outputHtml } from './output-format.mjs';
 
 export const blockHash = (text) => createHash('sha256').update(text.trim()).digest('hex').slice(0, 16);
 
@@ -75,9 +75,11 @@ export function checkHtml(entry, { moved = false } = {}) {
 	switch (entry.status) {
 		case 'cpu': {
 			const note = entry.note ? sentence(plain(entry.note)) : '';
-			const out = entry.stdout ? `<pre class="checked__out" tabindex="0"><code>${escHtml(entry.stdout)}</code></pre>` : '';
 			if (!entry.stdout) return note ? line(`${note}.`, ' checked--cpu') : '';
-			return line(`${note ? `${note}. ` : ''}${entry.trimmed ? 'It printed, trimmed to the fields this page uses:' : 'It printed:'}`, ' checked--cpu') + out;
+			// What the command printed: a titled panel, the JSON set as the docs set any JSON, and what a reader needs to know of it beside the title.
+			const { html, json } = outputHtml(entry.stdout);
+			const notes = [note, entry.trimmed ? 'Trimmed to the fields this page uses' : '', moved ? 'Its comments are shown above their commands' : ''].filter(Boolean).join('. ');
+			return `<figure class="response"><figcaption><span class="response__title">${json ? 'Response' : 'Output'}</span>${notes ? `<span class="response__note">${notes}</span>` : ''}</figcaption><pre class="checked__out" tabindex="0"><code>${html}</code></pre></figure>`;
 		}
 		case 'skills':
 			return '';
