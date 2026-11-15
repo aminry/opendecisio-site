@@ -20,7 +20,7 @@ Read a figure with its row, and do not expect it on your own workload.
 | Latency by text length | all three | one RTX PRO 6000 at 600 W, AMD EPYC 9534 | decisio 0.11.1, vLLM 0.30.0 | 2026-10-14 |
 | Context length against the card's share | Gemma 4 31B, FP8; Gemma 4 12B | one H100 PCIe, 80 GB | vLLM 0.31.0 | 2026-10-15 |
 | Mac memory | Gemma 4 31B and 12B, MLX builds | one Apple M5 Pro, 64 GB | MLX | 2026-10-05 to 2026-10-16 |
-| Ollama memory | Gemma 4 12B, `q4_k_m` | one Apple M5 Pro | Ollama 0.35.1 | 2026-10-07 |
+| Ollama memory and answers | Gemma 4 12B, base and tuned, `q4_k_m` and `q8_0` | one Apple M5 Pro, 64 GB | Ollama 0.40.16 | 2026-11-15 |
 | The 12B in FP8 against bf16, and on a 32 GB card | Gemma 4 12B, FP8 and bf16 | one RTX 5090, 32 GB | vLLM 0.31.0, 4,096 tokens, 0.95 of the card | 2026-10-21 |
 | Batched throughput | Gemma 4 12B, FP8 | one RTX 5090, 32 GB | vLLM 0.31.0, 0.95 of the card, 4,096 tokens, requests about new 1,000-token states, 8 and 16 clients | 2026-10-21 |
 | The header layout against the plain one | Gemma 4 31B, FP8 on load; Gemma 4 12B, FP8 | one RTX PRO 6000 Blackwell; one RTX 5090 | decisio's proxy sets and a public multi-domain sample | before decisio 0.26.0 |
@@ -71,14 +71,14 @@ On the commit-think repository, against the same model without thinking, on held
 
 ## What was not tested
 
-- The image route on either Gemma model; a Mac does not serve images.
+- Pictures on a Mac other than one Apple silicon Mac with 64 GB; Box questions on a Mac, which it does not serve.
 - A 48 GB or 32 GB Mac, or a 16 GB laptop, as machines: their figures are read on a 64 GB Mac.
 - NVIDIA cards other than the RTX PRO 6000 Blackwell and the H100 PCIe, and, for the 12B, the RTX 5090.
 - The 12B in FP8's accuracy and calibration: its answers were compared with the bf16 12B's on 200 questions only, and its temperatures are the bf16 12B's.
 - Accuracy at long length on a full test set: no set has a text over 32,768 tokens.
 - The 31B's 6-bit Mac build on MMLU-Pro, and its server times.
 - Latency with the intent head on a second engine.
-- Ollama's answers: Ollama builds its own prompt and applies no calibration.
+- Ollama on a 16 GB machine, and its answers beyond the 300 text questions and 257 image questions measured against decisio's own servers.
 - The tuned 12B's accuracy was measured in bf16 against the untrained 12B on held-out items; [the announcement](/news/tuned-12b/) has its limits.
 - Fine-tuned adapters under the header layout. That is why an adapter that records no layout is served plain.
 - Other engines. Only the vLLM engine was measured with the header; the HF and MLX engines build the same prompt.

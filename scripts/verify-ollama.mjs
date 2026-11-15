@@ -52,7 +52,9 @@ for (const model of models) {
 	if (!existsSync(manifest)) fail(`${model} is not pulled here (no ${manifest}); run ollama pull ${model}`);
 	const local = JSON.parse(readFileSync(manifest, 'utf8')).layers.map((l) => l.digest);
 	const published = await publishedLayers(model);
-	if (JSON.stringify(local) !== JSON.stringify(published)) fail(`the local ${model} is not the published listing; run ollama pull ${model}`);
+	// Ollama 0.40 and later add a layer of their own to a local manifest (the model's config); the published layers must all be there, in order.
+	const extra = local.filter((d) => !published.includes(d));
+	if (JSON.stringify(local.filter((d) => published.includes(d))) !== JSON.stringify(published) || extra.length > 1) fail(`the local ${model} is not the published listing; run ollama pull ${model}`);
 	listings[model] = published;
 	log(`Ollama ${version}; ${model} has the registry's ${published.length} layers`);
 }

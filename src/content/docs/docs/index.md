@@ -26,7 +26,7 @@ No server yet? The steps below pick one for your machine, start it and read the 
 | Linux with an NVIDIA card | [On a cloud GPU](/docs/deploy/cloud-gpu/) |
 | Linux with an NVIDIA card and Docker | [With Docker](/docs/deploy/docker/) |
 | Mac with Apple silicon | [On a Mac](/docs/deploy/mac/) |
-| Mac, Linux or Windows with Ollama 0.35.1 to 0.40.3 | [With Ollama](/docs/deploy/mac/#on-a-laptop-with-ollama) |
+| Mac, Linux or Windows with Ollama 0.40.4 or later | [With Ollama](/docs/deploy/mac/#on-a-laptop-with-ollama) |
 
 The memory and card each machine needs are on [Requirements and limits](/docs/limits/).
 Choose the guide for your hardware, start the model server it describes, then continue below.

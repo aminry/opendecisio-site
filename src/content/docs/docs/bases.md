@@ -20,7 +20,7 @@ With no flag the server serves Gemma 4 31B:
 | --- | --- | --- | --- | --- |
 | Gemma 4 31B, the default | `gemma-4-31b` | 30.6 GiB, FP8 | an NVIDIA card with 96 GB, or an 80 GB H100; a 64 GB Mac, or a 48 GB one from its 4-bit build | accuracy |
 | Qwen3.6-35B-A3B | `qwen3.6-35b-a3b` | 33.3 GiB, FP8 | an NVIDIA card with 96 GB | speed on long new texts, and the same probabilities every time on one server |
-| Gemma 4 12B | `gemma-4-12b` | 22.8 GiB, bf16 | an NVIDIA card with 96 GB; a 32 GB Mac; a 16 GB laptop with Ollama | smaller machines |
+| Gemma 4 12B | `gemma-4-12b` | 22.8 GiB, bf16 | an NVIDIA card with 96 GB; a 32 GB Mac; a Mac, Linux or Windows machine with Ollama | smaller machines |
 | Gemma 4 31B in bf16 | `gemma-4-31b-bf16` | 57.91 GiB, bf16 | an NVIDIA card larger than 96 GB | the 31B without quantization; not measured |
 | Gemma 4 12B in FP8 | `gemma-4-12b-fp8` | 12.74 GiB, FP8 | an NVIDIA card with 32 GB, at its full 65,536 tokens; not a Mac | a 32 GB card, and a faster read than the 12B in bf16 |
 

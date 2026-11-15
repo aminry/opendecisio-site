@@ -7,9 +7,10 @@ test('package command evidence shows no release, date or machine under the block
 });
 const {packageProblems,evidenceProblems,skillsPackage}=await import('../../src/lib/skills-package.mjs');
 test('package compatibility follows the site release pin',()=>{
- assert.deepEqual(packageProblems(skillsPackage,'v0.46.0'),[]);
- assert.ok(packageProblems(skillsPackage,'v0.47.0').some(x=>x.includes('do not match')));
- for(const change of [{sha256:'bad'},{version:'1; echo bad'},{archive:'other.zip'},{repository:'other/repo'},{skills:[]}])assert.ok(packageProblems({...skillsPackage,...change},'v0.46.0').length);
+ const target=`v${skillsPackage.decisioVersion}`;
+ assert.deepEqual(packageProblems(skillsPackage,target),[]);
+ assert.ok(packageProblems(skillsPackage,'v0.0.1').some(x=>x.includes('do not match')));
+ for(const change of [{sha256:'bad'},{version:'1; echo bad'},{archive:'other.zip'},{repository:'other/repo'},{skills:[]}])assert.ok(packageProblems({...skillsPackage,...change},target).length);
 });
 test('changed package bytes or published commands invalidate their evidence',()=>{
  const entry={status:'skills',version:skillsPackage.version,sha256:skillsPackage.sha256};
