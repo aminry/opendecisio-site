@@ -72,6 +72,9 @@ An image goes where its reference stands, inside the state or inside a question,
 A photo in the state is read by every question of the request.
 
 A photo in a question's `instructions` or `criteria` is read by that question alone.
+
+::figure{name="image-placement"}
+
 Four ways to send one:
 
 | How | What it looks like |
@@ -90,6 +93,10 @@ Four ways to send one:
 
 A Box question finds an object and answers with one box, as fractions of the image, with a confidence.
 Say what to find in `instructions`, a short noun phrase:
+
+::figure{name="image-box"}
+
+The request:
 
 ::site-block{name="images-box-request"}
 
@@ -116,6 +123,8 @@ The picture is scaled to fill it, so a bigger budget gives small objects more to
 | --- | --- | --- |
 | Gemma 4 12B | 560 | 1120 is refused at start: the 12B's window is 1,024 tokens, shorter than the block |
 | Gemma 4 31B | 280 | 1120 is an opt-in; the 31B reads pictures through its own vision encoder |
+
+::figure{name="image-budget"}
 
 At 560 an image costs about 1.8 times the tokens of 280, and Box answers read better.
 A small object in a large image is found better after you crop to its region and ask again, or at a higher budget.
