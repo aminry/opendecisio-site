@@ -3,6 +3,13 @@
 These rules bind every page.
 CI checks the ones a script can check; the review checks the rest.
 
+## Notes under a command
+
+- The docs describe the current release, and the build checks every command against it.
+  A note under a command says what the command needs or what it printed: never the release, the date or the machine it was checked on.
+  `src/lib/checks.mjs` writes these notes from `verification/plan.mjs`, so the plan's `note` and `why` are written for the reader.
+- Measurements and recorded samples are different: they keep their dataset, release, date and serving conditions beside the number.
+
 ## Numbers
 
 - Every number comes from the pinned decisio release (README.md, EVAL_CARD.md, a docs page or a named run record) or from the launch facts, `src/data/launch/launch_facts.public.json`, and the page names its source.

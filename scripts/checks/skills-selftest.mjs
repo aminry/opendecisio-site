@@ -1,9 +1,9 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {checkHtml} from '../../src/lib/checks.mjs';
-test('package command evidence identifies the package without claiming model inference',()=>{
+test('package command evidence shows no release, date or machine under the block',()=>{
  const html=checkHtml({status:'skills',version:'0.1.0',date:'2026-11-13'});
- assert.ok(html.includes('0.1.0'));assert.ok(html.includes('2026-11-13'));assert.ok(!html.includes('CPU stand-in'));assert.ok(!html.includes('model answered'));
+ assert.equal(html,'');
 });
 const {packageProblems,evidenceProblems,skillsPackage}=await import('../../src/lib/skills-package.mjs');
 test('package compatibility follows the site release pin',()=>{
