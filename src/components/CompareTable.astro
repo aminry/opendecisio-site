@@ -18,7 +18,7 @@ const colour = (h: string) => {
 const label = (h: string) => strip(h).replace(/^decisio\s*·\s*/i, `${site.name} · `);
 ---
 <div class="table-scroll" tabindex="0" role="region" aria-label={`${caption}, scrolls sideways when it does not fit`}>
-	<table class="data-table data-table--stack compare">
+	<table class="data-table data-table--framed compare">
 		<caption class="sr-only">{caption}</caption>
 		<thead>
 			<tr>

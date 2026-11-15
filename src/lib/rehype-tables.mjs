@@ -2,8 +2,7 @@
 // scrolls sideways inside its own frame (a focusable region), and the page never does:
 // the table sits in a container the stylesheet can query (div.table-wrap) and
 // each value carries its column's heading, so below a container width the
-// stylesheet can show one labelled block per row (src/styles/docs.css), the way
-// the site's own tables do (.data-table--stack).
+// stylesheet can show one labelled block per row (src/styles/docs.css).
 import { toString } from 'hast-util-to-string';
 import { visit } from 'unist-util-visit';
 

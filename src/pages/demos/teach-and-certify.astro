@@ -138,8 +138,8 @@ const events = [
 			<div class="pcard tile tc-fix" id="historical-oos">
 				<h3 class="tc-h3">An older replay with an out-of-scope option</h3>
 				<p class="tc-read">Give the task one more option, out of scope, taught from {fix.oos_taught} off-topic examples, and certify it on held-out examples that include {fix.cert_oos} off-topic ones. An off-topic message then has a right answer, and the certificate counts it.</p>
-				<div class="table-scroll tc-compare">
-					<table class="data-table">
+				<div class="table-scroll tc-compare" tabindex="0" role="region" aria-label="The same drift stream with and without an out-of-scope option, scrolls sideways when it does not fit">
+					<table class="data-table data-table--framed">
 						<caption>The same drift stream, off-topic rising from 0 at message {n(fix.start)} to {pc(fix.top_share, 0)} at {n(fix.top)}, with suspension in that historical monitor replay.</caption>
 						<thead><tr><th scope="col"></th><th scope="col">No out-of-scope option</th><th scope="col">Out of scope taught</th></tr></thead>
 						<tbody>

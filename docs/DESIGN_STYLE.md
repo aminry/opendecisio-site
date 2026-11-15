@@ -107,9 +107,11 @@ Every page ends with a "Next" card pair (previous, next) and the edit link.
 - Tables are for comparing things across two or more attributes.
   A two-column "term, meaning" table is acceptable.
   A table with long sentences in cells is a bad table: use a list.
-- Below 600px a table keeps its frame and scrolls sideways inside it.
+- A table that does not fit keeps its frame and scrolls sideways inside it, at every width, with a faint edge shadow showing that more is there.
+  Its frame is a keyboard-focusable region.
   It never turns into stacked cards: stacked cards made an 11-row table 7,600px tall on a phone.
   The first column stays visible while scrolling.
+- A two-column term-and-meaning table is framed too.
 - A status column (measured, not tested) uses a muted mono style.
 
 ### Callouts
@@ -198,11 +200,14 @@ The home, Benchmarks, Demos, Privacy, the 404 and the Articles and News pages sh
 - **Code on the home.** A home code box stays dark in both themes and may use a corner Copy button without a header row when it is a single command.
 - **Posts and index pages.** One 780px reading column, 19px prose, hairline above each h2 (64px above the rule, 22px of padding inside it), framed tables, the callout style for a quote, and a closing `What next` that links the other posts and the feed.
   An index is a list of hairline rows, not a grid of cards.
-- **Tables.** A table of three columns or more keeps its frame and scrolls inside it on a phone, with its first column sticky, on every page.
+- **Tables.** A table of three columns or more keeps its frame and scrolls inside it, with its first column sticky, on every page.
 - **Charts.** A fixed colour per measured base is allowed and stays the same on every chart.
   A chart that is an image keeps its text at 11px or more and scrolls inside its card on a phone.
   A static chart is a framed image: it needs no loop.
   A chart title states the finding, or describes the data where the finding would repeat a number or rank something.
+- **Section pages.** A page made of sections uses the Typography h2 (27px) with 64px above, 80px below the section's content and a hairline above; Benchmarks is one.
+- **Reading column without a rail.** Posts and index pages centre their 780px column; the header and footer stay on the wide site grid.
+- **Wide charts.** A chart image wider than 900px is never narrower than 38rem on a phone: it scrolls inside a focusable frame, or has a phone version.
 - **Stages.** A card that holds only a table is flat, with no shadow: use the stage for drawings.
 
 ## What a page must not do

@@ -32,7 +32,7 @@ import { chromium, firefox, webkit } from 'playwright';
 
 const engines = { chromium, webkit, firefox };
 const chosen = (process.env.ENGINES ?? 'chromium,webkit,firefox').split(',');
-const port = 4390;
+const port = Number(process.env.BROWSER_PORT ?? 4390);
 const base = `https://127.0.0.1:${port}`;
 const walk = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(dir, e.name)) : e.name === 'index.html' ? [join(dir, e.name)] : []));
 // Every page, and the 404 (dist/404.html, which the server answers for any unknown path, as /404/).
@@ -309,22 +309,22 @@ try {
 						return under;
 					})(),
 					// No table is clipped and the page never scrolls sideways, at any width: a docs table of three columns or more may scroll
-					// inside its own focusable frame (so may a benchmarks table), no cell is wider than itself, and below 1024px a stacking table is stacked, its header row hidden.
+					// inside its own focusable frame (so may every framed site table), no cell is wider than itself, and no table turns into stacked cards.
 					wideTables: [...document.querySelectorAll('main table')]
 						.flatMap((t) => {
 							const box = t.closest('.table-scroll, .table-wrap') ?? t.parentElement;
 							const name = t.querySelector('caption')?.textContent?.trim() || t.closest('[aria-label]')?.getAttribute('aria-label') || t.closest('section')?.querySelector('h2')?.textContent?.trim() || 'a table';
 							const out = [];
-							const framed = (t.classList.contains('docs-table') && t.querySelector('tr > :nth-child(3)')) || (!!t.closest('.bench') && !!t.closest('.table-scroll'));
-							// A benchmarks table keeps its table form and scrolls inside its own frame (so it is not stacked); every other stacking table still stacks.
-							const keepsForm = !!t.closest('.bench') && !!t.closest('.table-scroll');
+							const framed = (t.classList.contains('docs-table') && t.querySelector('tr > :nth-child(3)')) || (t.classList.contains('data-table--framed') && !!t.closest('.table-scroll'));
 							if (!framed && box.scrollWidth > box.clientWidth + 1) out.push(`${name} scrolls: ${box.scrollWidth}px in a ${box.clientWidth}px box`);
 							if (framed && box.scrollWidth > box.clientWidth + 1 && box.getAttribute('tabindex') !== '0') out.push(`${name} scrolls inside its frame but the frame is not keyboard-focusable`);
 							if (!framed && t.getBoundingClientRect().right > box.getBoundingClientRect().right + 1) out.push(`${name} runs ${Math.round(t.getBoundingClientRect().right - box.getBoundingClientRect().right)}px past its box`);
 							const clipped = [...t.querySelectorAll('th, td')].filter((c) => c.scrollWidth > c.clientWidth + 1);
 							if (clipped.length) out.push(`${name} has ${clipped.length} clipped cells, the first: "${clipped[0].textContent.trim().slice(0, 40)}"`);
-							const headHeight = t.querySelector('thead')?.getBoundingClientRect().height ?? 0;
-							if (window.innerWidth < 1024 && t.classList.contains('data-table--stack') && !keepsForm && headHeight > 1) out.push(`${name} is not stacked below 1024px`);
+							// A table keeps its table form at every width: its header row is never hidden to stack the rows into cards.
+							const head = t.querySelector('thead');
+							if (head && t.getBoundingClientRect().height > 1 && head.getBoundingClientRect().height <= 1) out.push(`${name} hides its header row (stacked cards)`);
+							if (t.classList.contains('data-table--framed') && !t.closest('.table-scroll[role="region"]')) out.push(`${name} is a framed table outside a focusable frame`);
 							return out;
 						}),
 					// A code block scrolls its long lines sideways and never breaks one inside a word or a path: its text keeps
