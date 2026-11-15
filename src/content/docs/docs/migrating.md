@@ -53,7 +53,7 @@ curl -s http://127.0.0.1:8000/health
 | A request without `model` | refused with 422 | answered, and the answer names the served model |
 | A field it does not know | refused with 400 | accepted and ignored, so check that a field you rely on is in [the HTTP API](/docs/api/) |
 | A score with more than 10 levels | refused with 422 | answered |
-| `box` questions | supported | refused with 422 |
+| `box` questions | supported | answered on a Gemma server started with `--images on`, refused with 400 elsewhere |
 | Probabilities | rounded to two decimals | at full precision |
 
 - **No authentication.** The server accepts any API key and ignores it: keep it on `127.0.0.1` or behind a proxy that authenticates.

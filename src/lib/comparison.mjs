@@ -54,9 +54,9 @@ export function comparison() {
 
 	// The opening's facts the site restates in its own words (the opening itself names the entries by their standing and
 	// calls the Decision Index submission pending, where the board now lists the rows): where the board figures come from, and that
-	// none comes from a call to TypeSafe's API.
+	// none comes from a call to TypeSafe's API but the reference figures for images and Box.
 	const openingText = opening.map((n) => toString(n)).join(' ');
-	if (!/come only from the public boards/.test(openingText) || !/No figure here comes from any call of ours to TypeSafe's API/.test(openingText)) throw new Error('comparison: the opening no longer says where the board figures come from and that none comes from TypeSafe\'s API');
+	if (!/come only from the public boards/.test(openingText) || !/No figure in sections 1 to 4 comes from any call of ours to TypeSafe's API/.test(openingText) || !/the one exception is section 3\.1's reference figures for images and Box, from 150 requests of 2026-11-14/.test(openingText)) throw new Error('comparison: the opening no longer says where the board figures come from and that none comes from TypeSafe\'s API but the reference figures for images and Box');
 	// The site shows values and intervals with no marks (decided 2026-10-15), so the paragraph that defines the marks is
 	// left out, and no cell is marked.
 	return { headline, notes, capabilities, everyIntro, groups: groups.filter((g) => g.table) };

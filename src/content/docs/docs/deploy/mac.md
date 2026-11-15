@@ -1,14 +1,14 @@
 ---
 title: On a Mac or a laptop
-description: Run decisio on a Mac with Apple silicon from an MLX build, sized to your Mac's memory, or on a 16 GB laptop with Ollama 0.35.1 through 0.40.3.
+description: Run decisio on a Mac with Apple silicon from an MLX build, sized to your Mac's memory, with pictures if you want them, or on Ollama 0.40.4 or later with the Gemma listings.
 ---
 
 <!-- Site-written: the deploy guide for a Mac and for Ollama. The commands are decisio's docs/running.md at the pinned release (src/lib/site-blocks.mjs, ::upstream); the request is the site's, run against Ollama (verification/ollama.json); the numbers are docs/running.md's (src/config/sourced.mjs checks them). -->
 
-::covers{links="README.md#mac-with-mlx docs/running.md#mac-with-mlx docs/running.md#memory-on-a-mac=mind-the-memory README.md#ollama=on-a-laptop-with-ollama README.md#on-a-laptop-with-ollama=on-a-laptop-with-ollama docs/running.md#ollama=on-a-laptop-with-ollama"}
+::covers{links="README.md#mac-with-mlx docs/running.md#mac-with-mlx docs/running.md#images-on-a-mac=read-pictures-on-a-mac docs/running.md#memory-on-a-mac=mind-the-memory README.md#ollama=on-a-laptop-with-ollama README.md#on-a-laptop-with-ollama=on-a-laptop-with-ollama docs/running.md#ollama=on-a-laptop-with-ollama"}
 
 Pick the build that fits your Mac's memory, then start it.
-A 64 GB Mac runs the default model, Gemma 4 31B, with two commands.
+A 64 GB Mac runs the default model, Gemma 4 31B, with two commands, and a Gemma build there reads pictures too.
 
 ::figure{name="mac-memory"}
 
@@ -29,7 +29,7 @@ On a 64 GB Mac, install it and start the default model, Gemma 4 31B:
 | 64 GB | Gemma 4 31B, 6-bit | 24.9 GB; 29.6, 31.1 and 33.7 GB at about 8k, 16k and 32k tokens | 16,383 tokens | not measured |
 | 48 GB | Gemma 4 31B, 4-bit | 19.2 GB; 23.9, 25.3 and 28.0 GB, read on a 64 GB Mac | 16,383 tokens | 9.4 s at 3,000 tokens, on a busy Mac |
 | 32 GB | Gemma 4 12B, 6-bit | 9.7 GB; 15.1 GB at 32,687 tokens | 32,768 tokens | 1,312 ms at 1,000 tokens |
-| A 16 GB laptop | Gemma 4 12B on Ollama | a 7.7 GB download; 8.6 GB in Ollama, read on a 64 GB Mac | 8,192 tokens | not recorded |
+| Any machine with Ollama 0.40.4 or later | Gemma 4 12B on Ollama, `q4_k_m` | 11.1 GB in Ollama, read on a 64 GB Mac; a 16 GB machine was not tried | 8,192 tokens | not recorded |
 
 Measured on one Apple M5 Pro with 64 GB; no smaller Mac was measured, and GB are 10⁹ bytes.
 The Qwen base runs from its 6-bit build too; its 4-bit build is for Macs with more than 32 GB.
@@ -55,6 +55,30 @@ On a smaller Mac, start the build that fits it instead:
 
 :::
 
+<span class="fp-anchor" id="read-pictures-on-a-mac"></span>
+
+## Read pictures on a Mac
+
+A Gemma 4 base reads pictures on a Mac with the engine that reads its text, through the same request path as on a GPU.
+Add the `mlx-images` extra and start with `--images on`:
+
+::upstream{file="docs/running.md" section="Images on a Mac" block="1"}
+
+- A conversion made for text has no vision weights, so the server takes them from the base's vision add-on: 100 MB for the 12B and 1.15 GB for the 31B, downloaded once and checked before every start.
+- A request without pictures is answered as before.
+- Box questions are not served on a Mac: the server answers 400, and `/health` reports `images.box` as false.
+
+Measured through the Mac server on one Apple silicon Mac with 64 GB, at an image budget of 560, as the median of 10 requests with one picture and a short state; no other Mac has been tried:
+
+| Build | One picture | Process memory (MLX's peak) |
+| --- | --- | --- |
+| 12B, Google's bf16 checkpoint | 1.0 s | 24.2 GB (23.0 GB) |
+| tuned 12B, 6-bit MLX conversion with the add-on | 1.1 s | 11.1 GB (9.9 GB) |
+| 31B, 4-bit MLX build with the add-on | 3.4 s | 20.7 GB (20.3 GB) |
+
+All three placed a square right in 8 of 8 questions, at budgets 280 and 560.
+Against decisio on vLLM, on 60 held-out items, neither MLX build changed an answer, though their probabilities differ from vLLM's because they are quantized builds.
+
 <span class="fp-anchor" id="3-mind-the-memory"></span>
 
 ## Mind the memory
@@ -69,29 +93,39 @@ On a smaller Mac, start the build that fits it instead:
 
 ## On a laptop, with Ollama
 
-Ollama runs decisio's Gemma 4 12B listing on Mac, Linux or Windows, and its smallest tag fits a 16 GB laptop.
-It works on Ollama 0.35.1 through 0.40.3; later versions refuse these models on the decision route. On a Mac, use decisio's MLX server instead ([above](#pick-the-build-for-your-mac)).
+Ollama runs decisio's two Gemma 4 12B listings on Mac, Linux or Windows, with decisio's own prompt and temperatures, and they read pictures.
+It works on Ollama 0.40.4 or later.
 
 ::upstream{file="docs/running.md" section="Ollama" block="1"}
 
-| Tag | Download | In Ollama |
+| Listing | Tag | In Ollama |
 | --- | --- | --- |
-| `q4_k_m`, also `latest` | 7.7 GB | 8.6 GB, at the listing's 8,192-token context |
-| `q8_0` | not given | 13.6 GB |
+| `aminroudaki/decisio-gemma`, the base | `q4_k_m`, also `latest` | 11.1 GB |
+| `aminroudaki/decisio-gemma-tuned`, the tuned 12B | `q4_k_m`, also `latest` | 10.8 GB |
+| either | `q8_0` | 15.9 GB |
 
-The Qwen listing's smallest tag is a 23 GB download, so it needs a machine with more memory.
-Then ask it a question on Ollama's decision route, on port 11434, with the listing named in `model`:
+Memory is the runner's resident set at the listings' 8,192-token context, read on a 64 GB Mac while it answered text, a picture and a 6,600-token text; a 16 GB machine was not tried.
+Then ask a question on Ollama's decision route, on port 11434, with the listing named in `model`; a picture goes in the request's `images` field, base64-encoded:
 
 ::site-block{name="ollama-request-gemma"}
 
-Ollama builds its own prompt and applies none of decisio's corrections to the probabilities, so they are not decisio's measured ones.
-To teach and certify tasks, run a decisio server.
+Measured on the same Mac on 2026-11-15, the base's `q8_0` tag chose the same answer as decisio's own server (MLX, 8-bit) on 98.3% of 300 text questions, and its `q4_k_m` tag chose the same answer as decisio's 4-bit MLX build on 87.0%.
+
+How Ollama differs from a decisio server:
+
+- Each question's prompt lists only its own question when a request has several.
+- Past 68 options the option letters are llama.cpp's codes, not decisio's.
+- Pictures go before the text, not at their places in it; a picture is not limited to one question, and Ollama reads it near its own resolution.
+- There is no Box question.
+- The commit flavor, thinking, reading twice, tasks, abstention and the fast table need a decisio server.
+
+The Qwen listing, `aminroudaki/decisio`, needs Ollama 0.35.1 through 0.40.3; on a current Ollama use the Gemma listings, or decisio's MLX server on a Mac.
 
 <span class="fp-anchor" id="4-what-a-mac-does-not-serve"></span>
 
 ## What does a Mac not serve?
 
-- Images in a question, adapters (`--adapter`), packed mode, or the intent head on a second engine (`--head-engine`).
+- Box questions, the Qwen base's second image engine (`--image-model`), adapters (`--adapter`), packed mode, or the intent head on a second engine (`--head-engine`).
 - FP8 checkpoints: a Mac always names an MLX build with `--model`.
 - Teaching a task works, slowly: on the 31B 4-bit, about an hour for 770 labelled examples (77 options) and about 2.6 hours for 1,500 (150 options).
 

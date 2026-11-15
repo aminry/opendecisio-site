@@ -76,7 +76,7 @@ Tasks and certificates are per model and per flavor: register and certify your t
 
 ## Good to know
 
-- **No Ollama version is planned.**
+- **On Ollama it is its own listing**, `aminroudaki/decisio-gemma-tuned`, which answers questions but needs a decisio server for tasks and certificates ([the Mac and Ollama guide](/docs/deploy/mac/#on-a-laptop-with-ollama)).
 - **Its accuracy was measured in bf16** against the untrained 12B on held-out items; the figures and their limits are in [the announcement](/news/tuned-12b/).
 
 ## What next

@@ -105,6 +105,25 @@ try {
 		await eventually(async () => await fig.getAttribute('data-playback') === 'running', 'The abstention figure did not loop');
 		assert.equal(await fig.locator('li[data-phase]').count(), 4);
 	});
+	await check('the Images guide\'s three figures loop on their own, walk every part and keep one height', async () => {
+		await page.goto(`${base}/docs/images/`);
+		await page.waitForLoadState('networkidle');
+		for (const [name, parts] of [['image-placement', 3], ['image-box', 4], ['image-budget', 5]]) {
+			const fig = page.locator(`[data-fig="${name}"]`);
+			await fig.scrollIntoViewIfNeeded();
+			await eventually(async () => await fig.getAttribute('data-playback') === 'running', `The ${name} figure did not loop`);
+			assert.equal(await fig.locator('button, input').count(), 0, `${name} has a control`);
+			const seen = new Set();
+			const heights = new Set();
+			for (let i = 0; i < parts * 2; i++) {
+				seen.add(await fig.locator('[data-phase].is-current').first().getAttribute('data-phase'));
+				heights.add(Math.round((await fig.boundingBox()).height));
+				await page.clock.runFor(1800);
+			}
+			assert.equal(seen.size, parts, `${name}: saw ${[...seen]} of ${parts} parts`);
+			assert.equal(heights.size, 1, `${name}: the panel height changed: ${[...heights]}`);
+		}
+	});
 	await page.clock.resume();
 	await check('field selection uses four keyboard controls instead of individual JSON members', async () => {
 		await page.goto(`${base}/docs/build-request/`);

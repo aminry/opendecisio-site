@@ -64,8 +64,9 @@ import { tasksFigures } from './figures/tasks.mjs';
 import { useFromFigures } from './figures/use-from.mjs';
 import { thinkFigures } from './figures/think.mjs';
 import { apiFigures } from './figures/api.mjs';
+import { imageFigures } from './figures/images.mjs';
 
-export const figures = { 'request-flow': requestFlow, 'first-decision': firstDecision, ...learningFigures, ...guideFigures, ...useFromFigures, ...thinkFigures, ...runItFigures, ...understandFigures, ...deployFigures, ...tasksFigures, ...apiFigures };
+export const figures = { 'request-flow': requestFlow, 'first-decision': firstDecision, ...learningFigures, ...guideFigures, ...useFromFigures, ...thinkFigures, ...runItFigures, ...understandFigures, ...deployFigures, ...tasksFigures, ...apiFigures, ...imageFigures };
 
 export function docsFigure(name) {
 	const f = figures[name];

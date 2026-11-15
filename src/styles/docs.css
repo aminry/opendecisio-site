@@ -2359,3 +2359,170 @@ a.fig__card:hover {
 	background: color-mix(in srgb, var(--sl-color-accent) 9%, transparent);
 	border-inline-start-color: var(--sl-color-accent);
 }
+
+/* The Images guide's figures: real photographs in frames, a box that draws itself on one, a ruler that reads its edges, and a
+   token grid that gets finer with the budget. Everything is drawn in full by default (no script, reduced motion); a figure in
+   motion lights one part at a time. */
+.fig .ib-frame {
+	fill: none;
+	stroke: var(--sl-color-gray-4);
+	stroke-width: 1;
+}
+
+.fig .ib-chip,
+.fig .ib-tileframe {
+	fill: none;
+	stroke: var(--sl-color-gray-5);
+	stroke-width: 1;
+}
+
+.fig .ib-chip {
+	fill: var(--sl-color-gray-6);
+}
+
+.fig .ib-box {
+	fill: color-mix(in srgb, var(--sl-color-accent) 14%, transparent);
+	stroke: var(--sl-color-accent);
+	stroke-width: 3.5;
+}
+
+.fig .ib-box--whole {
+	fill: none;
+	stroke-dasharray: 9 6;
+	stroke-width: 3;
+}
+
+.fig .ib-link {
+	fill: none;
+	stroke: var(--sl-color-gray-3);
+	stroke-width: 1.5;
+	color: var(--sl-color-gray-3);
+}
+
+.fig .ib-link--no {
+	stroke-dasharray: 3 4;
+}
+
+.fig .ib-guide {
+	fill: none;
+	stroke: var(--sl-color-accent);
+	stroke-width: 1;
+	stroke-dasharray: 3 3;
+}
+
+.fig .ib-ruler,
+.fig .ib-tick {
+	fill: none;
+	stroke: var(--sl-color-gray-3);
+	stroke-width: 1.2;
+}
+
+.fig .ib-dot {
+	fill: var(--sl-color-accent);
+}
+
+.fig .ib-x {
+	fill: var(--sl-color-gray-3);
+	font: 700 16px var(--sl-font, 'Geist Site', sans-serif);
+	text-anchor: middle;
+}
+
+.fig .ib-grid {
+	fill: none;
+	stroke: color-mix(in srgb, var(--sl-color-white) 60%, transparent);
+	stroke-width: 0.55;
+}
+
+.fig .ib-region {
+	fill: none;
+	stroke: var(--sl-color-accent);
+	stroke-width: 1.5;
+}
+
+.fig .ib-zoom {
+	fill: none;
+	stroke: var(--sl-color-gray-3);
+	stroke-width: 1;
+	stroke-dasharray: 2 3;
+}
+
+.fig .ib-notes text {
+	transition: fill var(--fig-t, 240ms) var(--fig-ease);
+}
+
+.fig [data-phase].is-current .ib-link {
+	stroke: var(--sl-color-accent);
+	color: var(--sl-color-accent);
+	stroke-width: 2.5;
+}
+
+.fig [data-phase].is-current .ib-x {
+	fill: var(--sl-color-accent);
+}
+
+.fig [data-phase].is-current .ib-frame {
+	stroke: var(--sl-color-accent);
+	stroke-width: 3;
+}
+
+.fig text[data-phase].is-current,
+.fig [data-phase].is-current > .ft-code,
+.fig [data-phase].is-current > .ft-d,
+.fig [data-phase].is-current > .ft-s {
+	fill: var(--sl-color-white);
+}
+
+.fig [data-phase].is-current > .ib-chip {
+	stroke: var(--sl-color-accent);
+}
+
+.fig [data-phase].is-current .ib-tileframe {
+	stroke: var(--sl-color-accent);
+	stroke-width: 2;
+}
+
+.fig [data-phase].is-current .ib-grid {
+	stroke: var(--sl-color-accent);
+	stroke-width: 0.8;
+}
+
+.fig [data-phase].is-current .ib-box {
+	animation: ib-draw 1.1s var(--fig-ease) both;
+}
+
+.fig [data-phase].is-current .ib-crop {
+	animation: ib-rise 0.9s var(--fig-ease) both;
+}
+
+@keyframes ib-draw {
+	from {
+		opacity: 0.15;
+		transform: scale(1.06);
+		transform-box: fill-box;
+		transform-origin: center;
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+		transform-box: fill-box;
+		transform-origin: center;
+	}
+}
+
+@keyframes ib-rise {
+	from {
+		opacity: 0.2;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.fig .ib-box,
+	.fig .ib-crop {
+		animation: none !important;
+	}
+}

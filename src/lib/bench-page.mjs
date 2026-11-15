@@ -75,7 +75,7 @@ export function calibration() {
 
 /**
  * One line on each base, each statement checked against the README's table: the 31B the most accurate on every accuracy
- * row and the slowest to read a new text, Qwen the quickest to read one and the only base measured with images.
+ * row and the slowest to read a new text, Qwen the quickest to read one.
  */
 export function baseLines() {
 	const { rows, row } = baseTable();
@@ -88,12 +88,10 @@ export function baseLines() {
 	const read = row('New 300-token state');
 	const ms = (c) => Number(read[c].replace(' ms', ''));
 	if (!(ms('g31') > ms('g12') && ms('g12') > ms('qwen'))) fail('the bases no longer read a new text in the order Qwen, 12B, 31B');
-	const img = row('Image input');
-	if (img.g12 !== 'n/m' || img.g31 !== 'n/m' || img.qwen === 'n/m') fail('image input is no longer measured on the Qwen base alone');
 	return [
 		{ base: 'g31', name: 'Gemma 4 31B, the default', text: 'at or above the other two on every accuracy measure in the table, and the slowest to read a new text. One NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or a 64 GB Mac.' },
 		{ base: 'g12', name: 'Gemma 4 12B', text: 'the smaller Gemma, for a 32 GB Mac, or a laptop with Ollama.' },
-		{ base: 'qwen', name: 'Qwen3.6-35B-A3B', text: 'the quickest to read a new text, and the only one measured with images in the text.' },
+		{ base: 'qwen', name: 'Qwen3.6-35B-A3B', text: 'the quickest to read a new text.' },
 	];
 }
 

@@ -173,7 +173,7 @@ After:
 
 ## How the rules are checked
 
-- Existing checks stay: one figure per page, no ranks or comparisons, at most three sentences per paragraph, every command verified, nothing internal on any page.
+- Existing checks stay: one figure for each separate idea a page teaches (three at most), no ranks or comparisons, at most three sentences per paragraph, every command verified, nothing internal on any page.
 - New checks: no link from a docs page to decisio's docs on GitHub; every page opens with a paragraph and then a code block or figure; every animated figure loops without controls and has a reduced-motion frame and alt text.
 
 ## Navigation and onboarding

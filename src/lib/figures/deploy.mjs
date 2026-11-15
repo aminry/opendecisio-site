@@ -65,12 +65,12 @@ export function macBuilds() {
 	const [w31q] = read(run, /group size 32, ([\d.]+) GB of weights/, "the 31B 4-bit build's weights");
 	const [, p31q] = read(run, /The 4-bit conversion peaks at ([\d.]+), ([\d.]+) and ([\d.]+) GB/, "the 31B 4-bit build's peaks");
 	const [w12, p12] = read(run, /holds ([\d.]+) GB of weights and peaks at ([\d.]+) GB at 32,687 tokens/, "the 12B 6-bit build's weights and peak");
-	const [pOl] = read(run, /a [\d.]+ GB download and takes ([\d.]+) GB in Ollama/, "the Ollama listing's memory");
+	const [pOl] = read(run, /Memory at the listings' 8,192-token context, .*?: ([\d.]+) GB for the base's `q4_k_m`/, "the Ollama listing's memory");
 	return [
 		{ mac: 64, build: 'Gemma 4 31B, 6-bit', weights: w31, peak: p31, at: 'at about 16k tokens, its longest' },
 		{ mac: 48, build: 'Gemma 4 31B, 4-bit', weights: w31q, peak: p31q, at: 'at about 16k tokens, its longest, read on 64 GB' },
 		{ mac: 32, build: 'Gemma 4 12B, 6-bit', weights: w12, peak: p12, at: 'at 32,687 tokens' },
-		{ mac: 16, build: 'Gemma 4 12B on Ollama', weights: null, peak: pOl, at: 'in Ollama, at 8,192 tokens, read on 64 GB' },
+		{ mac: 16, build: 'Gemma 4 12B on Ollama', weights: null, peak: pOl, at: 'in Ollama, at 8,192 tokens, read on 64 GB; a 16 GB machine was not tried' },
 	];
 }
 

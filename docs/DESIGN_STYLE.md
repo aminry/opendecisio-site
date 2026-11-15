@@ -148,7 +148,7 @@ In Markdown write `:::caution[Heads up]`, `:::note` or `:::tip`.
   The active node has a strong amber border and a 4px soft amber halo.
 - If no part of a flow is the model, use steel for the second actor or leave it out.
 - Use at most seven steps and six boxes.
-- One figure per page.
+- One figure for each separate idea a page teaches, and no more than three on a page.
 - A lead-in table or command may sit between a figure and the first section.
 - Every diagram has a one-sentence takeaway below it and a text alternative.
 - Diagrams loop on their own, about 1.8 seconds a step.

@@ -1,54 +1,36 @@
 {
-	"ollama": "0.35.1",
-	"date": "2026-10-09",
+	"ollama": "0.40.16",
+	"date": "2026-11-15",
 	"runner": "darwin-arm64",
 	"listings": {
 		"aminroudaki/decisio-gemma": [
-			"sha256:3962624dcd25b947d889dc9ae1bf275b61db6cd4dbe694057f34fffef1671509",
-			"sha256:3e86cb9347aeb07622816cf2f1857504eae6689df7a16015c488f7eaaf49d2f1",
-			"sha256:ce4a164fc04605703b485251fe9f1a181688ba0eb6badb80cc6335c0de17ca0d"
+			"sha256:2059c6a45dcaf2d44463b3cb8a57af5fe2827bd178b00834e1f81cd5d296006b",
+			"sha256:563192209f002b0a13af16a4992fdb9dd61187a36919eaf65f408bb47af3d272",
+			"sha256:fe4c0ec48705e97241d70fde4caeb39053f9bf055bfed88828e7188e573fdd6e"
 		],
-		"aminroudaki/decisio": [
-			"sha256:b46fedd33e0bfb0cae308aa3c158d0a4b2c4a1d2185a1ed6f093cdaf39064772",
-			"sha256:67924785ff1885c2b34c15d0e52979e991acca64221694ba2cc3a6474a053fb4",
-			"sha256:3e86cb9347aeb07622816cf2f1857504eae6689df7a16015c488f7eaaf49d2f1",
-			"sha256:ce4a164fc04605703b485251fe9f1a181688ba0eb6badb80cc6335c0de17ca0d"
+		"aminroudaki/decisio-gemma-tuned": [
+			"sha256:d2f8e1916abff916c5e6f53f2fed7509fe6afaa39f0ffc69a9fccab556df7123",
+			"sha256:563192209f002b0a13af16a4992fdb9dd61187a36919eaf65f408bb47af3d272",
+			"sha256:fe4c0ec48705e97241d70fde4caeb39053f9bf055bfed88828e7188e573fdd6e"
 		]
 	},
 	"blocks": {
-		"a50959b00ac2115f": {
+		"8178bc8d822462cb": {
 			"status": "ollama",
-			"ollama": "0.35.1",
+			"ollama": "0.40.16",
 			"models": [
 				"aminroudaki/decisio-gemma",
-				"aminroudaki/decisio"
+				"aminroudaki/decisio-gemma-tuned"
 			],
-			"date": "2026-10-09"
+			"date": "2026-11-15"
 		},
 		"0929ca22eb2889dd": {
 			"status": "ollama",
-			"ollama": "0.35.1",
+			"ollama": "0.40.16",
 			"models": [
 				"aminroudaki/decisio-gemma"
 			],
-			"date": "2026-10-09"
-		},
-		"86957084853fb2e3": {
-			"status": "ollama",
-			"ollama": "0.35.1",
-			"models": [
-				"aminroudaki/decisio"
-			],
-			"date": "2026-10-09"
-		},
-		"13a23eaa310d2a64": {
-			"status": "ollama",
-			"ollama": "0.35.1",
-			"models": [
-				"aminroudaki/decisio-gemma",
-				"aminroudaki/decisio"
-			],
-			"date": "2026-10-09"
+			"date": "2026-11-15"
 		}
 	}
 }

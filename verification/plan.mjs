@@ -193,6 +193,10 @@ export const plan = [
 	},
 	{ page: '/docs/images/', n: 1, mode: 'example', expect: 'import base64' },
 	{ page: '/docs/images/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
+	{ page: '/docs/images/', n: 3, mode: 'shown', expect: 'uv sync --extra mlx-images', why: 'it needs an Apple silicon Mac with room for the model' },
+	{ page: '/docs/images/', n: 4, mode: 'shown', expect: 'python -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
+	{ page: '/docs/images/', n: 5, mode: 'shown', expect: '{"state": "The photo: PHOTO"', why: 'it needs a Gemma server started with --images on, on one NVIDIA card, and a photo of your own' },
+	{ page: '/docs/images/', n: 6, mode: 'shown', expect: '{"mug": {"type": "box"', why: 'it is the shape of an answer from a Gemma server started with --images on, on one NVIDIA card' },
 	// The use-case recipes, on the stand-in: each asks its question and routes on the certificate (src/lib/use-cases.mjs);
 	// the stand-in certifies nothing, so every answer takes the person's branch, which the assertion accepts like the other.
 	{
@@ -439,11 +443,12 @@ export const plan = [
 	{ page: '/docs/deploy/mac/', n: 2, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --backend mlx --base gemma-4-31b --model mlx-community/gemma-4-31b-it-6bit', needs: 'a Mac with Apple silicon', record: 'runs/2026-10-07_mlx-gemma-31b/' },
 	{ page: '/docs/deploy/mac/', n: 3, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --backend mlx --base gemma-4-31b --model tachara-ai/decisio-gemma-4-31b-mlx-4bit', needs: 'a Mac with Apple silicon', record: 'runs/2026-10-16_mlx-gemma-31b-4bit/' },
 	{ page: '/docs/deploy/mac/', n: 4, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --backend mlx --base gemma-4-12b', needs: 'a Mac with Apple silicon', record: 'runs/2026-10-05_mlx-gemma/' },
-	{ page: '/docs/deploy/mac/', n: 5, mode: 'output', expect: 'decisio: the gemma-4-12b base needs about 16.6 GiB under MLX' },
+	{ page: '/docs/deploy/mac/', n: 5, mode: 'shown', expect: 'uv sync --extra mlx-images', why: 'it needs a Mac with Apple silicon, which this check does not have' },
+	{ page: '/docs/deploy/mac/', n: 6, mode: 'output', expect: 'decisio: the gemma-4-12b base needs about 16.6 GiB under MLX' },
 	// The pull is decisio's; both Ollama blocks are run against Ollama by scripts/verify-ollama.mjs
 	// (the request is site-written: src/lib/site-blocks.mjs).
-	{ page: '/docs/deploy/mac/', n: 6, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma', models: ['aminroudaki/decisio-gemma', 'aminroudaki/decisio'], needs: '0.35.1', upTo: '0.40.3', assert: pulled },
-	{ page: '/docs/deploy/mac/', n: 7, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma'], needs: '0.35.1', upTo: '0.40.3', assert: ticketAnswers },
+	{ page: '/docs/deploy/mac/', n: 7, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma', models: ['aminroudaki/decisio-gemma', 'aminroudaki/decisio-gemma-tuned'], needs: '0.40.4', assert: pulled },
+	{ page: '/docs/deploy/mac/', n: 8, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma'], needs: '0.40.4', assert: ticketAnswers },
 	{ page: '/docs/bases/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', needs: 'an NVIDIA card', record: 'runs/2026-10-04_gemma-base/' },
 
 	{ page: '/docs/releases/', n: 2, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b', needs: 'an NVIDIA card, and for the container the NVIDIA Container Toolkit' },
@@ -470,7 +475,7 @@ export const plan = [
 	// The home page's Get started: each tab's block is a deploy guide's own, and the request and its answer are Get started's.
 	{ page: '/', n: 1, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/deploy/cloud-gpu/', 1] },
 	{ page: '/', n: 2, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model" },
-	{ page: '/', n: 3, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/deploy/mac/', 6] },
-	{ page: '/', n: 4, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 7] },
+	{ page: '/', n: 3, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/deploy/mac/', 7] },
+	{ page: '/', n: 4, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 8] },
 	{ page: '/', n: 5, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },
 ];
