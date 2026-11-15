@@ -702,3 +702,181 @@
 	font-size: 15px;
 	font-weight: 600;
 }
+
+/* Benchmarks (design guide): tables and charts as framed objects.
+   Scoped to the page's body class, so the demos page keeps its own look. */
+
+/* A table-only card is not a stage: the table carries its own frame, and the card only holds a title above it. */
+.bench .pcard--flat {
+	padding: 0;
+	border: 0;
+	background: none;
+	box-shadow: none;
+}
+
+/* A card that holds a chart is a figure stage: panel, 1px line, 14px radius, the one hard shadow. */
+.bench .pcard.tile {
+	padding: 18px 20px 16px;
+	border: 1px solid var(--h-line);
+	border-radius: 14px;
+	background: var(--d-surface);
+	box-shadow: 6px 6px 0 var(--d-shadow);
+}
+
+.bench .pcard.tile::before {
+	display: none;
+}
+
+.bench .pcard__meta {
+	letter-spacing: 0;
+}
+
+/* A framed table: rounded, bordered, a tinted mono header, hairline rows. It stays a table at every width: below
+   the stacking breakpoint it scrolls sideways inside its frame and the first column stays in view. */
+.bench .table-scroll {
+	border: 1px solid var(--h-line);
+	border-radius: 14px;
+	background: var(--d-surface);
+	overflow-x: auto;
+}
+
+.bench .data-table {
+	min-width: 34rem;
+	font-size: 14.5px;
+	line-height: 1.5;
+}
+
+.bench .data-table--stack thead {
+	position: static;
+	width: auto;
+	height: auto;
+	overflow: visible;
+	clip-path: none;
+}
+
+.bench .data-table--stack tr {
+	display: table-row;
+	padding: 0;
+	border: 0;
+}
+
+.bench .data-table--stack :is(th, td, td.num) {
+	display: table-cell;
+	padding: 11px 14px;
+	border: 0;
+	border-top: 1px solid var(--h-line);
+	white-space: normal;
+	text-align: left;
+}
+
+.bench .data-table--stack :is(td.num, th.num) {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.bench .data-table--stack th.num {
+	white-space: normal;
+}
+
+.bench .data-table--stack.compare td.prose {
+	display: table-cell;
+	margin: 0;
+}
+
+.bench .data-table--stack.compare td.prose > span,
+.bench .data-table--stack td > span {
+	text-align: inherit;
+}
+
+.bench .data-table--stack td::before {
+	content: none;
+}
+
+.bench .data-table--stack tbody tr:first-child :is(th, td) {
+	border-top: 0;
+}
+
+.bench .data-table--stack tbody th {
+	display: table-cell;
+	margin: 0;
+	font-weight: 450;
+}
+
+.bench .data-table thead tr {
+	background: color-mix(in srgb, var(--d-navy) 50%, var(--d-surface));
+}
+
+:root[data-theme='light'] .bench .data-table thead tr {
+	background: color-mix(in srgb, var(--d-navy) 8%, var(--d-surface));
+}
+
+.bench .data-table thead th {
+	border-top: 0;
+	font: 500 11.5px/1.4 var(--d-font-mono, 'Geist Mono Site', monospace);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--d-muted);
+}
+
+.bench .data-table thead th :is(.src, code, a) {
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+.bench .data-table :is(th, td) code {
+	font-size: 0.96em;
+}
+
+.bench .data-table :is(tbody th, thead th:first-child) {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	background: var(--d-surface);
+}
+
+.bench .data-table thead th:first-child {
+	background: color-mix(in srgb, var(--d-navy) 50%, var(--d-surface));
+}
+
+:root[data-theme='light'] .bench .data-table thead th:first-child {
+	background: color-mix(in srgb, var(--d-navy) 8%, var(--d-surface));
+}
+
+/* Charts: a hairline grid at 8%, mono axis labels, and a width a phone can read (the chart scrolls inside its card). */
+.bench .cc,
+.bench .ic {
+	overflow-x: auto;
+}
+
+.bench :is(.cc, .ic) svg {
+	min-width: 34rem;
+}
+
+.bench :is(.cc-grid, .ic-grid) line {
+	stroke: color-mix(in srgb, var(--d-ink) 8%, transparent);
+}
+
+.bench :is(.cc-grid, .ic-grid) text,
+.bench .jb__axis {
+	font-family: var(--d-font-mono, 'Geist Mono Site', monospace);
+}
+
+.bench .jb--so {
+	padding: 0;
+	border: 0;
+	background: none;
+}
+
+/* The same-session chart is a published image with its own small text: on a phone it keeps a readable width and scrolls inside its card. */
+.bench .lc-fig {
+	overflow-x: auto;
+}
+
+.bench .lc-fig .lc {
+	display: block;
+	min-width: 36rem;
+}
+
+.bench .data-table--stack .head2 {
+	display: inline-grid;
+}

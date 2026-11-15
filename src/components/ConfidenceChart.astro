@@ -14,7 +14,7 @@ const ROW = 64;
 const H = 24 + rows.length * ROW + 34;
 const desc = rows.map((r) => `${r.name}: ${r.standard.toFixed(3)} on the standard tier, ${r.hard.toFixed(3)} on the hard tier`).join('; ');
 ---
-<figure class="cc">
+<figure class="cc" tabindex="0" role="region" aria-label="Calibration error chart, scrolls sideways when it does not fit">
 	<svg class="cc__svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="cc-t cc-d" xmlns="http://www.w3.org/2000/svg">
 		<title id="cc-t">Calibration error on JevBench, per base and tier; lower is better</title>
 		<desc id="cc-d">{desc}.</desc>

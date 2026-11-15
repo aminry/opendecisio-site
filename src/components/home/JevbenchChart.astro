@@ -44,7 +44,7 @@ const alt = `Dot and interval chart of JevBench ${j.revision} composite scores w
 			<text class="bc-ax" x={(X0 + X1) / 2} y={H - 6} text-anchor="middle">JevBench score, with its 95% interval</text>
 		</svg>
 	</div>
-	<div class="jb__fallback table-scroll">
+	<div class="jb__fallback table-scroll" tabindex="0" role="region" aria-label="JevBench composite, every system, scrolls sideways when it does not fit">
 		<table class="data-table data-table--stack">
 			<caption class="sr-only">JevBench {j.revision}: ten open-weights systems from the board's file, in alphabetical order, with Jev 1.13.0 as a reference row</caption>
 			<thead>

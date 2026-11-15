@@ -14,7 +14,7 @@ const columns = b.head.slice(1).map((h) => {
 	return { html: h, colour: colourOf(base), record: records[base as keyof typeof records] };
 });
 ---
-<div class="table-scroll" tabindex="0" role="region" aria-label="Benchmarks of each base">
+<div class="table-scroll" tabindex="0" role="region" aria-label="Benchmarks of each base, scrolls sideways when it does not fit">
 	<table class="data-table data-table--stack">
 		<thead>
 			<tr>

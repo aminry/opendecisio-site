@@ -1,6 +1,6 @@
 ---
 // One post, in the home page's style: a label, the headline, a row with the date, the author and the reading time, the
-// body at a reading width, and the other posts of its kind beside it on a wide screen and below it on a narrow one. (A piece first published elsewhere has no page: its
+// body at a reading width, and a "What next" ending: the other posts of their kind and the feed. (A piece first published elsewhere has no page: its
 // card links to the original.)
 import { render } from 'astro:content';
 import { site } from '../config/site';
@@ -46,10 +46,10 @@ const jsonLd = [
 			<div class="post__body prose" data-history><Content /></div>
 			{more.length > 0 && (
 				<aside class="post__more" aria-labelledby="more-h">
-					<h2 id="more-h" class="post__more-h">More {label.toLowerCase()}</h2>
-					<ul class="posts posts--rail">
+					<h2 id="more-h" class="post__more-h">What next</h2>
+					<ul class="posts">
 						{more.map((p) => (
-							<li class="post-card tile">
+							<li class="post-card">
 								<p class="post-card__meta"><time datetime={isoDay(p.data.date)}>{dateText(p.data.date)}</time><span aria-hidden="true">·</span><span>{outLabel(p)}</span></p>
 								<h3 class="post-card__title"><a href={where(kind, p)}>{p.data.title}</a></h3>
 								<span class="post-card__go" aria-hidden="true">{isExternal(p) ? `Read on ${p.data.originalSite}` : 'Read'}</span>
