@@ -15,7 +15,7 @@ const ticks = [0, 25, 50, 75, 100];
 const cls = (r: (typeof rows)[number]) => (r.base ? `ic-ours ${colourOf(r.base)}` : r.jev ? 'ic-jev' : 'ic-other');
 const desc = rows.map((r) => `${r.name} ${r.value.toFixed(2)}`).join('; ');
 ---
-<figure class="ic">
+<figure class="ic" tabindex="0" role="region" aria-label="Decision Index chart, scrolls sideways when it does not fit">
 	<svg class="ic__svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="ic-t ic-d" xmlns="http://www.w3.org/2000/svg">
 		<title id="ic-t">Decision Index 0.2.1, 0 to 100, as of 2026-10-05; decisio's values are our own runs</title>
 		<desc id="ic-d">{desc}.</desc>

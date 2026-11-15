@@ -1,7 +1,7 @@
 ---
 // The index of articles or news, in the home page's style: a hero (label, headline, one sentence, the feed), the
-// newest post as a larger card and the rest as a grid of cards, newest first; with no posts, a quiet panel that says so
-// and points at the feed and the repository. The cards rise in once on load (CSS only, off under reduced motion).
+// posts as one list of rows, newest first; with no posts, a quiet panel that says so
+// and points at the feed and the repository.
 import { dateText, externalNote, isExternal, isoDay, readingMinutes, where } from '../lib/posts.mjs';
 import { site } from '../config/site';
 import PageHero from './PageHero.astro';
@@ -25,6 +25,7 @@ const card = (p: any, lead = false) => ({
 });
 const cards = [first && card(first, true), ...rest.map((p) => card(p))].filter(Boolean) as ReturnType<typeof card>[];
 ---
+<div class="posts-index">
 <PageHero label={label} lede={lede} links={[{ href: `/${kind}/rss.xml`, text: 'RSS feed' }, kind === 'articles' ? { href: '/news/', text: 'News' } : { href: '/articles/', text: 'Articles' }]}>{headline}</PageHero>
 <section class="section posts-list">
 	<div class="wrap">
@@ -36,7 +37,7 @@ const cards = [first && card(first, true), ...rest.map((p) => card(p))].filter(B
 		) : (
 			<ul class="posts">
 				{cards.map((c, i) => (
-					<li class:list={['post-card', 'tile', { 'post-card--lead': c.lead, 'tile--active': c.lead }]} data-i={i}>
+					<li class:list={['post-card', { 'post-card--lead': c.lead }]} data-i={i}>
 						<p class="post-card__meta"><time datetime={c.iso}>{c.when}</time>{c.out ? <><span aria-hidden="true">·</span><span>on {c.from}</span></> : <><span aria-hidden="true">·</span><span>{c.minutes} min read</span></>}</p>
 						<h2 class="post-card__title" data-history={c.out ? '' : undefined}><a href={c.href}>{c.title}</a></h2>
 						<p class="post-card__text">{c.text}</p>
@@ -49,6 +50,7 @@ const cards = [first && card(first, true), ...rest.map((p) => card(p))].filter(B
 		)}
 	</div>
 </section>
+</div>
 <script>
 	import '../scripts/depth.ts';
 </script>

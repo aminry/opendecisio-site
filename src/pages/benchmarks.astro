@@ -42,12 +42,12 @@ const sections = [
 const title = `Benchmarks: ${site.name}`;
 const description = 'What decisio does, measured and dated: many questions about one document, each base, the calibration error, two public boards, and decisio beside a hosted service and open entries.';
 ---
-<SiteLayout bodyClass="home" jsonLd={breadcrumbs([{ name: 'Benchmarks', path: '/benchmarks/' }])} title={title} description={description}>
+<SiteLayout bodyClass="home bench" jsonLd={breadcrumbs([{ name: 'Benchmarks', path: '/benchmarks/' }])} title={title} description={description}>
 	<PageHero
 		label="Benchmarks"
 		lede="Ask 50 questions about one document and get every answer in about a second, on one card you own. Every number below is a measurement, with its date and its source."
 		links={[{ href: '/docs/evaluation-card/', text: 'Evaluation card' }, { href: BOARD_URL, text: 'JevBench live board' }, { href: di.link, text: 'Decision Index board' }]}
-	>What it does, <em class="hl">measured and dated</em></PageHero>
+	>What it does, measured and dated</PageHero>
 
 	<section class="section psec bench-top" aria-label="At a glance">
 		<div class="wrap">
@@ -79,13 +79,13 @@ const description = 'What decisio does, measured and dated: many questions about
 		<div class="wrap">
 			<div class="section__head">
 				<p class="kicker">Each base</p>
-				<h2 id="bases">Choosing a <em class="hl">base</em></h2>
+				<h2 id="bases">Choosing a base</h2>
 				<p>Three models serve the same API. Each was measured by us with the public harnesses, and none of these is a board score. <a href="/docs/bases/">Choosing a model</a> says how to pick and start each one.</p>
 			</div>
 			<ul class="bases">
 				{lines.map((l) => <li class:list={['bases__i', colourOf(KEY[l.base])]}><span class="dot" aria-hidden="true"></span><b>{l.name}</b>: {l.text}</li>)}
 			</ul>
-			<div class="pcard tile">
+			<div class="pcard pcard--flat">
 				<div class="pcard__head">
 					<h3 class="pcard__title">Accuracy and time, each base</h3>
 					<p class="pcard__meta">each base with its own defaults on {measured.label}; higher is better, but for the times; each column links to its record</p>
@@ -108,12 +108,16 @@ const description = 'What decisio does, measured and dated: many questions about
 		<div class="wrap">
 			<div class="section__head">
 				<p class="kicker">Confidence</p>
-				<h2 id="confidence">Probabilities that <em class="hl">mean what they say</em></h2>
+				<h2 id="confidence">Probabilities that mean what they say</h2>
 				<p>The <a class="gloss" href="/docs/glossary/#calibration-error">calibration error</a> is the average gap between the probability an answer states and how often answers like it were right: lower is better, and zero would be exact. Here it is on JevBench's published items, on its standard and hard tiers.</p>
 			</div>
 			<div class="pcard tile">
+				<div class="pcard__head">
+					<h3 class="pcard__title">Calibration error on JevBench, per base and tier</h3>
+					<p class="pcard__meta">JevBench published items on {measured.label}; lower is better</p>
+				</div>
 				<ConfidenceChart />
-				<p class="pcard__foot">Measured by us on {measured.label}, with JevBench's own measure, over ten equal-width bins of the probability; <a href="/docs/evaluation-card/#3-numbers">the evaluation card, section 3</a>, has every calibration table and what was fitted on what.</p>
+				<p class="pcard__foot">Measured by us with JevBench's own measure, over ten equal-width bins of the probability; <a href="/docs/evaluation-card/#3-numbers">the evaluation card, section 3</a>, has every calibration table and what was fitted on what.</p>
 			</div>
 		</div>
 	</section>
@@ -124,15 +128,15 @@ const description = 'What decisio does, measured and dated: many questions about
 		<div class="wrap">
 			<div class="section__head">
 				<p class="kicker">Public boards</p>
-				<h2 id="decision-index">The Decision Index <em class="hl">board</em></h2>
+				<h2 id="decision-index">The Decision Index board</h2>
 				<p>The Decision Index runs 38 public benchmarks in five areas and scores each system from 0 to 100. Its board lists decisio's rows from our submissions, in <a href={di.link}>its data file of {di.date}</a>.</p>
 			</div>
-			<div class="pcard tile">
+			<div class="pcard pcard--flat">
 				<div class="pcard__head">
 					<h3 class="pcard__title">decisio's rows on the board</h3>
 					<p class="pcard__meta"><a href={di.link}>{di.version}, the board's data file of {di.date}</a></p>
 				</div>
-				<div class="table-scroll" tabindex="0" role="region" aria-label="decisio's rows on the Decision Index board">
+				<div class="table-scroll" tabindex="0" role="region" aria-label="decisio's rows on the Decision Index board, scrolls sideways when it does not fit">
 					<table class="data-table data-table--stack">
 						<caption class="sr-only">decisio's rows as the Decision Index board lists them, {di.version}, its data file of {di.date}</caption>
 						<thead>
@@ -159,12 +163,12 @@ const description = 'What decisio does, measured and dated: many questions about
 		<div class="wrap">
 			<div class="section__head">
 				<p class="kicker">Beside other systems</p>
-				<h2 id="compares">Beside a hosted service <em class="hl">and open entries</em></h2>
+				<h2 id="compares">Beside a hosted service and open entries</h2>
 				<p>decisio's three bases beside TypeSafe's Jev 1.13 and three open-weights entries from the Decision Index's public board, as of 2026-10-05. Jev's and the other entries' values come only from the public boards and TypeSafe's public documentation; decisio's are our own runs on the Decision Index 0.2.1.</p>
 			</div>
 			<HowItCompares />
 
-			<div class="pcard tile">
+			<div class="pcard pcard--flat">
 				<div class="pcard__head">
 					<h3 class="pcard__title" id="compares-demos">The recorded demos, every player</h3>
 					<p class="pcard__meta">the same games, seeds and checks for every player, on {players.dates.join(' and ')}</p>
@@ -188,7 +192,7 @@ const description = 'What decisio does, measured and dated: many questions about
 		<div class="wrap">
 			<div class="section__head">
 				<p class="kicker">What next</p>
-				<h2 id="next">Before you rely on <em class="hl">a number</em></h2>
+				<h2 id="next">Before you rely on a number</h2>
 			</div>
 			<ul class="plain-list bench-next">
 				<li>Each figure is one card, one run: your card, host and load will move the times.</li>
