@@ -1,13 +1,15 @@
 ---
 title: Guardrails
-description: Check each message against a policy, such as toxicity, in one yes-or-no question; block or allow what decisio can stand behind, and send the rest to a moderator.
+description: Check each message against a policy such as toxicity with one yes-or-no question, block or allow what decisio can stand behind, and send the rest to a moderator.
 ---
 
 <!-- Site-written: a use-case recipe. The question, the routing script and the registration are src/lib/use-cases.mjs; the measured result is the ToxicChat row of decisio's EVAL_CARD.md section 7.2, read by the same module. -->
 
-This script asks one yes-or-no question and blocks or allows only on a certified answer:
+The script asks one yes-or-no question and blocks or allows only on a certified answer:
 
 ::figure{name="recipe-guardrails"}
+
+## TL;DR
 
 Save the [complete caller](/examples/recipes/guardrails.py) as `guardrails.py` and run it with Python 3.12 or later.
 Set `DECISIO_BASE_URL` to your server, or leave the local default.
@@ -15,7 +17,7 @@ Until you register and certify this question, the caller sends answers to review
 
 ::site-block{name="route-guardrails"}
 
-
+## Is it a good fit?
 
 :::fit
 - A policy you can state as a yes-or-no question: is it toxic, is it off-topic, does it ask for a refund.
@@ -54,26 +56,20 @@ Check the returned certificate: a `null` threshold means no answer can be certif
 The caller acts only when `certified` is `true` and `certificate_kind` is `gold`, with a certificate id.
 A learned table's `agreement` certificate measures agreement with the model, so it goes to review in this recipe.
 
-
 - A certified yes blocks; a certified no allows.
 - Everything else goes to a moderator.
 - When the messages change, a new kind of abuse, a new language, certification is suspended until you certify again ([Watch for drift](/docs/tasks/drift/)).
-
-## Handle unavailable and uncertain answers
-
-An HTTP error, timeout, invalid response or uncertified answer goes to the review path.
-The caller uses a 15-second network timeout; set it to fit your application, and log failures where you call `route`.
-It returns an action for your backend to perform.
 
 ## What it did
 
 ::proof{name="guardrails"}
 
-## Good to know
+<span class="fp-anchor" id="handle-unavailable-and-uncertain-answers"></span>
+<span class="fp-anchor" id="good-to-know"></span>
+## Limits
 
-Keep the question and options stable after registration.
-Certify again after changing the task or serving setup, and check new traffic with labelled examples.
-The caller prints an action; connect that action to your own queue, workflow or review interface.
+- An HTTP error, timeout or invalid response goes to the review path, like an uncertified answer ([Handle review and service failures](/docs/use-cases/#handle-review-and-service-failures)).
+- Keep the question and options stable after registration, and certify again after changing the task or serving setup ([Keep a certificate valid](/docs/production/#keep-a-certificate-valid)).
 
 ## What next
 

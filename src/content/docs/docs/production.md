@@ -5,7 +5,7 @@ description: The serving setup to keep for each certified task, the settings tha
 
 <!-- Site-written: the production setup, split from the requirements page. Every setting is docs/running.md's at the pinned release. -->
 
-::covers{links="docs/running.md#precision-casts---emulate-precision-casts=what-to-pin docs/running.md#batch-invariance---batch-invariant=what-to-pin docs/running.md#deterministic-compile---deterministic-compile=keep-a-certificate-valid"}
+::covers{links="docs/running.md#precision-casts---emulate-precision-casts=what-to-pin docs/running.md#batch-invariance---batch-invariant=what-to-pin docs/running.md#deterministic-compile---deterministic-compile=keep-a-certificate-valid docs/tasks.md#replicas-a-shared-store---task-store=keep-tasks-across-restarts-and-replicas"}
 
 Pin the settings below, and your replicas answer the same way and each certificate stays valid.
 They are a short list, and one change means certifying again.
@@ -22,7 +22,7 @@ After an upgrade or a change to the model, engine, hardware, precision, cache ty
 | Consistent 12B cold starts on replicas | Use the [certificate guidance](#keep-a-certificate-valid) for `--deterministic-compile`; leave it off on the 31B |
 | Task persistence on one server | `--tasks-dir` on a persistent volume, with `--require-tasks` |
 | Shared tasks across replicas | One `--task-store`, the same stack, synchronized clocks and per-replica monitoring |
-| Private access | An authenticated proxy with rate and request-size limits; [Operate](/docs/operating/#5-secure-it) |
+| Private access | An authenticated proxy with rate and request-size limits; [Operate](/docs/operating/#secure-it) |
 
 ## Keep a certificate valid
 
@@ -37,6 +37,32 @@ Certify again with `POST /v1/tasks/{id}/certify`, on new labelled examples.
 3. **On the 12B with several replicas or fresh nodes, make cold starts agree** with `--deterministic-compile on`, then certify again: the setting is part of what a certificate covers. Leave it off on the 31B, whose cold starts already agreed in the same check and whose answers it changes.
 4. **Expect a repeated request to differ slightly from its first read.** A request about a text the server has read before is computed on the blocks the prefix cache kept, which can move an answer near the threshold across it. On the 12B, `--batch-invariant on`, off by default, removes this: a request read from the cache gives the same bits as one read without it.
 
+## Set the longest text
+
+<span class="fp-anchor" id="3-plan-for-long-texts"></span>
+
+Each model's longest text is on [Requirements and limits](/docs/limits/#2-how-long-a-text-and-how-many-options); `/health` reports the length a server chose, as `max_model_len`.
+
+1. **Give `--max-model-len` the same value on every card**, for the same answers everywhere; `--max-model-len 32768` serves only what was measured.
+2. **Mind `--gpu-memory-utilization`.** It changes the length a card gives a lot: on an 80 GB H100, the 31B served 98,304 tokens at 0.90 and 49,152 at 0.85, and did not start at 0.70.
+
+A prompt longer than the length gets 422, and the server stays up.
+
+## Keep tasks across restarts and replicas
+
+<span class="fp-anchor" id="4-keep-tasks-across-restarts-and-replicas"></span>
+
+- **One server:** start it with `--tasks-dir` on a volume that outlives the container, and `--require-tasks N`, as [Teach a task](/docs/tasks/#6-keep-it-across-restarts) shows. One directory belongs to one server.
+- **A volume that fails to mount:** a server that finds fewer than N usable tasks refuses to start, so a volume that failed to mount does not turn into untaught answers.
+- A save that fails fails the request with 500, and the task is not registered.
+- A task registered under another id for the same question replaces the first on disk too, so a restart serves the task registered last.
+- **Replicas behind a load balancer:** start every one with `--task-store` on object storage, such as `s3://bucket/prefix`. A task taught on one replica reaches the others within `--task-store-poll-seconds`, 5 by default, as the same fitted record, so every replica serves the same numbers.
+- **Two teachers at once:** a second registration of the same task answers 409 instead of overwriting it; read the task again and send it again.
+- **Keep fitting on one replica:** start the others with `--task-store-readonly` and route the task-writing routes to that one.
+- **A task with a fast table:** every replica needs the `decisio[table]` extra and CPU headroom, and decides for itself whether to use it; [Add a decision fast path](/docs/tasks/fast-table/#9-operating-notes) has what each state means.
+- **A fast table that learns from traffic:** on the shared store the replicas learn one table together. One replica trains under a lease, every replica times each new version itself, and a restart loses nothing ([Learn across replicas](/docs/tasks/fast-table/#6-learn-across-replicas)).
+- **If the store goes away:** replicas keep serving what they have, and teaching answers 503 until it is back; `/health` says so under `systemone.task_store`.
+
 ## Optional features
 
 - Thinking requires the vLLM engine in the server process; a thinking request can hold up other requests.
@@ -49,7 +75,6 @@ Certify again with `POST /v1/tasks/{id}/certify`, on new labelled examples.
 ## Replicas
 
 A shared-store write takes time to reach the other replicas; wait for the poll or read back from the writer.
-If the store is unavailable, replicas keep serving their loaded records and task writes return 503.
 The store must support conditional writes; check it before routing traffic, and collect task metrics from every replica.
 
 On a Mac, run one model server at a time.

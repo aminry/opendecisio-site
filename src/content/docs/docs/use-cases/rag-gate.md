@@ -5,9 +5,11 @@ description: Before a retrieval pipeline answers, check whether the passages it 
 
 <!-- Site-written: a use-case recipe. The question, the routing script and the registration are src/lib/use-cases.mjs; the measured result is the SciFact and BoolQ rows of decisio's EVAL_CARD.md section 7.2, read by the same module. -->
 
-This script sends the question and the passage as one text and acts only on a certified answer:
+The script sends the question and the passage as one text and acts only on a certified answer:
 
 ::figure{name="recipe-rag-gate"}
+
+## TL;DR
 
 Save the [complete caller](/examples/recipes/rag-gate.py) as `rag-gate.py` and run it with Python 3.12 or later.
 Set `DECISIO_BASE_URL` to your server, or leave the local default.
@@ -15,7 +17,7 @@ Until you register and certify this question, the caller sends answers to review
 
 ::site-block{name="route-rag-gate"}
 
-
+## Is it a good fit?
 
 :::fit
 - A retrieval step that returns passages, and questions your users ask again and again.
@@ -54,26 +56,20 @@ To let the server decline on its own, add a "can't tell" option and an abstentio
 The caller acts only when `certified` is `true` and `certificate_kind` is `gold`, with a certificate id.
 A learned table's `agreement` certificate measures agreement with the model, so it goes to review in this recipe.
 
-
 - A certified `yes` answers from the passage; `partly` answers with the missing part stated; `no` says it is not in the documents.
 - Everything else goes to a larger model or a person.
 - When your documents or your users' questions change, certification is suspended until you certify again ([Watch for drift](/docs/tasks/drift/)).
-
-## Handle unavailable and uncertain answers
-
-An HTTP error, timeout, invalid response or uncertified answer goes to the review path.
-The caller uses a 15-second network timeout; set it to fit your application, and log failures where you call `route`.
-It returns an action for your backend to perform.
 
 ## What it did
 
 ::proof{name="rag-gate"}
 
-## Good to know
+<span class="fp-anchor" id="handle-unavailable-and-uncertain-answers"></span>
+<span class="fp-anchor" id="good-to-know"></span>
+## Limits
 
-Keep the question and options stable after registration.
-Certify again after changing the task or serving setup, and check new traffic with labelled examples.
-The caller prints an action; connect that action to your own queue, workflow or review interface.
+- An HTTP error, timeout or invalid response goes to the review path, like an uncertified answer ([Handle review and service failures](/docs/use-cases/#handle-review-and-service-failures)).
+- Keep the question and options stable after registration, and certify again after changing the task or serving setup ([Keep a certificate valid](/docs/production/#keep-a-certificate-valid)).
 
 ## What next
 

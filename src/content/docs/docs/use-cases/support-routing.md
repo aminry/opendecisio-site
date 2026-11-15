@@ -1,13 +1,15 @@
 ---
 title: Support routing
-description: Send each support ticket to the right queue, act on the routes decisio can stand behind, and send only the rest to a person.
+description: Send each support ticket to the right queue from your backend, and give a person only the tickets decisio cannot stand behind.
 ---
 
 <!-- Site-written: a use-case recipe. The question, the routing script and the registration are src/lib/use-cases.mjs; the measured result is the teach-and-certify runs' support inbox and decisio's triage demo (docs/demos/README.md), read by the same module. -->
 
-This script asks for the queue and acts only on a certified answer:
+The model names the queue, and your code routes only on a certified answer:
 
 ::figure{name="recipe-support-routing"}
+
+## TL;DR
 
 Save the [complete caller](/examples/recipes/support-routing.py) as `support-routing.py` and run it with Python 3.12 or later.
 Set `DECISIO_BASE_URL` to your server, or leave the local default.
@@ -15,7 +17,7 @@ Until you register and certify this question, the caller sends answers to review
 
 ::site-block{name="route-support-routing"}
 
-
+## Is it a good fit?
 
 :::fit
 - A fixed list of queues your team already routes to.
@@ -53,26 +55,20 @@ Check the returned certificate: a `null` threshold means no answer can be certif
 The caller acts only when `certified` is `true` and `certificate_kind` is `gold`, with a certificate id.
 A learned table's `agreement` certificate measures agreement with the model, so it goes to review in this recipe.
 
-
 - A certified answer goes to its queue on its own.
 - Everything else goes to a person, with decisio's suggestion beside it.
 - When traffic moves away from the tickets you certified on, certification is suspended, so the shift goes to people instead of into the wrong queues ([Watch for drift](/docs/tasks/drift/)).
-
-## Handle unavailable and uncertain answers
-
-An HTTP error, timeout, invalid response or uncertified answer goes to the review path.
-The caller uses a 15-second network timeout; set it to fit your application, and log failures where you call `route`.
-It returns an action for your backend to perform.
 
 ## What it did
 
 ::proof{name="support-routing"}
 
-## Good to know
+<span class="fp-anchor" id="handle-unavailable-and-uncertain-answers"></span>
+<span class="fp-anchor" id="good-to-know"></span>
+## Limits
 
-Keep the question and options stable after registration.
-Certify again after changing the task or serving setup, and check new traffic with labelled examples.
-The caller prints an action; connect that action to your own queue, workflow or review interface.
+- An HTTP error, timeout or invalid response goes to the review path, like an uncertified answer ([Handle review and service failures](/docs/use-cases/#handle-review-and-service-failures)).
+- Keep the question and options stable after registration, and certify again after changing the task or serving setup ([Keep a certificate valid](/docs/production/#keep-a-certificate-valid)).
 
 ## What next
 

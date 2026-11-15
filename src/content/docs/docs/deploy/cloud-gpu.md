@@ -5,15 +5,27 @@ description: Run decisio on one NVIDIA card, serve the default model on port 800
 
 <!-- Site-written: the deploy guide for one NVIDIA card. Its commands are decisio's at the pinned release (src/lib/site-blocks.mjs, and docs/running.md and docs/operating.md through ::upstream); its numbers are those files' and the README's (src/config/sourced.mjs checks them). -->
 
-::covers{links="README.md#gpu-server README.md#on-a-gpu-with-pip docs/running.md#gpu-server docs/running.md#model-repositories=3-pin-what-you-serve docs/operating.md#systemd=5-keep-it-running docs/operating.md#kubernetes=5-keep-it-running"}
+::covers{links="README.md#gpu-server README.md#on-a-gpu-with-pip docs/running.md#gpu-server docs/running.md#model-repositories=pin-what-you-serve docs/operating.md#systemd=keep-it-running docs/operating.md#kubernetes=keep-it-running"}
 
-Install it from PyPI and start it: it serves the default model, Gemma 4 31B, on `http://127.0.0.1:8000`, ready once `/health` answers.
+Install decisio from PyPI and start it on a Linux box with one NVIDIA card.
+It serves Gemma 4 31B at `http://127.0.0.1:8000`, ready once `/health` answers.
 
 ::site-block{name="gpu-pip"}
 
 ::figure{name="layout-gpu"}
 
-## 1. Pick your card
+## What do you need?
+
+| Part | What you need |
+| --- | --- |
+| System | Linux, with one NVIDIA card |
+| Driver | one that supports CUDA 13.0 |
+| Python | 3.12 |
+| Disk | room for the first download, in the Hugging Face cache |
+
+<span class="fp-anchor" id="1-pick-your-card"></span>
+
+## Pick your card
 
 | Model | Weights in memory | Measured on | Longest text, with no flag |
 | --- | --- | --- | --- |
@@ -25,14 +37,9 @@ Install it from PyPI and start it: it serves the default model, Gemma 4 31B, on 
 Start another model with `--base gemma-4-12b`, `--base gemma-4-12b-fp8` or `--base qwen3.6-35b-a3b`.
 [Choosing a model](/docs/bases/) compares them; [Requirements and limits](/docs/limits/) has every machine.
 
-| Part | What you need |
-| --- | --- |
-| System | Linux, with one NVIDIA card |
-| Driver | one that supports CUDA 13.0 |
-| Python | 3.12 |
-| Disk | room for the first download, in the Hugging Face cache |
+<span class="fp-anchor" id="2-start-the-server"></span>
 
-## 2. Start the server
+## Start the server
 
 The first start downloads the weights and loads them onto the card.
 The 31B was ready after 7 min 54 s with the download, and after 4 min 3 s with the weights already on disk.
@@ -50,7 +57,9 @@ For exactly the versions decisio was measured with, install from a clone of the 
 
 ::site-block{name="gpu-clone"}
 
-## 3. Pin what you serve
+<span class="fp-anchor" id="3-pin-what-you-serve"></span>
+
+## Pin what you serve
 
 Name the model repository at a revision, so a later change to it cannot change your answers:
 
@@ -60,12 +69,21 @@ Name the model repository at a revision, so a later change to it cannot change y
 - Pin `--max-model-len 32768` unless you need longer texts: `--max-model-len 32768` serves only what was measured, and the same value on every card keeps one certificate valid on all of them, since the length served is part of what it covers.
 - After upgrading decisio, certify your tasks again ([Upgrade](/docs/upgrading/)).
 
-## 4. Put it behind a proxy
+<span class="fp-anchor" id="4-put-it-behind-a-proxy"></span>
 
-- The server listens on `127.0.0.1:8000`; `--host` and `--port` change that.
-- It has no authentication. Put a reverse proxy that authenticates the caller in front of it, and call it from your backend.
+## Put it behind a proxy
 
-## 5. Keep it running
+The server listens on `127.0.0.1:8000`; `--host` and `--port` change that.
+Call it from your backend, with a reverse proxy in front when other machines must reach it.
+
+:::caution[Heads up]
+The server has no authentication.
+Put a reverse proxy that authenticates the caller in front of it.
+:::
+
+<span class="fp-anchor" id="5-keep-it-running"></span>
+
+## Keep it running
 
 When its engine dies, the server answers 503 and exits with code 70, so a supervisor can start a new one.
 With systemd, for a clone in `/opt/decisio` and a user `decisio`:
@@ -77,7 +95,7 @@ On Kubernetes, one GPU, the weights on a volume, and `/health` as the startup an
 ::site-block{name="kubernetes"}
 
 - Each probe reads `/health`: 200 once the engine is loaded, 503 from the moment it has died.
-- Each replica is a separate server: give it its own `--tasks-dir`, or share the replicas' tasks with `--task-store` ([Operate](/docs/operating/#4-keep-tasks-across-restarts-and-replicas)).
+- Each replica is a separate server: give it its own `--tasks-dir`, or share the replicas' tasks with `--task-store` ([Set up for production](/docs/production/#keep-tasks-across-restarts-and-replicas)).
 
 ## What next
 

@@ -8,12 +8,14 @@ description: Run the tuned Gemma 4 12B from its Hugging Face repository with one
 Run the tuned 12B when you want the smaller model with settings for rule-based decisions.
 It is right more often than the untrained 12B on hard decisions with rules, exceptions and arithmetic, and about the same elsewhere ([the announcement](/news/tuned-12b/)).
 
-Choose GPU bf16, GPU FP8 or MLX below.
-Each repository holds its weights and settings, so one flag serves it:
+Each repository holds its weights and settings, so one flag serves it.
+On a GPU with room for about 24 GB of bf16 weights, this starts the calibrated one:
 
 ::site-block{name="tuned-start"}
 
-## 1. Pick the repository
+<span class="fp-anchor" id="1-pick-the-repository"></span>
+
+## Which repository do you pick?
 
 All three repositories hold the same weights; only their settings differ.
 
@@ -21,60 +23,58 @@ All three repositories hold the same weights; only their settings differ.
 - **`tachara-ai/Decisio-12b-tuned-commit`**, commits yes/no answers: the same temperatures and layout with the commit rule, so no yes/no answer sits between 0.20 and 0.80. It changes no answer.
 - **`tachara-ai/Decisio-12b-tuned-commit-think`**, adds thinking on choice questions to the commit settings: a choice question whose likeliest option is under 0.3712 is read again after up to 256 tokens of reasoning, and a text longer than 45,000 tokens is cut to its start and answered without thinking.
 
-## 2. Start it
+What thinking adds, and what it costs, is in [What was measured on what](/docs/measured/#what-thinking-adds-to-the-tuned-12b).
+
+<span class="fp-anchor" id="2-start-it"></span>
+
+## Start it
 
 - **It needs a GPU with room for about 24 GB of bf16 weights.** It was measured on one RTX PRO 6000.
 - **`--base owner/name@revision`** takes the repository's weights and its settings; no other flag is needed. The first start downloads the weights.
-- **A flag you give still applies,** and is recorded as an override, as on [a flavor](/docs/bases/#5-serve-a-flavor).
+- **A flag you give still applies,** and is recorded as an override, as on [a flavor](/docs/bases/#serve-a-flavor).
 
-## 3. Know what thinking adds
+<span class="fp-anchor" id="3-know-what-thinking-adds"></span>
+<span class="fp-anchor" id="4-or-serve-it-in-fp8"></span>
 
-On the commit-think repository, against the same model without thinking, on held-out questions:
-
-- **Hard decisions with rules, exceptions and arithmetic** (525): +4.95 points (3.43 to 6.67), with 8.95% of questions thinking. The settings were chosen on these questions, so this figure is optimistic.
-- **Decisions in natural, everyday wording** (939, not used to choose the settings): +0.75 points (0.21 to 1.38), with 2.56% thinking.
-- **The mixed development set** (430): no question thinks.
-- **Time:** the median stayed at 60 ms per decision, and the slowest of 2,044 took 4.71 s.
-
-::source[Measured with decisio 0.33.0 on one RTX PRO 6000 Blackwell at 600 W, 2026-10-26, serving the tuned commit model with the commit-think settings given as flags, from cold starts, one request at a time, on questions screened against our training data.]
-
-## 4. Or serve it in FP8
+## Serve it in FP8
 
 On a GPU with FP8 support, two more repositories hold the tuned 12B in FP8, 13.1 GB each, with the same two settings:
 
 ::site-block{name="tuned-fp8-start"}
 
 - **`tachara-ai/Decisio-12b-tuned-fp8-calibrated`**, and **`tachara-ai/Decisio-12b-tuned-fp8-commit`**.
-- **It is level with bf16 on the held-out sets,** within a quarter of a point, but gives a different likeliest answer on about 3 to 6 of every 100 questions ([the announcement](/news/tuned-12b/) has the figures).
-- **It is quicker:** a median of 100.0 ms of server time per question, against 151.7 ms for bf16.
 - **The server emulates bf16 rounding on FP8 by default,** which narrows the difference between two cold starts.
+- **It is level with bf16 and quicker,** with a different likeliest answer on a few questions in a hundred ([the figures](/docs/measured/#the-tuned-12b-in-fp8)).
 
-::source[The times: decisio 0.33.0 on one RTX PRO 6000 Blackwell at 600 W, 2026-10-25, 430 questions one request at a time, both with the diagnostic readout on, which adds time to each.]
+<span class="fp-anchor" id="5-or-serve-it-on-a-mac"></span>
 
-## 5. Or serve it on a Mac
+## Serve it on a Mac
 
 decisio serves the tuned 12B on a Mac with Apple silicon from its MLX conversions, with the calibrated and commit settings:
 
 ::site-block{name="tuned-mlx-start"}
 
-- **8-bit** (`tachara-ai/Decisio-12b-tuned-mlx8-calibrated` and `-mlx8-commit`, 12.7 GB) gives the bf16 model's likeliest answer on 97.9% of held-out questions, at 69.8% accuracy against 69.9%. It peaks at 14.9 GB with an 8,000-token text and 18.6 GB at 32,000.
-- **6-bit** (`-mlx-calibrated` and `-mlx-commit`, 9.7 GB) gives it on 95.5%, at 69.5% against 69.9%. It peaks at 12.0 GB at 8,000 tokens and 15.6 GB at 32,000.
-- **Both fit a 32 GB Mac,** and a fresh start answered a sample of questions bit for bit as before.
+- **8-bit** is `tachara-ai/Decisio-12b-tuned-mlx8-calibrated` and `-mlx8-commit`, 12.7 GB.
+- **6-bit** is `-mlx-calibrated` and `-mlx-commit`, 9.7 GB.
+- **Both fit a 32 GB Mac;** [the measurements](/docs/measured/#the-tuned-12b-on-a-mac) have their accuracy and memory.
 - **Pin a revision** with `@`, as on a GPU: the full hash is on each repository's page.
 
-::source[Measured on one Apple M5 Pro with 64 GB, decisio's MLX engine, on 1,894 held-out questions against the bf16 tuned model with the same settings.]
+<span class="fp-anchor" id="6-check-what-it-serves"></span>
 
-## 6. Check what it serves
+## Check what it serves
 
 `GET /v1/models` and `/health` report the served name, such as `Decisio-12b-tuned-calibrated`, `Decisio-12b-tuned-commit-think` or `Decisio-12b-tuned-fp8-commit`.
 
-## 7. Teach and certify on it
+<span class="fp-anchor" id="7-teach-and-certify-on-it"></span>
+
+## Teach and certify on it
 
 Tasks and certificates are per model and per flavor: register and certify your tasks again on the tuned 12B, as on [Teach a task](/docs/tasks/).
 
-<span id="8-know-what-is-not-there-yet"></span>
+<span class="fp-anchor" id="8-know-what-is-not-there-yet"></span>
+<span class="fp-anchor" id="8-good-to-know"></span>
 
-## 8. Good to know
+## Good to know
 
 - **No Ollama version is planned.**
 - **Its accuracy was measured in bf16** against the untrained 12B on held-out items; the figures and their limits are in [the announcement](/news/tuned-12b/).

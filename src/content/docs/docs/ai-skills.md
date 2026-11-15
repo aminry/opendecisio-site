@@ -85,7 +85,9 @@ In Codex, mention `$decisio-setup`, `$decisio-request` or `$decisio-integrate`.
 In Claude Code, use `/decisio-setup`, `/decisio-request` or `/decisio-integrate`.
 Ordinary language can also select a matching workflow.
 
-### Example: connect to your server
+## 3. Try an example prompt
+
+### Connect to your server
 
 Use **decisio-setup** when your backend needs a working connection.
 For a decisio server already running locally, paste:
@@ -98,7 +100,7 @@ The assistant reports any missing requirement if the endpoint is unavailable.
 For a fresh installation, replace the endpoint sentence with “Set up decisio with MLX,” “Use my NVIDIA GPU,” or “Use Ollama with the decisio model listing.”
 Run the setup in an environment with access to that hardware or endpoint.
 
-### Example: write a ticket-routing request
+### Write a ticket-routing request
 
 Use **decisio-request** when you know the decision you want to ask.
 Paste:
@@ -109,7 +111,7 @@ You should get a named choice question with the three options, the input ticket 
 The model chooses the category when you run it; the prompt does not fix the result.
 Without an endpoint, the assistant can still prepare the files and explain how to run them later.
 
-### Example: add the decision to your backend
+### Add the decision to your backend
 
 Use **decisio-integrate** once your application needs to act on the answer.
 Paste:
@@ -123,7 +125,9 @@ See [Support routing](/docs/use-cases/support-routing/) for the full application
 Use the same prompts in each assistant, with its invocation from the table above.
 For example, a Devin request can start with `@skills:decisio-request`, while Codex can start with `$decisio-request` and Claude Code, Cursor or Copilot CLI with `/decisio-request`.
 
-## 3. Update or remove
+<span class="fp-anchor" id="3-update-or-remove"></span>
+
+## 4. Update or remove
 
 To take a newer compatible package, download and extract that release, then run its installer with `--update` for your original host and scope.
 For this package and the Codex project installation above:

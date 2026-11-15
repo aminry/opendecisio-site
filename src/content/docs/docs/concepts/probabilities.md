@@ -51,8 +51,11 @@ To automate at an error target, [teach and certify a task](/docs/tasks/certify/)
 Your code checks the returned `certified` field before using its certified-answer path; an answer without it does not qualify.
 
 Certification applies to choice and yes/no tasks, not scores.
+
+:::caution[Heads up]
 A gold certificate concerns errors against labelled answers; a learned table's agreement certificate concerns agreement with the model.
 If your policy requires a gold certificate, check `certificate_kind` as well as `certified`.
+:::
 
 <details>
 <summary>Explore a recorded request and answer</summary>

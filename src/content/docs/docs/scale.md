@@ -5,7 +5,7 @@ description: Ask every question about a text for the price of one read, plan for
 
 <!-- Site-written: the Scale guide, merging Many questions about one text, Make it fast and Long documents and many options. The time per text length is docs/running.md's table at the pinned release (::latency-table); the 50 questions are the launch facts' same_box_speed; the other facts are docs/running.md's, docs/api.md's, docs/cli.md's and the README's (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/running.md#first-question-latency-by-state-length=2-plan-for-the-first-read docs/running.md#a-later-question-about-the-same-state---register-boundary=5-set-the-flags-that-move-server-time"}
+::covers{links="docs/running.md#first-question-latency-by-state-length=plan-for-the-first-read docs/running.md#a-later-question-about-the-same-state---register-boundary=set-the-flags-that-move-server-time"}
 
 Put every question about a text in one request: the server reads the text once and answers them all.
 On the Gemma models it matters more, because their default [prompt layout](/docs/layout/) lists the request's questions before the text, so a later request with other questions reads the text again.
@@ -13,9 +13,9 @@ On the Gemma models it matters more, because their default [prompt layout](/docs
 
 | Your workload | Start here |
 | --- | --- |
-| Several known questions about one text | [Ask them together](#1-ask-many-questions-in-one-request) |
+| Several known questions about one text | [Ask them together](#ask-many-questions-in-one-request) |
 | A series of different questions about the same text | [Choose plain layout](/docs/layout/#2-ask-for-plain-for-a-series-of-questions-about-one-text) |
-| Long documents | [Plan for the first read](#2-plan-for-the-first-read) |
+| Long documents | [Plan for the first read](#plan-for-the-first-read) |
 | Many clients at once | [Batch concurrent requests](/docs/concurrency/) |
 
 <details>
@@ -51,7 +51,9 @@ with urllib.request.urlopen(request) as response:
 
 </details>
 
-## 1. Ask many questions in one request
+## Ask many questions in one request
+
+<span class="fp-anchor" id="1-ask-many-questions-in-one-request"></span>
 
 The 31B answered 50 questions about one 3,000-token text in 1.08 s.
 
@@ -67,7 +69,9 @@ A second engine changes this: with `--head-engine` or `--image-model` the engine
 A request has no cap on its questions, but the response grows with them: for thousands, send several requests about the same text.
 Under the plain layout the later ones read the text from the cache; under the header layout each reads it again.
 
-## 2. Plan for the first read
+## Plan for the first read
+
+<span class="fp-anchor" id="2-plan-for-the-first-read"></span>
 
 The first question about a new text pays for reading it, and that grows with its length:
 
@@ -81,17 +85,16 @@ On the Gemma models the server marks where each text ends, so that a later quest
 Under the header layout, the Gemma models' default, a later request with other questions pays for the first read again: on the 31B, 485 ms instead of 41 at 3,000 tokens.
 A client that asks a series of questions about one text sends `"layout": "plain"` on its requests ([Choose the prompt layout](/docs/layout/#2-ask-for-plain-for-a-series-of-questions-about-one-text)).
 
-## 3. Plan for long texts
+## Plan for long texts
 
-Each model's longest text is on [Requirements and limits](/docs/limits/#2-how-long-a-text-and-how-many-options); `/health` reports the length a server chose, as `max_model_len`.
+<span class="fp-anchor" id="3-plan-for-long-texts"></span>
 
-1. **Give `--max-model-len` the same value on every card**, for the same answers everywhere; `--max-model-len 32768` serves only what was measured.
-2. **Mind `--gpu-memory-utilization`.** It changes the length a card gives a lot: on an 80 GB H100, the 31B served 98,304 tokens at 0.90 and 49,152 at 0.85, and did not start at 0.70.
-3. **Certify again after changing the length or the cache type.** Both are part of what a certificate covers.
+Each model's longest text is on [Requirements and limits](/docs/limits/#2-how-long-a-text-and-how-many-options).
+[Set up for production](/docs/production/#set-the-longest-text) says how to give every card the same length.
 
-A prompt longer than the length gets 422, and the server stays up.
+## Plan for long option lists
 
-## 4. Plan for long option lists
+<span class="fp-anchor" id="4-plan-for-long-option-lists"></span>
 
 A choice can have up to 255 options; more gets 422.
 On a long list of fine-grained options, [teach a task](/docs/tasks/): that is where teaching gains most.
@@ -116,7 +119,9 @@ print("options answered:", len(answer["probabilities"]))
 # options answered: 120
 ```
 
-## 5. Set the flags that move server time
+## Set the flags that move server time
+
+<span class="fp-anchor" id="5-set-the-flags-that-move-server-time"></span>
 
 | Flag | What it does | What it costs |
 | --- | --- | --- |
@@ -124,14 +129,16 @@ print("options answered:", len(answer["probabilities"]))
 | `--register-boundary after` | marks it after the answer instead | the cost moves to throughput: the 31B kept 0.61 and 0.74 of it at 32 and 64 clients in the same run, so keep `before` on the 31B under load |
 | `--register-boundary off` | never marks it; the default, and the only setting, when `--engine` turns vLLM's prefix cache off | a later question re-reads the text; for traffic that asks one question per text |
 | `--layout plain` | the text, then the question, as the Qwen model reads it, for every request that names no layout; one request asks for it with `"layout": "plain"` | a later, different question about a text reads it from the cache; the Gemma models' default, `header`, answered more accurately on most of what was measured |
-| `--multi-question` | `warm`, the 31B's default, scores a request's questions in one batch; `sequential` scores them one at a time | see the table in step 1 |
+| `--multi-question` | `warm`, the 31B's default, scores a request's questions in one batch; `sequential` scores them one at a time | see [the table above](#ask-many-questions-in-one-request) |
 | `--head-engine` | answers a taught task's head questions from a second engine | a second copy of the weights on the card, and no image engine |
 
 ::source[The boundary's costs were measured on decisio 0.8.1, one RTX PRO 6000 at 585 W, 2026-10-06.]
 
 Every flag is in [Server flags](/docs/flags/).
 
-## 6. Measure your own
+## Measure your own
+
+<span class="fp-anchor" id="6-measure-your-own"></span>
 
 Every response carries `x-decisio-server-ms`, the server's time, and `x-decisio-stages`, where it went; when the engine reports prompt sizes, `x-decisio-prompt` gives the prompt tokens read and how many the cache served:
 

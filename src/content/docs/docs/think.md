@@ -1,6 +1,6 @@
 ---
 title: Think when unsure
-description: Have the server read an unsure question again after the model writes its reasoning, and spend the extra time only on those questions.
+description: Get more of the unsure questions right by letting the model reason before it answers, with the extra time spent on those questions only.
 ---
 
 <!-- Site-written: the Think when unsure guide. Its facts are decisio's docs/running.md ("Thinking when unsure"), docs/cli.md, docs/api.md and docs/tasks.md at the pinned release (src/config/sourced.mjs checks them); its commands are decisio's (src/lib/site-blocks.mjs). No accuracy or time figure for thinking is published yet, so the page gives none. -->
@@ -16,19 +16,25 @@ The extra time goes to those questions only: a sure question is still answered f
 It follows the procedure of [Chon](https://github.com/xoai/chon) (Apache-2.0).
 No measurement of its accuracy or its time is published yet.
 
-## 1. Turn it on
+## TL;DR
 
-Start the server with `--think`:
+Start the server with `--think`, then ask as before:
 
 ::site-block{name="think-start"}
+
+::site-block{name="think-ask"}
+
+<span class="fp-anchor" id="1-turn-it-on"></span>
+
+## How do you turn it on?
 
 - Thinking is off by default, on every base: a request is one read, as fast and as repeatable as before.
 - `--no-think` turns it off, including when a tuned model's repository turns it on in its `defaults.think`.
 - A request decides for itself with `"think": true` or `"think": false`; without the field, the server's setting applies.
 
-## 2. Ask with it
+<span class="fp-anchor" id="2-ask-with-it"></span>
 
-::site-block{name="think-ask"}
+## Which questions think?
 
 - A question thinks when its top probability is under its type's threshold: 0.75 for a choice, 0.92 for yes/no, 0.70 for a score.
 - `--think-factor` scales the three thresholds, 1 by default; a lower factor thinks on fewer questions.
@@ -36,7 +42,9 @@ Start the server with `--think`:
 - `--think-types choice,score` limits thinking to the named question types; without it, every type may think.
 - All the unsure questions of a request go to the model in one call.
 
-## 3. Read what it did
+<span class="fp-anchor" id="3-read-what-it-did"></span>
+
+## How do you read what it did?
 
 - `thinking` in the response says how many questions thought, the reasoning tokens and the time, and for each question whether it thought, or why not.
 - `usage.thinking_tokens` counts the reasoning tokens, and `usage.output_tokens` includes them.
@@ -47,7 +55,9 @@ The server's setting, and how many questions have thought, are in `/health`:
 
 ::site-block{name="think-health"}
 
-## 4. Give thought answers their own temperature
+<span class="fp-anchor" id="4-give-thought-answers-their-own-temperature"></span>
+
+## Can thought answers have their own temperature?
 
 Prefer a tuned repository's supplied thought-answer temperatures when it provides them.
 A type with no think temperature keeps the single-pass one, so a server without them answers as before.
@@ -56,7 +66,9 @@ Which questions think does not change: the unsure test still uses the single-pas
 `/health` shows the selected temperatures under `systemone.think_temperatures`; a certificate made under other ones is suspended (`think_mode_changed`).
 The [flags reference](/docs/flags/#temperatures-and-outputs) lists per-type overrides for deployments that fit their own settings.
 
-## 5. Know what stays at one read
+<span class="fp-anchor" id="5-know-what-stays-at-one-read"></span>
+
+## What stays at one read?
 
 - A question with more than 16 options.
 - A question a registered task answers: its correction and certificate were fitted on one read.
