@@ -16,7 +16,7 @@
 :root[data-theme='light'] .post {
 	--p-head: var(--d-surface-2);
 	--p-code: var(--d-surface-2);
-	--p-code-head: color-mix(in srgb, var(--d-navy) 8%, var(--d-surface-2));
+	--p-code-head: color-mix(in srgb, var(--d-navy) 4%, var(--d-surface-2));
 }
 
 /* One column, centred: the hero, the list and the article share a 780px measure in the middle of the page, so nothing sits
