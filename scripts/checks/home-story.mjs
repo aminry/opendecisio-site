@@ -45,9 +45,11 @@ try {
     await copy.click();await until(async()=>await copy.textContent()==='Copied','Copy did not complete');
     assert.equal(await page.evaluate(()=>navigator.clipboard.readText()),expected,'Copied command differs from the displayed block');
   }
-  await page.clock.install();
+  // The page clock is paused, so a scene only moves when this check runs it: two reads of one scene never straddle a step.
+  await page.clock.install();await page.clock.pauseAt(new Date(Date.now()+200));
+  const running=async(scene,message)=>{for(let i=0;i<100;i++){if(await scene.getAttribute('data-playback')==='running')return;await page.clock.runFor(50);await new Promise(r=>setTimeout(r,20));}assert.fail(message);};
   const core=page.locator('[data-home-core]');await core.scrollIntoViewIfNeeded();
-  await until(async()=>await core.getAttribute('data-playback')==='running','Hero does not start');
+  await running(core,'Hero does not start');
   const heroRecords=JSON.parse(await core.getAttribute('data-records')),seenTypes=new Set();
   for(let i=0;i<28;i++){
     await page.clock.runFor(1000);const step=Number(await core.getAttribute('data-step')),record=heroRecords[Math.floor(step/3)%heroRecords.length];
@@ -58,7 +60,7 @@ try {
   }
   assert.deepEqual(seenTypes,new Set(['choice','yes/no','score']),'Hero did not show all question types automatically');
   const taught=page.locator('[data-home-cert]');await taught.scrollIntoViewIfNeeded();
-  await until(async()=>await taught.getAttribute('data-playback')==='running','Teaching does not start');
+  await running(taught,'Teaching does not start');
   for(let i=0;await taught.getAttribute('data-phase')!=='0';i++){assert.ok(i<17);await page.clock.runFor(1000);}
   assert.notEqual(await taught.locator('.hp-label-packet').evaluate(el=>getComputedStyle(el).animationName),'none','Labels do not flow into the task head');
   assert.notEqual(await taught.locator('.hp-head-weights i').first().evaluate(el=>getComputedStyle(el).animationName),'none','Task head does not visibly adapt');
@@ -66,7 +68,7 @@ try {
   assert.equal(await taught.locator('[data-cert-badge]').textContent(),'Checking…');
   assert.equal(await taught.locator('[data-cert-route].dv-selected').count(),0,'Certification check is presented as an app action');
   for(const scene of await scenes.all()){
-    await scene.scrollIntoViewIfNeeded();await until(async()=>await scene.getAttribute('data-playback')==='running','Scene does not start');
+    await scene.scrollIntoViewIfNeeded();await running(scene,'Scene does not start');
     const before=await scene.getAttribute('data-step');await page.clock.runFor(19000);assert.notEqual(await scene.getAttribute('data-step'),before);
     await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));});
     const step=await scene.getAttribute('data-step');await page.clock.runFor(10000);assert.equal(await scene.getAttribute('data-step'),step);assert.equal(await scene.getAttribute('data-playback'),'paused');
@@ -79,7 +81,7 @@ try {
   for(const width of [390,360,320]){
     await page.setViewportSize({width,height:844});
     for(const scene of await scenes.all()){
-      await scene.scrollIntoViewIfNeeded();await until(async()=>await scene.getAttribute('data-playback')==='running','Phone scene does not start');
+      await scene.scrollIntoViewIfNeeded();await running(scene,'Phone scene does not start');
       const heights=[];
       for(let i=0;i<52;i++){await page.clock.runFor(1000);heights.push(await scene.evaluate(el=>el.clientHeight));}
       assert.ok(await scene.locator('.dv-route>strong').evaluateAll(nodes=>nodes.every(el=>el.scrollWidth<=el.clientWidth+2)),`Route label spills into its card padding at ${width}px`);
