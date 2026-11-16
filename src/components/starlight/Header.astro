@@ -57,10 +57,36 @@ const current = currentHref(path);
 		.site-nav a {
 			color: var(--sl-color-gray-3);
 			text-decoration: none;
+			white-space: nowrap;
 		}
 		.site-nav a:hover,
 		.site-nav a[aria-current='page'] {
 			color: var(--sl-color-white);
+		}
+		/* Between a phone menu and a wide window the seven links, the search and the theme choice cannot all keep their
+		   desktop size: the title stops reserving the sidebar's width, the search shows only its icon and the links sit
+		   closer, so nothing wraps or runs off the edge. */
+		@media (min-width: 50rem) and (max-width: 72rem) {
+			.header {
+				grid-template-columns: auto 1fr auto !important;
+			}
+			.right-group {
+				gap: 0.75rem;
+			}
+			.site-nav {
+				gap: 0.8rem;
+				font-size: 0.8125rem;
+			}
+			.header :global(site-search button > span),
+			.header :global(site-search button > kbd) {
+				display: none !important;
+			}
+			.header :global(site-search button) {
+				min-width: 0 !important;
+				width: 2.5rem !important;
+				justify-content: center !important;
+				padding-inline: 0 !important;
+			}
 		}
 		@media (min-width: 50rem) {
 			:global(:root[data-has-sidebar]) {
