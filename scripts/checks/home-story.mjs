@@ -19,8 +19,8 @@ try {
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+'/');await page.waitForLoadState('networkidle');
   assert.match(await page.locator('h1').textContent(),/decision model for your application/i);
-  assert.equal(await page.locator('[data-home-core],[data-home-cert],[data-home-fast]').count(),3);
-  const scenes=page.locator('[data-home-core],[data-home-cert],[data-home-fast]');
+  assert.equal(await page.locator('[data-home-core],[data-home-cert],[data-home-fast],[data-home-pics]').count(),4);
+  const scenes=page.locator('[data-home-core],[data-home-cert],[data-home-fast],[data-home-pics]');
   assert.equal(await scenes.locator('button,input').count(),0,'Explanations depend on controls');
   assert.equal(await page.locator('[data-home-core] .dv-answer').count(),1);
   for(const type of ['choice','yes/no','score'])assert.equal(await page.locator(`[data-core-type="${type}"]`).count(),1);

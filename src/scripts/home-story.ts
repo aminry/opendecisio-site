@@ -2,7 +2,7 @@
 import {autoStream} from '../lib/fast-path-demo.mjs';
 const motion=matchMedia('(prefers-reduced-motion:reduce)');
 type Scene={el:HTMLElement;step:number;remaining:number;started:number;timer?:number;rendered?:string;durations:number[]};
-const scenes:Scene[]=[...document.querySelectorAll<HTMLElement>('[data-motion-scene]')].map(el=>({el,step:0,remaining:el.hasAttribute('data-home-cert')?5000:900,started:0,durations:el.hasAttribute('data-home-cert')?[5000,5000,6000]:[900,900,4200]}));
+const scenes:Scene[]=[...document.querySelectorAll<HTMLElement>('[data-motion-scene]')].map(el=>({el,step:0,remaining:el.hasAttribute('data-home-cert')?5000:el.hasAttribute('data-home-pics')?2200:900,started:0,durations:el.hasAttribute('data-home-cert')?[5000,5000,6000]:el.hasAttribute('data-home-pics')?[2200,2000,4600]:[900,900,4200]}));
 const text=(el:HTMLElement,key:string,value:string)=>{el.querySelector<HTMLElement>(`[data-${key}]`)!.textContent=value;};
 function render(s:Scene){
  const key=motion.matches?'static':String(s.step);if(s.rendered===key)return;s.rendered=key;
@@ -30,6 +30,8 @@ function render(s:Scene){
   el.querySelector('[data-cert-path]')!.setAttribute('d',v.eligible?'M250 0v20Q250 30 230 30H145Q125 30 125 50v6':'M250 0v20Q250 30 270 30H355Q375 30 375 50v6');
   text(el,'cert-status',phase===0?'Your labels fit a small task head. Base model weights stay fixed.':phase===1?'Check the target on separate held-back examples.':v.eligible?'Correctness certificate qualifies. Your backend can route.':'Below the recorded cutoff. Your backend requests review.');
   text(el,'cert-truth',v.answer===v.label?'this test prediction was right.':'this prediction was wrong, despite qualifying.');
+ }else if(el.hasAttribute('data-home-pics')){
+  text(el,'pics-status',phase===0?'Reading both pictures into blocks, one block of detail per token.':phase===1?'A yes/no answer about the parcel.':'A box around the mug, as fractions of the picture.');
  }else{
   // All four cases belong to the support task whose context stays fixed above the facts.
   const v=autoStream(index%4,phase);el.dataset.route=v.route;
