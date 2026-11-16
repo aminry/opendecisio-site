@@ -1,0 +1,31 @@
+---
+// The homepage's picture section: two real photographs, read one question at a time, and the answers a decision model
+// gives about them (a yes/no answer, and one box). An illustration: no model ran, and the box is the mug's outline
+// measured on the photograph (public/media/images-guide, rendered by scripts/render-images-guide.py).
+import {readFileSync} from 'node:fs';
+const credits=JSON.parse(readFileSync('public/media/images-guide/credits.json','utf8'));
+const b=credits.mugBox,pct=(n:number)=>`${(n*100).toFixed(1)}%`;
+const box=`left:${pct(b.left)};top:${pct(b.top)};width:${pct(b.right-b.left)};height:${pct(b.bottom-b.top)}`;
+const edgesA=`left ${b.left.toFixed(2)} · top ${b.top.toFixed(2)}`,edgesB=`right ${b.right.toFixed(2)} · bottom ${b.bottom.toFixed(2)}`;
+---
+<section class="hp-section hp-feature" id="pictures" aria-labelledby="hp-pics-title"><div class="wrap hp-feature-grid">
+ <div class="hp-feature-copy"><p class="hp-label">Pictures</p><h2 id="hp-pics-title">Ask about a picture.<br/>Get a decision.</h2><p>Send photos with your text. Ask a yes/no, choice or score question about them, or ask where something is and get one box back, as fractions of the picture, with a confidence.</p><p>Pictures go in the same request as text and come back as the same typed answers, with probabilities. Run it on a GPU, a Mac or Ollama.</p>
+  <ul class="hp-pics-list"><li>Yes/no, choice and score questions about one or more pictures</li><li>Box questions: find a described object and get its box</li><li>Questions can share a picture or each bring their own</li></ul>
+  <div class="hp-feature-links"><a href="/docs/images/">Ask about images</a><a href="/news/images-gpu-mac-ollama/">Read the announcement</a></div></div>
+ <figure class="decision-visual hp-pics" data-home-pics data-motion-scene data-playback="idle" data-phase="2" data-parity="0">
+  <div class="dv-top"><strong>Two questions. Two photographs.</strong><span>Illustration</span></div>
+  <div class="hp-pics-stage">
+   <div class="hp-pic" data-pic="parcel">
+    <div class="hp-pic-frame"><img src="/media/images-guide/parcel.jpg" width="1200" height="800" alt="A cardboard parcel marked FRAGILE, crushed at one corner, on a doorstep" loading="lazy" decoding="async"/><i class="hp-pic-grid" aria-hidden="true"></i><i class="hp-pic-beam" aria-hidden="true"></i></div>
+    <p class="hp-pic-q"><b>yes/no</b>Is the parcel visibly damaged?</p>
+    <p class="hp-pic-a"><span class="hp-wait">Reading…</span><strong class="hp-done">yes</strong></p>
+   </div>
+   <div class="hp-pic" data-pic="mug">
+    <div class="hp-pic-frame"><img src="/media/images-guide/mug.jpg" width="1200" height="800" alt="A turquoise mug on a wooden table" loading="lazy" decoding="async"/><i class="hp-pic-grid" aria-hidden="true"></i><i class="hp-pic-beam" aria-hidden="true"></i><i class="hp-pic-box" style={box} aria-hidden="true"></i></div>
+    <p class="hp-pic-q"><b>box</b>the turquoise mug</p>
+    <p class="hp-pic-a"><span class="hp-wait">Reading…</span><strong class="hp-done hp-done--box">{edgesA}<br/>{edgesB}</strong></p>
+   </div>
+  </div>
+  <p class="hp-status" data-pics-status>A box around the mug, as fractions of the picture.</p>
+  <figcaption class="dv-caption">Illustration, slowed for clarity: no model ran, and the box is the mug's outline measured on the photograph. Photos: <a href={credits.photos.parcel.page}>Meanwell Packaging</a> and <a href={credits.photos.mug.page}>Shixart1985</a>, <a href={credits.photos.mug.licenceUrl}>CC BY 2.0</a>, on Wikimedia Commons.</figcaption>
+ </figure></div><div class="wrap"><p class="hp-feature-note">Pictures need a server started with images on. A Box question always returns a box, so read its confidence, or ask a yes/no question beside it.</p></div></section>

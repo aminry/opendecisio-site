@@ -19,8 +19,8 @@ try {
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(base+'/');await page.waitForLoadState('networkidle');
   assert.match(await page.locator('h1').textContent(),/decision model for your application/i);
-  assert.equal(await page.locator('[data-home-core],[data-home-cert],[data-home-fast]').count(),3);
-  const scenes=page.locator('[data-home-core],[data-home-cert],[data-home-fast]');
+  assert.equal(await page.locator('[data-home-core],[data-home-cert],[data-home-fast],[data-home-pics]').count(),4);
+  const scenes=page.locator('[data-home-core],[data-home-cert],[data-home-fast],[data-home-pics]');
   assert.equal(await scenes.locator('button,input').count(),0,'Explanations depend on controls');
   assert.equal(await page.locator('[data-home-core] .dv-answer').count(),1);
   for(const type of ['choice','yes/no','score'])assert.equal(await page.locator(`[data-core-type="${type}"]`).count(),1);
@@ -36,7 +36,7 @@ try {
   assert.match(await page.locator('[data-teaching-gain]').textContent(),/77\.6%[\s\S]*84\.2%/,'Recorded teaching gain missing');
   assert.match(await page.locator('[data-cert-check]').textContent(),/separate examples/i);
   assert.match(await page.locator('[data-cert-check]').textContent(),/5%/);
-  for(const id of ['teach','certify','use-cases','fit','board','try','ask'])assert.equal(await page.locator('#'+id).count(),1);
+  for(const id of ['teach','certify','pictures','fit','board','try','ask'])assert.equal(await page.locator('#'+id).count(),1);
   assert.equal(await page.getByRole('tab',{name:'GPU',exact:true}).count(),1);
   for(const name of ['Mac (MLX)','Ollama']){await page.getByRole('tab',{name,exact:true}).click();assert.equal(await page.locator('[role=tabpanel]:visible').count(),1);}
   if(engine==='chromium'){
