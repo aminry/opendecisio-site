@@ -245,18 +245,6 @@
 			"status": "shown",
 			"why": "it needs Linux with one NVIDIA card, which this check does not have"
 		},
-		"30b412e6d6062aa2": {
-			"status": "shown",
-			"why": "it needs Linux with one NVIDIA card and about 24 GB of bf16 weights, which this check does not have"
-		},
-		"59fb3cfc1bda3c72": {
-			"status": "shown",
-			"why": "it needs Linux with an NVIDIA card that supports FP8, which this check does not have"
-		},
-		"ea3aad9e1b21a262": {
-			"status": "shown",
-			"why": "it needs a Mac with Apple silicon, which this check does not have"
-		},
 		"020e7c3291becae1": {
 			"status": "shown",
 			"why": "it needs the reader’s own complete dynamic-task.json with labelled requests; transport tests check the registration"
@@ -521,6 +509,22 @@
 			"tag": "v0.48.0",
 			"date": "2026-11-15",
 			"stdout": "{\n \"models\": [\n  {\n   \"name\": \"decisio-qwen3.6-35b-a3b-letters\",\n   \"description\": \"letters readout, served default\",\n   \"release_date\": \"2026-09-27\"\n  }\n ]\n}"
+		},
+		"d40631488c995544": {
+			"status": "shown",
+			"why": "it needs Linux with one NVIDIA card and about 24 GB of bf16 weights, which this check does not have"
+		},
+		"e0b5dff564f5bb6d": {
+			"status": "shown",
+			"why": "it needs Linux with an NVIDIA card that supports FP8, which this check does not have"
+		},
+		"829d19814543ce37": {
+			"status": "shown",
+			"why": "it needs a Mac with Apple silicon, which this check does not have"
+		},
+		"1f0bb651b902124b": {
+			"status": "shown",
+			"why": "it needs Linux with one NVIDIA card and about 24 GB of bf16 weights, which this check does not have"
 		}
 	}
 }
