@@ -8,7 +8,7 @@ description: Start the tuned Gemma 4 12B on a GPU, a Mac or Ollama, send text an
 ::covers{links="README.md#install-and-run=1-pick-your-machine README.md#quickstart=1-pick-your-machine docs/running.md=1-pick-your-machine"}
 
 Five steps: pick your machine, check the server, ask a question, read the answer and, if you want, choose another model.
-Every command here starts the tuned Gemma 4 12B with calibrated probabilities, the default.
+Every command here starts the tuned Gemma 4 12B with calibrated probabilities, the default, with images on.
 
 ::figure{name="first-question"}
 
@@ -39,6 +39,7 @@ A Mac with Apple silicon and 32 GB or more; this 8-bit build is 12.7 GB.
 
 ::site-block{name="tuned-mlx-start"}
 
+It downloads a vision add-on of about 100 MB for the pictures.
 A smaller build and the untrained models are in [On a Mac](/docs/deploy/mac/).
 
 ::tab{label="Ollama"}
@@ -47,7 +48,8 @@ Mac, Linux or Windows with Ollama 0.40.4 or later; the listing is 10.8 GB.
 
 ::site-block{name="ollama-pull-tuned"}
 
-Ollama uses its own port, 11434, and its own request in step 3.
+Ollama's listings read pictures as they are, with nothing to turn on.
+It uses its own port, 11434, and its own request in step 3.
 
 :::
 
@@ -129,10 +131,12 @@ With no flag a decisio server serves Gemma 4 31B; the commands above name the tu
 | **Tuned 12B, calibrated**, the default | Gemma 4 12B tuned for decisions | You want honest probabilities on the most machines | yes | yes | yes |
 | Tuned 12B, commit | The same weights, with yes/no answers committed | Your code acts on a yes/no answer directly | yes | yes | no |
 | Tuned 12B, commit-think | The commit settings, plus a short think on unsure choices | Hard choice questions matter more than the occasional slower answer | bf16 only | no | no |
+| Tuned 12B v2, commit | A second tuned 12B, a new model with its own weights | You want to try the newer tuned model on your own questions | bf16 only | no | no |
 | Gemma 4 12B | The untrained model | You want the model as Google published it, on a smaller machine | yes | yes | yes |
 | Gemma 4 31B | The larger untrained model | You want the most accuracy and have the memory | yes | yes | no |
 
 The tuned 12B is right more often than the untrained 12B on hard decisions with rules, exceptions and arithmetic, and about the same elsewhere ([the announcement](/news/tuned-12b/)).
+No accuracy figures are published for v2, and it does not replace the first tuned 12B, which stays the default.
 
 ### What the three tuned settings change
 
@@ -144,17 +148,18 @@ All three tuned settings use the same weights; only the settings differ.
 
 ### What to pass to `--base`
 
-On a GPU:
+On a GPU, add `--images on` to each of these:
 
 | Model | `--base` |
 | --- | --- |
 | Tuned 12B, calibrated | `tachara-ai/Decisio-12b-tuned-calibrated@baa731aa` |
 | Tuned 12B, commit | `tachara-ai/Decisio-12b-tuned-commit@245e00dc` |
 | Tuned 12B, commit-think | `tachara-ai/Decisio-12b-tuned-commit-think@e36aeb24` |
+| Tuned 12B v2, commit | `tachara-ai/Decisio-12b-tuned-v2-commit@1b63613e` |
 | Gemma 4 12B | `gemma-4-12b` |
 | Gemma 4 31B | `gemma-4-31b` |
 
-On a Mac, add `--backend mlx` and name an MLX build: `tachara-ai/Decisio-12b-tuned-mlx8-calibrated` or `tachara-ai/Decisio-12b-tuned-mlx8-commit` for the tuned 12B, and the untrained models as in [On a Mac](/docs/deploy/mac/).
+On a Mac, install `decisio[mlx-images]`, add `--backend mlx --images on` and name an MLX build: `tachara-ai/Decisio-12b-tuned-mlx8-calibrated` or `tachara-ai/Decisio-12b-tuned-mlx8-commit` for the tuned 12B, and the untrained models as in [On a Mac](/docs/deploy/mac/).
 On Ollama, `aminroudaki/decisio-gemma` is the untrained 12B and `aminroudaki/decisio-gemma-tuned` the tuned one.
 [Choosing a model](/docs/bases/) has every setting, and [Serve the tuned 12B](/docs/deploy/tuned-12b/) has the tuned repositories.
 
@@ -168,6 +173,8 @@ Choose the workflow for your task and include your hardware or endpoint in the p
 - A request the server cannot read gets status 422, with a `detail` that names what is wrong.
 - The `model` field does not choose a model: a server serves the one model it was started with.
 - Tasks and certificates belong to one model and setting: teach and certify again after you switch.
+- `--images on` is the picture switch for the Gemma models; [Ask about images](/docs/images/) shows a request. On the 31B it also moves its text answers a little, so a server that answers mostly text on the 31B can leave it off.
+- Whether the tuned 12B reads pictures as well as the untrained 12B is not measured.
 - The words used here are defined in the [glossary](/docs/glossary/).
 
 ## What next

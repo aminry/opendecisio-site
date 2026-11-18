@@ -124,7 +124,7 @@ export const plan = [
 	},
 		// The three machines' start commands and the Ollama request: the tuned 12B, the default (src/lib/site-blocks.mjs).
 	{ page: '/docs/', n: 2, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/deploy/tuned-12b/', 1] },
-	{ page: '/docs/', n: 3, mode: 'same-as', expect: 'pip install "decisio[mlx]', of: ['/docs/deploy/tuned-12b/', 3] },
+	{ page: '/docs/', n: 3, mode: 'same-as', expect: 'pip install "decisio[mlx-images]', of: ['/docs/deploy/tuned-12b/', 3] },
 	{ page: '/docs/', n: 4, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma-tuned', models: ['aminroudaki/decisio-gemma-tuned'], needs: '0.40.4', assert: pulledOne },
 	{ page: '/docs/', n: 7, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma-tuned'], needs: '0.40.4', assert: ticketAnswers },
 	{ page: '/docs/', n: 8, mode: 'example', expect: '{\n  "type": "choice",' },
@@ -282,7 +282,8 @@ export const plan = [
 	// Serve the tuned 12B: decisio's command on a card, which this check does not have.
 	{ page: '/docs/deploy/tuned-12b/', n: 1, mode: 'shown', expect: 'python3.12 -m venv .venv', why: 'it needs Linux with one NVIDIA card and about 24 GB of bf16 weights, which this check does not have' },
 	{ page: '/docs/deploy/tuned-12b/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with an NVIDIA card that supports FP8, which this check does not have' },
-	{ page: '/docs/deploy/tuned-12b/', n: 3, mode: 'shown', expect: 'pip install "decisio[mlx]', why: 'it needs a Mac with Apple silicon, which this check does not have' },
+	{ page: '/docs/deploy/tuned-12b/', n: 3, mode: 'shown', expect: 'pip install "decisio[mlx-images]', why: 'it needs a Mac with Apple silicon, which this check does not have' },
+	{ page: '/docs/deploy/tuned-12b/', n: 4, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card and about 24 GB of bf16 weights, which this check does not have' },
 	// Teach a task whose options change: the registration as decisio's docs give it.
 	{ page: '/docs/tasks/dynamic/', n: 1, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own complete dynamic-task.json with labelled requests; transport tests check the registration' },
 	// Answer short tasks faster: the registration as decisio's docs give it.
@@ -480,7 +481,7 @@ export const plan = [
 
 	// The home page's Get started: each tab's block is the Quickstart's own, and the request and its answer are Get started's.
 	{ page: '/', n: 1, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/', 2] },
-	{ page: '/', n: 2, mode: 'same-as', expect: 'pip install "decisio[mlx]', of: ['/docs/', 3] },
+	{ page: '/', n: 2, mode: 'same-as', expect: 'pip install "decisio[mlx-images]', of: ['/docs/', 3] },
 	{ page: '/', n: 3, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma-tuned', of: ['/docs/', 4] },
 	{ page: '/', n: 4, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/', 7] },
 	{ page: '/', n: 5, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },

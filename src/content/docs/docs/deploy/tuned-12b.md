@@ -1,6 +1,6 @@
 ---
 title: Serve the tuned 12B
-description: Run the tuned Gemma 4 12B from its Hugging Face repository with one command, on a GPU, in FP8 or on a Mac, with honest probabilities or with committed yes/no answers.
+description: Run the tuned Gemma 4 12B from its Hugging Face repository with one command, on a GPU, in FP8 or on a Mac, with honest probabilities or with committed yes/no answers, and with images on.
 ---
 
 <!-- Site-written: the Serve the tuned 12B guide. The repositories, revisions, served names and settings are the published repositories' and decisio's docs/running.md ("Flavors") at the pinned release; the accuracy figures are the announcement's held-out table. -->
@@ -9,9 +9,12 @@ Run the tuned 12B when you want the smaller model with settings for rule-based d
 It is right more often than the untrained 12B on hard decisions with rules, exceptions and arithmetic, and about the same elsewhere ([the announcement](/news/tuned-12b/)).
 
 Each repository holds its weights and settings, so one flag serves it.
-On a GPU with room for about 24 GB of bf16 weights, this starts the calibrated one:
+On a GPU with room for about 24 GB of bf16 weights, this starts the calibrated one, with images on so you can send pictures with your text:
 
 ::site-block{name="tuned-start"}
+
+`--images on` loads the picture path; leave it off for a text-only server.
+[Ask about images](/docs/images/) shows the request.
 
 <span class="fp-anchor" id="1-pick-the-repository"></span>
 
@@ -24,6 +27,7 @@ All three repositories hold the same weights; only their settings differ.
 - **`tachara-ai/Decisio-12b-tuned-commit-think`**, adds thinking on choice questions to the commit settings: a choice question whose likeliest option is under 0.3712 is read again after up to 256 tokens of reasoning, and a text longer than 45,000 tokens is cut to its start and answered without thinking.
 
 What thinking adds, and what it costs, is in [What was measured on what](/docs/measured/#what-thinking-adds-to-the-tuned-12b).
+A second tuned 12B, [v2](#the-tuned-12b-v2), has its own weights.
 
 <span class="fp-anchor" id="2-start-it"></span>
 
@@ -59,11 +63,24 @@ decisio serves the tuned 12B on a Mac with Apple silicon from its MLX conversion
 - **Both fit a 32 GB Mac;** [the measurements](/docs/measured/#the-tuned-12b-on-a-mac) have their accuracy and memory.
 - **Pin a revision** with `@`, as on a GPU: the full hash is on each repository's page.
 
+<span class="fp-anchor" id="the-tuned-12b-v2"></span>
+
+## The tuned 12B v2
+
+`tachara-ai/Decisio-12b-tuned-v2-commit` is a second tuned Gemma 4 12B, a new model with its own weights and temperatures, with the commit settings.
+It is not an update of the repositories above, which remain decisio's default tuned 12B.
+Its card gives no accuracy figures, and none are measured here, so compare it with the first on your own questions.
+
+::site-block{name="tuned-v2-start"}
+
+- **It is a bf16 GPU repository only:** there is no FP8, Mac or Ollama version yet.
+- **It needs the decisio release the install above pins,** and the first start downloads its weights.
+
 <span class="fp-anchor" id="6-check-what-it-serves"></span>
 
 ## Check what it serves
 
-`GET /v1/models` and `/health` report the served name, such as `Decisio-12b-tuned-calibrated`, `Decisio-12b-tuned-commit-think` or `Decisio-12b-tuned-fp8-commit`.
+`GET /v1/models` and `/health` report the served name, such as `Decisio-12b-tuned-calibrated`, `Decisio-12b-tuned-commit-think`, `Decisio-12b-tuned-fp8-commit` or `Decisio-12b-tuned-v2-commit`.
 
 <span class="fp-anchor" id="7-teach-and-certify-on-it"></span>
 
@@ -76,6 +93,7 @@ Tasks and certificates are per model and per flavor: register and certify your t
 
 ## Good to know
 
+- **Whether the tuned 12B reads pictures as well as the untrained 12B is not measured.** `--images on` serves them; the picture figures on [Ask about images](/docs/images/) are for the untrained models.
 - **On Ollama it is its own listing**, `aminroudaki/decisio-gemma-tuned`, which answers questions but needs a decisio server for tasks and certificates ([the Mac and Ollama guide](/docs/deploy/mac/#on-a-laptop-with-ollama)).
 - **Its accuracy was measured in bf16** against the untrained 12B on held-out items; the figures and their limits are in [the announcement](/news/tuned-12b/).
 
