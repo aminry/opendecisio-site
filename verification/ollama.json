@@ -1,20 +1,36 @@
 {
 	"ollama": "0.40.16",
-	"date": "2026-11-15",
+	"date": "2026-11-18",
 	"runner": "darwin-arm64",
 	"listings": {
-		"aminroudaki/decisio-gemma": [
-			"sha256:2059c6a45dcaf2d44463b3cb8a57af5fe2827bd178b00834e1f81cd5d296006b",
+		"aminroudaki/decisio-gemma-tuned": [
+			"sha256:d2f8e1916abff916c5e6f53f2fed7509fe6afaa39f0ffc69a9fccab556df7123",
 			"sha256:563192209f002b0a13af16a4992fdb9dd61187a36919eaf65f408bb47af3d272",
 			"sha256:fe4c0ec48705e97241d70fde4caeb39053f9bf055bfed88828e7188e573fdd6e"
 		],
-		"aminroudaki/decisio-gemma-tuned": [
-			"sha256:d2f8e1916abff916c5e6f53f2fed7509fe6afaa39f0ffc69a9fccab556df7123",
+		"aminroudaki/decisio-gemma": [
+			"sha256:2059c6a45dcaf2d44463b3cb8a57af5fe2827bd178b00834e1f81cd5d296006b",
 			"sha256:563192209f002b0a13af16a4992fdb9dd61187a36919eaf65f408bb47af3d272",
 			"sha256:fe4c0ec48705e97241d70fde4caeb39053f9bf055bfed88828e7188e573fdd6e"
 		]
 	},
 	"blocks": {
+		"a4c5782f1af8398b": {
+			"status": "ollama",
+			"ollama": "0.40.16",
+			"models": [
+				"aminroudaki/decisio-gemma-tuned"
+			],
+			"date": "2026-11-18"
+		},
+		"8602a6f962e84714": {
+			"status": "ollama",
+			"ollama": "0.40.16",
+			"models": [
+				"aminroudaki/decisio-gemma-tuned"
+			],
+			"date": "2026-11-18"
+		},
 		"8178bc8d822462cb": {
 			"status": "ollama",
 			"ollama": "0.40.16",
@@ -22,7 +38,7 @@
 				"aminroudaki/decisio-gemma",
 				"aminroudaki/decisio-gemma-tuned"
 			],
-			"date": "2026-11-15"
+			"date": "2026-11-18"
 		},
 		"0929ca22eb2889dd": {
 			"status": "ollama",
@@ -30,7 +46,7 @@
 			"models": [
 				"aminroudaki/decisio-gemma"
 			],
-			"date": "2026-11-15"
+			"date": "2026-11-18"
 		}
 	}
 }

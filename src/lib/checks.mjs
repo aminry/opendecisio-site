@@ -90,7 +90,7 @@ export function checkHtml(entry, { moved = false } = {}) {
 		case 'output':
 			return line(`Recorded output${entry.record ? `, ${record(entry.record)}` : ''}.`);
 		case 'ollama':
-			return line("The answers are Ollama's, not the default model's on a decisio server.");
+			return line("Ollama runs its own listing of the model, so its answers are not a decisio server's.");
 		case 'example':
 			return line('A shape to fill in, not a command to run.');
 		default:

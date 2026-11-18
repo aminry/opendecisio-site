@@ -31,10 +31,11 @@ import { pin } from '../src/lib/upstream.mjs';
 const json = (stdout) => JSON.parse(stdout);
 
 // A pull reports its end on stderr, one "success" per model.
-function pulled(_stdout, stderr) {
+function pulled(_stdout, stderr, expected = 2) {
 	const n = (stderr.match(/\bsuccess\b/g) ?? []).length;
-	if (n !== 2) throw new Error(`the pulls ended in ${n} "success", not 2`);
+	if (n !== expected) throw new Error(`the pulls ended in ${n} "success", not ${expected}`);
 }
+const pulledOne = (stdout, stderr) => pulled(stdout, stderr, 1);
 
 // The README's support-ticket request answers all three of its questions.
 function ticketAnswers(stdout) {
@@ -106,12 +107,12 @@ export const plan = [
 	{ page: '/docs/build-request/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },
 	// Get started, on the stand-in, the path every machine can take: the small choice request (src/lib/site-blocks.mjs).
 	{
-		page: '/docs/', n: 2, mode: 'run-then-server', expect: `git clone --branch ${pin.tag} https://github.com/${pin.repository}`,
+		page: '/docs/', n: 5, mode: 'run-then-server', expect: `git clone --branch ${pin.tag} https://github.com/${pin.repository}`,
 		skip: [`git clone --branch ${pin.tag} https://github.com/${pin.repository}`, 'cd decisio'],
 		note: 'the clone is the pinned release, as the check has it; the install and the server start',
 	},
 	{
-		page: '/docs/', n: 3, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health', show: fields('ok', 'base', 'max_model_len', 'max_model_len_source', 'max_model_len_ceiling'), trimmed: true,
+		page: '/docs/', n: 6, mode: 'run', expect: 'curl -s http://127.0.0.1:8000/health', show: fields('ok', 'base', 'max_model_len', 'max_model_len_source', 'max_model_len_ceiling'), trimmed: true,
 		assert(stdout) {
 			if (json(stdout).ok !== true) throw new Error('/health did not answer ok');
 		},
@@ -121,9 +122,14 @@ export const plan = [
 		note: "the answers are the stand-in's, not the default model's",
 		assert: (stdout) => questionAnswer(stdout, 'category', 'choice', ['billing', 'access', 'bug']),
 	},
-	{ page: '/docs/', n: 4, mode: 'example', expect: '{\n  "type": "choice",' },
+		// The three machines' start commands and the Ollama request: the tuned 12B, the default (src/lib/site-blocks.mjs).
+	{ page: '/docs/', n: 2, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/deploy/tuned-12b/', 1] },
+	{ page: '/docs/', n: 3, mode: 'same-as', expect: 'pip install "decisio[mlx-images]', of: ['/docs/deploy/tuned-12b/', 3] },
+	{ page: '/docs/', n: 4, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma-tuned', models: ['aminroudaki/decisio-gemma-tuned'], needs: '0.40.4', assert: pulledOne },
+	{ page: '/docs/', n: 7, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma-tuned'], needs: '0.40.4', assert: ticketAnswers },
+	{ page: '/docs/', n: 8, mode: 'example', expect: '{\n  "type": "choice",' },
 	{ page: '/docs/concepts/choice/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },
-	{ page: '/docs/concepts/choice/', n: 2, mode: 'same-as', expect: '{\n  "type": "choice",', of: ['/docs/', 4] },
+	{ page: '/docs/concepts/choice/', n: 2, mode: 'same-as', expect: '{\n  "type": "choice",', of: ['/docs/', 8] },
 	{ page: '/docs/concepts/noul/', n: 1, mode: 'run', expect: 'curl --fail-with-body', assert: (stdout) => questionAnswer(stdout, 'refund', 'noul'), note: "the answer is the stand-in's, not a model-quality measurement" },
 	{ page: '/docs/concepts/noul/', n: 2, mode: 'example', expect: '{"type": "noul",' },
 	{ page: '/docs/concepts/score/', n: 1, mode: 'run', expect: 'curl --fail-with-body', assert: (stdout) => questionAnswer(stdout, 'impact', 'score', ['0', '1', '2', '3']), note: "the answer is the stand-in's, not a model-quality measurement" },
@@ -262,8 +268,8 @@ export const plan = [
 		},
 	},
 	// How it works, on the stand-in.
-	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 3] },
-	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 3] },
+	{ page: '/docs/evaluation-card/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 6] },
+	{ page: '/docs/limits/', n: 1, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 6] },
 	// Batch concurrent requests: the server's mode read from /health on the stand-in (serial, the default); the batched
 	// start is decisio's command on a card.
 	{
@@ -276,7 +282,8 @@ export const plan = [
 	// Serve the tuned 12B: decisio's command on a card, which this check does not have.
 	{ page: '/docs/deploy/tuned-12b/', n: 1, mode: 'shown', expect: 'python3.12 -m venv .venv', why: 'it needs Linux with one NVIDIA card and about 24 GB of bf16 weights, which this check does not have' },
 	{ page: '/docs/deploy/tuned-12b/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with an NVIDIA card that supports FP8, which this check does not have' },
-	{ page: '/docs/deploy/tuned-12b/', n: 3, mode: 'shown', expect: 'pip install "decisio[mlx]', why: 'it needs a Mac with Apple silicon, which this check does not have' },
+	{ page: '/docs/deploy/tuned-12b/', n: 3, mode: 'shown', expect: 'pip install "decisio[mlx-images]', why: 'it needs a Mac with Apple silicon, which this check does not have' },
+	{ page: '/docs/deploy/tuned-12b/', n: 4, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card and about 24 GB of bf16 weights, which this check does not have' },
 	// Teach a task whose options change: the registration as decisio's docs give it.
 	{ page: '/docs/tasks/dynamic/', n: 1, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own complete dynamic-task.json with labelled requests; transport tests check the registration' },
 	// Answer short tasks faster: the registration as decisio's docs give it.
@@ -330,8 +337,8 @@ export const plan = [
 	{ page: '/docs/deploy/adapter/', n: 4, mode: 'shown', expect: 'python -m decisio.serve.adapter_temperatures fit --reads', why: "it needs your adapter's readouts on your labelled items" },
 	{ page: '/docs/deploy/adapter/', n: 2, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/systemone', why: 'it needs a server with an adapter loaded, on one NVIDIA card' },
 	{ page: '/docs/deploy/adapter/', n: 5, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/health \\', why: 'it needs a server with an adapter loaded, on one NVIDIA card' },
-	{ page: '/docs/deploy/development/', n: 1, mode: 'same-as', expect: `git clone --branch ${pin.tag}`, of: ['/docs/', 2] },
-	{ page: '/docs/deploy/development/', n: 2, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 3] },
+	{ page: '/docs/deploy/development/', n: 1, mode: 'same-as', expect: `git clone --branch ${pin.tag}`, of: ['/docs/', 5] },
+	{ page: '/docs/deploy/development/', n: 2, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 6] },
 
 	{
 		page: '/docs/releases/', n: 1, mode: 'run', expect: 'uv run python -c "from importlib.metadata import version', show: asPrinted,
@@ -473,12 +480,12 @@ export const plan = [
 			if (typeof json(stdout).models?.[0]?.name !== 'string') throw new Error('/v1/models did not list the served name');
 		},
 	},
-	{ page: '/docs/migrating/', n: 4, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 3] },
+	{ page: '/docs/migrating/', n: 4, mode: 'same-as', expect: 'curl -s http://127.0.0.1:8000/health', of: ['/docs/', 6] },
 
-	// The home page's Get started: each tab's block is a deploy guide's own, and the request and its answer are Get started's.
-	{ page: '/', n: 1, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/deploy/cloud-gpu/', 1] },
-	{ page: '/', n: 2, mode: 'shown', expect: `git clone --branch ${pin.tag}`, why: "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model" },
-	{ page: '/', n: 3, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma', of: ['/docs/deploy/mac/', 7] },
-	{ page: '/', n: 4, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/deploy/mac/', 8] },
+	// The home page's Get started: each tab's block is the Quickstart's own, and the request and its answer are Get started's.
+	{ page: '/', n: 1, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/', 2] },
+	{ page: '/', n: 2, mode: 'same-as', expect: 'pip install "decisio[mlx-images]', of: ['/docs/', 3] },
+	{ page: '/', n: 3, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma-tuned', of: ['/docs/', 4] },
+	{ page: '/', n: 4, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/', 7] },
 	{ page: '/', n: 5, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },
 ];
