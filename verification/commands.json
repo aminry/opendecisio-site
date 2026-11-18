@@ -521,10 +521,6 @@
 			"tag": "v0.48.0",
 			"date": "2026-11-15",
 			"stdout": "{\n \"models\": [\n  {\n   \"name\": \"decisio-qwen3.6-35b-a3b-letters\",\n   \"description\": \"letters readout, served default\",\n   \"release_date\": \"2026-09-27\"\n  }\n ]\n}"
-		},
-		"c6f49288869d0065": {
-			"status": "shown",
-			"why": "it needs a Mac with Apple silicon, which this check does not have; its lines are the Mac guide's install and its start of the default model"
 		}
 	}
 }
