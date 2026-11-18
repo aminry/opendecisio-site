@@ -23,6 +23,8 @@ export const edits = [
 	{"file": "docs/api.md", "find": "`POST /v1/answer` applies no registered task, so it answers the field with 422, and an example of a registration that names a task is 422 too.", "replace": "An example of a registration that names a task is 422.", "why": "keep the supported request behavior without verification-route annotations"},
 	{"file": "docs/api.md", "find": " On `POST /v1/answer` the same facts are `timing.batch`.", "replace": "", "why": "keep the supported request behavior without verification-route annotations"},
 	{"file": "docs/api.md", "find": " On `POST /v1/answer` the same facts are `timing.waited_ms` and `timing.waited_behind_registration`.", "replace": "", "why": "keep the supported request behavior without verification-route annotations"},
+	{"file": "docs/api.md", "find": "- `POST /v1/answer` takes `header_questions` too, with the same rules (its questions' `instructions` are the lines).\n", "replace": "", "why": "keep the supported request behavior without verification-route annotations"},
+	{"file": "docs/api.md", "find": "- `POST /v1/answer` and requests with images never carry the block.", "replace": "- Requests with images never carry the block.", "why": "keep the supported request behavior without verification-route annotations"},
 	{"file": "docs/api.md", "find": " (test I7)", "replace": "", "why": "keep the supported request behavior without verification-route annotations"},
 ];
 

@@ -55,6 +55,7 @@ Start the server with `--concurrency batched`, then read the mode it runs; witho
 ## What can move?
 
 - **Answers on the 12B can be made not to move.** With `--batch-invariant on`, off by default, a request gives the same bits in any batch of up to 16 reads, in bf16 and FP8, at a cost that grows with the input.
+  decisio recommends leaving it off.
 - **Answers on the 31B, and on the 12B by default, can.** An answer no certified task covers can differ slightly when it is scored beside other requests, because the engine's arithmetic follows the shape of the batch. Keep serial where your application requires repeatable request-by-request results.
 - **What was measured.** Only the 12B in FP8 has a published batched throughput figure; none is published for the 31B or the 12B in bf16.
 

@@ -10,6 +10,7 @@ const operating = 'docs/operating.md';
 const readme = 'README.md';
 const card = 'EVAL_CARD.md';
 const upgrading = 'docs/upgrading.md';
+const calculator = 'docs/calculator.md';
 const tasksDoc = 'docs/tasks.md';
 const benchPy = 'src/decisio/bench/table_latency.py';
 const security = 'SECURITY.md';
@@ -73,6 +74,29 @@ export const sourced = [
 		['A type with no think temperature keeps the single-pass one, so a server without them answers as before.', upgrading, 'A type with no think temperature keeps its single-pass temperature, so a repository or a server that does not set them answers exactly as before.'],
 		['a certificate made under other ones is suspended (think_mode_changed)', running, 'a certificate made under others is `think_mode_changed`'],
 	]),
+	// decisio 0.50.0: exact arithmetic support
+	...fromPage('/docs/calculator/', [
+		['The block never states the final figure, a verdict, or whether a claim is right: the decision stays the model\'s.', calculator, 'The block never states the final figure, a verdict, or whether a claim is right: the decision stays the model\'s.'],
+		['It is opt-in per model: the server shows the block only to a model trained with it.', calculator, 'It is opt-in per model: the server shows the block only to a model trained with it.'],
+		['A base and any model that records nothing never see the block.', calculator, 'A base and any model that records nothing never see the block.'],
+		['--calculator auto (the default) shows the block when the model records it; --calculator off never does.', calculator, '`--calculator auto` (the default) shows the block when the model records it; `--calculator off` never does.'],
+		['One currency, one record, English (v1).', calculator, 'One currency, one record, English (v1).'],
+		['Every line with a number has to be understood.', calculator, 'Every line with a number has to be understood.'],
+		['A missing block is the safe failure; a wrong number is the one failure the calculator is built never to make.', calculator, 'A missing block is the safe failure; a wrong number is the one failure the calculator is built never to make.'],
+		['Numbers are JSON integers or decimal strings; a JSON float is refused, since it is not exact.', calculator, 'Numbers are JSON integers or decimal strings; a JSON float is refused, since it is not exact.'],
+		['usage.input_tokens counts the block.', calculator, '`usage.input_tokens` counts the block.'],
+		['a block that would push the row over the engine\'s prompt ceiling is left out', calculator, 'a block that would push the row over the engine\'s prompt ceiling is left out'],
+		['an Ollama listing does not run decisio\'s server', calculator, 'an Ollama listing does not run decisio\'s server'],
+	]),
+	// decisio 0.49.0: header_questions
+	...fromPage('/docs/layout/', [
+		['Under the header layout a separate request about an already-read state reads the whole state again, unless every request about the state declares the same list.', running, 'Under the header layout a separate request about an already-read state re-reads the whole state, unless every request about the state declares the same list.'],
+		['On the 12B on a Mac, a follow-up about a state already read took 3,470 to 3,752 ms under the header layout and 195 ms under the plain one.', running, 'Measured on the 12B on a Mac, a follow-up about a state already read took 3,470 to 3,752 ms under the header layout and 195 ms under the plain one.'],
+		['on every request about that state, whichever of them the request asks.', running, 'on every request about that state, whichever of them the request asks'],
+		['Send the same list, in the same order, every time: another list or another order is another header and a new read of the state.', running, 'Send the same list, in the same order, every time: another list or another order is another header and a new read of the state.'],
+		['Under the plain layout the field has no effect, so a client may send it to servers of either layout.', running, 'Under the plain layout the field has no effect, so a client may send it to servers of either layout.'],
+		['the header\'s gains above were measured with the header listing the questions the request asks', running, 'the header\'s gains above were measured with the header listing the questions the request asks'],
+	]),
 	...fromPage('/docs/layout/', [
 	]),
 	...fromPage('/docs/bases/', [
@@ -125,7 +149,7 @@ export const sourced = [
 		['With --concurrency batched, requests of the two layouts are never scored in one engine call.', running, 'with `--concurrency batched` the requests of the two layouts are never scored in one engine call'],
 		['refuses the layout field with a 422', running, 'a request with images has no layout (422 with the field)'],
 		['--mode packed reads the plain layout only, and refuses "layout": "header" with a 422.', running, '`--mode packed` reads the plain layout only (422 for `"header"`)'],
-		['A task is fitted one question at a time, so a request with several questions reads a longer header than the task was fitted on.', running, 'a request with several questions reads a longer header than the one the task was fitted on'],
+		['A task is fitted one question at a time, so a request with several questions reads a longer header than the task was fitted on.', running, 'reads a longer header than the one the task was fitted on'],
 		['A request with images is read on the plain layout', running, 'a request with images keeps the plain layout'],
 	]),
 	...fromPage('/docs/measured/', [
@@ -136,8 +160,9 @@ export const sourced = [
 	// Batch concurrent requests
 	...fromPage('/docs/concurrency/', [
 		['With --batch-invariant on, off by default, a request gives the same bits in any batch of up to 16 reads, in bf16 and FP8', running, 'a request read alone twice, in any batch of up to 16 reads of 450 tokens, and from the prefix cache against computed from scratch, gives the same bits on bf16. On one RTX PRO 5000 the same held on FP8'],
-		['Answers on the 12B can be made not to move.', running, 'It is off by default (opt-in) since 0.45.0'],
-		['Answers on the 31B, and on the 12B by default, can.', running, 'It is off by default (opt-in) since 0.45.0'],
+		['Answers on the 12B can be made not to move.', running, 'It is off by default since 0.45.0'],
+		['decisio recommends leaving it off.', running, 'off is the recommended setting'],
+		['Answers on the 31B, and on the 12B by default, can.', running, 'It is off by default since 0.45.0'],
 		['it scores every request waiting for the engine together, in one call, so concurrent requests share the model\'s forward passes', running, 'scores all their rows in one engine call, so concurrent requests share forward passes'],
 		['A request that arrives at an idle server is still scored at once, alone, and gets the serial answer bit for bit', running, 'a request that arrives at an idle server is scored at once, alone, by the same engine call a serial server makes'],
 		['and gets the serial answer bit for bit', running, 'and its answer is the serial answer bit for bit (200 of 200 requests on the FP8 and the bf16 12B, RTX 5090, vLLM 0.31.0'],

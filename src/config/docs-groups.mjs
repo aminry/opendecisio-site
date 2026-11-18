@@ -74,6 +74,7 @@ export const docsGroups = [
 			{ slug: 'docs/concurrency', label: 'Batch concurrent requests', shape: 'guide' },
 			{ slug: 'docs/layout', label: 'Choose the prompt layout', shape: 'guide' },
 			{ slug: 'docs/think', label: 'Think when unsure', shape: 'guide' },
+			{ slug: 'docs/calculator', label: 'Exact arithmetic', shape: 'guide' },
 			{ slug: 'docs/upgrading', label: 'Upgrade', shape: 'guide' },
 			{ slug: 'docs/troubleshooting', label: 'Troubleshoot', shape: 'guide' },
 			{ slug: 'docs/migrating', label: 'Move from System One', shape: 'guide' },

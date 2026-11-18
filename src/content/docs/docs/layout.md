@@ -5,7 +5,7 @@ description: Choose whether a request's questions come before its text, as on th
 
 <!-- Site-written: the Choose the prompt layout guide. Its facts are decisio's docs/running.md ("The header layout"), docs/upgrading.md, docs/cli.md, docs/api.md and EVAL_CARD.md at the pinned release (src/config/sourced.mjs checks them). The 31B's figures are decisio's A/B on one RTX PRO 6000 and the 12B's its pre-registered A/B on one RTX 5090, as running.md states them. No board is named or linked; the public sample is described, not named. -->
 
-::covers{links="docs/running.md#the-header-layout---layout docs/running.md#a-layout-per-request-layout=when-should-you-ask-for-plain docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r=how-do-you-read-short-requests-twice docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r-for-decision-index-runs=how-do-you-read-short-requests-twice"}
+::covers{links="docs/running.md#a-question-list-for-the-header-header_questions=how-do-you-keep-the-header-for-a-series-of-questions docs/running.md#the-header-layout---layout docs/running.md#a-layout-per-request-layout=when-should-you-ask-for-plain docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r=how-do-you-read-short-requests-twice docs/running.md#read-twice---read-twice-under-n---read-twice-max-questions-r-for-decision-index-runs=how-do-you-read-short-requests-twice"}
 
 On the Gemma models the prompt lists every question of the request, then the text, then the question being answered.
 The model reads the text knowing what will be asked, and the 31B answered more accurately that way on most of what was measured.
@@ -82,6 +82,23 @@ curl -s http://127.0.0.1:8000/v1/systemone \
 To serve plain to every request that names none, start the server with `--layout plain`:
 
 ::site-block{name="layout-start"}
+
+<span class="fp-anchor" id="a-question-list-for-the-header-header_questions"></span>
+
+## How do you keep the header for a series of questions?
+
+Under the header layout a separate request about an already-read state reads the whole state again, unless every request about the state declares the same list.
+The header lists the request's own questions, so a client that asks one question at a time sends a different header each time.
+On the 12B on a Mac, a follow-up about a state already read took 3,470 to 3,752 ms under the header layout and 195 ms under the plain one.
+
+A client that knows the questions it will ask about a state sends them all, as `"header_questions": ["<instructions>", ...]`, on every request about that state, whichever of them the request asks.
+The requests then share the header and the state, so the first one reads the state and the others read it from the cache.
+
+- **Send the same list, in the same order, every time:** another list or another order is another header and a new read of the state.
+- **Every question of the request must be in the list,** or the request is a 422.
+- **Under the plain layout the field has no effect,** so a client may send it to servers of either layout.
+- **A request that reads a state again says so** in the `x-decisio-note` response header, and `/health` counts the rereads under `systemone.header_layout`.
+- **Its accuracy is not measured yet:** the header's gains above were measured with the header listing the questions the request asks, so measure on your own traffic before relying on the gain.
 
 ## When should you keep the header?
 
