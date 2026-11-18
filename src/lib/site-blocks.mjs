@@ -329,6 +329,8 @@ export const siteBlocks = {
 	'ollama-request': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio') },
 	// The Gemma listing, the 16 GB laptop's: the home page's.
 	'ollama-request-gemma': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio-gemma') },
+	'ollama-pull-tuned': { lang: 'sh', text: 'ollama pull aminroudaki/decisio-gemma-tuned' },
+	'ollama-request-tuned': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio-gemma-tuned') },
 };
 
 /** A site-written block by name, or an error naming the unknown one. */

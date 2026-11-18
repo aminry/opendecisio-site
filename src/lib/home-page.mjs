@@ -106,14 +106,13 @@ export function useCaseCards() {
 	return ids.map((id) => ({ id, href: `/docs/use-cases/${id}/`, ...CARDS[id], proof: proof[id][0], source: proof[id][1], measured: id !== 'document-classification' }));
 }
 
-/** Homepage setup routes reuse pinned GPU/MLX/Ollama blocks, followed by the verified one-choice request. */
+/** The home page's setup routes: the tuned 12B, the default, on each machine (the docs' Quickstart's own blocks), then the verified one-choice request. */
 export function homeBlocks() {
- const ollama = /^## Ollama\n+```bash\n([\s\S]*?)\n```/m.exec(readUpstream('docs/running.md'))?.[1] ?? fail('Missing Ollama start');
  return {
   tabs: [
-   {id:'gpu',label:'GPU',note:'Linux with one NVIDIA GPU. The first start downloads the model.',blocks:[siteBlock('gpu-pip').text],href:'/docs/deploy/cloud-gpu/',guide:'GPU requirements and setup'},
-   {id:'mac',label:'Mac (MLX)',note:'Apple silicon. Choose a model that fits your memory in the MLX guide.',blocks:[`${siteBlock('mac-install').text}\n${siteBlock('mac-31b-6bit').text}`],href:'/docs/deploy/mac/',guide:'Apple silicon requirements and setup'},
-   {id:'ollama',label:'Ollama',note:'Local Ollama. Its request below uses port 11434 and names the pulled model.',blocks:[ollama,siteBlock('ollama-request-gemma').text],href:'/docs/deploy/mac/#on-a-laptop-with-ollama',guide:'Ollama setup and supported versions'},
+   {id:'gpu',label:'GPU',note:'Linux with an NVIDIA card that has room for about 24 GB of bf16 weights. The first start downloads the model.',blocks:[siteBlock('tuned-start').text],href:'/docs/#1-pick-your-machine',guide:'GPU, Docker and FP8 setup'},
+   {id:'mac',label:'Mac (MLX)',note:'A Mac with Apple silicon and 32 GB or more. This 8-bit build is 12.7 GB.',blocks:[siteBlock('tuned-mlx-start').text],href:'/docs/deploy/mac/',guide:'Apple silicon requirements and setup'},
+   {id:'ollama',label:'Ollama',note:'Mac, Linux or Windows with Ollama 0.40.4 or later. Its request below uses port 11434 and names the pulled model.',blocks:[siteBlock('ollama-pull-tuned').text,siteBlock('ollama-request-tuned').text],href:'/docs/deploy/mac/#on-a-laptop-with-ollama',guide:'Ollama setup and supported versions'},
   ],
   request:siteBlock('question-choice').text,
  };

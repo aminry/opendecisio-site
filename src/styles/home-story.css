@@ -167,3 +167,6 @@
 @keyframes hp-box-pulse {0% {box-shadow:0 0 0 2px #00000066,0 0 0 0 #fca311aa;}100% {box-shadow:0 0 0 2px #00000066,0 0 0 18px #fca31100;}}
 @media(max-width:520px){.hp-pics-stage {grid-template-columns:minmax(0,1fr);}}
 @media(prefers-reduced-motion:reduce){.hp-pics .hp-pic-grid,.hp-pics .hp-pic-beam {display:none;}}
+
+/* The model line under Get started's tabs: which model the commands start, and where the others are. */
+.home-story .hp-models {font-size:.9rem;line-height:1.55;color:var(--d-muted);max-width:70ch;margin:1.4rem 0 0;border-left:3px solid var(--d-accent-line);padding:.2rem 0 .2rem .9rem;}
