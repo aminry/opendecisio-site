@@ -305,6 +305,9 @@ export const plan = [
 	{ page: '/docs/layout/', n: 3, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
 	// Think when unsure: the server's think setting read from /health on the stand-in (thinking off, its default); the start
 	// and a thinking request need the vLLM engine, which writes the reasoning.
+	// Exact arithmetic: decisio's own block and request; no repository on this site records the format, so no model on this check or the site's can read them.
+	{ page: '/docs/calculator/', n: 1, mode: 'example', expect: 'Shipment SH-310, shipper: Teo Barrand.' },
+	{ page: '/docs/calculator/', n: 2, mode: 'shown', expect: '{\n  "state": "Shipment SH-310', why: 'it needs a model whose repository records the calculator format, which none of the repositories on this site does' },
 	{ page: '/docs/think/', n: 1, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
 	{ page: '/docs/think/', n: 2, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/systemone', why: "it needs a server that thinks; the CPU stand-in cannot write reasoning, only the vLLM engine on a card can" },
 	{

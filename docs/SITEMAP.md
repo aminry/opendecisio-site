@@ -14,6 +14,7 @@ The current release is read from `upstream.json`.
 | `/docs/api/` | HTTP API |
 | `/docs/bases/` | Choosing a model |
 | `/docs/build-request/` | Build a request |
+| `/docs/calculator/` | Exact arithmetic |
 | `/docs/concepts/choice/` | Choose an option |
 | `/docs/concepts/noul/` | Ask yes or no |
 | `/docs/concepts/probabilities/` | Use the probabilities |
