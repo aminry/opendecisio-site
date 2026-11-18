@@ -71,6 +71,7 @@ try {
     await scene.scrollIntoViewIfNeeded();await running(scene,'Scene does not start');
     const before=await scene.getAttribute('data-step');await page.clock.runFor(19000);assert.notEqual(await scene.getAttribute('data-step'),before);
     await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));});
+    await until(async()=>await scene.getAttribute('data-playback')==='paused','A hidden tab does not pause the scene');
     const step=await scene.getAttribute('data-step');await page.clock.runFor(10000);assert.equal(await scene.getAttribute('data-step'),step);assert.equal(await scene.getAttribute('data-playback'),'paused');
     await page.evaluate(()=>{delete document.hidden;document.dispatchEvent(new Event('visibilitychange'));});
     await page.emulateMedia({reducedMotion:'reduce'});await until(async()=>await scene.getAttribute('data-playback')==='static','Reduced motion ignored');
