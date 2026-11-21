@@ -15,7 +15,18 @@ uv run python -c "from importlib.metadata import version; print(version('decisio
 
 ::figure{name="release-timeline"}
 
-## The latest releases: 0.51.1 and 0.51.0
+## The latest release: 0.52.0
+
+Released on 2026-11-21.
+A taught task's calibration now works on top of the temperature the server serves its question at, so its probabilities are as calibrated as an untaught question's.
+
+**0.52.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.52.0)
+
+- **Fixed:** a task that keeps calibration is fitted and served on top of the server's temperature; before, it was fitted at temperature 1 and its probabilities were overconfident.
+- **Register those tasks again:** a calibration fitted at another temperature is not applied, so until a task is registered again with the same body its questions are answered as without the task, and not certified. `/health` lists them under `calibration_refit` ([Upgrade](/docs/upgrading/)).
+- Tasks whose intent head is kept, and tasks whose calibration was declined, are unchanged.
+
+## The earlier release summary: 0.51.1 and 0.51.0
 
 Released on 2026-11-20 and 2026-11-21.
 They add a date and time block and a second reader to the calculator, which a tuned repository can turn on by itself, as Decisio v3 does.
@@ -31,28 +42,6 @@ They add a date and time block and a second reader to the calculator, which a tu
 - **The cascade reader:** a role tagger behind precision gates shows a block for wordings and layouts the rule reader has no rule for ([how it reads](/docs/calculator/#how-does-the-cascade-reader-read-more)).
 - **A tuned repository can turn the cascade reader on** with its tagger and thresholds, and a tagger that cannot be loaded no longer stops the start.
 - **Two small bases,** `qwen3.5-4b` and `gemma-4-e4b`, on the vLLM server ([Choosing a model](/docs/bases/#the-small-bases)).
-
-## The earlier release summary: 0.50.2 to 0.49.0
-
-Released on 2026-11-17 and 2026-11-18.
-They add a declared question list for the header layout and exact arithmetic support, both opt-in.
-
-**0.50.2**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.50.2)
-
-- **Fixed:** the calculator shows no block for counts with a multiplier or a number word, or for a unit factor across kinds of unit.
-
-**0.50.1**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.50.1)
-
-- **Fixed:** a defaults key this decisio does not know in a repository is ignored with a warning, not refused.
-
-**0.50.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.50.0)
-
-- **Exact arithmetic support:** a model trained with it reads exact line values for a state's arithmetic, in a fixed block after the state. It is opt-in per model ([Exact arithmetic](/docs/calculator/)).
-
-**0.49.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.49.0)
-
-- **`header_questions`:** a client declares the question list the header carries, so separate requests about one state share the header and the state is read once ([Choose the prompt layout](/docs/layout/#how-do-you-keep-the-header-for-a-series-of-questions)).
-- **A note when the header layout reads a state again:** the response header `x-decisio-note` says so, and `/health` counts it.
 
 The upgrade notes below say who is affected, and what to do.
 
