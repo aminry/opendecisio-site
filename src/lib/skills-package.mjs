@@ -2,13 +2,17 @@ import {pin} from './upstream.mjs';
 import {readFileSync} from 'node:fs';
 
 export const skillsPackage = JSON.parse(readFileSync('src/data/skills.json','utf8'));
+const atLeast=(a,b)=>{const[x,y]=[a,b].map(v=>v.split('.').map(Number));for(let i=0;i<3;i++)if(x[i]!==y[i])return x[i]>y[i];return true;};
 export function packageProblems(meta, release) {
     const problems=[];
     if(meta.repository!=='aminry/decisio-skills')problems.push('unknown skills repository');
     if(!/^\d+\.\d+\.\d+$/.test(meta.version??''))problems.push('invalid package version');
     if(meta.archive!==`decisio-skills-${meta.version}.zip`)problems.push('archive does not match its version');
     if(!/^[a-f0-9]{64}$/.test(meta.sha256??''))problems.push('invalid archive digest');
-    if(meta.decisioVersion!==release.replace(/^v/,''))problems.push('skills references do not match the documented decisio release');
+    // The skills work with the latest decisio from their floor on (minDecisio): a package is accepted while its floor is at
+    // or below the documented release, so a decisio release needs no new package.
+    if(!/^\d+\.\d+\.\d+$/.test(meta.minDecisio??''))problems.push('invalid skills floor (minDecisio)');
+    else if(!atLeast(release.replace(/^v/,''),meta.minDecisio))problems.push('skills need a later decisio than the documented release');
     if(JSON.stringify(meta.skills)!==JSON.stringify(['decisio-setup','decisio-request','decisio-integrate']))problems.push('unexpected workflow inventory');
     return problems;
 }
@@ -45,5 +49,5 @@ export function evidenceProblems(record, blocks, meta=skillsPackage) {
     return problems;
 }
 export function skillsReleaseNote() {
-    return `<p class="src-note">Skills package <a href="${skillsReleaseUrl}">${skillsPackage.version}</a>, for decisio ${skillsPackage.decisioVersion}. <a href="${skillsArchiveUrl}">Download the ZIP</a>.</p>`;
+    return `<p class="src-note">Skills package <a href="${skillsReleaseUrl}">${skillsPackage.version}</a>, for decisio ${skillsPackage.minDecisio} or later. <a href="${skillsArchiveUrl}">Download the ZIP</a>.</p>`;
 }
