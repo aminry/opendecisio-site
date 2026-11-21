@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { get } from 'node:https';
 import { chromium, firefox, webkit } from 'playwright';
+import { assertNotLoaded, watchFilm } from './reader-intent.mjs';
 const port = Number(process.env.FAST_PATH_PORT ?? 4397);
 const base = `https://127.0.0.1:${port}`;
 const server = spawn('node', ['scripts/serve.mjs', String(port)], { stdio: ['ignore', 'ignore', 'pipe'] });
@@ -18,7 +19,7 @@ try {
   await context.route(/https:\/\/(static\.)?cloudflareinsights\.com\//, r => r.fulfill({ status: 200, contentType: 'application/javascript', body: '' }));
   await context.route('**/cdn-cgi/rum*', r => r.fulfill({ status: 204 }));
   const page = await context.newPage(); const errors = []; page.on('pageerror', e => errors.push(e.message));
-  let videoRequests=0;page.on('request',request=>{if(request.url().includes('/media/decision-fast-path.mp4'))videoRequests++;});
+  const videoRequests=watchFilm(page,'/media/decision-fast-path.mp4');
   await page.goto(`${base}/docs/tasks/fast-table/`); await page.waitForLoadState('networkidle');
   assert.equal(await page.locator('[data-context-consumer=cpu]').count(),1,'Facts-only CPU path is missing');
   assert.equal(await page.locator('[data-context-consumer=model]').count(),1,'Combined context and facts path is missing');
@@ -48,7 +49,7 @@ try {
   assert.equal(await video.count(),1);
   assert.equal(await video.getAttribute('preload'),'none');
   assert.equal(await video.getAttribute('autoplay'),null);
-  assert.equal(videoRequests,0,'Film downloaded before reader intent');
+  await assertNotLoaded({engine,requests:videoRequests,video,name:'The film',check:'fast-path-interactions'});
   await video.scrollIntoViewIfNeeded();
   await video.evaluate(v=>{v.muted=true;return v.play();});
   await until(()=>video.evaluate(v=>!v.paused&&v.currentTime>0),'Video did not actually decode and play');
