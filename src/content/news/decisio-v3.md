@@ -13,12 +13,12 @@ It runs on one NVIDIA GPU, on a Mac with Apple silicon, or through Ollama.
 
 On 5,000 held-out questions of its training distribution, never trained on, each model at its own temperatures:
 
-| Questions | Gemma 4 12B, untrained | The previous tuned 12B | Decisio v3 |
+| Questions | Decisio v3 | Gemma 4 12B, untrained | The previous tuned 12B |
 | --- | ---: | ---: | ---: |
-| All | 67.7% | 71.6% | 78.8% |
-| Choice | 68.9% | 71.7% | 79.8% |
-| Yes/no | 83.0% | 84.7% | 89.8% |
-| Score | 45.1% | 55.2% | 62.2% |
+| All | 78.8% | 67.7% | 71.6% |
+| Choice | 79.8% | 68.9% | 71.7% |
+| Yes/no | 89.8% | 83.0% | 84.7% |
+| Score | 62.2% | 45.1% | 55.2% |
 
 It gains on every question type, most on scores.
 Its probabilities are calibrated: on average they are off by 2.3 points from how often it is right, and the untrained model's by 9.0.
