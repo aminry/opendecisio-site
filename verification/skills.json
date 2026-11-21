@@ -1,50 +1,50 @@
 {
-	"version": "0.1.3",
-	"decisioVersion": "0.50.2",
-	"sha256": "8bef49717012499cd8e061c11d30776d046acc75e4650ba14db6ac0dc2e1d161",
-	"date": "2026-11-18",
+	"version": "0.1.4",
+	"decisioVersion": "0.51.1",
+	"sha256": "6044f8a0caad7d77fb4c681985a0abbe0cb311dc284eb70c98fdcebde992be02",
+	"date": "2026-11-21",
 	"blocks": {
-		"79c7b161bba42c86": {
+		"c1f7bf7ce48ce210": {
 			"status": "skills",
-			"version": "0.1.3",
-			"sha256": "8bef49717012499cd8e061c11d30776d046acc75e4650ba14db6ac0dc2e1d161",
-			"date": "2026-11-18"
+			"version": "0.1.4",
+			"sha256": "6044f8a0caad7d77fb4c681985a0abbe0cb311dc284eb70c98fdcebde992be02",
+			"date": "2026-11-21"
 		},
-		"277e513c4e947f1a": {
+		"b54c3050e037d691": {
 			"status": "skills",
-			"version": "0.1.3",
-			"sha256": "8bef49717012499cd8e061c11d30776d046acc75e4650ba14db6ac0dc2e1d161",
-			"date": "2026-11-18"
+			"version": "0.1.4",
+			"sha256": "6044f8a0caad7d77fb4c681985a0abbe0cb311dc284eb70c98fdcebde992be02",
+			"date": "2026-11-21"
 		},
-		"62ba6dd164d76429": {
+		"c3455ca983a8429f": {
 			"status": "skills",
-			"version": "0.1.3",
-			"sha256": "8bef49717012499cd8e061c11d30776d046acc75e4650ba14db6ac0dc2e1d161",
-			"date": "2026-11-18"
+			"version": "0.1.4",
+			"sha256": "6044f8a0caad7d77fb4c681985a0abbe0cb311dc284eb70c98fdcebde992be02",
+			"date": "2026-11-21"
 		},
-		"f96de29300832a92": {
+		"244d7a8a385dc824": {
 			"status": "skills",
-			"version": "0.1.3",
-			"sha256": "8bef49717012499cd8e061c11d30776d046acc75e4650ba14db6ac0dc2e1d161",
-			"date": "2026-11-18"
+			"version": "0.1.4",
+			"sha256": "6044f8a0caad7d77fb4c681985a0abbe0cb311dc284eb70c98fdcebde992be02",
+			"date": "2026-11-21"
 		},
-		"70422d6b4acdb953": {
+		"0d92cfbfc8225236": {
 			"status": "skills",
-			"version": "0.1.3",
-			"sha256": "8bef49717012499cd8e061c11d30776d046acc75e4650ba14db6ac0dc2e1d161",
-			"date": "2026-11-18"
+			"version": "0.1.4",
+			"sha256": "6044f8a0caad7d77fb4c681985a0abbe0cb311dc284eb70c98fdcebde992be02",
+			"date": "2026-11-21"
 		},
-		"ed30c8ebed670258": {
+		"289a336b3d2e9399": {
 			"status": "skills",
-			"version": "0.1.3",
-			"sha256": "8bef49717012499cd8e061c11d30776d046acc75e4650ba14db6ac0dc2e1d161",
-			"date": "2026-11-18"
+			"version": "0.1.4",
+			"sha256": "6044f8a0caad7d77fb4c681985a0abbe0cb311dc284eb70c98fdcebde992be02",
+			"date": "2026-11-21"
 		},
-		"891f62aaeb6fb6b0": {
+		"b7ccbd22bbee1459": {
 			"status": "skills",
-			"version": "0.1.3",
-			"sha256": "8bef49717012499cd8e061c11d30776d046acc75e4650ba14db6ac0dc2e1d161",
-			"date": "2026-11-18"
+			"version": "0.1.4",
+			"sha256": "6044f8a0caad7d77fb4c681985a0abbe0cb311dc284eb70c98fdcebde992be02",
+			"date": "2026-11-21"
 		}
 	}
 }
