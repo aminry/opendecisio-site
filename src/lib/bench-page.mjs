@@ -63,7 +63,7 @@ export function runOf(base) {
 
 /** The calibration error (ECE) of each base on JevBench's standard and hard tiers, as the README states it. */
 export function calibration() {
-	const m = /^Calibration on JevBench, as ECE on the standard and hard tiers: ([\d.]+) and ([\d.]+) on the Qwen base, ([\d.]+) and ([\d.]+) on the Gemma 4 12B base, ([\d.]+) and ([\d.]+) on the Gemma 4 31B base\.$/m.exec(readUpstream('README.md'));
+	const m = /^Calibration on JevBench, as ECE on the standard and hard tiers: ([\d.]+) and ([\d.]+) on the Qwen base, ([\d.]+) and ([\d.]+) on the Gemma 4 12B base, ([\d.]+) and ([\d.]+) on the Gemma 4 31B base\.$/m.exec(readUpstream('docs/overview.md'));
 	if (!m) fail('the README no longer states each base\'s ECE on the standard and hard tiers');
 	const v = m.slice(1).map(Number);
 	return [
@@ -97,7 +97,7 @@ export function baseLines() {
 
 /** The README's notes under its benchmark table that a reader of the table needs: n/m, the intent heads, and the latency's conditions. */
 export function tableNotes() {
-	const text = readUpstream('README.md');
+	const text = readUpstream('docs/overview.md');
 	const lines = ['n/m is not measured.', 'Intent heads use labelled examples, so they are not comparable with zero-shot systems.'];
 	for (const l of lines) if (!text.includes(`\n${l}\n`)) fail(`the README no longer says "${l}" under its benchmark table`);
 	const latency = /^Latency is server time on decisio 0\.8\.1's served defaults, at a 585 W power limit \(default 600 W\), so a card at 600 W may read new states faster/m.exec(text);

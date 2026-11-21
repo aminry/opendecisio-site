@@ -143,7 +143,7 @@ export function floor(id) {
 	const tasks = readUpstream('docs/tasks.md');
 	const held = Number((/^\| 0\.05 \| (\d+) \| \d+ \|$/m.exec(tasks) ?? fail("docs/tasks.md's table no longer gives the fewest held-back examples at 0.05"))[1]);
 	if (!/\(half by default\)/.test(tasks)) fail('docs/tasks.md no longer says the server holds back half the examples');
-	const per = Number((/\((\d+) per option for the intent head, and \d+ held out to certify at the defaults/.exec(readUpstream('README.md')) ?? fail('the README no longer says how many examples per option the intent head needs'))[1]);
+	const per = Number((/\((\d+) per option for the intent head, and \d+ held out to certify at the defaults/.exec(readUpstream('docs/overview.md')) ?? fail('the README no longer says how many examples per option the intent head needs'))[1]);
 	const r = recipe(id);
 	const options = r.type === 'noul' ? 0 : Object.keys(r.criteria).length;
 	const total = 2 * Math.max(held, per * options);

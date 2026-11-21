@@ -18,7 +18,7 @@ const md = (t) => esc(t).replace(/`([^`]+)`/g, '<code>$1</code>');
 // --- How it works -------------------------------------------------------------------------------------------------------
 
 function onePass() {
-	const readme = text('README.md');
+	const readme = text('docs/overview.md');
 	has(readme, "its answer is the model's distribution over the option letters at one position", 'that an answer is the distribution over the option letters at one position');
 	const r = recorded();
 	const q = r.items[0].questions.find((x) => x.type === 'choice');

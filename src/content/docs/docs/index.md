@@ -1,14 +1,14 @@
 ---
 title: Quickstart
-description: Start the tuned Gemma 4 12B on a GPU, a Mac or Ollama, send text and questions, then read a typed answer from your backend. Other models are one flag away.
+description: Start Decisio v3 on a GPU, a Mac or Ollama, send text and questions, then read a typed answer from your backend. Other models are one flag away.
 ---
 
 <!-- The machine paths follow the pinned release. The first request shares the downloadable choice example; the optional recorded result retains its original source label. -->
 
-::covers{links="README.md#install-and-run=1-pick-your-machine README.md#quickstart=1-pick-your-machine docs/running.md=1-pick-your-machine"}
+::covers{links="README.md#quick-start=1-pick-your-machine docs/overview.md#install-and-run=1-pick-your-machine docs/overview.md#quickstart=1-pick-your-machine docs/running.md=1-pick-your-machine"}
 
 Five steps: pick your machine, check the server, ask a question, read the answer and, if you want, choose another model.
-Every command here starts the tuned Gemma 4 12B with calibrated probabilities, the default, with images on.
+Every command here starts Decisio v3, a Gemma 4 12B tuned for decisions, with calibrated probabilities.
 
 ::figure{name="first-question"}
 
@@ -31,24 +31,22 @@ The first start downloads the model.
 
 ::site-block{name="tuned-start"}
 
-On a card with FP8 support, or with Docker, see [Serve the tuned 12B](/docs/deploy/tuned-12b/) and [With Docker](/docs/deploy/docker/).
+On a smaller card in FP8, or with Docker, see [Serve Decisio v3](/docs/deploy/tuned-12b/) and [With Docker](/docs/deploy/docker/).
 
 ::tab{label="Mac"}
 
-A Mac with Apple silicon and 32 GB or more; this 8-bit build is 12.7 GB.
+A Mac with Apple silicon and 32 GB or more; this 8-bit build is 12 GB.
 
 ::site-block{name="tuned-mlx-start"}
 
-It downloads a vision add-on of about 100 MB for the pictures.
-A smaller build and the untrained models are in [On a Mac](/docs/deploy/mac/).
+A 6-bit build is in [Serve Decisio v3](/docs/deploy/tuned-12b/#serve-it-on-a-mac), and the untrained models in [On a Mac](/docs/deploy/mac/).
 
 ::tab{label="Ollama"}
 
-Mac, Linux or Windows with Ollama 0.40.4 or later; the listing is 10.8 GB.
+Mac, Linux or Windows with Ollama 0.40.4 or later; the 8-bit file is 12.7 GB.
 
 ::site-block{name="ollama-pull-tuned"}
 
-Ollama's listings read pictures as they are, with nothing to turn on.
 It uses its own port, 11434, and its own request in step 3.
 
 :::
@@ -124,44 +122,29 @@ It is a recorded Gemma 4 31B result, labelled with its release, hardware and dat
 
 A server serves one model, the one it was started with.
 To switch, stop it and start it again with another `--base`.
-With no flag a decisio server serves Gemma 4 31B; the commands above name the tuned 12B so you start with it.
+With no flag a decisio server serves Gemma 4 31B; the commands above name Decisio v3 so you start with it.
 
 | Model | What it is | Choose it when | GPU | Mac | Ollama |
 | --- | --- | --- | --- | --- | --- |
-| **Tuned 12B, calibrated**, the default | Gemma 4 12B tuned for decisions | You want honest probabilities on the most machines | yes | yes | yes |
-| Tuned 12B, commit | The same weights, with yes/no answers committed | Your code acts on a yes/no answer directly | yes | yes | no |
-| Tuned 12B, commit-think | The commit settings, plus a short think on unsure choices | Hard choice questions matter more than the occasional slower answer | bf16 only | no | no |
-| Tuned 12B v2, commit | A second tuned 12B, a new model with its own weights | You want to try the newer tuned model on your own questions | bf16 only | no | no |
-| Gemma 4 12B | The untrained model | You want the model as Google published it, on a smaller machine | yes | yes | yes |
-| Gemma 4 31B | The larger untrained model | You want the most accuracy and have the memory | yes | yes | no |
+| **Decisio v3, calibrated**, recommended | Gemma 4 12B tuned for decisions | You use the probabilities themselves: thresholds, ranking, expected values | yes | yes | yes |
+| Decisio v3, commit | The same weights, with yes/no answers committed | You act on yes/no answers directly | yes | yes | no |
+| Gemma 4 12B | The untrained model | You want the model as Google published it | yes | yes | yes |
+| Gemma 4 31B | The larger untrained model | You have the memory for a larger model | yes | yes | no |
 
-The tuned 12B is right more often than the untrained 12B on hard decisions with rules, exceptions and arithmetic, and about the same elsewhere ([the announcement](/news/tuned-12b/)).
-No accuracy figures are published for v2, and it does not replace the first tuned 12B, which stays the default.
-
-### What the three tuned settings change
-
-All three tuned settings use the same weights; only the settings differ.
-
-- **Calibrated** gives honest probabilities for every question type, yes/no included. Start here.
-- **Commit** does the same and then commits yes/no answers: no yes/no probability sits between 0.20 and 0.80. It changes no answer.
-- **Commit-think** keeps commit and reads a choice question again after a short reasoning step when its likeliest option is under 0.3712. [What it adds and costs](/docs/measured/#what-thinking-adds-to-the-tuned-12b).
+[Serve Decisio v3](/docs/deploy/tuned-12b/) has its accuracy, its repositories for each machine and what the two flavors change.
 
 ### What to pass to `--base`
 
-On a GPU, add `--images on` to each of these:
-
 | Model | `--base` |
 | --- | --- |
-| Tuned 12B, calibrated | `tachara-ai/Decisio-12b-tuned-calibrated@baa731aa` |
-| Tuned 12B, commit | `tachara-ai/Decisio-12b-tuned-commit@245e00dc` |
-| Tuned 12B, commit-think | `tachara-ai/Decisio-12b-tuned-commit-think@e36aeb24` |
-| Tuned 12B v2, commit | `tachara-ai/Decisio-12b-tuned-v2-commit@1b63613e` |
+| Decisio v3, calibrated | `tachara-ai/Decisio-12b-tuned-v3-calibrated` |
+| Decisio v3, commit | `tachara-ai/Decisio-12b-tuned-v3-commit` |
 | Gemma 4 12B | `gemma-4-12b` |
 | Gemma 4 31B | `gemma-4-31b` |
 
-On a Mac, install `decisio[mlx-images]`, add `--backend mlx --images on` and name an MLX build: `tachara-ai/Decisio-12b-tuned-mlx8-calibrated` or `tachara-ai/Decisio-12b-tuned-mlx8-commit` for the tuned 12B, and the untrained models as in [On a Mac](/docs/deploy/mac/).
-On Ollama, `aminroudaki/decisio-gemma` is the untrained 12B and `aminroudaki/decisio-gemma-tuned` the tuned one.
-[Choosing a model](/docs/bases/) has every setting, and [Serve the tuned 12B](/docs/deploy/tuned-12b/) has the tuned repositories.
+On a Mac, add `--backend mlx` and name an MLX build: `tachara-ai/Decisio-12b-tuned-v3-mlx8-calibrated` or `-mlx8-commit` for Decisio v3, and the untrained models as in [On a Mac](/docs/deploy/mac/).
+On Ollama, `aminroudaki/decisio-v3` is Decisio v3 and `aminroudaki/decisio-gemma` the untrained 12B.
+[Choosing a model](/docs/bases/) has every setting.
 
 ## Use a coding assistant
 
@@ -173,8 +156,7 @@ Choose the workflow for your task and include your hardware or endpoint in the p
 - A request the server cannot read gets status 422, with a `detail` that names what is wrong.
 - The `model` field does not choose a model: a server serves the one model it was started with.
 - Tasks and certificates belong to one model and setting: teach and certify again after you switch.
-- `--images on` is the picture switch for the Gemma models; [Ask about images](/docs/images/) shows a request. On the 31B it also moves its text answers a little, so a server that answers mostly text on the 31B can leave it off.
-- Whether the tuned 12B reads pictures as well as the untrained 12B is not measured.
+- `--images on` is the picture switch for the Gemma models; [Ask about images](/docs/images/) shows a request. Decisio v3 was trained on text, and how well it reads pictures is not measured.
 - The words used here are defined in the [glossary](/docs/glossary/).
 
 ## What next

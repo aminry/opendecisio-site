@@ -7,7 +7,7 @@ const api = 'docs/api.md';
 const running = 'docs/running.md';
 const thinkPy = 'src/decisio/serve/think.py';
 const operating = 'docs/operating.md';
-const readme = 'README.md';
+const overview = 'docs/overview.md';
 const card = 'EVAL_CARD.md';
 const upgrading = 'docs/upgrading.md';
 const calculator = 'docs/calculator.md';
@@ -88,6 +88,22 @@ export const sourced = [
 		['a block that would push the row over the engine\'s prompt ceiling is left out', calculator, 'a block that would push the row over the engine\'s prompt ceiling is left out'],
 		['an Ollama listing does not run decisio\'s server', calculator, 'an Ollama listing does not run decisio\'s server'],
 	]),
+	// decisio 0.51.0 and 0.51.1: the date and time block, the cascade reader, a repository that turns it on; Decisio v3 records both
+	...fromPage('/docs/calculator/', [
+		['so the server adds the exact values for bills, invoices, payslips and dates with no flag', 'README.md', 'For bills, invoices, payslips and dates, the server adds the exact values a question depends on before the model reads the text'],
+		['Its first start also downloads the calculator\'s small tagger.', 'README.md', 'The first start downloads the model (22 GB) and the calculator\'s small tagger.'],
+		['It suits rotas, travel logs, shipment and incident timelines, warranty and notice periods.', calculator, 'It suits rotas, travel logs, shipment and incident timelines, warranty and notice periods.'],
+		['The block holds facts, never an answer, and is written only where every value is certain.', calculator, 'The block holds facts, never an answer, and is written only where every value is certain.'],
+		['as time-v1, or calc-v1+time-v1 for both blocks', calculator, '`time-v1` for this block alone, or `calc-v1+time-v1` for both'],
+		['The cascade reader may show a block for wordings and layouts the rule reader has no rule for.', calculator, 'The cascade reader may show a block for states the rule reader does not read, such as wordings and layouts it has no rule for.'],
+		['where the tagger gives no block, the rule reader\'s block stands (rules_only)', calculator, 'Where the tagger gives no block but the rule reader reads the state, the rule reader\'s block stands (`rules_only`): the cascade never shows less than the rule reader.'],
+		['A tagger failure is no block, never a failed request.', calculator, 'a tagger failure is no block too, never a failed request'],
+		['a tuned model can turn the cascade reader on by itself', calculator, 'A tuned model can turn the cascade reader on by itself, so a server started with only `--base <owner>/<name>` serves it with no reader flags.'],
+		['A reader flag beats the repository, and --calculator-reader rules turns it off.', calculator, '`--calculator-reader rules` turns it off'],
+		['where it adds tens of milliseconds to each request whose state it reads', calculator, 'On a CPU it adds tens of milliseconds to each request whose state it reads'],
+		['the server still starts, reads with the rule reader, and says why in its start line and in /health', running, 'If the tagger cannot be loaded, the server still starts, reads with the rule reader, and says why in its start line and in `/health`.'],
+		['A certificate made with one reader is suspended under the other', calculator, 'a certificate made with one reader is suspended under the other (`serving_stack_changed`)'],
+	]),
 	// decisio 0.49.0: header_questions
 	...fromPage('/docs/layout/', [
 		['Under the header layout a separate request about an already-read state reads the whole state again, unless every request about the state declares the same list.', running, 'Under the header layout a separate request about an already-read state re-reads the whole state, unless every request about the state declares the same list.'],
@@ -100,6 +116,9 @@ export const sourced = [
 	...fromPage('/docs/layout/', [
 	]),
 	...fromPage('/docs/bases/', [
+		['each at its pinned revision, in bf16, on the vLLM server', running, 'each at its pinned revision, in bf16, on the vLLM server'],
+		['1.0 for every question type until a fit on their own reads replaces it', running, '1.0 for every question type until a fit on their own reads replaces it'],
+		['Not measured yet: accuracy, calibration and latency. MLX does not serve them.', running, '**Not measured yet on this release:** accuracy, calibration and latency. MLX does not serve them.'],
 		['so no yes/no answer sits between 0.20 and 0.80. It changes no answer.', running, 'it changes no answer'],
 		['The calibrated temperatures are yes/no 4.84 in bf16 and 4.72 in FP8 and score 7.85; choice stays at the model\'s 3.592.', running, 'yes/no 4.84 (bf16) or 4.72 (FP8), each fitted on its own precision\'s readouts, and score 7.85 for both'],
 		['They were fitted on items that share no text with a public benchmark\'s test set.', running, 'Every item they were fitted on shares no text with a public benchmark\'s test set.'],
@@ -186,7 +205,7 @@ export const sourced = [
 	]),
 	// The 12B in FP8 beside the other models, on the deploy guide and in the served names
 	...fromPage('/docs/deploy/cloud-gpu/', [
-		['12.74 GiB, FP8', readme, '12.74 GiB in memory on vLLM 0.31.0'],
+		['12.74 GiB, FP8', overview, '12.74 GiB in memory on vLLM 0.31.0'],
 		['one 32 GB RTX 5090, at its full context', running, 'on a 32 GB RTX 5090 at the default share the FP8 12B serves its full 65,536 tokens'],
 	]),
 	...fromPage('/docs/migrating/', [
@@ -197,7 +216,7 @@ export const sourced = [
 	]),
 	// Choosing a model: the 12B in FP8
 	...fromPage('/docs/bases/', [
-		['12.74 GiB, FP8', readme, '12.13 GiB as a stored conversion, 12.74 GiB in memory on vLLM 0.31.0'],
+		['12.74 GiB, FP8', overview, '12.13 GiB as a stored conversion, 12.74 GiB in memory on vLLM 0.31.0'],
 		['an NVIDIA card with 32 GB, at its full 65,536 tokens', running, 'on a 32 GB RTX 5090 at the default share the FP8 12B serves its full 65,536 tokens'],
 		['google/gemma-4-12B-it, quantized to FP8 as it loads', running, '`--base gemma-4-12b-fp8` alone serves `google/gemma-4-12B-it` at its pinned revision and quantizes it on load.'],
 		['or tachara-ai/decisio-gemma-4-12b-fp8, the same conversion stored', running, 'The repository `tachara-ai/decisio-gemma-4-12b-fp8` holds it, at the revision this release pins'],
@@ -302,36 +321,36 @@ export const sourced = [
 	// Benchmarks: one line on each base.
 	...fromPage('/benchmarks/', [
 		['One NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or a 64 GB Mac.', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
-		['One NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or a 64 GB Mac.', readme, 'measured on a 96 GB card; it also runs on an 80 GB H100'],
-		['One NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or a 64 GB Mac.', readme, 'runs from its 6-bit MLX conversion on a 64 GB Mac'],
-		['the smaller Gemma, for a 32 GB Mac, or a laptop with Ollama', readme, 'The Gemma 4 12B base runs from its 6-bit MLX conversion, on a 32 GB Mac'],
-		['the smaller Gemma, for a 32 GB Mac, or a laptop with Ollama', readme, 'ollama pull aminroudaki/decisio-gemma    # the Gemma 4 12B base'],
+		['One NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or a 64 GB Mac.', overview, 'measured on a 96 GB card; it also runs on an 80 GB H100'],
+		['One NVIDIA card, measured on 96 GB and also run on an 80 GB H100, or a 64 GB Mac.', overview, 'runs from its 6-bit MLX conversion on a 64 GB Mac'],
+		['the smaller Gemma, for a 32 GB Mac, or a laptop with Ollama', overview, 'The Gemma 4 12B base runs from its 6-bit MLX conversion, on a 32 GB Mac'],
+		['the smaller Gemma, for a 32 GB Mac, or a laptop with Ollama', overview, 'ollama pull aminroudaki/decisio-gemma    # the Gemma 4 12B base'],
 	]),
 	...fromPage('/benchmarks/', [
 		['The Decision Index runs 38 public benchmarks', card, 'a Decision Index value needs all 38 of its benchmarks'],
 		['in five areas', card, 'every index benchmark, the five areas'],
 		['scores each system from 0 to 100', 'docs/comparison.md', '**Decision Index 0.2.1** (0 to 100)'],
-		["with JevBench's own measure, over ten equal-width bins of the probability", readme, "over 10 equal-width bins of the probability (JevBench's own measure"],
+		["with JevBench's own measure, over ten equal-width bins of the probability", overview, "over 10 equal-width bins of the probability (JevBench's own measure"],
 	]),
 	...fromPage('/benchmarks/', [
-		['At least 32,768 tokens on a Gemma base, and up to 98,304 on the 31B, as the card holds', readme, 'on the Gemma bases, of the largest length the card holds, at least 32,768 and at most 98,304 on the 31B'],
+		['At least 32,768 tokens on a Gemma base, and up to 98,304 on the 31B, as the card holds', overview, 'on the Gemma bases, of the largest length the card holds, at least 32,768 and at most 98,304 on the 31B'],
 	]),
 	// Batch 10: the FAQ's answers in their new homes.
 	...fromPage('/docs/bases/', [
-		["The weights are under Apache-2.0: Alibaba's Qwen3.6-35B-A3B and Google's Gemma 4 12B and 31B", readme, "The model weights are Alibaba's Qwen3.6-35B-A3B under Apache-2.0 and, for the other two bases, Google's Gemma 4 12B and 31B under Apache-2.0"],
-		['redistribute them with their licence and provenance files', readme, 'redistribute those weights under Apache-2.0 with their licence and provenance files'],
+		["The weights are under Apache-2.0: Alibaba's Qwen3.6-35B-A3B and Google's Gemma 4 12B and 31B", overview, "The model weights are Alibaba's Qwen3.6-35B-A3B under Apache-2.0 and, for the other two bases, Google's Gemma 4 12B and 31B under Apache-2.0"],
+		['redistribute them with their licence and provenance files', overview, 'redistribute those weights under Apache-2.0 with their licence and provenance files'],
 	]),
 	...fromPage('/docs/operating/', [
 	]),
 	...fromPage('/docs/use-cases/', [
-		['Each answer is read from one forward pass and no generated text', readme, 'from one forward pass and no generated text'],
+		['Each answer is read from one forward pass and no generated text', overview, 'from one forward pass and no generated text'],
 	]),
 	...fromPage('/benchmarks/', [
-		['none of these is a board score', readme, 'None is a board score.'],
+		['none of these is a board score', overview, 'None is a board score.'],
 	]),
 	...fromPage('/benchmarks/', [
 		['within 0.001 on the 12B, except GPQA Diamond (two of 196 items)', card, 'within 0.001 on the 12B except GPQA Diamond (two of 196 items)'],
-		['and certifies which answers to trust at the error rate you pick', readme, 'a certificate holds for one task on one serving setup'],
+		['and certifies which answers to trust at the error rate you pick', overview, 'a certificate holds for one task on one serving setup'],
 	]),
 	...fromPage('/docs/upgrading/', [
 		["A server takes 0.90 of its card's memory by default", running, '| 0.90 (the default) | 33.85 GiB |'],
@@ -342,7 +361,7 @@ export const sourced = [
 	]),
 	// Homepage facts follow the compact product explanation; detailed limits remain in their guides.
 	...fromPage('/', [
-		['A certificate covers one task on one serving setup', readme, 'a certificate holds for one task on one serving setup'],
+		['A certificate covers one task on one serving setup', overview, 'a certificate holds for one task on one serving setup'],
 		['tasks, abstention and the fast table need a decisio server', running, 'the commit flavor, thinking, read twice, tasks, abstention and the fast table'],
 		['The CPU reads the facts; the model still gets both.', tasksDoc, 'A fast table encodes the state alone'],
 		['A learned table can match the model’s mistakes', tasksDoc, "The table learns decisio's answers, including decisio's mistakes"],
@@ -371,9 +390,9 @@ export const sourced = [
 	{ page: '/docs/migrating/', says: "The SDK's retries on 429 never fire; it still retries 408 and 5xx", file: migrating, source: "the SDK's retries on 429 never fire; it still retries 408 and 5xx" },
 	// On a cloud GPU
 	...fromPage('/docs/deploy/cloud-gpu/', [
-		['30.6 GiB, FP8', readme, '30.6 GiB in memory'],
-		['22.8 GiB, bf16', readme, 'bf16, 22.8 GiB in memory'],
-		['33.3 GiB, FP8', readme, '33.3 GiB in memory'],
+		['30.6 GiB, FP8', overview, '30.6 GiB in memory'],
+		['22.8 GiB, bf16', overview, 'bf16, 22.8 GiB in memory'],
+		['33.3 GiB, FP8', overview, '33.3 GiB in memory'],
 		['about 31 GB', running, "about 31 GB for the 31B's FP8 repository"],
 		['about 36 GB', running, 'about 36 GB for the Qwen base'],
 		['also starts and answers on one 80 GB H100 PCIe', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
@@ -381,8 +400,8 @@ export const sourced = [
 		['the largest that fits, 32,768 to 98,304 tokens', running, 'the largest that fits the card, 32,768 to 98,304'],
 		['32,768 to 65,536 tokens', running, 'the largest that fits the card, 32,768 to 65,536'],
 		['one that supports CUDA 13.0', running, 'a driver that supports CUDA 13.0'],
-		['ready after 7 min 54 s with the download, and after 4 min 3 s with the weights already on disk', readme, 'ready after 7 min 54 s, including the download of its weights, and a start with the weights already on disk after 4 min 3 s'],
-		['decisio 0.11.0 from PyPI, one RTX PRO 6000 Blackwell at 600 W, 2026-10-09', readme, 'Measured on 2026-10-09 on decisio 0.11.0 from PyPI, on one RTX PRO 6000 Blackwell at 600 W'],
+		['ready after 7 min 54 s with the download, and after 4 min 3 s with the weights already on disk', overview, 'ready after 7 min 54 s, including the download of its weights, and a start with the weights already on disk after 4 min 3 s'],
+		['decisio 0.11.0 from PyPI, one RTX PRO 6000 Blackwell at 600 W, 2026-10-09', overview, 'Measured on 2026-10-09 on decisio 0.11.0 from PyPI, on one RTX PRO 6000 Blackwell at 600 W'],
 		['refuses to start on a difference', running, 'refuses to start on a difference'],
 		['--max-model-len 32768 serves only what was measured', running, 'to serve only what was measured, give `--max-model-len 32768`'],
 		['answers 503 and exits with code 70', running, 'the server stops its engine processes and exits with code 70'],
@@ -422,7 +441,6 @@ export const sourced = [
 		['1,312 ms at 1,000 tokens', running, 'one question on a new 1,000-token state takes 1,312 ms'],
 		['11.1 GB in Ollama, read on a 64 GB Mac; a 16 GB machine was not tried', running, "11.1 GB for the base's `q4_k_m` (10.8 GB for the tuned one) and 15.9 GB for either `q8_0`"],
 		['a 16 GB machine was not tried', running, 'A 16 GB machine was not tried.'],
-		['10.8 GB', running, "(10.8 GB for the tuned one)"],
 		['15.9 GB', running, "15.9 GB for either `q8_0`"],
 		['at the listings\' 8,192-token context', running, "Memory at the listings' 8,192-token context"],
 		['a 6,600-token text', running, 'an image and a 6,600-token text'],
@@ -431,11 +449,9 @@ export const sourced = [
 		['its 4-bit build is for Macs with more than 32 GB', running, 'The 4-bit conversion is for Macs with more than 32 GB of memory'],
 		['about an hour for 770 labelled examples (77 options) and about 2.6 hours for 1,500 (150 options)', running, 'about an hour for a BANKING77 draw and about 2.6 hours for a CLINC150 draw'],
 		['Box questions, the Qwen base\'s second image engine (--image-model), adapters (--adapter), packed mode, or the intent head on a second engine (--head-engine)', running, "It refuses the Qwen base's second image engine (`--image-model`), packed mode, LoRA adapters and the second-engine head"],
-		['Ollama 0.40.4 or later', readme, '| Mac, Linux or Windows with Ollama 0.40.4 or later |'],
-		['It works on Ollama 0.40.4 or later', readme, 'It works on Ollama 0.40.4 and later'],
-		['with decisio\'s own prompt and temperatures, and they read pictures', running, "Both listings answer Ollama's decision route, `/v1/systemone`, with decisio's own prompt and temperatures, and they read images."],
-		['aminroudaki/decisio-gemma-tuned', running, 'ollama pull aminroudaki/decisio-gemma-tuned    # the tuned 12B'],
-		['a picture goes in the request\'s images field', readme, 'An image goes in the request\'s `images` field, base64-encoded.'],
+		['Ollama 0.40.4 or later', overview, '| Mac, Linux or Windows with Ollama 0.40.4 or later |'],
+		['It works on Ollama 0.40.4 or later', overview, 'It works on Ollama 0.40.4 and later'],
+		['a picture goes in the request\'s images field', overview, 'An image goes in the request\'s `images` field, base64-encoded.'],
 		['98.3% of 300 text questions', running, 'the same answer as decisio\'s own server on the same Mac (MLX, 8-bit) for 98.3% of 300 questions'],
 		['on 87.0%', running, '| Base `q4_k_m` | 87.0% (MLX 4-bit) |'],
 		['Each question\'s prompt lists only its own question', running, "each question's prompt lists only its own question in the header, where decisio lists every question"],
@@ -467,9 +483,32 @@ export const sourced = [
 		['watch physical_footprint_bytes', running, '`physical_footprint_bytes`'],
 		['--revision v0.15.0 serves the build that was measured', running, "`--revision v0.15.0` names the repository's tag of the build that was measured"],
 	]),
+	// Decisio v3: decisio's README at the pinned release
 	...fromPage('/docs/deploy/tuned-12b/', [
-		['aminroudaki/decisio-gemma-tuned', running, 'ollama pull aminroudaki/decisio-gemma-tuned    # the tuned 12B'],
-		['needs a decisio server for tasks and certificates', running, 'the commit flavor, thinking, read twice, tasks, abstention and the fast table'],
+		["when it says 80%, it is right about 80% of the time", 'README.md', "calibrated so that 80% means right about 80% of the time"],
+		["The first start downloads the model (22 GB) and the calculator's small tagger.", 'README.md', "The first start downloads the model (22 GB) and the calculator's small tagger."],
+		["you use the probabilities themselves: thresholds, ranking, expected values", 'README.md', "you use the probabilities themselves: thresholds, ranking, expected values"],
+		["a yes/no between 20% and 80% is reported as 20% or 80%; the answer never changes", 'README.md', "a yes/no between 20% and 80% is reported as 20% or 80%; the answer never changes"],
+		["every one has a commit twin", 'README.md', "Every repository has a `commit` twin."],
+		["tachara-ai/Decisio-12b-tuned-v3-calibrated 22 GB", 'README.md', "| bf16 | `tachara-ai/Decisio-12b-tuned-v3-calibrated` (or `-commit`) | 22 GB | NVIDIA GPU |"],
+		["tachara-ai/Decisio-12b-tuned-v3-fp8-calibrated 12 GB", 'README.md', "| FP8 | `tachara-ai/Decisio-12b-tuned-v3-fp8-calibrated` | 12 GB | NVIDIA GPU, for smaller cards |"],
+		["tachara-ai/Decisio-12b-tuned-v3-mlx8-calibrated 12 GB", 'README.md', "| MLX 8-bit | `tachara-ai/Decisio-12b-tuned-v3-mlx8-calibrated` | 12 GB | Mac with Apple silicon |"],
+		["tachara-ai/Decisio-12b-tuned-v3-mlx-calibrated 9 GB", 'README.md', "| MLX 6-bit | `tachara-ai/Decisio-12b-tuned-v3-mlx-calibrated` | 9 GB | Mac with Apple silicon, 32 GB |"],
+		["aminroudaki/decisio-v3 (q8_0, q4_k_m) 12.7 / 7.4 GB", 'README.md', "| Ollama | `aminroudaki/decisio-v3` (`q8_0`, `q4_k_m`) | 12.7 / 7.4 GB | any machine with Ollama |"],
+		["On 5,000 held-out questions, Decisio v3 gains on every question type, most on scores", 'README.md', "It gains on every question type, most on scores."],
+		["All 67.7% 71.6% 78.8%", 'README.md', "All questions: base 67.7%, previous 71.6%, Decisio v3 78.8%."],
+		["Choice 68.9% 71.7% 79.8%", 'README.md', "Choice: 68.9, 71.7, 79.8."],
+		["Yes/no 83.0% 84.7% 89.8%", 'README.md', "Yes/no: 83.0, 84.7, 89.8."],
+		["Score 45.1% 55.2% 62.2%", 'README.md', "Score: 45.1, 55.2, 62.2."],
+		["off by 2.3 points from how often it is right, and the untrained model's by 9.0", 'README.md', "on average it is off by 2.3 points, against 9.0 for the base model"],
+		["they are not scores on an independent benchmark", 'README.md', "they are not scores on an independent benchmark"],
+		["RTX PRO 6000, bf16 22 GB 4 min 51 s 60 / 144 ms", 'README.md', "| RTX PRO 6000, bf16 | 22 GB | 4 min 51 s | 60 / 144 ms |"],
+		["RTX PRO 6000, FP8 12 GB 3 min 41 s 44 / 97 ms", 'README.md', "| RTX PRO 6000, FP8 | 12 GB | 3 min 41 s | 44 / 97 ms |"],
+		["Mac M5 Pro (64 GB), MLX 8-bit 12 GB 2 min 51 s 0.90 / 1.07 s", 'README.md', "| Mac M5 Pro (64 GB), MLX 8-bit | 12 GB | 2 min 51 s | 0.90 / 1.07 s |"],
+		["One request at a time over 500 held-out texts of mixed length (100 on the Mac)", 'README.md', "One request at a time over 500 held-out texts of mixed length (100 on the Mac)"],
+		["Ollama answers the same /v1/systemone route with the model's own temperatures; the calculator comes only with decisio's own server.", 'README.md', "Ollama answers the same `/v1/systemone` route with the model's own temperatures; the calculator comes only with decisio's own server"],
+		["Decisio v3 was trained on text; it reads images through the base's image path, unmeasured.", 'README.md', "Decisio v3 was trained on text; it reads images through the base's image path, unmeasured."],
+		["Decisio-12b-tuned-v3-calibrated", 'README.md', "\"model\": \"Decisio-12b-tuned-v3-calibrated\""],
 	]),
 	// For development (CPU)
 	...fromPage('/docs/deploy/development/', [
@@ -480,9 +519,9 @@ export const sourced = [
 	]),
 	// Requirements and limits
 	...fromPage('/docs/limits/', [
-		['30.6 GiB of weights', readme, '30.6 GiB in memory'],
-		['22.8 GiB of weights', readme, 'bf16, 22.8 GiB in memory'],
-		['33.3 GiB of weights', readme, '33.3 GiB in memory'],
+		['30.6 GiB of weights', overview, '30.6 GiB in memory'],
+		['22.8 GiB of weights', overview, 'bf16, 22.8 GiB in memory'],
+		['33.3 GiB of weights', overview, '33.3 GiB in memory'],
 		['33.85 GiB of cache at the default share', running, '| 0.90 (the default) | 33.85 GiB |'],
 		['43.28 GiB of cache at the default share', running, 'On the same 80 GB card the 12B served its ceiling of 65,536 at the default share (43.28 GiB of KV cache)'],
 		['98,304 tokens at the default share; 49,152 at 0.85', running, '| 0.85 | 29.9 GiB | 53,696 | 49,152 |'],
@@ -491,9 +530,12 @@ export const sourced = [
 		['24.9 GB of weights; 33.7 GB at its peak', running, 'It peaks at 29.6, 31.1 and 33.7 GB'],
 		['19.2 GB of weights; 28.0 GB at its peak', running, 'peaks at 23.9, 25.3 and 28.0 GB'],
 		['9.7 GB of weights; 15.1 GB at its peak', running, 'holds 9.7 GB of weights and peaks at 15.1 GB at 32,687 tokens of state'],
-		['11.1 GB in Ollama (10.8 GB for the tuned listing)', running, "11.1 GB for the base's `q4_k_m` (10.8 GB for the tuned one)"],
+		['11.1 GB in Ollama', running, "11.1 GB for the base's `q4_k_m`"],
+		['Decisio v3, bf16 22 GB of weights', 'README.md', '| bf16 | `tachara-ai/Decisio-12b-tuned-v3-calibrated` (or `-commit`) | 22 GB | NVIDIA GPU |'],
+		['Decisio v3, FP8 12 GB of weights', 'README.md', '| FP8 | `tachara-ai/Decisio-12b-tuned-v3-fp8-calibrated` | 12 GB | NVIDIA GPU, for smaller cards |'],
+		['Decisio v3, 6-bit MLX 9 GB of weights', 'README.md', '| MLX 6-bit | `tachara-ai/Decisio-12b-tuned-v3-mlx-calibrated` | 9 GB | Mac with Apple silicon, 32 GB |'],
 		['a 16 GB machine was not tried', running, 'A 16 GB machine was not tried.'],
-		['Ollama 0.40.4 or later for the Gemma listings', readme, '| Mac, Linux or Windows with Ollama 0.40.4 or later |'],
+		['Ollama 0.40.4 or later for the Gemma listings', overview, '| Mac, Linux or Windows with Ollama 0.40.4 or later |'],
 		['the Qwen listing needs 0.35.1 through 0.40.3', running, 'The Qwen listing, `aminroudaki/decisio`, needs Ollama 0.35.1 through 0.40.3'],
 		['the mlx-images extra', running, 'uv sync --extra mlx-images'],
 		['serves the largest multiple of 8,192 under it and under the ceiling', running, 'then serves the largest multiple of 8,192 not above that and not above the ceiling'],
@@ -547,7 +589,7 @@ export const sourced = [
 	]),
 	// Certify answers
 	...fromPage('/docs/tasks/certify/', [
-		['so a 5% certificate needs at least 118 labelled examples', readme, 'and 59 held out to certify at the defaults, so 118 in all'],
+		['so a 5% certificate needs at least 118 labelled examples', overview, 'and 59 held out to certify at the defaults, so 118 in all'],
 		['at most 5% are wrong, for traffic like your examples, nine times in ten (the default delta of 0.1)', tasksDoc, '**with probability at least 1 - `delta` over the draw of your examples (90% by default), at most `alpha` of the answers marked certified are wrong (5% by default)'],
 		['one certified answer can still be wrong', tasksDoc, 'a single certified answer can still be wrong'],
 		['The server holds back half the examples', tasksDoc, 'It **sets aside some of your labelled examples** (half by default)'],
@@ -613,9 +655,9 @@ export const sourced = [
 		['the 31B scores the questions one at a time', cli, '| `--multi-question` | `sequential` | `sequential` | `warm` with the engine in the server\'s process, else `sequential` |'],
 		['serves texts of up to 32,768 tokens', cli, 'The Qwen base, `--image-model`, a second engine, `--engine-process separate` and the other backends stay at 32768'],
 		['for thousands, send several requests about the same text', api, 'for thousands of questions send several requests about the same state'],
-		['the same choice on every item measured; probabilities within 0.0073', readme, 'the same choice as one engine call per question on every item measured, probabilities within 0.0073'],
-		['the same choice; probabilities within 0.035', readme, 'the same choice as each question sent alone, probabilities within 0.035'],
-		['Qwen3.6-35B-A3B one at a time, from the one read the same probabilities', readme, 'the same probabilities as each question sent alone, bit for bit'],
+		['the same choice on every item measured; probabilities within 0.0073', overview, 'the same choice as one engine call per question on every item measured, probabilities within 0.0073'],
+		['the same choice; probabilities within 0.035', overview, 'the same choice as each question sent alone, probabilities within 0.035'],
+		['Qwen3.6-35B-A3B one at a time, from the one read the same probabilities', overview, 'the same probabilities as each question sent alone, bit for bit'],
 		['median of 10 new texts per length, on one RTX PRO 6000 Blackwell at 600 W, decisio 0.11.1 on vLLM 0.30.0', running, 'median of 10 new documents per length, on one RTX PRO 6000 Blackwell Workstation Edition at 600 W'],
 		['decisio 0.11.1 on vLLM 0.30.0', running, 'decisio 0.11.1 on vLLM 0.30.0'],
 		['under 165 ms at every length, on every model', running, 'The second question stays under 165 ms on every length and base.'],
@@ -653,7 +695,7 @@ export const sourced = [
 		['On a Mac, the same flag works with the MLX backend and the extra mlx-images', running, 'uv sync --extra mlx-images'],
 		['An MLX conversion made for text drops them and takes the base\'s vision add-on', running, 'An MLX conversion made for text drops the vision tensors, so it cannot read pictures by itself.'],
 		['Ollama puts the images before the state and has no Box question.', running, 'a request\'s images go before the state, not at their places in it; an image is not limited to one question; there is no Box question'],
-		['on Ollama 0.40.4 or later', readme, 'on Ollama 0.40.4 and later (checked on 0.40.4, 0.40.9 and 0.40.16)'],
+		['on Ollama 0.40.4 or later', overview, 'on Ollama 0.40.4 and later (checked on 0.40.4, 0.40.9 and 0.40.16)'],
 		['the soft tokens one image may take: 70, 140, 280, 560 or 1120', running, 'is the soft tokens an image may take: 70, 140, 280, 560 or 1120'],
 		['At 560 an image costs about 1.8 times the tokens of 280, and Box answers read better.', api, 'At 560 an image costs about 1.8 times the tokens of 280 and Box answers read better.'],
 		["1120 is refused at start: the 12B's window is 1,024 tokens", card, 'the window is 1,024 tokens'],
@@ -670,18 +712,18 @@ export const sourced = [
 	]),
 	// Choosing a model
 	...fromPage('/docs/bases/', [
-		['30.6 GiB, FP8', readme, '30.6 GiB in memory'],
-		['33.3 GiB, FP8', readme, '33.3 GiB in memory'],
-		['22.8 GiB, bf16', readme, 'bf16, 22.8 GiB in memory'],
+		['30.6 GiB, FP8', overview, '30.6 GiB in memory'],
+		['33.3 GiB, FP8', overview, '33.3 GiB in memory'],
+		['22.8 GiB, bf16', overview, 'bf16, 22.8 GiB in memory'],
 		['or an 80 GB H100', running, 'The 31B (stored FP8) on one H100 PCIe 80 GB'],
 		['a 64 GB Mac, or a 48 GB one from its 4-bit build', running, 'is for Macs with 48 GB of memory'],
-		['speed on long new texts', readme, 'Qwen3.6-35B-A3B for speed on long new states'],
+		['speed on long new texts', overview, 'Qwen3.6-35B-A3B for speed on long new states'],
 		['and the same probabilities every time on one server', card, 'Unlike the Qwen base, this base does not return the same probabilities bit for bit for a repeated question.'],
-		['a 32 GB Mac; a Mac, Linux or Windows machine with Ollama', readme, 'It runs on a 32 GB Mac from its MLX conversion'],
-		['a 32 GB Mac; a Mac, Linux or Windows machine with Ollama', readme, '| Mac, Linux or Windows with Ollama 0.40.4 or later |'],
-		['A flag you give explicitly overrides the model\'s value.', readme, 'a flag given explicitly overrides the base\'s value'],
-		['A checkpoint named with --model and no --base brings the model its config.json declares.', readme, 'A checkpoint named with `--model` and no `--base` brings the base its `config.json` declares'],
-		['Each is an official checkpoint at a pinned revision, with no training or fine-tuning by us.', readme, 'Official checkpoint from Google, at a pinned revision'],
+		['a 32 GB Mac; a Mac, Linux or Windows machine with Ollama', overview, 'It runs on a 32 GB Mac from its MLX conversion'],
+		['a 32 GB Mac; a Mac, Linux or Windows machine with Ollama', overview, '| Mac, Linux or Windows with Ollama 0.40.4 or later |'],
+		['A flag you give explicitly overrides the model\'s value.', overview, 'a flag given explicitly overrides the base\'s value'],
+		['A checkpoint named with --model and no --base brings the model its config.json declares.', overview, 'A checkpoint named with `--model` and no `--base` brings the base its `config.json` declares'],
+		['Each is an official checkpoint at a pinned revision, with no training or fine-tuning by us.', overview, 'Official checkpoint from Google, at a pinned revision'],
 	]),
 	// Teach a task whose options change
 	...fromPage('/docs/tasks/dynamic/', [

@@ -15,7 +15,24 @@ uv run python -c "from importlib.metadata import version; print(version('decisio
 
 ::figure{name="release-timeline"}
 
-## The latest releases: 0.50.2 to 0.49.0
+## The latest releases: 0.51.1 and 0.51.0
+
+Released on 2026-11-20 and 2026-11-21.
+They add a date and time block and a second reader to the calculator, which a tuned repository can turn on by itself, as Decisio v3 does.
+
+**0.51.1**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.51.1)
+
+- **Fixed:** a server shows the cascade reader's blocks again; in 0.51.0 every reading the tagger took failed, so only the rule reader's blocks and the date and time block appeared.
+- **A failure the cascade turns into no block is logged** at warning level.
+
+**0.51.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.51.0)
+
+- **A date and time block, `time-v1`:** zoned times in UTC, the real time between two of them, and dates N days, months or years on, for a model trained with it ([Exact arithmetic](/docs/calculator/#which-dates-and-times-does-it-read)).
+- **The cascade reader:** a role tagger behind precision gates shows a block for wordings and layouts the rule reader has no rule for ([how it reads](/docs/calculator/#how-does-the-cascade-reader-read-more)).
+- **A tuned repository can turn the cascade reader on** with its tagger and thresholds, and a tagger that cannot be loaded no longer stops the start.
+- **Two small bases,** `qwen3.5-4b` and `gemma-4-e4b`, on the vLLM server ([Choosing a model](/docs/bases/#the-small-bases)).
+
+## The earlier release summary: 0.50.2 to 0.49.0
 
 Released on 2026-11-17 and 2026-11-18.
 They add a declared question list for the header layout and exact arithmetic support, both opt-in.
@@ -30,41 +47,12 @@ They add a declared question list for the header layout and exact arithmetic sup
 
 **0.50.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.50.0)
 
-- **Exact arithmetic support:** a model trained with it reads exact line values for a state's arithmetic, in a fixed block after the state. It is opt-in per model, and no repository listed on this site records it ([Exact arithmetic](/docs/calculator/)).
+- **Exact arithmetic support:** a model trained with it reads exact line values for a state's arithmetic, in a fixed block after the state. It is opt-in per model ([Exact arithmetic](/docs/calculator/)).
 
 **0.49.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.49.0)
 
 - **`header_questions`:** a client declares the question list the header carries, so separate requests about one state share the header and the state is read once ([Choose the prompt layout](/docs/layout/#how-do-you-keep-the-header-for-a-series-of-questions)).
 - **A note when the header layout reads a state again:** the response header `x-decisio-note` says so, and `/health` counts it.
-
-## The earlier release summary: 0.48.0 and 0.47.0
-
-Both were released on 2026-11-15, and together they bring pictures to decisio.
-The [news post](/news/images-gpu-mac-ollama/) has the measured figures, and [Ask about images](/docs/images/) is the guide to using them.
-
-**0.48.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.48.0)
-
-- **Images on a Mac:** `--backend mlx --images on` with the extra `mlx-images`.
-  A conversion made for text takes the base's vision add-on, and Box questions are not served on a Mac.
-- **Ollama listings that read images:** `aminroudaki/decisio-gemma` and `aminroudaki/decisio-gemma-tuned`, with decisio's own prompt and temperatures, on Ollama 0.40.4 or later.
-- **A tool for GGUF files** for llama.cpp's and Ollama's decision route, `python -m decisio.hub_gguf`.
-- **Fixed:** the System One template is written without `\x` escapes, so that Ollama 0.40.4's llama.cpp loads it.
-
-**0.47.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.47.0)
-
-- **Images on Gemma 4 12B and 31B**, served with vLLM and `--images on`: yes/no, choice and score questions about one or more pictures, which can stand in the state or in a question's own text.
-- **Box questions:** find a described object in a picture and get its box with a confidence, or the whole image at confidence 0 when the model says it is absent.
-- **The Qwen image route reads each image at its place**, as the Gemma bases do.
-  The earlier layout stays as `--image-prompt legacy`, which is deprecated.
-- **New image defaults:** the 12B reads images at a budget of 560 and the 31B at 280, with 1120 an opt-in on the 31B.
-  Image answers on the 31B and on the Qwen route use temperatures fitted on images.
-  Requests without images keep their temperatures.
-- **Fixed:** a Gemma server started with `--images on` starts again, and the 31B starts with it as documented.
-  A Box question whose reply says there is no box answers with the whole image at confidence 0.
-  Gemma 4 31B takes image budget 1120, and a base without a vision encoder refuses a budget whose image block is longer than its window.
-  Image uploads from client SDKs are accepted, and the image wire rules cover part content types, reference lengths, animated images and a 32 MiB request body.
-  The `--image-model` engine loads at a pinned revision and is checked before any engine is built.
-  Box questions are read under the plain layout on any server.
 
 The upgrade notes below say who is affected, and what to do.
 
