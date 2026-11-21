@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { get } from 'node:https';
 import { chromium, firefox, webkit } from 'playwright';
+import { assertNotLoaded, watchFilm } from './reader-intent.mjs';
 const port = Number(process.env.FAST_PATH_PORT ?? 4397);
 const base = `https://127.0.0.1:${port}`;
 const server = spawn('node', ['scripts/serve.mjs', String(port)], { stdio: ['ignore', 'ignore', 'pipe'] });
@@ -18,7 +19,7 @@ try {
   await context.route(/https:\/\/(static\.)?cloudflareinsights\.com\//, r => r.fulfill({ status: 200, contentType: 'application/javascript', body: '' }));
   await context.route('**/cdn-cgi/rum*', r => r.fulfill({ status: 204 }));
   const page = await context.newPage(); const errors = []; page.on('pageerror', e => errors.push(e.message));
-  let videoRequests=0;page.on('request',request=>{if(request.url().includes('/media/decision-fast-path.mp4'))videoRequests++;});
+  const videoRequests=watchFilm(page,'/media/decision-fast-path.mp4');
   await page.goto(`${base}/docs/tasks/fast-table/`); await page.waitForLoadState('networkidle');
   assert.equal(await page.locator('[data-context-consumer=cpu]').count(),1,'Facts-only CPU path is missing');
   assert.equal(await page.locator('[data-context-consumer=model]').count(),1,'Combined context and facts path is missing');
@@ -48,7 +49,7 @@ try {
   assert.equal(await video.count(),1);
   assert.equal(await video.getAttribute('preload'),'none');
   assert.equal(await video.getAttribute('autoplay'),null);
-  assert.equal(videoRequests,0,'Film downloaded before reader intent');
+  await assertNotLoaded({engine,requests:videoRequests,video,name:'The film',check:'fast-path-interactions'});
   await video.scrollIntoViewIfNeeded();
   await video.evaluate(v=>{v.muted=true;return v.play();});
   await until(()=>video.evaluate(v=>!v.paused&&v.currentTime>0),'Video did not actually decode and play');
@@ -127,7 +128,7 @@ try {
   for(const width of [1440,820,390,320]){
     await page.setViewportSize({width,height:1000});await stream.scrollIntoViewIfNeeded();
     await until(async()=>await stream.getAttribute('data-playback')==='running','Request stream did not resume');
-    const sizes=[];for(let i=0;i<76;i++){await page.clock.runFor(1000);sizes.push(await stream.evaluate(el=>({height:el.clientHeight,parts:[...el.children].map(c=>[c.className.baseVal??c.className,c.clientHeight])})));}
+    const sizes=[];for(let i=0;i<76;i++){await page.clock.runFor(1000);sizes.push(await stream.evaluate(el=>({height:el.clientHeight,parts:[...el.children].map(c=>[c.className.baseVal??c.className,c.clientHeight]),answers:[...el.querySelectorAll('.fp-demo-answers>div>*')].map(c=>[c.tagName.toLowerCase(),c.clientHeight,c.textContent.trim().slice(0,40)])})));}
     const heights=sizes.map(s=>s.height);if(Math.max(...heights)-Math.min(...heights)>2)console.error(JSON.stringify({width,short:sizes.find(s=>s.height===Math.min(...heights)),tall:sizes.find(s=>s.height===Math.max(...heights))}));
     for(const name of ['fp-incoming','fp-demo-node','fp-demo-answers','fp-saving','fp-demo-examples']){const values=sizes.map(s=>s.parts.find(p=>p[0]===name)[1]);assert.ok(Math.max(...values)-Math.min(...values)<=2,`${name} changes height at ${width}px`);}
     assert.ok(Math.max(...heights)-Math.min(...heights)<=2,`Request stream changes height across examples at ${width}px: ${Math.min(...heights)}–${Math.max(...heights)}`);

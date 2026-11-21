@@ -218,3 +218,7 @@
  .fp-demo-answers :is([data-stream-fast-note],[data-stream-model-note]){display:block;line-height:1.5;min-height:4.5em}
  .fp-demo .fp-saving{min-height:calc(2.8em + 1rem)}
 }
+/* At the narrowest widths a note can take a fourth line where the text renders wider (WebKit on Linux, 320px). */
+@media(max-width:340px){
+ .fp-demo-answers :is([data-stream-fast-note],[data-stream-model-note]){min-height:6em}
+}
