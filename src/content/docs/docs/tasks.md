@@ -5,7 +5,7 @@ description: Teach decisio a question you ask again and again, from your own lab
 
 <!-- Site-written: the first of the three Teach and trust guides, rewritten from decisio's docs/tasks.md at the pinned release, whose commands it shows (::upstream); what teaching did is EVAL_CARD.md section 7.2's, through src/lib/teach.mjs; the other facts are docs/tasks.md's (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/tasks.md README.md#teach-it-your-question docs/tasks.md#what-a-task-is=1-check-that-it-is-a-task docs/tasks.md#why-register-one=what-it-does docs/tasks.md#what-you-need=2-gather-your-examples docs/tasks.md#walk-through=3-register docs/tasks.md#3-read-the-response=4-read-what-it-kept docs/tasks.md#5-list-export-reload-delete=6-keep-it-across-restarts docs/tasks.md#saved-to-disk---tasks-dir=6-keep-it-across-restarts docs/tasks.md#what-you-get=what-it-does docs/tasks.md#when-it-helps-and-when-it-does-not=what-it-does docs/tasks.md#what-it-costs=what-it-costs"}
+::covers{links="docs/tasks.md README.md#teach-it-your-question docs/tasks.md#what-a-task-is=1-check-that-it-is-a-task docs/tasks.md#why-register-one=what-it-does docs/tasks.md#what-you-need=2-gather-your-examples docs/tasks.md#walk-through=3-register docs/tasks.md#3-read-the-response=4-read-what-it-kept docs/tasks.md#5-list-export-reload-delete=6-keep-it-across-restarts docs/tasks.md#saved-to-disk---tasks-dir=6-keep-it-across-restarts docs/tasks.md#what-you-get=what-it-does docs/tasks.md#when-it-helps-and-when-it-does-not=what-it-does docs/tasks.md#what-it-costs=what-it-costs docs/tasks.md#label-review=check-the-flagged-labels"}
 
 Register the question once, with labelled examples, and every later request that asks it is answered with what the server learned.
 Run this from the root of a release checkout, with your server running.
@@ -57,6 +57,15 @@ When it declines one, the question is answered exactly as before:
 - **Too few examples:** add more, up to 20 for the correction or 10 per option for the head, and register again. When the head is declined for this, `short_options` names the options that have too few, each with its count.
 - **The plain answer is already as good:** common for a clear yes/no question.
 - **Labels that disagree:** two people labelling the same kind of input differently look like noise, and the server declines.
+
+### Check the flagged labels
+
+The answer also carries `label_review`: the labelled examples whose label looks wrong, each with the option the model suggests.
+A flag means the model, fitted on your other examples, is at least 90% sure of another option and gives your label 2% or less.
+
+decisio never drops or changes a label, so check each flagged example, correct it if it is wrong, and register again.
+A flag is a reason to look, not proof, and no flag does not mean every label is right.
+Label review covers choice and yes/no tasks with at least 20 labelled examples on Gemma 4 12B and Decisio v3; elsewhere the field says why there is no review.
 
 ## 5. Ask, and check that it applied
 
