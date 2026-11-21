@@ -1,6 +1,6 @@
 ---
 title: What was measured on what
-description: The machines, versions and dates behind decisio's published memory, length, repeatability and tuned 12B figures, and what was not tested.
+description: The machines, versions and dates behind decisio's published memory, length, repeatability and tuned-model figures, and what was not tested.
 ---
 
 <!-- Site-written: the evidence behind the requirements page. Every number is EVAL_CARD.md's or docs/running.md's at the pinned release (src/config/sourced.mjs checks them); the research detail behind them stays in the evaluation card. -->
@@ -24,9 +24,9 @@ Read a figure with its row, and do not expect it on your own workload.
 | The 12B in FP8 against bf16, and on a 32 GB card | Gemma 4 12B, FP8 and bf16 | one RTX 5090, 32 GB | vLLM 0.31.0, 4,096 tokens, 0.95 of the card | 2026-10-21 |
 | Batched throughput | Gemma 4 12B, FP8 | one RTX 5090, 32 GB | vLLM 0.31.0, 0.95 of the card, 4,096 tokens, requests about new 1,000-token states, 8 and 16 clients | 2026-10-21 |
 | The header layout against the plain one | Gemma 4 31B, FP8 on load; Gemma 4 12B, FP8 | one RTX PRO 6000 Blackwell; one RTX 5090 | decisio's proxy sets and a public multi-domain sample | before decisio 0.26.0 |
-| The tuned 12B with thinking | the tuned commit model with the commit-think settings given as flags | one RTX PRO 6000 Blackwell at 600 W | decisio 0.33.0, cold starts, one request at a time, questions screened against our training data | 2026-10-26 |
-| The tuned 12B in FP8 against bf16, times | the tuned 12B, FP8 and bf16 | one RTX PRO 6000 Blackwell at 600 W | decisio 0.33.0, 430 questions, one request at a time, diagnostic readout on | 2026-10-25 |
-| The tuned 12B on a Mac | the tuned 12B, MLX 8-bit and 6-bit | one Apple M5 Pro, 64 GB | decisio's MLX engine, 1,894 held-out questions against the bf16 tuned model with the same settings | not dated |
+| The previous tuned 12B with thinking | the tuned commit model with the commit-think settings given as flags | one RTX PRO 6000 Blackwell at 600 W | decisio 0.33.0, cold starts, one request at a time, questions screened against our training data | 2026-10-26 |
+| The previous tuned 12B in FP8 against bf16, times | the tuned 12B, FP8 and bf16 | one RTX PRO 6000 Blackwell at 600 W | decisio 0.33.0, 430 questions, one request at a time, diagnostic readout on | 2026-10-25 |
+| The previous tuned 12B on a Mac | the tuned 12B, MLX 8-bit and 6-bit | one Apple M5 Pro, 64 GB | decisio's MLX engine, 1,894 held-out questions against the bf16 tuned model with the same settings | not dated |
 :::
 
 ## How to read it
@@ -49,7 +49,9 @@ On the 12B, `--batch-invariant on`, off by default, makes a repeated request giv
 
 At long length, the 31B answered a check at 85,000 tokens, 23 of 30 right against 25 of 30 short; a 30-item check is a smoke test, not an accuracy measurement.
 
-## What thinking adds to the tuned 12B
+<span class="fp-anchor" id="what-thinking-adds-to-the-tuned-12b"></span>
+
+## What thinking adds to the previous tuned 12B
 
 On the commit-think repository, against the same model without thinking, on held-out questions:
 
@@ -58,12 +60,16 @@ On the commit-think repository, against the same model without thinking, on held
 - **The mixed development set** (430): no question thinks.
 - **Time:** the median stayed at 60 ms per decision, and the slowest of 2,044 took 4.71 s.
 
-## The tuned 12B in FP8
+<span class="fp-anchor" id="the-tuned-12b-in-fp8"></span>
+
+## The previous tuned 12B in FP8
 
 - **It is level with bf16 on the held-out sets,** within a quarter of a point, but gives a different likeliest answer on about 3 to 6 of every 100 questions ([the announcement](/news/tuned-12b/) has the figures).
 - **It is quicker:** a median of 100.0 ms of server time per question, against 151.7 ms for bf16.
 
-## The tuned 12B on a Mac
+<span class="fp-anchor" id="the-tuned-12b-on-a-mac"></span>
+
+## The previous tuned 12B on a Mac
 
 - **8-bit** gives the bf16 model's likeliest answer on 97.9% of held-out questions, at 69.8% accuracy against 69.9%. It peaks at 14.9 GB with an 8,000-token text and 18.6 GB at 32,000.
 - **6-bit** gives it on 95.5%, at 69.5% against 69.9%. It peaks at 12.0 GB at 8,000 tokens and 15.6 GB at 32,000.
@@ -79,7 +85,7 @@ On the commit-think repository, against the same model without thinking, on held
 - The 31B's 6-bit Mac build on MMLU-Pro, and its server times.
 - Latency with the intent head on a second engine.
 - Ollama on a 16 GB machine, and its answers beyond the 300 text questions and 257 image questions measured against decisio's own servers.
-- The tuned 12B's accuracy was measured in bf16 against the untrained 12B on held-out items; [the announcement](/news/tuned-12b/) has its limits.
+- The previous tuned 12B's accuracy was measured in bf16 against the untrained 12B on held-out items; [the announcement](/news/tuned-12b/) has its limits. Decisio v3's figures are on [Serve Decisio v3](/docs/deploy/tuned-12b/#how-accurate-is-it).
 - Fine-tuned adapters under the header layout. That is why an adapter that records no layout is served plain.
 - Other engines. Only the vLLM engine was measured with the header; the HF and MLX engines build the same prompt.
 - The Evaluation card. Its figures were measured on the plain layout.

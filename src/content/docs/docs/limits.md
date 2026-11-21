@@ -32,17 +32,18 @@ curl -s http://127.0.0.1:8000/health
 | NVIDIA, 80 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights; 43.28 GiB of cache at the default share | 65,536 tokens at the default share | yes, an H100 PCIe |
 | NVIDIA, 96 GB | Gemma 4 12B, bf16 | 22.8 GiB of weights | up to 65,536 tokens | yes |
 | NVIDIA, larger than 96 GB | Gemma 4 31B, bf16 | 57.91 GiB of weights | up to 65,536 tokens, chosen at start | no; on a 96 GB card it does not start at the default share |
-| NVIDIA, 96 GB | the tuned Gemma 4 12B, bf16 | about 24 GB of weights | chosen at start | yes, an RTX PRO 6000 |
-| NVIDIA with FP8 support | the tuned Gemma 4 12B, FP8 | 13.1 GB of weights | chosen at start | yes, an RTX PRO 6000 |
+| NVIDIA, 96 GB | Decisio v3, bf16 | 22 GB of weights | chosen at start | yes, an RTX PRO 6000 |
+| NVIDIA with FP8 support | Decisio v3, FP8 | 12 GB of weights | chosen at start | yes, an RTX PRO 6000 |
 | NVIDIA, 32 GB | Gemma 4 12B, bf16 | does not start on vLLM's defaults | 4,096 tokens, at 0.95 of the card | yes, an RTX 5090 |
 | NVIDIA, 32 GB | Gemma 4 12B, FP8 | 12.74 GiB of weights | 65,536 tokens at the default share | yes, an RTX 5090 |
 | NVIDIA, 96 GB | Qwen3.6-35B-A3B, FP8 | 33.3 GiB of weights | 32,768 tokens | yes |
 | Mac, 64 GB | Gemma 4 31B, 6-bit MLX | 24.9 GB of weights; 33.7 GB at its peak | 16,383 tokens | yes, an Apple M5 Pro |
 | Mac, 48 GB | Gemma 4 31B, 4-bit MLX | 19.2 GB of weights; 28.0 GB at its peak | 16,383 tokens | read on the 64 GB Mac |
-| Mac, 32 GB | the tuned Gemma 4 12B, 8-bit MLX | 13.8 GB of weights; 18.6 GB at its peak | measured to 32,000 tokens | read on the 64 GB Mac |
-| Mac, 32 GB | the tuned Gemma 4 12B, 6-bit MLX | 10.8 GB of weights; 15.6 GB at its peak | measured to 32,000 tokens | read on the 64 GB Mac |
+| Mac, 32 GB | Decisio v3, 8-bit MLX | 12 GB of weights | not measured | its speed, on a 64 GB Apple M5 Pro |
+| Mac, 32 GB | Decisio v3, 6-bit MLX | 9 GB of weights | not measured | no |
 | Mac, 32 GB | Gemma 4 12B, 6-bit MLX | 9.7 GB of weights; 15.1 GB at its peak | 32,768 tokens | read on the 64 GB Mac |
-| Any machine with Ollama | Gemma 4 12B on Ollama, `q4_k_m` | 11.1 GB in Ollama (10.8 GB for the tuned listing) | 8,192 tokens | read on the 64 GB Mac; a 16 GB machine was not tried |
+| Any machine with Ollama | Gemma 4 12B on Ollama, `q4_k_m` | 11.1 GB in Ollama | 8,192 tokens | read on the 64 GB Mac; a 16 GB machine was not tried |
+| Any machine with Ollama | Decisio v3 on Ollama, `q8_0` or `q4_k_m` | a 12.7 GB or 7.4 GB file | 8,192 tokens | no |
 | Any machine | the CPU stand-in | a small model | 32,768 tokens | for development only |
 
 | To run | You need |

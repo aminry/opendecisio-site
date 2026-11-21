@@ -1,6 +1,6 @@
 ---
 title: On a Mac or a laptop
-description: Run decisio on a Mac with Apple silicon from an MLX build, sized to your Mac's memory, with pictures if you want them, or on Ollama 0.40.4 or later with the Gemma listings.
+description: Run decisio on a Mac with Apple silicon from an MLX build, sized to your Mac's memory, with pictures if you want them, or on Ollama 0.40.4 or later with Decisio v3.
 ---
 
 <!-- Site-written: the deploy guide for a Mac and for Ollama. The commands are decisio's docs/running.md at the pinned release (src/lib/site-blocks.mjs, ::upstream); the request is the site's, run against Ollama (verification/ollama.json); the numbers are docs/running.md's (src/config/sourced.mjs checks them). -->
@@ -8,7 +8,7 @@ description: Run decisio on a Mac with Apple silicon from an MLX build, sized to
 ::covers{links="README.md#mac-with-mlx docs/running.md#mac-with-mlx docs/running.md#images-on-a-mac=read-pictures-on-a-mac docs/running.md#memory-on-a-mac=mind-the-memory README.md#ollama=on-a-laptop-with-ollama README.md#on-a-laptop-with-ollama=on-a-laptop-with-ollama docs/running.md#ollama=on-a-laptop-with-ollama"}
 
 Pick the build that fits your Mac's memory, then start it.
-A 64 GB Mac runs the default model, Gemma 4 31B, with two commands, and a Gemma build there reads pictures too.
+Decisio v3, the recommended model, runs on a 32 GB Mac ([Serve Decisio v3](/docs/deploy/tuned-12b/#serve-it-on-a-mac)); a 64 GB Mac also runs the default model, Gemma 4 31B, with two commands, and a Gemma build there reads pictures too.
 
 ::figure{name="mac-memory"}
 
@@ -73,7 +73,7 @@ Measured through the Mac server on one Apple silicon Mac with 64 GB, at an image
 | Build | One picture | Process memory (MLX's peak) |
 | --- | --- | --- |
 | 12B, Google's bf16 checkpoint | 1.0 s | 24.2 GB (23.0 GB) |
-| tuned 12B, 6-bit MLX conversion with the add-on | 1.1 s | 11.1 GB (9.9 GB) |
+| the previous tuned 12B, 6-bit MLX conversion with the add-on | 1.1 s | 11.1 GB (9.9 GB) |
 | 31B, 4-bit MLX build with the add-on | 3.4 s | 20.7 GB (20.3 GB) |
 
 All three placed a square right in 8 of 8 questions, at budgets 280 and 560.
@@ -93,18 +93,19 @@ Against decisio on vLLM, on 60 held-out items, neither MLX build changed an answ
 
 ## On a laptop, with Ollama
 
-Ollama runs decisio's two Gemma 4 12B listings on Mac, Linux or Windows, with decisio's own prompt and temperatures, and they read pictures.
+Ollama runs Decisio v3 and the untrained Gemma 4 12B on Mac, Linux or Windows, each with its own temperatures.
 It works on Ollama 0.40.4 or later.
 
-::upstream{file="docs/running.md" section="Ollama" block="1"}
+::site-block{name="ollama-pull-v3"}
 
-| Listing | Tag | In Ollama |
+| Listing | Tag | Size |
 | --- | --- | --- |
-| `aminroudaki/decisio-gemma`, the base | `q4_k_m`, also `latest` | 11.1 GB |
-| `aminroudaki/decisio-gemma-tuned`, the tuned 12B | `q4_k_m`, also `latest` | 10.8 GB |
-| either | `q8_0` | 15.9 GB |
+| `aminroudaki/decisio-v3`, Decisio v3 | `q8_0`, also `latest` | 12.7 GB file |
+| `aminroudaki/decisio-v3` | `q4_k_m` | 7.4 GB file |
+| `aminroudaki/decisio-gemma`, the untrained 12B | `q4_k_m`, also `latest` | 11.1 GB in Ollama |
+| `aminroudaki/decisio-gemma` | `q8_0` | 15.9 GB in Ollama |
 
-Memory is the runner's resident set at the listings' 8,192-token context, read on a 64 GB Mac while it answered text, a picture and a 6,600-token text; a 16 GB machine was not tried.
+The untrained listing's memory is the runner's resident set at the listings' 8,192-token context, read on a 64 GB Mac while it answered text, a picture and a 6,600-token text; a 16 GB machine was not tried.
 Then ask a question on Ollama's decision route, on port 11434, with the listing named in `model`; a picture goes in the request's `images` field, base64-encoded:
 
 ::site-block{name="ollama-request-gemma"}

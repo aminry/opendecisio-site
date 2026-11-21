@@ -11,7 +11,7 @@ Register the question once, with labelled examples, and every later request that
 Run this from the root of a release checkout, with your server running.
 The supplied ticket fixture gives you a complete registration to try:
 
-::upstream{file="README.md" section="Teach it your question" block="1"}
+::upstream{file="docs/overview.md" section="Teach it your question" block="1"}
 
 ::figure{name="teach-flow-teach"}
 

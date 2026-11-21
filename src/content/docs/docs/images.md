@@ -42,7 +42,7 @@ There is no second engine and no second copy of the weights:
 
 ::site-block{name="images-start"}
 
-- Gemma 4 12B, including its tuned and FP8 repositories, and Gemma 4 31B take `--images on`, on the vLLM server or on a Mac.
+- Gemma 4 12B, including Decisio v3 and the FP8 repositories, and Gemma 4 31B take `--images on`, on the vLLM server or on a Mac.
 - `--images on` does not combine with `--image-model`, `--one-engine` or `--mode packed`.
 - `--max-images` is the most images one request may carry, 16 unless set.
 
@@ -54,7 +54,7 @@ On a Mac, the same flag works with the MLX backend and the extra `mlx-images`:
   An MLX conversion made for text drops them and takes the base's vision add-on, which `--vision-weights` names.
 - Box questions are not served on a Mac.
 
-On Ollama, the Gemma listings `aminroudaki/decisio-gemma` and `aminroudaki/decisio-gemma-tuned` read images through Ollama's own `images` field, on Ollama 0.40.4 or later.
+On Ollama, the untrained Gemma listing `aminroudaki/decisio-gemma` reads images through Ollama's own `images` field, on Ollama 0.40.4 or later.
 Ollama puts the images before the state and has no Box question.
 [On a Mac or a laptop](/docs/deploy/mac/) has the commands.
 
@@ -148,7 +148,7 @@ Gemma 4 31B multiplies its text temperature by 1.376, fitted on images at budget
 Gemma 4 12B reads images at its text temperatures.
 
 The Qwen route reads at 0.80, fitted on its layout.
-An adapter keeps its own temperatures, and how well a tuned model reads pictures was measured for the tuned 12B only.
+An adapter keeps its own temperatures, and how well a tuned model reads pictures was measured for the previous tuned 12B only: Decisio v3 was trained on text, and its pictures are not measured.
 
 ## Limits
 

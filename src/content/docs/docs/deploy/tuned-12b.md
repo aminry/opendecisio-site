@@ -1,104 +1,125 @@
 ---
-title: Serve the tuned 12B
-description: Run the tuned Gemma 4 12B from its Hugging Face repository with one command, on a GPU, in FP8 or on a Mac, with honest probabilities or with committed yes/no answers, and with images on.
+title: Serve Decisio v3
+description: Run Decisio v3, a Gemma 4 12B tuned for decisions, with one command on a GPU, in FP8 or on a Mac, or pull it on Ollama, with calibrated probabilities or committed yes/no answers.
 ---
 
-<!-- Site-written: the Serve the tuned 12B guide. The repositories, revisions, served names and settings are the published repositories' and decisio's docs/running.md ("Flavors") at the pinned release; the accuracy figures are the announcement's held-out table. -->
+<!-- Site-written: the Serve Decisio v3 guide, at the tuned 12B's old address. The repositories, sizes, accuracy, calibration and speed figures are decisio's README at the pinned release ("Why Decisio v3", "Pick a model", "Speed and memory"; src/config/sourced.mjs checks them); the start commands are the README's, with the install pinned to that release. -->
 
-Run the tuned 12B when you want the smaller model with settings for rule-based decisions.
-It is right more often than the untrained 12B on hard decisions with rules, exceptions and arithmetic, and about the same elsewhere ([the announcement](/news/tuned-12b/)).
+::covers{links="README.md#why-decisio-v3=how-accurate-is-it README.md#pick-a-model=which-repository-do-you-pick README.md#run-it=start-it README.md#speed-and-memory=how-fast-is-it"}
 
-Each repository holds its weights and settings, so one flag serves it.
-On a GPU with room for about 24 GB of bf16 weights, this starts the calibrated one, with images on so you can send pictures with your text:
+Decisio v3 answers more of your questions right, with probabilities you can act on: when it says 80%, it is right about 80% of the time.
+Each repository holds its weights and settings, so one flag serves it, with exact arithmetic for bills, invoices, payslips and dates built in.
+
+On a Linux machine with one NVIDIA GPU and Python 3.12, this starts the calibrated one:
 
 ::site-block{name="tuned-start"}
 
-`--images on` loads the picture path; leave it off for a text-only server.
-[Ask about images](/docs/images/) shows the request.
+The first start downloads the model (22 GB) and the calculator's small tagger.
 
 <span class="fp-anchor" id="1-pick-the-repository"></span>
 
 ## Which repository do you pick?
 
-All three repositories hold the same weights; only their settings differ.
+Every repository holds the same weights in one of two flavors, and every one has a `commit` twin:
 
-- **`tachara-ai/Decisio-12b-tuned-calibrated`**, gives honest probabilities: calibrated temperatures for every question type, yes/no included, the header layout, and no commit rule, thinking or read twice.
-- **`tachara-ai/Decisio-12b-tuned-commit`**, commits yes/no answers: the same temperatures and layout with the commit rule, so no yes/no answer sits between 0.20 and 0.80. It changes no answer.
-- **`tachara-ai/Decisio-12b-tuned-commit-think`**, adds thinking on choice questions to the commit settings: a choice question whose likeliest option is under 0.3712 is read again after up to 256 tokens of reasoning, and a text longer than 45,000 tokens is cut to its start and answered without thinking.
+| Flavor | Use it when |
+| --- | --- |
+| `calibrated` | you use the probabilities themselves: thresholds, ranking, expected values |
+| `commit` | you act on yes/no answers: a yes/no between 20% and 80% is reported as 20% or 80%; the answer never changes |
 
-What thinking adds, and what it costs, is in [What was measured on what](/docs/measured/#what-thinking-adds-to-the-tuned-12b).
-A second tuned 12B, [v2](#the-tuned-12b-v2), has its own weights.
+| Format | Repository | Size | Runs on |
+| --- | --- | --- | --- |
+| bf16 | `tachara-ai/Decisio-12b-tuned-v3-calibrated` | 22 GB | an NVIDIA GPU |
+| FP8 | `tachara-ai/Decisio-12b-tuned-v3-fp8-calibrated` | 12 GB | an NVIDIA GPU, for smaller cards |
+| MLX 8-bit | `tachara-ai/Decisio-12b-tuned-v3-mlx8-calibrated` | 12 GB | a Mac with Apple silicon |
+| MLX 6-bit | `tachara-ai/Decisio-12b-tuned-v3-mlx-calibrated` | 9 GB | a Mac with Apple silicon, 32 GB |
+| Ollama | `aminroudaki/decisio-v3` (`q8_0`, `q4_k_m`) | 12.7 / 7.4 GB | any machine with Ollama |
+
+For the `commit` flavor, end the repository's name in `-commit` instead of `-calibrated`.
+
+## How accurate is it?
+
+On 5,000 held-out questions, Decisio v3 gains on every question type, most on scores:
+
+| Questions | Gemma 4 12B, untrained | The previous tuned 12B | Decisio v3 |
+| --- | --- | --- | --- |
+| All | 67.7% | 71.6% | 78.8% |
+| Choice | 68.9% | 71.7% | 79.8% |
+| Yes/no | 83.0% | 84.7% | 89.8% |
+| Score | 45.1% | 55.2% | 62.2% |
+
+Its probabilities are calibrated: on average they are off by 2.3 points from how often it is right, and the untrained model's by 9.0.
+
+::source[Held-out questions of the training distribution, never trained on, each model at its own temperatures; they are not scores on an independent benchmark. decisio's README, Decisio v3 published 2026-11-20.]
 
 <span class="fp-anchor" id="2-start-it"></span>
 
 ## Start it
 
-- **It needs a GPU with room for about 24 GB of bf16 weights.** It was measured on one RTX PRO 6000.
-- **`--base owner/name@revision`** takes the repository's weights and its settings; no other flag is needed. The first start downloads the weights.
+- **`--base owner/name`** takes the repository's weights and its settings, the calculator included; no other flag is needed.
 - **A flag you give still applies,** and is recorded as an override, as on [a flavor](/docs/bases/#serve-a-flavor).
+- **Pin a revision** with `@`, as `--base tachara-ai/Decisio-12b-tuned-v3-calibrated@<revision>`: each repository's page lists its revisions.
 
 <span class="fp-anchor" id="3-know-what-thinking-adds"></span>
 <span class="fp-anchor" id="4-or-serve-it-in-fp8"></span>
 
 ## Serve it in FP8
 
-On a GPU with FP8 support, two more repositories hold the tuned 12B in FP8, 13.1 GB each, with the same two settings:
+On a smaller NVIDIA card, the FP8 repository holds the same model in 12 GB:
 
 ::site-block{name="tuned-fp8-start"}
-
-- **`tachara-ai/Decisio-12b-tuned-fp8-calibrated`**, and **`tachara-ai/Decisio-12b-tuned-fp8-commit`**.
-- **The server emulates bf16 rounding on FP8 by default,** which narrows the difference between two cold starts.
-- **It is level with bf16 and quicker,** with a different likeliest answer on a few questions in a hundred ([the figures](/docs/measured/#the-tuned-12b-in-fp8)).
 
 <span class="fp-anchor" id="5-or-serve-it-on-a-mac"></span>
 
 ## Serve it on a Mac
 
-decisio serves the tuned 12B on a Mac with Apple silicon from its MLX conversions, with the calibrated and commit settings:
+decisio serves Decisio v3 on a Mac with Apple silicon from its MLX repositories:
 
 ::site-block{name="tuned-mlx-start"}
 
-- **8-bit** is `tachara-ai/Decisio-12b-tuned-mlx8-calibrated` and `-mlx8-commit`, 12.7 GB.
-- **6-bit** is `-mlx-calibrated` and `-mlx-commit`, 9.7 GB.
-- **Both fit a 32 GB Mac;** [the measurements](/docs/measured/#the-tuned-12b-on-a-mac) have their accuracy and memory.
-- **Pin a revision** with `@`, as on a GPU: the full hash is on each repository's page.
+The 6-bit repository, `-v3-mlx-calibrated`, fits a 32 GB Mac.
+
+## Pull it on Ollama
+
+`ollama pull aminroudaki/decisio-v3` takes the 8-bit file, and the `q4_k_m` tag the 4-bit one.
+Ollama answers the same `/v1/systemone` route with the model's own temperatures; the calculator comes only with decisio's own server.
+[On a Mac or a laptop](/docs/deploy/mac/#on-a-laptop-with-ollama) has the request.
+
+## How fast is it?
+
+One question, median and 95th percentile:
+
+| Setup | Weights | First start, with the download | One question |
+| --- | --- | --- | --- |
+| RTX PRO 6000, bf16 | 22 GB | 4 min 51 s | 60 / 144 ms |
+| RTX PRO 6000, FP8 | 12 GB | 3 min 41 s | 44 / 97 ms |
+| Mac M5 Pro (64 GB), MLX 8-bit | 12 GB | 2 min 51 s | 0.90 / 1.07 s |
+
+::source[One request at a time over 500 held-out texts of mixed length (100 on the Mac), decisio 0.51.0 installed with pip, the published repositories, the calibrated flavor; decisio's README.]
 
 <span class="fp-anchor" id="the-tuned-12b-v2"></span>
-
-## The tuned 12B v2
-
-`tachara-ai/Decisio-12b-tuned-v2-commit` is a second tuned Gemma 4 12B, a new model with its own weights and temperatures, with the commit settings.
-It is not an update of the repositories above, which remain decisio's default tuned 12B.
-Its card gives no accuracy figures, and none are measured here, so compare it with the first on your own questions.
-
-::site-block{name="tuned-v2-start"}
-
-- **It is a bf16 GPU repository only:** there is no FP8, Mac or Ollama version yet.
-- **It needs the decisio release the install above pins,** and the first start downloads its weights.
-
 <span class="fp-anchor" id="6-check-what-it-serves"></span>
 
 ## Check what it serves
 
-`GET /v1/models` and `/health` report the served name, such as `Decisio-12b-tuned-calibrated`, `Decisio-12b-tuned-commit-think`, `Decisio-12b-tuned-fp8-commit` or `Decisio-12b-tuned-v2-commit`.
+`GET /v1/models` and `/health` report the served name, such as `Decisio-12b-tuned-v3-calibrated`.
 
 <span class="fp-anchor" id="7-teach-and-certify-on-it"></span>
 
 ## Teach and certify on it
 
-Tasks and certificates are per model and per flavor: register and certify your tasks again on the tuned 12B, as on [Teach a task](/docs/tasks/).
+Tasks and certificates are per model and per flavor: register and certify your tasks again on Decisio v3, as on [Teach a task](/docs/tasks/).
 
 <span class="fp-anchor" id="8-know-what-is-not-there-yet"></span>
 <span class="fp-anchor" id="8-good-to-know"></span>
 
 ## Good to know
 
-- **Whether the tuned 12B reads pictures as well as the untrained 12B is not measured.** `--images on` serves them; the picture figures on [Ask about images](/docs/images/) are for the untrained models.
-- **On Ollama it is its own listing**, `aminroudaki/decisio-gemma-tuned`, which answers questions but needs a decisio server for tasks and certificates ([the Mac and Ollama guide](/docs/deploy/mac/#on-a-laptop-with-ollama)).
-- **Its accuracy was measured in bf16** against the untrained 12B on held-out items; the figures and their limits are in [the announcement](/news/tuned-12b/).
+- **Decisio v3 was trained on text;** it reads images through the base's image path, unmeasured.
+- **The accuracy figures are on held-out questions of the training distribution;** your questions may differ, so check it on yours with [Evaluate your task](/docs/evaluation-card/).
 
 ## What next
 
+- [Teach a task](/docs/tasks/): fit your own task on Decisio v3.
+- [Exact arithmetic](/docs/calculator/): what the calculator adds to bills, invoices, payslips and dates.
 - [Choosing a model](/docs/bases/): the untrained models and their flavors.
-- [Teach a task](/docs/tasks/): fit your own task on the tuned 12B.
-- [Requirements and limits](/docs/limits/#1-pick-your-machine): the machine it needs.

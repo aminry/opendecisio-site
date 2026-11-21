@@ -23,9 +23,9 @@ import { paragraphStarting, table } from '../lib/upstream-content.mjs';
 
 const { tiles } = benchTiles();
 const di = decisionIndexBoard();
-const paired = table('README.md', 'Choosing a base', 2);
+const paired = table('docs/overview.md', 'Choosing a base', 2);
 // The paired table's own opening sentence; the README's next sentences repeat figures the page already shows.
-const pairedIntro = paragraphStarting('README.md', 'Choosing a base', 'What drives the choice').split('\n')[0];
+const pairedIntro = paragraphStarting('docs/overview.md', 'Choosing a base', 'What drives the choice').split('\n')[0];
 const lines = baseLines();
 const notes = tableNotes();
 const measured = tableConditions();

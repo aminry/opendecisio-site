@@ -22,7 +22,7 @@ On a Mac, a 1,176-token moderation policy sent as the context took 373 ms a read
 | MLX, an Apple M5 Pro | 1,946 ms a read | 373 ms a read |
 | vLLM, an RTX PRO 6000 | 61.4 ms p50 | 60.8 ms p50 |
 
-::source[decisio's measurement with a 1,176-token moderation policy and short comments to judge, the tuned 12B, one question per request, requests one at a time: the MLX conversion on an Apple M5 Pro, the mean of 600 reads; the 12B in bf16 on vLLM 0.31.0 and one RTX PRO 6000, 40 requests, as decisio's docs/tasks.md states them.]
+::source[decisio's measurement with a 1,176-token moderation policy and short comments to judge, the previous tuned 12B, one question per request, requests one at a time: the MLX conversion on an Apple M5 Pro, the mean of 600 reads; the 12B in bf16 on vLLM 0.31.0 and one RTX PRO 6000, 40 requests, as decisio's docs/tasks.md states them.]
 
 - **On a Mac each request computes only its changing part.** MLX's prefix cache finds only exactly the same prefix, so a policy at the start of every request is computed again each time; as the context it is a cache entry of its own, and each request computes only its changing part.
 - **On vLLM the answers are the same, and the requests smaller.** vLLM's prefix cache already reuses a prefix every request repeats, so the two run at the same speed; the context is held from the task's first request.

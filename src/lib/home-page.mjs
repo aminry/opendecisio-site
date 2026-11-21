@@ -28,7 +28,7 @@ export function heroStats() {
 		return c.printed.replace(/ \(\d+\)$/, '');
 	};
 	const one = singleQuestion();
-	const release = /^- decisio (v[\d.]+) on vLLM [\d.]+ \(the 31B and the 12B at their repositories' pins\)/m.exec(readUpstream('README.md'))?.[1];
+	const release = /^- decisio (v[\d.]+) on vLLM [\d.]+ \(the 31B and the 12B at their repositories' pins\)/m.exec(readUpstream('docs/overview.md'))?.[1];
 	if (!release) fail("the README no longer names the decisio release of the same-box session");
 	const date = stable('speed_same_box_2026_10_11').date;
 	// The first figure's run, by its record's name (runs/2026-10-06_latency-585w/, in the facts' conditions).
@@ -106,13 +106,13 @@ export function useCaseCards() {
 	return ids.map((id) => ({ id, href: `/docs/use-cases/${id}/`, ...CARDS[id], proof: proof[id][0], source: proof[id][1], measured: id !== 'document-classification' }));
 }
 
-/** The home page's setup routes: the tuned 12B, the default, on each machine (the docs' Quickstart's own blocks), then the verified one-choice request. */
+/** The home page's setup routes: Decisio v3, the recommended model, on each machine (the docs' Quickstart's own blocks), then the verified one-choice request. */
 export function homeBlocks() {
  return {
   tabs: [
-   {id:'gpu',label:'GPU',note:'Linux with an NVIDIA card that has room for about 24 GB of bf16 weights. The first start downloads the model, and images are on.',blocks:[siteBlock('tuned-start').text],href:'/docs/#1-pick-your-machine',guide:'GPU, Docker and FP8 setup'},
-   {id:'mac',label:'Mac (MLX)',note:'A Mac with Apple silicon and 32 GB or more. This 8-bit build is 12.7 GB, and images are on.',blocks:[siteBlock('tuned-mlx-start').text],href:'/docs/deploy/mac/',guide:'Apple silicon requirements and setup'},
-   {id:'ollama',label:'Ollama',note:'Mac, Linux or Windows with Ollama 0.40.4 or later. Its listings read images as they are. Its request below uses port 11434 and names the pulled model.',blocks:[siteBlock('ollama-pull-tuned').text,siteBlock('ollama-request-tuned').text],href:'/docs/deploy/mac/#on-a-laptop-with-ollama',guide:'Ollama setup and supported versions'},
+   {id:'gpu',label:'GPU',note:'Linux with an NVIDIA card that has room for 22 GB of bf16 weights. The first start downloads the model and the calculator\'s small tagger.',blocks:[siteBlock('tuned-start').text],href:'/docs/#1-pick-your-machine',guide:'GPU, Docker and FP8 setup'},
+   {id:'mac',label:'Mac (MLX)',note:'A Mac with Apple silicon and 32 GB or more. This 8-bit build is 12 GB.',blocks:[siteBlock('tuned-mlx-start').text],href:'/docs/deploy/mac/',guide:'Apple silicon requirements and setup'},
+   {id:'ollama',label:'Ollama',note:'Mac, Linux or Windows with Ollama 0.40.4 or later. The 8-bit file is 12.7 GB. Its request below uses port 11434 and names the pulled model.',blocks:[siteBlock('ollama-pull-tuned').text,siteBlock('ollama-request-tuned').text],href:'/docs/deploy/mac/#on-a-laptop-with-ollama',guide:'Ollama setup and supported versions'},
   ],
   request:siteBlock('question-choice').text,
  };

@@ -73,11 +73,11 @@ curl -s http://127.0.0.1:8000/v1/systemone \
 
 - **`"layout"` is `"plain"` or `"header"`,** on `/v1/systemone`. Absent or `null`, the request gets the server's layout; any other value is a 422.
 - **The request is built token for token** as a server started with that `--layout` builds it, and `x-decisio-prompt` says which layout was read.
-- **On the tuned 12B a later, different question about the same text took 177 to 185 ms under plain** and 434 to 436 ms under the header, which reads the text again. A repeated request took about 147 ms against about 391 ms for the first read, in either layout.
+- **On the previous tuned 12B a later, different question about the same text took 177 to 185 ms under plain** and 434 to 436 ms under the header, which reads the text again. A repeated request took about 147 ms against about 391 ms for the first read, in either layout.
 - **What plain gives up is the header's gain in the answers,** not their speed: the tables above.
 - **The two layouts share no cached text.** A client that switches layouts about one text reads it again on each change.
 
-::source[The tuned 12B's times: decisio 0.43.0's release notes, measured on one RTX PRO 5000. The 31B's: decisio's docs/running.md, "First-question latency by state length".]
+::source[The previous tuned 12B's times: decisio 0.43.0's release notes, measured on one RTX PRO 5000. The 31B's: decisio's docs/running.md, "First-question latency by state length".]
 
 To serve plain to every request that names none, start the server with `--layout plain`:
 

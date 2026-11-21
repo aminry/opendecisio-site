@@ -5,6 +5,7 @@ import { toString } from 'mdast-util-to-string';
 import { pin, readUpstream } from './upstream.mjs';
 
 const README = 'README.md';
+const OVERVIEW = 'docs/overview.md';
 
 /** The README's title, the heading the opening paragraphs sit under. */
 function readmeTitle() {
@@ -22,7 +23,7 @@ export function oneSentence() {
 
 /** The three bases, with their checkpoints and provenance. */
 export function bases() {
-	const t = table(README, 'Choosing a base', 0);
+	const t = table(OVERVIEW, 'Choosing a base', 0);
 	return t.rows.map(([base, checkpoint, provenance]) => ({ base, checkpoint, provenance }));
 }
 
@@ -33,7 +34,7 @@ export function bases() {
  * `sub` the item's sub-bullets.
  */
 export function guidance() {
-	const list = sectionNodes(README, 'Choosing a base').find((n) => n.type === 'list');
+	const list = sectionNodes(OVERVIEW, 'Choosing a base').find((n) => n.type === 'list');
 	if (!list) throw new Error('home: the README "Choosing a base" no longer has its list of when to choose each base');
 	return list.children.map((item) => {
 		const [lead, ...rest] = inlineHtml(item.children[0]).split('\n');
@@ -54,7 +55,7 @@ export function guidanceFor(flag) {
  * The measurement qualifiers beside the README's benchmark tables, found by their opening words.
  */
 function standingLines() {
-	const lines = sectionNodes(README, 'Benchmarks')
+	const lines = sectionNodes(OVERVIEW, 'Benchmarks')
 		.filter((n) => n.type === 'paragraph')
 		.flatMap((n) => inlineHtml(n).split('\n'));
 	const plain = (l) => l.replace(/<[^>]+>/g, '');
@@ -71,7 +72,7 @@ function standingLines() {
 
 /** The benchmarks table, split into the speed rows and the accuracy rows. */
 export function benchmarks() {
-	const t = table(README, 'Benchmarks', 0);
+	const t = table(OVERVIEW, 'Benchmarks', 0);
 	const isSpeed = (row) => /server time/.test(row[0]);
 	return {
 		head: t.head,
@@ -81,34 +82,34 @@ export function benchmarks() {
 		source: sourceLines(),
 		standing: standingLines(),
 		// From 0.8.0: where the latency rows were measured, and how much the host matters.
-		latency: paragraphStarting(README, 'Benchmarks', 'The latency rows', { optional: true })?.split('\n') ?? [],
+		latency: paragraphStarting(OVERVIEW, 'Benchmarks', 'The latency rows', { optional: true })?.split('\n') ?? [],
 	};
 }
 
 /** The README's example request, and the response it recorded. */
 export function firstRequest() {
-	const response = JSON.parse(code(README, 'Ask a question', 1));
+	const response = JSON.parse(code(OVERVIEW, 'Ask a question', 1));
 	return {
-		request: code(README, 'Ask a question', 0),
+		request: code(OVERVIEW, 'Ask a question', 0),
 		response: response.answers,
-		recorded: paragraphStarting(README, 'Ask a question', 'Response,'),
+		recorded: paragraphStarting(OVERVIEW, 'Ask a question', 'Response,'),
 	};
 }
 
 /** The install chooser: machine, path, memory needed. */
 export function machines() {
-	const t = table(README, 'Install and run', 0);
+	const t = table(OVERVIEW, 'Install and run', 0);
 	return t.rows.map(([machine, path, memory]) => ({ machine, path, memory }));
 }
 
 /** The commands of each install path. */
 export function install(heading) {
-	return code(README, heading, 0);
+	return code(OVERVIEW, heading, 0);
 }
 
 /** The demo clips the README shows, with their captions. */
 export function clips() {
-	const t = table(README, 'Watch it play', 0);
+	const t = table(OVERVIEW, 'Watch it play', 0);
 	// Below an empty header, the table alternates a row of GIFs and a row of captions.
 	const out = [];
 	const rows = t.rows;
@@ -130,7 +131,7 @@ export function sectionText(file, heading) {
 
 /** The example request's JSON body, from the curl command in the README. */
 export function requestBody() {
-	const command = code(README, 'Ask a question', 0);
+	const command = code(OVERVIEW, 'Ask a question', 0);
 	const body = command.match(/-d '([\s\S]*)'\s*$/)?.[1];
 	if (!body) throw new Error('home: the README example no longer has a -d body');
 	return JSON.parse(body);
@@ -138,7 +139,7 @@ export function requestBody() {
 
 /** The record each Benchmarks column comes from, as the README's sentence under the table names them. */
 export function benchmarkRecords() {
-	const text = paragraphText(README, 'Benchmarks', 0);
+	const text = paragraphText(OVERVIEW, 'Benchmarks', 0);
 	if (!text.startsWith('Each base with its own defaults')) throw new Error('home: the README Benchmarks section no longer opens with its records sentence');
 	const m = text.match(/the Qwen and Gemma 4 12B bases in one session \((runs\/[^)]+)\), Gemma 4 31B in its own \((runs\/[^)]+)\), image input in another \((runs\/[^)]+)\)/);
 	if (m) return { 'qwen3.6-35b-a3b': m[1], 'gemma-4-12b': m[1], 'gemma-4-31b': m[2], image: m[3] };
@@ -157,7 +158,7 @@ export let selfRun = '';
 
 /** The README's records sentences; a "Measured privately" line is replaced by the site's self-run sentence. */
 function sourceLines() {
-	const lines = paragraphStarting(README, 'Benchmarks', 'Each base with its own defaults').split('\n');
+	const lines = paragraphStarting(OVERVIEW, 'Benchmarks', 'Each base with its own defaults').split('\n');
 	const kept = lines.filter((l) => !/^Measured privately/.test(l.replace(/<[^>]+>/g, '')));
 	selfRun = kept.length < lines.length ? selfRunSentence : '';
 	return kept;

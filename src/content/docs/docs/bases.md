@@ -1,16 +1,17 @@
 ---
 title: Choosing a model
-description: Which of the three models to serve, by your machine and what you need; one flag picks it, with every setting it was measured with.
+description: Start with Decisio v3, or pick an untrained model by your machine and what you need; one flag picks it, with every setting it was measured with.
 ---
 
 <!-- Site-written: the Choosing a model reference. The start commands are the README's "Choosing a base" at the pinned release; the checkpoints, weights and reasons are the README's and docs/running.md's there (src/config/sourced.mjs checks them). The comparisons between the models are on Benchmarks. -->
 
-::covers{links="README.md#choosing-a-base docs/running.md#flavors=serve-a-flavor docs/running.md#the-31b-in-bf16=the-31b-in-bf16 docs/running.md#the-12b-in-two-precisions=the-12b-in-fp8 docs/running.md#the-12b-in-two-precisions-bf16-and-fp8=the-12b-in-fp8"}
+::covers{links="README.md#choosing-a-base docs/running.md#flavors=serve-a-flavor docs/running.md#the-31b-in-bf16=the-31b-in-bf16 docs/running.md#the-12b-in-two-precisions=the-12b-in-fp8 docs/running.md#the-12b-in-two-precisions-bf16-and-fp8=the-12b-in-fp8 docs/running.md#the-small-bases=the-small-bases"}
 
-Pick the model by your machine and what you need: one flag, `--base`, serves it with every setting it was measured with.
+Start with **Decisio v3**, a Gemma 4 12B tuned for decisions, on a GPU, a Mac or Ollama: [Serve Decisio v3](/docs/deploy/tuned-12b/) has its repositories.
+The untrained models are one flag away: `--base` serves each with every setting it was measured with.
 With no flag the server serves Gemma 4 31B:
 
-::upstream{file="README.md" section="Choosing a base" block="1"}
+::upstream{file="docs/overview.md" section="Choosing a base" block="1"}
 
 ## Pick by your machine
 
@@ -82,7 +83,7 @@ How a flavor is served:
 - **On the 31B, `calibrated` and `commit` do not start yet:** its calibrated temperatures are not fitted. Its `read-enhanced` serves the model's own temperatures until they are. The flavor `read-enhanced` says `pending` wherever the flavor is reported: it has no question cap until its timing run.
 - **Thinking is not a flavor:** [`--think`](/docs/think/) turns it on for any server.
 - **Tasks and certificates are per flavor.** The Qwen model and the 31B in bf16 have no flavors, and a server without `--flavor` is what it was.
-- **A tuned model can be a flavor of its own:** [the tuned 12B](/docs/deploy/tuned-12b/) ships as `Decisio-12b-tuned-calibrated`, `Decisio-12b-tuned-commit` and `Decisio-12b-tuned-commit-think`, which adds thinking on choice questions to the commit settings.
+- **A tuned model carries its own settings:** [Decisio v3](/docs/deploy/tuned-12b/) ships as `Decisio-12b-tuned-v3-calibrated` and `Decisio-12b-tuned-v3-commit`.
 
 ## The 31B in bf16
 
@@ -94,6 +95,16 @@ How a flavor is served:
 - **It needs room for 57.91 GiB of weights and a cache.** On one 96 GB card it does not start at the default share; on a larger card the server serves the longest text that fits, up to 65,536 tokens. Read `/health` for the length it chose.
 - **Its accuracy, calibration and latency are not measured,** and the FP8 31B's records do not carry over to it.
 - It runs on the vLLM server only, with no flavors.
+
+## The small bases
+
+`--base qwen3.5-4b` serves `Qwen/Qwen3.5-4B` and `--base gemma-4-e4b` serves `google/gemma-4-E4B-it`, each at its pinned revision, in bf16, on the vLLM server:
+
+::upstream{file="docs/running.md" section="The small bases" block="1"}
+
+- **Text only,** with the 12B's prompt and the header layout.
+- **Their temperatures are not fitted yet:** 1.0 for every question type until a fit on their own reads replaces it.
+- **Not measured yet:** accuracy, calibration and latency. MLX does not serve them.
 
 ## What next
 

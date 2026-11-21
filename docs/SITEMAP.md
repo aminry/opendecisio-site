@@ -26,7 +26,7 @@ The current release is read from `upstream.json`.
 | `/docs/deploy/development/` | For development (CPU) |
 | `/docs/deploy/docker/` | With Docker |
 | `/docs/deploy/mac/` | On a Mac or a laptop |
-| `/docs/deploy/tuned-12b/` | Serve the tuned 12B |
+| `/docs/deploy/tuned-12b/` | Serve Decisio v3 |
 | `/docs/evaluation-card/` | Evaluate your task |
 | `/docs/flags/` | Server flags |
 | `/docs/glossary/` | Glossary |

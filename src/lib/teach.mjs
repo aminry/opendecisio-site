@@ -15,7 +15,7 @@ const same = (a, b, what) => { if (Math.abs(a - b) > 5e-4) fail(`${what}: launch
 export function intentRows() {
 	const card = readUpstream('EVAL_CARD.md');
 	const m = must(card, /Intent heads from 10 labelled examples per intent \| BANKING77 (0\.\d+) \(plain readout (0\.\d+)\), CLINC150 (0\.\d+) \((0\.\d+)\), means of three draws; registration (\d+) s and (\d+) s/, 'the 31B\'s intent heads against its plain readout');
-	const readme = readUpstream('README.md');
+	const readme = readUpstream('docs/overview.md');
 	const r = must(readme, /^\| Intent heads, BANKING77 \/ CLINC150 \| [^|]*\| [^|]*\| (0\.\d+) \/ (0\.\d+) \|$/m, 'the intent-head row of the README\'s Benchmarks table');
 	if (r[1] !== m[1] || r[2] !== m[3]) fail('the README\'s intent-head row and the evaluation card\'s disagree about the 31B');
 	const tasks = readUpstream('docs/tasks.md');

@@ -280,7 +280,7 @@ export function manyQuestions(kind) {
 	// The box, as the site says it ("measured by us"), and the release decisio ran, in the README's own line.
 	need2(/^measured by [^,]+ on one RTX PRO 6000, each system on its own published server, in one session$/.test(m.box.labelled), 'has a same_box_speed box label the site no longer reads');
 	const box = m.box.labelled.replace(/^measured by [^ ]+( [A-Z][\w.]*)* on/, 'Measured by us on');
-	const release = /^- (decisio v[\d.]+ on vLLM [\d.]+) \(the 31B and the 12B at their repositories' pins\)/m.exec(readUpstream('README.md'))?.[1];
+	const release = /^- (decisio v[\d.]+ on vLLM [\d.]+) \(the 31B and the 12B at their repositories' pins\)/m.exec(readUpstream('docs/overview.md'))?.[1];
 	need2(release, 'is beside a README that no longer names the decisio release of the same-box session');
 	return { sentences, qualifiers, chart: charts[kind], box, release: `The server was ${release}, on the plain layout.` };
 }

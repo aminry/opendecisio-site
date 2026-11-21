@@ -36,6 +36,7 @@ function pulled(_stdout, stderr, expected = 2) {
 	if (n !== expected) throw new Error(`the pulls ended in ${n} "success", not ${expected}`);
 }
 const pulledOne = (stdout, stderr) => pulled(stdout, stderr, 1);
+const pulledThree = (stdout, stderr) => pulled(stdout, stderr, 3);
 
 // The README's support-ticket request answers all three of its questions.
 function ticketAnswers(stdout) {
@@ -122,11 +123,11 @@ export const plan = [
 		note: "the answers are the stand-in's, not the default model's",
 		assert: (stdout) => questionAnswer(stdout, 'category', 'choice', ['billing', 'access', 'bug']),
 	},
-		// The three machines' start commands and the Ollama request: the tuned 12B, the default (src/lib/site-blocks.mjs).
+		// The three machines' start commands and the Ollama request: Decisio v3, the recommended model (src/lib/site-blocks.mjs).
 	{ page: '/docs/', n: 2, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/deploy/tuned-12b/', 1] },
-	{ page: '/docs/', n: 3, mode: 'same-as', expect: 'pip install "decisio[mlx-images]', of: ['/docs/deploy/tuned-12b/', 3] },
-	{ page: '/docs/', n: 4, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma-tuned', models: ['aminroudaki/decisio-gemma-tuned'], needs: '0.40.4', assert: pulledOne },
-	{ page: '/docs/', n: 7, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma-tuned'], needs: '0.40.4', assert: ticketAnswers },
+	{ page: '/docs/', n: 3, mode: 'same-as', expect: 'pip install "decisio[mlx]', of: ['/docs/deploy/tuned-12b/', 3] },
+	{ page: '/docs/', n: 4, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-v3', models: ['aminroudaki/decisio-v3'], needs: '0.40.4', assert: pulledOne },
+	{ page: '/docs/', n: 7, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-v3'], needs: '0.40.4', assert: ticketAnswers },
 	{ page: '/docs/', n: 8, mode: 'example', expect: '{\n  "type": "choice",' },
 	{ page: '/docs/concepts/choice/', n: 1, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },
 	{ page: '/docs/concepts/choice/', n: 2, mode: 'same-as', expect: '{\n  "type": "choice",', of: ['/docs/', 8] },
@@ -279,11 +280,10 @@ export const plan = [
 		},
 	},
 	{ page: '/docs/concurrency/', n: 1, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
-	// Serve the tuned 12B: decisio's command on a card, which this check does not have.
-	{ page: '/docs/deploy/tuned-12b/', n: 1, mode: 'shown', expect: 'python3.12 -m venv .venv', why: 'it needs Linux with one NVIDIA card and about 24 GB of bf16 weights, which this check does not have' },
+	// Serve Decisio v3: decisio's README commands on a card or a Mac, which this check does not have.
+	{ page: '/docs/deploy/tuned-12b/', n: 1, mode: 'shown', expect: 'python3.12 -m venv .venv', why: 'it needs Linux with one NVIDIA card and room for 22 GB of bf16 weights, which this check does not have' },
 	{ page: '/docs/deploy/tuned-12b/', n: 2, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with an NVIDIA card that supports FP8, which this check does not have' },
-	{ page: '/docs/deploy/tuned-12b/', n: 3, mode: 'shown', expect: 'pip install "decisio[mlx-images]', why: 'it needs a Mac with Apple silicon, which this check does not have' },
-	{ page: '/docs/deploy/tuned-12b/', n: 4, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card and about 24 GB of bf16 weights, which this check does not have' },
+	{ page: '/docs/deploy/tuned-12b/', n: 3, mode: 'shown', expect: 'pip install "decisio[mlx]', why: 'it needs a Mac with Apple silicon, which this check does not have' },
 	// Teach a task whose options change: the registration as decisio's docs give it.
 	{ page: '/docs/tasks/dynamic/', n: 1, mode: 'shown', expect: 'import json\nimport os', why: 'it needs the reader’s own complete dynamic-task.json with labelled requests; transport tests check the registration' },
 	// Answer short tasks faster: the registration as decisio's docs give it.
@@ -312,9 +312,10 @@ export const plan = [
 	{ page: '/docs/layout/', n: 3, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
 	// Think when unsure: the server's think setting read from /health on the stand-in (thinking off, its default); the start
 	// and a thinking request need the vLLM engine, which writes the reasoning.
-	// Exact arithmetic: decisio's own block and request; no repository on this site records the format, so no model on this check or the site's can read them.
+	// Exact arithmetic: decisio's own blocks and request; the CPU development model records no calculator format, so this check cannot read them.
 	{ page: '/docs/calculator/', n: 1, mode: 'example', expect: 'Shipment SH-310, shipper: Teo Barrand.' },
-	{ page: '/docs/calculator/', n: 2, mode: 'shown', expect: '{\n  "state": "Shipment SH-310', why: 'it needs a model whose repository records the calculator format, which none of the repositories on this site does' },
+	{ page: '/docs/calculator/', n: 2, mode: 'example', expect: 'Calculator, times (exact):' },
+	{ page: '/docs/calculator/', n: 3, mode: 'shown', expect: '{\n  "state": "Shipment SH-310', why: 'it needs a model whose repository records the calculator format, such as Decisio v3, on a GPU or a Mac; the CPU development model records none' },
 	{ page: '/docs/think/', n: 1, mode: 'shown', expect: 'pip install "decisio[serve]', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
 	{ page: '/docs/think/', n: 2, mode: 'shown', expect: 'curl -s http://127.0.0.1:8000/v1/systemone', why: "it needs a server that thinks; the CPU stand-in cannot write reasoning, only the vLLM engine on a card can" },
 	{
@@ -455,11 +456,12 @@ export const plan = [
 	{ page: '/docs/deploy/mac/', n: 4, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --backend mlx --base gemma-4-12b', needs: 'a Mac with Apple silicon', record: 'runs/2026-10-05_mlx-gemma/' },
 	{ page: '/docs/deploy/mac/', n: 5, mode: 'shown', expect: 'uv sync --extra mlx-images', why: 'it needs a Mac with Apple silicon, which this check does not have' },
 	{ page: '/docs/deploy/mac/', n: 6, mode: 'output', expect: 'decisio: the gemma-4-12b base needs about 16.6 GiB under MLX' },
-	// The pull is decisio's; both Ollama blocks are run against Ollama by scripts/verify-ollama.mjs
-	// (the request is site-written: src/lib/site-blocks.mjs).
-	{ page: '/docs/deploy/mac/', n: 7, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-gemma', models: ['aminroudaki/decisio-gemma', 'aminroudaki/decisio-gemma-tuned'], needs: '0.40.4', assert: pulled },
+	// The pulls are Decisio v3's card's and decisio's; both Ollama blocks are run against Ollama by scripts/verify-ollama.mjs
+	// (both are site-written: src/lib/site-blocks.mjs).
+	{ page: '/docs/deploy/mac/', n: 7, mode: 'ollama', expect: 'ollama pull aminroudaki/decisio-v3', models: ['aminroudaki/decisio-v3', 'aminroudaki/decisio-v3:q4_k_m', 'aminroudaki/decisio-gemma'], needs: '0.40.4', assert: pulledThree },
 	{ page: '/docs/deploy/mac/', n: 8, mode: 'ollama', expect: 'curl http://localhost:11434/v1/systemone', models: ['aminroudaki/decisio-gemma'], needs: '0.40.4', assert: ticketAnswers },
 	{ page: '/docs/bases/', n: 1, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine                          # gemma-4-31b, the default', needs: 'an NVIDIA card', record: 'runs/2026-10-04_gemma-base/' },
+	{ page: '/docs/bases/', n: 2, mode: 'shown', expect: 'uv run python -m decisio.serve.vllm_engine --base qwen3.5-4b', why: 'it needs Linux with one NVIDIA card, which this check does not have' },
 
 	{ page: '/docs/releases/', n: 2, mode: 'verbatim', expect: 'uv run python -m decisio.serve.vllm_engine --base qwen3.6-35b-a3b', needs: 'an NVIDIA card, and for the container the NVIDIA Container Toolkit' },
 
@@ -484,8 +486,8 @@ export const plan = [
 
 	// The home page's Get started: each tab's block is the Quickstart's own, and the request and its answer are Get started's.
 	{ page: '/', n: 1, mode: 'same-as', expect: 'python3.12 -m venv .venv', of: ['/docs/', 2] },
-	{ page: '/', n: 2, mode: 'same-as', expect: 'pip install "decisio[mlx-images]', of: ['/docs/', 3] },
-	{ page: '/', n: 3, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-gemma-tuned', of: ['/docs/', 4] },
+	{ page: '/', n: 2, mode: 'same-as', expect: 'pip install "decisio[mlx]', of: ['/docs/', 3] },
+	{ page: '/', n: 3, mode: 'same-as', expect: 'ollama pull aminroudaki/decisio-v3', of: ['/docs/', 4] },
 	{ page: '/', n: 4, mode: 'same-as', expect: 'curl http://localhost:11434/v1/systemone', of: ['/docs/', 7] },
 	{ page: '/', n: 5, mode: 'same-as', expect: 'curl --fail-with-body', of: ['/docs/', 1] },
 ];

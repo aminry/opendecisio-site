@@ -40,7 +40,7 @@ export function integrationsRun() {
 /** The five integrations checked against a server: version, checks passed, and the one thing to set. Compared with the README's table. */
 export function integrations() {
 	const data = vendored();
-	const readme = readUpstream('README.md');
+	const readme = readUpstream('docs/overview.md');
 	const table = readme.slice(readme.indexOf('## Works with'));
 	for (const it of data.items) {
 		const row = table.split('\n').find((l) => l.startsWith(`| ${it.readmeName} |`));
@@ -59,7 +59,7 @@ export const useFromFigures = {
  * dates of the checks (the README's "Works with") and of the programs (docs/integrations.md). */
 export function integrationsTable() {
 	const data = integrations();
-	const readme = readUpstream('README.md');
+	const readme = readUpstream('docs/overview.md');
 	const checked = /checked against a running decisio server \(Gemma 4 31B, decisio (\d+\.\d+\.\d+), [^)]*?(\d{4}-\d{2}-\d{2})\)/.exec(readme);
 	if (!checked) throw new Error('docs-figures: the README\'s Works with no longer says which release and date the integrations were checked on');
 	const programs = /with the package versions named, on (\d{4}-\d{2}-\d{2})/.exec(readUpstream('docs/integrations.md'));

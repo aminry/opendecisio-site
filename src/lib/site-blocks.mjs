@@ -154,10 +154,10 @@ const thinkHealth = () => `curl -s http://127.0.0.1:8000/health \\\n  | python3 
 
 // Batch concurrent requests: the start in batched mode, and the server's mode in /health.
 const concurrencyStart = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --concurrency batched`;
-const tunedStart = () => `python3.12 -m venv .venv && . .venv/bin/activate\npip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-calibrated@baa731aa --images on`;
-const tunedFp8Start = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-fp8-calibrated@d77c2790 --images on`;
-const tunedMlxStart = () => `pip install "decisio[mlx-images]==${version()}"\npython -m decisio.serve.vllm_engine --backend mlx --base tachara-ai/Decisio-12b-tuned-mlx8-calibrated --images on`;
-const tunedV2Start = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine --base tachara-ai/Decisio-12b-tuned-v2-commit@1b63613e --images on`;
+// Decisio v3's start commands, as decisio's README gives them, with the install pinned to the documented release.
+const tunedStart = () => `python3.12 -m venv .venv && . .venv/bin/activate\npip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine \\\n  --base tachara-ai/Decisio-12b-tuned-v3-calibrated`;
+const tunedFp8Start = () => `pip install "decisio[serve]==${version()}"\npython -m decisio.serve.vllm_engine \\\n  --base tachara-ai/Decisio-12b-tuned-v3-fp8-calibrated`;
+const tunedMlxStart = () => `pip install "decisio[mlx]==${version()}"\npython -m decisio.serve.vllm_engine --backend mlx \\\n  --base tachara-ai/Decisio-12b-tuned-v3-mlx8-calibrated`;
 const dynamicRegister = () => taskRegistration('dynamic');
 const fastTableRegister = () => taskRegistration('table');
 // Answer short tasks faster: a task that learns its table from its traffic, decisio's docs/tasks.md request laid out for a phone.
@@ -296,7 +296,6 @@ export const siteBlocks = {
 	get 'tuned-start'() { return { lang: 'bash', text: tunedStart() }; },
 	get 'tuned-fp8-start'() { return { lang: 'bash', text: tunedFp8Start() }; },
 	get 'tuned-mlx-start'() { return { lang: 'bash', text: tunedMlxStart() }; },
-	get 'tuned-v2-start'() { return { lang: 'bash', text: tunedV2Start() }; },
 	get 'context-register'() { return { lang: 'python', text: taskRegistration('context') }; },
 	get 'dynamic-register'() { return { lang: 'python', text: dynamicRegister() }; },
 	get 'fast-path-register'() { return { lang: 'python', text: fastPathRegistration() }; },
@@ -331,8 +330,10 @@ export const siteBlocks = {
 	'ollama-request': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio') },
 	// The Gemma listing, the 16 GB laptop's: the home page's.
 	'ollama-request-gemma': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio-gemma') },
-	'ollama-pull-tuned': { lang: 'sh', text: 'ollama pull aminroudaki/decisio-gemma-tuned' },
-	'ollama-request-tuned': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio-gemma-tuned') },
+	'ollama-pull-tuned': { lang: 'sh', text: 'ollama pull aminroudaki/decisio-v3' },
+	// The card's two pulls of Decisio v3 and decisio's docs/running.md's pull of the untrained 12B.
+	'ollama-pull-v3': { lang: 'sh', text: 'ollama pull aminroudaki/decisio-v3            # Decisio v3, the 8-bit file\nollama pull aminroudaki/decisio-v3:q4_k_m     # Decisio v3, the 4-bit file\nollama pull aminroudaki/decisio-gemma         # the untrained Gemma 4 12B' },
+	'ollama-request-tuned': { lang: 'sh', text: ollamaRequest('aminroudaki/decisio-v3') },
 };
 
 /** A site-written block by name, or an error naming the unknown one. */
