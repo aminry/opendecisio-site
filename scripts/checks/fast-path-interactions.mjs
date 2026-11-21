@@ -128,7 +128,7 @@ try {
   for(const width of [1440,820,390,320]){
     await page.setViewportSize({width,height:1000});await stream.scrollIntoViewIfNeeded();
     await until(async()=>await stream.getAttribute('data-playback')==='running','Request stream did not resume');
-    const sizes=[];for(let i=0;i<76;i++){await page.clock.runFor(1000);sizes.push(await stream.evaluate(el=>({height:el.clientHeight,parts:[...el.children].map(c=>[c.className.baseVal??c.className,c.clientHeight])})));}
+    const sizes=[];for(let i=0;i<76;i++){await page.clock.runFor(1000);sizes.push(await stream.evaluate(el=>({height:el.clientHeight,parts:[...el.children].map(c=>[c.className.baseVal??c.className,c.clientHeight]),answers:[...el.querySelectorAll('.fp-demo-answers>div>*')].map(c=>[c.tagName.toLowerCase(),c.clientHeight,c.textContent.trim().slice(0,40)])})));}
     const heights=sizes.map(s=>s.height);if(Math.max(...heights)-Math.min(...heights)>2)console.error(JSON.stringify({width,short:sizes.find(s=>s.height===Math.min(...heights)),tall:sizes.find(s=>s.height===Math.max(...heights))}));
     for(const name of ['fp-incoming','fp-demo-node','fp-demo-answers','fp-saving','fp-demo-examples']){const values=sizes.map(s=>s.parts.find(p=>p[0]===name)[1]);assert.ok(Math.max(...values)-Math.min(...values)<=2,`${name} changes height at ${width}px`);}
     assert.ok(Math.max(...heights)-Math.min(...heights)<=2,`Request stream changes height across examples at ${width}px: ${Math.min(...heights)}–${Math.max(...heights)}`);
