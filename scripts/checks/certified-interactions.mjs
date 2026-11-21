@@ -18,12 +18,14 @@ try {
   await context.route(/https:\/\/(static\.)?cloudflareinsights\.com\//, r => r.fulfill({ status: 200, contentType: 'application/javascript', body: '' }));
   await context.route('**/cdn-cgi/rum*', r => r.fulfill({ status: 204 }));
   const page = await context.newPage(); const errors = []; page.on('pageerror', e => errors.push(e.message));
-  let videoRequests=0;page.on('request',r=>{if(r.url().includes('/media/teach-and-certify.mp4'))videoRequests++;});
+  // Each request for the overview, with what the engine sent and when, so a request before reader intent names its cause.
+  const videoRequests=[];const started=Date.now();
+  page.on('request',r=>{if(r.url().includes('/media/teach-and-certify.mp4'))videoRequests.push({ms:Date.now()-started,method:r.method(),type:r.resourceType(),range:r.headers().range??null,frame:r.frame()===page.mainFrame()?'main':'other'});});
   await page.goto(`${base}/demos/teach-and-certify/`); await page.waitForLoadState('networkidle');
   const video=page.locator('[data-teach-film] video');
   assert.equal(await video.count(),1,'The narrated Teach and Certify overview is missing');
   assert.equal(await video.getAttribute('preload'),'none');assert.equal(await video.getAttribute('autoplay'),null);
-  assert.equal(videoRequests,0,'The overview downloaded before reader intent');
+  if(videoRequests.length){const state=await video.evaluate(v=>({networkState:v.networkState,readyState:v.readyState,currentSrc:v.currentSrc.split('/').pop()}));assert.fail(`The overview downloaded before reader intent (${engine}): ${JSON.stringify({requests:videoRequests,state})}`);}
   await video.scrollIntoViewIfNeeded();await video.evaluate(v=>{v.muted=true;return v.play();});
   await until(()=>video.evaluate(v=>!v.paused&&v.currentTime>0),'The overview did not decode and play');
   assert.equal(await video.evaluate(v=>Math.round(v.duration)),40);
