@@ -30,7 +30,7 @@ function run(name,target=project){
 run('skills-download');
 const root=join(cache,`decisio-skills-${meta.version}`);
 const manifest=JSON.parse(readFileSync(join(root,'manifest.json'),'utf8'));
-assert.equal(manifest.version,meta.version);assert.equal(manifest.decisioVersion,meta.decisioVersion);assert.deepEqual(manifest.skills,meta.skills);
+assert.equal(manifest.version,meta.version);assert.equal(manifest.minDecisio,meta.minDecisio);assert.deepEqual(manifest.skills,meta.skills);
 const digest=data=>createHash('sha256').update(data).digest('hex');
 const walk=(dir,base=dir)=>readdirSync(dir,{withFileTypes:true}).flatMap(e=>{
  const path=join(dir,e.name);assert.ok(!lstatSync(path).isSymbolicLink(),'archive contains a symlink');
@@ -71,7 +71,7 @@ const temp=join(work,'test temporary files');mkdirSync(temp);
 const testFiles=readdirSync(join(root,'test')).filter(n=>n.endsWith('.test.mjs')).map(n=>'test/'+n);
 const result=execFileSync(process.execPath,['--test','--test-reporter=tap',...testFiles],{cwd:root,env:{...process.env,TMPDIR:temp},encoding:'utf8'});
 assert.match(result,/# pass 28\b/);execFileSync(process.execPath,['scripts/check.mjs'],{cwd:root,encoding:'utf8'});
-const record={version:meta.version,decisioVersion:meta.decisioVersion,sha256:meta.sha256,date,blocks:records};
+const record={version:meta.version,minDecisio:meta.minDecisio,sha256:meta.sha256,date,blocks:records};
 if(process.argv.includes('--write'))writeFileSync('verification/skills.json',JSON.stringify(record,null,'\t')+'\n');
 else {const problems=evidenceProblems(JSON.parse(readFileSync('verification/skills.json','utf8')),blocks);assert.deepEqual(problems,[]);}
 console.log(`skills: public archive, ${Object.keys(manifest.files).length} manifest files, seven published commands, both host layouts and 28 bundled tests pass`);

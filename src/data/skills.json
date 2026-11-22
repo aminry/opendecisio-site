@@ -1,9 +1,9 @@
 {
   "repository": "aminry/decisio-skills",
-  "version": "0.1.5",
-  "decisioVersion": "0.52.0",
-  "archive": "decisio-skills-0.1.5.zip",
-  "sha256": "7c1b56b014b8a85b10cdb658cb1881170cb158905099c1d5bd55b6e9579b741c",
+  "version": "0.2.0",
+  "minDecisio": "0.52.0",
+  "archive": "decisio-skills-0.2.0.zip",
+  "sha256": "1415966fd12f894c320cea6612451d9ba9214931cae6e63c20afcb5b0fa9beb4",
   "skills": [
     "decisio-setup",
     "decisio-request",

@@ -70,7 +70,8 @@ These writing rules stay binding and checked:
 Public pages, Markdown exports and downloads never display source commit identifiers or link to commit pages.
 Keep release tags and artifact checksums where they identify a reproducible dependency or download; the build still checks its release pin.
 
-Skill installation examples name a published package version and archive checksum, with references compatible with the documented decisio release.
+Skill installation examples name a published package version and archive checksum.
+The package works with the latest decisio from its floor (`minDecisio`) on, and the site accepts it while that floor is at or below the documented decisio release, so a decisio release needs no new package.
 Show project scope first and make personal scope an explicit choice.
 Keep each installed skill self-contained, including its references and assets, and link the host's discovery instructions.
 

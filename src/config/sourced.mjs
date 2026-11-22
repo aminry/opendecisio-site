@@ -88,6 +88,15 @@ export const sourced = [
 		['a block that would push the row over the engine\'s prompt ceiling is left out', calculator, 'a block that would push the row over the engine\'s prompt ceiling is left out'],
 		['an Ollama listing does not run decisio\'s server', calculator, 'an Ollama listing does not run decisio\'s server'],
 	]),
+	// decisio 0.53.0: label review in the registration response
+	...fromPage('/docs/tasks/', [
+		['the labelled examples whose label looks wrong', tasksDoc, 'The registration response flags the labelled examples whose label looks wrong'],
+		['A flag means the model, fitted on your other examples, is at least 90% sure of another option and gives your label 2% or less.', tasksDoc, 'A flag means: the model, fitted on your other examples, is at least 90% sure of another option and gives yours 2% or less.'],
+		['decisio never drops or changes a label', tasksDoc, 'decisio never drops or changes a label'],
+		['A flag is a reason to look, not proof, and no flag does not mean every label is right.', tasksDoc, 'A flag is a reason to look, not proof; no flag does not mean every label is right.'],
+		['choice and yes/no tasks with at least 20 labelled examples', tasksDoc, 'choice and yes/no tasks with at least 20 labelled examples, on Gemma 4 12B and the tuned 12B repositories'],
+		['the field says why there is no review', tasksDoc, 'the field says why there is no review'],
+	]),
 	// decisio 0.51.0 and 0.51.1: the date and time block, the cascade reader, a repository that turns it on; Decisio v3 records both
 	...fromPage('/docs/calculator/', [
 		['so the server adds the exact values for bills, invoices, payslips and dates with no flag', 'README.md', 'For bills, invoices, payslips and dates, the server adds the exact values a question depends on before the model reads the text'],
