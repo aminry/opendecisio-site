@@ -69,7 +69,7 @@ The guides have the commands: [on a cloud GPU](/docs/deploy/cloud-gpu/), [with D
 
 - At start, the server asks the engine for the longest request that fits the card, and serves the largest multiple of 8,192 under it and under the ceiling.
 - If not even 32,768 fits, the server does not start, and says what length would fit.
-- The length stays at 32,768 with `--image-model`, `--head-engine`, `--engine-process separate`, on a Mac and on the CPU stand-in.
+- The length stays at 32,768 with `--image-model`, `--engine-process separate`, on a Mac and on the CPU stand-in.
 - How much a card gives depends on `--gpu-memory-utilization`: on the 80 GB H100 the 31B served 98,304 tokens at 0.90 and did not start at 0.70.
 
 Each request holds:

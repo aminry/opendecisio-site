@@ -65,7 +65,7 @@ The 31B answered 50 questions about one 3,000-token text in 1.08 s.
 | Gemma 4 12B | one at a time, from the one read | the same choice; probabilities within 0.035 |
 | Qwen3.6-35B-A3B | one at a time, from the one read | the same probabilities |
 
-A second engine changes this: with `--head-engine` or `--image-model` the engine runs in its own process, so the 31B scores the questions one at a time and serves texts of up to 32,768 tokens.
+A second engine changes this: with `--image-model` the engine runs in its own process, so the 31B scores the questions one at a time and serves texts of up to 32,768 tokens.
 A request has no cap on its questions, but the response grows with them: for thousands, send several requests about the same text.
 Under the plain layout the later ones read the text from the cache; under the header layout each reads it again.
 
@@ -130,7 +130,6 @@ print("options answered:", len(answer["probabilities"]))
 | `--register-boundary off` | never marks it; the default, and the only setting, when `--engine` turns vLLM's prefix cache off | a later question re-reads the text; for traffic that asks one question per text |
 | `--layout plain` | the text, then the question, as the Qwen model reads it, for every request that names no layout; one request asks for it with `"layout": "plain"` | a later, different question about a text reads it from the cache; the Gemma models' default, `header`, answered more accurately on most of what was measured |
 | `--multi-question` | `warm`, the 31B's default, scores a request's questions in one batch; `sequential` scores them one at a time | see [the table above](#ask-many-questions-in-one-request) |
-| `--head-engine` | answers a taught task's head questions from a second engine | a second copy of the weights on the card, and no image engine |
 
 ::source[The boundary's costs were measured on decisio 0.8.1, one RTX PRO 6000 at 585 W, 2026-10-06.]
 

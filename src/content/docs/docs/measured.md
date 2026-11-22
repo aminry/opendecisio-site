@@ -83,7 +83,6 @@ On the commit-think repository, against the same model without thinking, on held
 - The 12B in FP8's accuracy and calibration: its answers were compared with the bf16 12B's on 200 questions only, and its temperatures are the bf16 12B's.
 - Accuracy at long length on a full test set: no set has a text over 32,768 tokens.
 - The 31B's 6-bit Mac build on MMLU-Pro, and its server times.
-- Latency with the intent head on a second engine.
 - Ollama on a 16 GB machine, and its answers beyond the 300 text questions and 257 image questions measured against decisio's own servers.
 - The previous tuned 12B's accuracy was measured in bf16 against the untrained 12B on held-out items; [the announcement](/news/tuned-12b/) has its limits. Decisio v3's figures are on [Serve Decisio v3](/docs/deploy/tuned-12b/#how-accurate-is-it).
 - Fine-tuned adapters under the header layout. That is why an adapter that records no layout is served plain.

@@ -26,7 +26,6 @@ export const edits = [
 	{"file": "docs/api.md", "find": "- `POST /v1/answer` takes `header_questions` too, with the same rules (its questions' `instructions` are the lines).\n", "replace": "", "why": "keep the supported request behavior without verification-route annotations"},
 	{"file": "docs/api.md", "find": "- `POST /v1/answer` and requests with images never carry the block.", "replace": "- Requests with images never carry the block.", "why": "keep the supported request behavior without verification-route annotations"},
 	{"file": "docs/api.md", "find": " (test I7)", "replace": "", "why": "keep the supported request behavior without verification-route annotations"},
-	{"file": "docs/upgrading.md", "find": "## Unreleased: label review in the registration response", "replace": "## 0.53.0: label review in the registration response", "why": "decisio released the note in 0.53.0 without renaming its heading; drop this edit once decisio's file names the release"},
 ];
 
 // A run-folder citation whose name carries a session code after its date (`runs/2026-10-15_s12-session/K2/`,
