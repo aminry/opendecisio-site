@@ -25,7 +25,7 @@ In the container, `DECISIO_BASE` and `DECISIO_PORT` do the same as `--base` and 
 | `--batch-invariant` | off by default; `on` keeps repeated 12B reads independent of the batch and prefix cache, at an added cost; certify again after a change ([Set up for production](/docs/production/)) |
 | `--served-name` | the name `GET /v1/models` lists, kept stable across a change of model |
 | `--kv-cache-dtype` | `fp8` holds a longer text, but suspends a certificate made without it |
-| `--engine-process` | matters only with a second engine (`--image-model`, `--head-engine`, `--one-engine`) |
+| `--engine-process` | matters only with a second engine (`--image-model`, `--one-engine`) |
 | `--backend mlx` | serves on a Mac, from an MLX build |
 
 The text length and the cache type are part of what a certificate covers: change either, and certify your tasks again.

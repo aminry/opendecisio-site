@@ -111,7 +111,7 @@ These compare the taught server with the untaught one on the same messages, whic
 ## What it costs
 
 - **Teaching:** every example is scored once, plus the fit, as in the times above.
-- **Each later question:** a correction costs nothing extra. A question the intent head answers takes extra work on the server: :value{name="head-cost"}
+- **Each later question:** a correction costs nothing extra. With the engine in the server's process, the default, a question the intent head answers reads its hidden state in its own request, with no extra request: on Gemma 4 12B about 55 ms of client time, where a plain question took 76 ms on first sight and 55 ms repeated (300 BANKING77 questions on one RTX PRO 6000).
 
 ::source{name="triage-demo"}
 

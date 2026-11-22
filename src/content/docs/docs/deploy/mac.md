@@ -126,7 +126,7 @@ The Qwen listing, `aminroudaki/decisio`, needs Ollama 0.35.1 through 0.40.3; on 
 
 ## What does a Mac not serve?
 
-- Box questions, the Qwen base's second image engine (`--image-model`), adapters (`--adapter`), packed mode, or the intent head on a second engine (`--head-engine`).
+- Box questions, the Qwen base's second image engine (`--image-model`), adapters (`--adapter`), packed mode.
 - FP8 checkpoints: a Mac always names an MLX build with `--model`.
 - Teaching a task works, slowly: on the 31B 4-bit, about an hour for 770 labelled examples (77 options) and about 2.6 hours for 1,500 (150 options).
 
