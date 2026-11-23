@@ -88,6 +88,21 @@ export const sourced = [
 		['a block that would push the row over the engine\'s prompt ceiling is left out', calculator, 'a block that would push the row over the engine\'s prompt ceiling is left out'],
 		['an Ollama listing does not run decisio\'s server', calculator, 'an Ollama listing does not run decisio\'s server'],
 	]),
+	// decisio 0.55.0: certification from traffic labels and Average error, in the approved wording
+	...fromPage('/docs/tasks/certify/', [
+		["drawing the certification labels from live traffic needed about a third as many labels as labelling at random at alpha 0.10, and under half as many at alpha 0.05", tasksDoc, "drawing the certification labels from live traffic needed about a third as many labels as labelling at random at alpha 0.10, and under half as many at alpha 0.05"],
+		["This is a measured saving, not a promise, and it applies to tasks whose most confident answers are almost always right.", tasksDoc, "This is a measured saving, not a promise, and it applies to tasks whose most confident answers are almost always right."],
+		["certified coverage stayed small: the largest share at alpha 0.05 was 4%, with up to 2,000 labels.", tasksDoc, "certified coverage stayed small: the largest share at alpha 0.05 was 4%, with up to 2,000 labels."],
+		["so we make no saving or coverage claim at those levels", tasksDoc, "so we make no saving or coverage claim at those levels"],
+		["by a draw that does not depend on the right answer", tasksDoc, "by a probability draw that does not depend on the right answer"],
+		["Nothing is logged per request unless the task opts in", tasksDoc, "Nothing is logged per request unless the task opts in."],
+		["and never the request's text or state", tasksDoc, "Never the request's text or state."],
+		["takes up to 1,000 labels", tasksDoc, "takes up to 1,000 labels"],
+		["A drawn answer not labelled by its due date counts as an error.", tasksDoc, "a drawn answer not labelled by its due date counts as an error"],
+		["at 300 drawn labels by default", tasksDoc, "`certify.looks` (default `[300]`)"],
+		["On average over the labelled examples and over windows of answers like this one, at most 5% of the answers marked in a window are wrong. A particular window can have a higher share. Marks are given when the window closes.", tasksDoc, "On average over the labelled examples and over windows of answers like this one, at most 5% of the answers marked in a window are wrong. A particular window can have a higher share. Marks are given when the window closes."],
+		["and never certifies them", tasksDoc, "no answer is ever `certified: true` in this mode"],
+	]),
 	// decisio 0.53.0: label review in the registration response
 	...fromPage('/docs/tasks/', [
 		['the labelled examples whose label looks wrong', tasksDoc, 'The registration response flags the labelled examples whose label looks wrong'],
