@@ -63,6 +63,9 @@ Use [Teach a task](/docs/tasks/) for a complete registration and [Certify answer
 | `GET /v1/tasks/{task_id}/labels/status` | Counts by state and slice, revisions, and the labels the certificate's region still needs |
 | `PUT /v1/tasks/{task_id}/labels/settings` | Change label settings, which starts a new epoch |
 | `GET /v1/tasks/{task_id}/labels/export` | Every logged question with its stored fields, draw, state and label, as JSON lines |
+| `PUT /v1/tasks/{task_id}/labels/callback` | Set or change the HTTPS URL for Average error (FDR) marks and return a new signing secret once |
+| `POST /v1/tasks/{task_id}/labels/callback/rotate` | Make a new signing secret for the same URL and return it once |
+| `DELETE /v1/tasks/{task_id}/labels/callback` | Turn off delivery. The marks stay in the status and export |
 | `DELETE /v1/tasks/{task_id}/labels/{request_id}` | Erase one request's logged answers and labels |
 | `DELETE /v1/tasks/{task_id}/labels` | With `?before=<seconds since the epoch>`, erase every answer served and every label received before that time |
 
@@ -93,6 +96,7 @@ Every key in `certify` is optional.
 | `holdout` | Share of the registration examples held back, default 0.5 |
 | `suspend_on_alert` | Suspend certification while the monitor alerts, default `true` |
 | `examples` | Separate labelled certification examples, never used for fitting |
+| `callback` | In `average_error` mode, set `{"url": "https://..."}` to receive signed marks for each closed window |
 
 The returned `certificate` includes `threshold`, `alpha`, `delta`, `n`, `certified_share`, `split` and `summary`.
 A `null` threshold certifies nothing.

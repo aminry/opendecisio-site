@@ -15,7 +15,7 @@ decisio's task docs state the measured saving:
 
 > In our tests on classification tasks where 30% of answers could be certified, drawing the certification labels from live traffic needed about a third as many labels as labelling at random at alpha 0.10, and under half as many at alpha 0.05. This is a measured saving, not a promise, and it applies to tasks whose most confident answers are almost always right.
 
-The measurements are in decisio's [labels-needed run record](https://github.com/aminry/decisio/tree/main/runs/2026-11-23_labels-needed).
+The measurements are in decisio's [labels-needed run record](https://github.com/aminry/decisio/tree/v0.56.0/runs/2026-11-23_labels-needed).
 
 ## How it works
 

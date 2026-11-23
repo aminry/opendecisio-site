@@ -102,6 +102,8 @@ At alpha 0.01 and 0.005, none of those multilingual tasks reached a certificate 
 - **Label:** `GET /v1/tasks/{id}/labels/queue` lists the drawn answers to label, without the served answer, and `POST /v1/tasks/{id}/labels` takes up to 1,000 labels by `request_id`. A drawn answer not labelled by its due date counts as an error.
 - **Serve:** the certificate from examples serves until the first look, at 300 drawn labels by default, and that look's certificate replaces it. A label monitor suspends certification when the labelled error rises above your rate.
 
+Erasing an answer in the current traffic certificate's cohort withdraws that certificate at once. The server recomputes it, counting the erased answer as wrong at confidence 1. Answers that age out under `ttl_days` are dropped from the cohort before recomputing.
+
 With `"certify": {"mode": "average_error"}` a task that takes labels marks windows of its answers instead, and never certifies them.
 Its promise at alpha 0.05:
 
@@ -109,7 +111,9 @@ Its promise at alpha 0.05:
 On average over the labelled examples and over windows of answers like this one, at most 5% of the answers marked in a window are wrong. A particular window can have a higher share. Marks are given when the window closes.
 :::
 
-The measurements are in decisio's [labels-needed run record](https://github.com/aminry/decisio/tree/main/runs/2026-11-23_labels-needed).
+To receive each closed window's marks as a signed HTTPS callback, set `certify.callback` when registering the task or use the [callback endpoints](/docs/api/#tasks).
+
+The measurements are in decisio's [labels-needed run record](https://github.com/aminry/decisio/tree/v0.56.0/runs/2026-11-23_labels-needed).
 
 ## Pick a line by hand
 
