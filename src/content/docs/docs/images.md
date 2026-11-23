@@ -84,7 +84,7 @@ Four ways to send one:
 | An `assets` placeholder | `{"type": "image", "format": "png", "data_base64": "..."}`, named in the text, as System One sends images |
 | A `multipart/form-data` request | the JSON in `request`, each file in its own part |
 
-- PNG, JPEG or WebP; an animated image is refused.
+- The image route accepts only PNG, JPEG and WebP. An animated image is refused.
 - Up to 20 MB and 20 megapixels each; a request body over 32 MiB is refused with 413.
 - A multipart request needs an `X-Decisio-Client` header, any value, or it is refused with 415.
 - TypeSafe's Python SDK sends images as it does to System One, with nothing added.

@@ -15,7 +15,21 @@ uv run python -c "from importlib.metadata import version; print(version('decisio
 
 ::figure{name="release-timeline"}
 
-## The latest release: 0.55.0
+## The latest release: 0.56.0
+
+Released on 2026-11-23.
+A certificate from traffic labels is recomputed when you erase an answer from its cohort.
+
+**0.56.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.56.0)
+
+- **Traffic certificates:** The old certificate is withdrawn at once. An erased answer counts as wrong at confidence 1. Answers that age out under `ttl_days` are dropped, and the certificate is recomputed on the smaller cohort.
+- **Label records:** Erase events keep a keyed digest of the request ID. Fit records identify the labels they used by keyed digest.
+- **Average error (FDR):** Opt in to a signed HTTPS callback for each closed window's marks.
+- **Images:** The image route accepts only PNG, JPEG and WebP.
+- **Small base:** Gemma 4 E4B support is removed. Use `--base qwen3.5-4b` and register your tasks again for the new model.
+- **Serving engine:** The serving image uses vLLM 0.31.0.
+
+## The earlier release summary: 0.55.0
 
 Released on 2026-11-23.
 A task can now collect labels from its own traffic, opt-in, and be certified from them, so its accuracy is measured and its certificate checked on the requests it really serves.
@@ -28,19 +42,6 @@ A task can now collect labels from its own traffic, opt-in, and be certified fro
 - **Erasure and a label monitor:** erase one request's logged answers and labels, or everything before a time; the monitor reads the labels against the certificate.
 - **Fast tables:** under `auto` the static student is kept unless the encoder saves more than 10 points more, and a certified live table is judged on whole-request time.
 - **On Gemma 4 12B,** score tasks of 3 to 4 and of 10 or more levels get the evidence-averaged calibration, and two-option choice tasks get no label review.
-
-## The earlier release summary: 0.54.0
-
-Released on 2026-11-22.
-A taught task's intent head now reads its hidden state in the question's own request, with no extra request, on every base, and the second-engine head mode is gone.
-
-**0.54.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.54.0)
-
-- **Breaking:** `--head-engine` and `--head-gpu-memory-utilization` are removed, and a server started with them refuses to start. Drop the flags ([Upgrade](/docs/upgrading/)).
-- **The intent head in the question's own request**, with the engine in the server's process: on Gemma 4 12B about 55 ms of client time per head question ([Teach a task](/docs/tasks/)).
-- **Score questions get no intent head;** a score task gets calibration alone.
-- **On Gemma 4 12B, from 50 labelled examples,** a task's calibration fits its temperature and bias together.
-- **`--hf-device` and `--hf-dtype`** read a model through transformers on a card.
 
 The upgrade notes below say who is affected, and what to do.
 

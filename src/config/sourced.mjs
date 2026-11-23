@@ -88,6 +88,38 @@ export const sourced = [
 		['a block that would push the row over the engine\'s prompt ceiling is left out', calculator, 'a block that would push the row over the engine\'s prompt ceiling is left out'],
 		['an Ollama listing does not run decisio\'s server', calculator, 'an Ollama listing does not run decisio\'s server'],
 	]),
+	// decisio 0.56.0: the release summary and changes to the public references.
+	...fromPage('/docs/releases/', [
+		['Released on 2026-11-23.', 'CHANGELOG.md', 'compare/v0.55.0...v0.56.0) (2026-11-23)'],
+		['A certificate from traffic labels is recomputed when you erase an answer from its cohort.', upgrading, 'A certificate from traffic labels is made again when an answer of its cohort is erased'],
+		['The old certificate is withdrawn at once.', tasksDoc, 'the old one is withdrawn at once'],
+		['An erased answer counts as wrong at confidence 1.', upgrading, 'The erased answer counts as wrong at confidence 1'],
+		['Answers that age out under ttl_days are dropped, and the certificate is recomputed on the smaller cohort.', upgrading, 'Answers that age out under `ttl_days` are dropped from the cohort, not counted wrong**, and the certificate is made again on the smaller cohort'],
+		['Erase events keep a keyed digest of the request ID.', upgrading, 'An erase event keeps a keyed digest of the request id it erased'],
+		['Fit records identify the labels they used by keyed digest.', upgrading, "A fit's record of the labels it used holds keyed digests too"],
+		["Opt in to a signed HTTPS callback for each closed window's marks.", upgrading, "an opt-in signed callback for the Average error (FDR) marks"],
+		["Opt in to a signed HTTPS callback for each closed window's marks.", upgrading, "each closed window's marks POSTed to an https URL"],
+		['The image route accepts only PNG, JPEG and WebP.', upgrading, 'The image route accepts only PNG, JPEG and WebP'],
+		['Gemma 4 E4B support is removed.', upgrading, 'Gemma 4 E4B support is removed.'],
+		['Use --base qwen3.5-4b and register your tasks again for the new model.', upgrading, 'with `--base qwen3.5-4b` and remove any E4B checkpoint or revision flags. Register tasks for the new model'],
+		['The serving image uses vLLM 0.31.0.', running, "The image is vLLM's 0.31.0 release image"],
+	]),
+	...fromPage('/docs/tasks/certify/', [
+		["Erasing an answer in the current traffic certificate's cohort withdraws that certificate at once.", tasksDoc, "When an erasure removes an answer of the certificate in force's cohort"],
+		["Erasing an answer in the current traffic certificate's cohort withdraws that certificate at once.", tasksDoc, 'the old one is withdrawn at once'],
+		['The server recomputes it, counting the erased answer as wrong at confidence 1.', upgrading, 'The erased answer counts as wrong at confidence 1'],
+		['Answers that age out under ttl_days are dropped from the cohort before recomputing.', upgrading, 'Answers that age out under `ttl_days` are dropped from the cohort'],
+		["To receive each closed window's marks as a signed HTTPS callback, set certify.callback when registering the task or use the callback endpoints.", upgrading, "each closed window's marks POSTed to an https URL** (`docs/tasks.md`, \"The marks callback\"), with `certify.callback` at registration or `PUT /v1/tasks/{id}/labels/callback`"],
+	]),
+	...fromPage('/docs/api/', [
+		['callback In average_error mode, set {"url": "https://..."} to receive signed marks for each closed window', tasksDoc, "With `\"callback\": {\"url\": \"https://...\"}` in the certify block, the server also POSTs each closed window's marks to that URL"],
+		['PUT /v1/tasks/{task_id}/labels/callback Set or change the HTTPS URL for Average error (FDR) marks and return a new signing secret once', tasksDoc, 'sets or changes the URL and makes a new secret'],
+		['POST /v1/tasks/{task_id}/labels/callback/rotate Make a new signing secret for the same URL and return it once', tasksDoc, 'makes a new secret for the same URL; both answer it once'],
+		['DELETE /v1/tasks/{task_id}/labels/callback Turn off delivery. The marks stay in the status and export', tasksDoc, 'turns it off; the marks stay in the status and the export'],
+	]),
+	...fromPage('/docs/images/', [
+		['The image route accepts only PNG, JPEG and WebP.', upgrading, 'The image route accepts only PNG, JPEG and WebP'],
+	]),
 	// decisio 0.55.0: certification from traffic labels and Average error, in the approved wording
 	...fromPage('/docs/tasks/certify/', [
 		["drawing the certification labels from live traffic needed about a third as many labels as labelling at random at alpha 0.10, and under half as many at alpha 0.05", tasksDoc, "drawing the certification labels from live traffic needed about a third as many labels as labelling at random at alpha 0.10, and under half as many at alpha 0.05"],
@@ -140,9 +172,11 @@ export const sourced = [
 	...fromPage('/docs/layout/', [
 	]),
 	...fromPage('/docs/bases/', [
-		['each at its pinned revision, in bf16, on the vLLM server', running, 'each at its pinned revision, in bf16, on the vLLM server'],
-		['1.0 for every question type until a fit on their own reads replaces it', running, '1.0 for every question type until a fit on their own reads replaces it'],
-		['Not measured yet: accuracy, calibration and latency. MLX does not serve them.', running, '**Not measured yet on this release:** accuracy, calibration and latency. MLX does not serve them.'],
+		['--base qwen3.5-4b serves the small base, Qwen/Qwen3.5-4B, at its pinned revision in bf16 on the vLLM server.', running, '`--base qwen3.5-4b` serves the small base, `Qwen/Qwen3.5-4B`, at its pinned revision in bf16 on the vLLM server.'],
+		["Text only, with the 12B's system turn and header layout.", running, "The 12B's system turn and header layout use Qwen's own chat template"],
+		["Text only, with the 12B's system turn and header layout.", running, "**Text only.** Qwen's text class leaves the vision tower out"],
+		["1.0 for every question type until a fit on this base's reads replaces it.", running, "1.0 for every question type until a fit on this base's reads replaces it."],
+		['Accuracy, calibration and latency are unmeasured in this release.', running, 'Accuracy, calibration and latency are unmeasured in this release.'],
 		['so no yes/no answer sits between 0.20 and 0.80. It changes no answer.', running, 'it changes no answer'],
 		['The calibrated temperatures are yes/no 4.84 in bf16 and 4.72 in FP8 and score 7.85; choice stays at the model\'s 3.592.', running, 'yes/no 4.84 (bf16) or 4.72 (FP8), each fitted on its own precision\'s readouts, and score 7.85 for both'],
 		['They were fitted on items that share no text with a public benchmark\'s test set.', running, 'Every item they were fitted on shares no text with a public benchmark\'s test set.'],

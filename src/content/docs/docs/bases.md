@@ -5,7 +5,7 @@ description: Start with Decisio v3, or pick an untrained model by your machine a
 
 <!-- Site-written: the Choosing a model reference. The start commands are the README's "Choosing a base" at the pinned release; the checkpoints, weights and reasons are the README's and docs/running.md's there (src/config/sourced.mjs checks them). The comparisons between the models are on Benchmarks. -->
 
-::covers{links="README.md#choosing-a-base docs/running.md#flavors=serve-a-flavor docs/running.md#the-31b-in-bf16=the-31b-in-bf16 docs/running.md#the-12b-in-two-precisions=the-12b-in-fp8 docs/running.md#the-12b-in-two-precisions-bf16-and-fp8=the-12b-in-fp8 docs/running.md#the-small-bases=the-small-bases"}
+::covers{links="README.md#choosing-a-base docs/running.md#flavors=serve-a-flavor docs/running.md#the-31b-in-bf16=the-31b-in-bf16 docs/running.md#the-12b-in-two-precisions=the-12b-in-fp8 docs/running.md#the-12b-in-two-precisions-bf16-and-fp8=the-12b-in-fp8 docs/running.md#the-small-bases=the-small-base"}
 
 Start with **Decisio v3**, a Gemma 4 12B tuned for decisions, on a GPU, a Mac or Ollama: [Serve Decisio v3](/docs/deploy/tuned-12b/) has its repositories.
 The untrained models are one flag away: `--base` serves each with every setting it was measured with.
@@ -96,15 +96,17 @@ How a flavor is served:
 - **Its accuracy, calibration and latency are not measured,** and the FP8 31B's records do not carry over to it.
 - It runs on the vLLM server only, with no flavors.
 
-## The small bases
+## The small base
 
-`--base qwen3.5-4b` serves `Qwen/Qwen3.5-4B` and `--base gemma-4-e4b` serves `google/gemma-4-E4B-it`, each at its pinned revision, in bf16, on the vLLM server:
+<span class="fp-anchor" id="the-small-bases"></span>
+
+`--base qwen3.5-4b` serves the small base, `Qwen/Qwen3.5-4B`, at its pinned revision in bf16 on the vLLM server.
 
 ::upstream{file="docs/running.md" section="The small bases" block="1"}
 
-- **Text only,** with the 12B's prompt and the header layout.
-- **Their temperatures are not fitted yet:** 1.0 for every question type until a fit on their own reads replaces it.
-- **Not measured yet:** accuracy, calibration and latency. MLX does not serve them.
+- **Text only,** with the 12B's system turn and header layout.
+- **Temperature:** 1.0 for every question type until a fit on this base's reads replaces it.
+- **Measurements:** Accuracy, calibration and latency are unmeasured in this release.
 
 ## What next
 
