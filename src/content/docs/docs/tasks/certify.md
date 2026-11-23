@@ -5,7 +5,7 @@ description: Get answers the server stands behind. You choose the error rate; th
 
 <!-- Site-written: the second Teach and trust guide, rewritten from decisio's docs/tasks.md ("Certified answers") at the pinned release; its worked example's request is decisio's (::upstream) and the certificate and answers are that example recorded on the pinned release on the 31B, as is example 5's line by hand (src/lib/recorded.mjs), with the manual threshold and abstention from the former Use the probability guide and docs/api.md. The slider is the teach-and-certify runs' support inbox (src/lib/figures/tasks.mjs); the facts are docs/tasks.md's (src/config/sourced.mjs checks them). -->
 
-::covers{links="docs/tasks.md#certified-answers docs/tasks.md#what-certified-means=1-know-the-promise docs/tasks.md#a-worked-example=2-teach-the-task-with-a-certificate docs/tasks.md#how-many-examples-it-takes=4-have-enough-examples docs/tasks.md#where-it-stops=limits docs/api.md#abstention=let-the-server-abstain"}
+::covers{links="docs/tasks.md#certified-answers docs/tasks.md#what-certified-means=1-know-the-promise docs/tasks.md#a-worked-example=2-teach-the-task-with-a-certificate docs/tasks.md#how-many-examples-it-takes=4-have-enough-examples docs/tasks.md#where-it-stops=limits docs/api.md#abstention=let-the-server-abstain docs/tasks.md#labels-from-traffic-opt-in=certify-from-traffic-labels"}
 
 Add a `certify` block when you teach a task, and every answer says whether it is certified.
 Pick how often a certified answer may be wrong; the server finds the threshold that keeps that promise:
@@ -88,6 +88,29 @@ A certificate covers one task on one serving setup, so a change to the setup mea
 [Set up for production](/docs/production/#keep-a-certificate-valid) lists what to pin and when to certify again.
 A task is also fitted under one [prompt layout](/docs/layout/#certify-under-the-layout-your-clients-send) and certifies only that layout's requests.
 
+## Certify from traffic labels
+
+A certificate can come from the requests the task really serves, not only from examples you gathered beforehand.
+Register the task with a `labels` block beside its `certify` block: the server picks which answers to ask you about, by a draw that does not depend on the right answer, and the labels you post for them make the certificate.
+
+In our tests on classification tasks where 30% of answers could be certified, drawing the certification labels from live traffic needed about a third as many labels as labelling at random at alpha 0.10, and under half as many at alpha 0.05. This is a measured saving, not a promise, and it applies to tasks whose most confident answers are almost always right.
+
+On the hard multilingual tasks we tested (60-option intent sets and paraphrase detection), certified coverage stayed small: the largest share at alpha 0.05 was 4%, with up to 2,000 labels.
+At alpha 0.01 and 0.005, none of those multilingual tasks reached a certificate with up to 2,000 labels, so we make no saving or coverage claim at those levels.
+
+- **Opt in:** `"labels": true`, or settings such as `{"audit_pi": 0.05, "due_days": 7}`. Nothing is logged per request unless the task opts in, and never the request's text or state.
+- **Label:** `GET /v1/tasks/{id}/labels/queue` lists the drawn answers to label, without the served answer, and `POST /v1/tasks/{id}/labels` takes up to 1,000 labels by `request_id`. A drawn answer not labelled by its due date counts as an error.
+- **Serve:** the certificate from examples serves until the first look, at 300 drawn labels by default, and that look's certificate replaces it. A label monitor suspends certification when the labelled error rises above your rate.
+
+With `"certify": {"mode": "average_error"}` a task that takes labels marks windows of its answers instead, and never certifies them.
+Its promise at alpha 0.05:
+
+:::note
+On average over the labelled examples and over windows of answers like this one, at most 5% of the answers marked in a window are wrong. A particular window can have a higher share. Marks are given when the window closes.
+:::
+
+The measurements are in decisio's [labels-needed run record](https://github.com/aminry/decisio/tree/main/runs/2026-11-23_labels-needed).
+
 ## Pick a line by hand
 
 Without a certificate, you can still keep the answers above a line you choose and escalate the rest.
@@ -152,4 +175,4 @@ A threshold applies only on the served name it was fitted for, so fit it on the 
 
 - [Watch for drift](/docs/tasks/drift/): know when traffic moves away from the examples a certificate was made on.
 - [Certified answers on real tasks](/demos/teach-and-certify/): the support inbox, a drift alarm and a coding-agent gatekeeper.
-- [The HTTP API](/docs/api/): the certify block and every field of a certificate.
+- [The HTTP API](/docs/api/#tasks): the certify block, the label routes and every field of a certificate.
