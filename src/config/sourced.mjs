@@ -740,7 +740,7 @@ export const sourced = [
 		['There is no second engine and no second copy of the weights', api, 'no second copy of the weights'],
 		['--images on does not combine with --image-model, --one-engine or --mode packed', running, '`--images on` does not combine with `--image-model`'],
 		['--max-images is the most images one request may carry, 16 unless set', running, '`--max-images` is the most images one request may carry (16 here unless set)'],
-		['an animated image is refused', api, 'An animated image, a PNG or a WebP with more than one frame, is refused on every encoding'],
+		['An animated image is refused.', api, 'An animated image, a PNG or a WebP with more than one frame, is refused on every encoding'],
 		['Up to 20 MB and 20 megapixels each', api, 'up to the 20 MB and 20 megapixel limits'],
 		['a request body over 32 MiB is refused with 413', api, 'A request body over 32 MiB on this route'],
 		['or it is refused with 415', api, 'and is refused with 415 without one'],
