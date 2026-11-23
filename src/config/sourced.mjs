@@ -94,7 +94,7 @@ export const sourced = [
 		['A flag means the model, fitted on your other examples, is at least 90% sure of another option and gives your label 2% or less.', tasksDoc, 'A flag means: the model, fitted on your other examples, is at least 90% sure of another option and gives yours 2% or less.'],
 		['decisio never drops or changes a label', tasksDoc, 'decisio never drops or changes a label'],
 		['A flag is a reason to look, not proof, and no flag does not mean every label is right.', tasksDoc, 'A flag is a reason to look, not proof; no flag does not mean every label is right.'],
-		['choice and yes/no tasks with at least 20 labelled examples', tasksDoc, 'choice and yes/no tasks with at least 20 labelled examples, on Gemma 4 12B and the tuned 12B repositories'],
+		['choice tasks of 3 or more options and yes/no tasks with at least 20 labelled examples', tasksDoc, 'choice tasks of 3 or more options and yes/no tasks, with at least 20 labelled examples, on Gemma 4 12B and the tuned 12B repositories'],
 		['the field says why there is no review', tasksDoc, 'the field says why there is no review'],
 	]),
 	// decisio 0.51.0 and 0.51.1: the date and time block, the cascade reader, a repository that turns it on; Decisio v3 records both

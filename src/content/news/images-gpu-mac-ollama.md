@@ -59,7 +59,7 @@ On Ollama 0.40.16 on an Apple M5 Pro, every tag of the two listings chooses deci
 Install it and start a Gemma server with images on:
 
 ```bash
-pip install "decisio[serve]==0.54.0"
+pip install "decisio[serve]==0.55.0"
 python -m decisio.serve.vllm_engine --base gemma-4-12b --images on
 ```
 

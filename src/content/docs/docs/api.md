@@ -57,6 +57,14 @@ Use [Teach a task](/docs/tasks/) for a complete registration and [Certify answer
 | `POST /v1/tasks/import` | Import an exported object with a `tasks` array |
 | `POST /v1/tasks/{task_id}/certify` | Certify again with new `examples`; optionally set `alpha`, `delta`, `min_examples` and `suspend_on_alert` |
 | `POST /v1/tasks/{task_id}/fast_table/rollback` | Select a retained learned-table version with a JSON `version` number |
+| `POST /v1/tasks/{task_id}/labels` | Post up to 1,000 labels for a task that takes labels, each with an `answer` and one reference (`request_id`, `digest`, `state` or `text`) |
+| `GET /v1/tasks/{task_id}/labels/queue` | List the drawn answers still to label, oldest first, without the served answer |
+| `POST /v1/tasks/{task_id}/labels/decline` | Take items you will not label out of the queue, as `{"request_ids": [...]}` |
+| `GET /v1/tasks/{task_id}/labels/status` | Counts by state and slice, revisions, and the labels the certificate's region still needs |
+| `PUT /v1/tasks/{task_id}/labels/settings` | Change label settings, which starts a new epoch |
+| `GET /v1/tasks/{task_id}/labels/export` | Every logged question with its stored fields, draw, state and label, as JSON lines |
+| `DELETE /v1/tasks/{task_id}/labels/{request_id}` | Erase one request's logged answers and labels |
+| `DELETE /v1/tasks/{task_id}/labels` | With `?before=<seconds since the epoch>`, erase every answer served and every label received before that time |
 
 ### Registration fields
 
