@@ -65,7 +65,7 @@ A flag means the model, fitted on your other examples, is at least 90% sure of a
 
 decisio never drops or changes a label, so check each flagged example, correct it if it is wrong, and register again.
 A flag is a reason to look, not proof, and no flag does not mean every label is right.
-Label review covers choice and yes/no tasks with at least 20 labelled examples on Gemma 4 12B and Decisio v3; elsewhere the field says why there is no review.
+Label review covers choice tasks of 3 or more options and yes/no tasks with at least 20 labelled examples on Gemma 4 12B and Decisio v3; elsewhere the field says why there is no review.
 
 ## 5. Ask, and check that it applied
 

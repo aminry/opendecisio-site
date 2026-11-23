@@ -15,7 +15,21 @@ uv run python -c "from importlib.metadata import version; print(version('decisio
 
 ::figure{name="release-timeline"}
 
-## The latest release: 0.54.0
+## The latest release: 0.55.0
+
+Released on 2026-11-23.
+A task can now collect labels from its own traffic, opt-in, and be certified from them, so its accuracy is measured and its certificate checked on the requests it really serves.
+
+**0.55.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.55.0)
+
+- **Labels from traffic, opt-in at registration:** nothing is logged per request unless a task registers with a `labels` block. The server draws which answers to ask about, and you post labels by request id or by a digest of the input ([API](/docs/api/#tasks)).
+- **Certification from traffic labels**, the default for a task that takes labels.
+- **Average error (FDR):** an opt-in mode that marks windows of answers with an average-error promise and never certifies them.
+- **Erasure and a label monitor:** erase one request's logged answers and labels, or everything before a time; the monitor reads the labels against the certificate.
+- **Fast tables:** under `auto` the static student is kept unless the encoder saves more than 10 points more, and a certified live table is judged on whole-request time.
+- **On Gemma 4 12B,** score tasks of 3 to 4 and of 10 or more levels get the evidence-averaged calibration, and two-option choice tasks get no label review.
+
+## The earlier release summary: 0.54.0
 
 Released on 2026-11-22.
 A taught task's intent head now reads its hidden state in the question's own request, with no extra request, on every base, and the second-engine head mode is gone.
@@ -27,16 +41,6 @@ A taught task's intent head now reads its hidden state in the question's own req
 - **Score questions get no intent head;** a score task gets calibration alone.
 - **On Gemma 4 12B, from 50 labelled examples,** a task's calibration fits its temperature and bias together.
 - **`--hf-device` and `--hf-dtype`** read a model through transformers on a card.
-
-## The earlier release summary: 0.53.0
-
-Released on 2026-11-21.
-A task's registration now points at the labelled examples whose label looks wrong, so you can fix them before you rely on the task.
-
-**0.53.0**, [on GitHub](https://github.com/aminry/decisio/releases/tag/v0.53.0)
-
-- **Label review:** the registration response of a choice or yes/no task carries `label_review`, the examples whose label looks wrong, from answers of the task fitted on the other examples, on Gemma 4 12B and Decisio v3 ([Check the flagged labels](/docs/tasks/#check-the-flagged-labels)). Labels are never changed, and nothing stored changes.
-- **A server stopped by SIGTERM stops its engine processes too.**
 
 The upgrade notes below say who is affected, and what to do.
 
