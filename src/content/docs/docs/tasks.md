@@ -53,7 +53,8 @@ The answer has one record for each correction, `calibration` and `head`:
 | `reason` | why, in words: "cross-validated gain" when it was kept, because it helped on examples it was not fitted on, or what was missing |
 
 The server keeps a correction only when it helps on examples held out from fitting.
-When it declines one, the question is answered exactly as before:
+On Gemma 4 12B and Decisio v3, from 50 labelled examples, choice and yes/no tasks and score tasks of 3 to 4 or 10 or more levels instead get a calibration that fits a temperature and a bias per option together, weighted by how well each fit explains your examples; it is always applied, and its record says `method: "evidence_averaged_temperature_bias"`.
+When the server declines a correction, the question is answered exactly as before:
 - **Too few examples:** add more, up to 20 for the correction or 10 per option for the head, and register again. When the head is declined for this, `short_options` names the options that have too few, each with its count.
 - **The plain answer is already as good:** common for a clear yes/no question.
 - **Labels that disagree:** two people labelling the same kind of input differently look like noise, and the server declines.

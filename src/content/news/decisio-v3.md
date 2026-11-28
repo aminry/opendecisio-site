@@ -63,4 +63,4 @@ Through Ollama the model answers on its own, without decisio's calculator.
 - Decisio v3 needs decisio 0.51.1 or later; the [Quickstart](/docs/) installs it.
 - Tasks and certificates belong to one model and flavor: teach and certify your tasks again on Decisio v3.
 - Decisio v3 was trained on text; how well it reads pictures is not measured.
-- decisio 0.51.0 also adds two small bases, `qwen3.5-4b` and `gemma-4-e4b`, not yet measured ([Release notes](/docs/releases/)).
+- The small base is `qwen3.5-4b`, not yet measured ([Choosing a model](/docs/bases/)).
