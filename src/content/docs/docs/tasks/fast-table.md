@@ -217,11 +217,13 @@ Use `fast_table: true` for the default, or an object with a `kind`.
 | `static`, the default | potion-base-8M | Starting with a low-cost classifier |
 | `static` with `static_model: multilingual` | potion-multilingual-128M | Your traffic uses several languages |
 | `encoder` | bge-base-en-v1.5 | Its additional CPU cost pays on your task and host |
-| `auto` | Tries static and encoder | You want registration to select the larger measured saving |
+| `auto` | Tries static and encoder | You want registration to choose; it keeps static unless the encoder saves more than 10 points more |
 
 Static students read the whole text.
 The encoder reads at most 512 tokens, from the start and end of a longer text.
 This is a student-specific input rule, not a universal recommended state length.
+
+On a host with few CPU cores, a table that uses the encoder can be slower than the model alone when many requests run at once or a request carries several questions; registration times one request at a time.
 
 The first use downloads the chosen student.
 Use the [table image](/docs/deploy/docker/#5-run-fast-tables-with-no-hub-access) when the host cannot reach the Hub, or fetch the student files before registration.
@@ -252,14 +254,17 @@ Inspect `GET /v1/tasks/{id}` and `status.fast_table` for this replica's live sta
 | State | What answers | What to check |
 | --- | --- | --- |
 | `learning` | Decisio while learning data is collected | Whether a candidate has qualified yet |
-| `active` | Classifier where eligible, otherwise decisio | Latency, certified share and drift |
-| `timing` | Decisio while this replica checks the saving | CPU headroom and timing results |
+| `active` | Classifier where eligible, otherwise decisio; one block of questions in ten is answered by decisio alone to measure the saving | Latency, certified share and drift |
+| `timing` | Decisio while this replica checks the saving in short trials | CPU headroom and timing results |
 | `suspended` | Decisio | The alert and whether certification needs updating |
 | `unavailable` | Decisio | Installed extra, student files and registration |
 | `off` on a learning task | Decisio | Whether this replica matches the learned version's serving setup and features |
 
 With `--tasks-dir` or `--task-store`, learning rows survive restarts; without either they stay in memory.
 The rows keep features and model answers, not request text.
+
+While the table answers, the replica compares those blocks with the blocks either side on the whole time of each question.
+If the saving's 90% upper bound falls under `min_saving`, it falls back to decisio (`timing`), and `status.fast_table.switchback` gives the blocks compared, the mean saving and its bound.
 
 To roll back, send a retained version number to `POST /v1/tasks/{id}/fast_table/rollback`.
 The last five versions are kept.

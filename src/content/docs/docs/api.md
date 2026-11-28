@@ -79,6 +79,7 @@ Use [Teach a task](/docs/tasks/) for a complete registration and [Certify answer
 | `context` | A fixed string, object or array read before each changing state; see [fixed context](/docs/tasks/context/) |
 | `layout` | `plain` or `header`, otherwise the server's layout; the task applies under that layout |
 | `certify` | Certificate settings in the table below |
+| `labels` | `true`, or settings such as `{"audit_pi": 0.05, "due_days": 7}`, to collect labels from the task's traffic; without it the task logs nothing per request and its answers carry no request id |
 | `fast_table` | `true` for the default student, or the table settings below |
 | `options` | `dynamic` for a [question whose options change](/docs/tasks/dynamic/) |
 | `match` | `instructions` for a dynamic task |
@@ -96,11 +97,19 @@ Every key in `certify` is optional.
 | `holdout` | Share of the registration examples held back, default 0.5 |
 | `suspend_on_alert` | Suspend certification while the monitor alerts, default `true` |
 | `examples` | Separate labelled certification examples, never used for fitting |
+| `target_share` | For a task that takes labels: the certified share to aim at, which sets the region labels are drawn from |
+| `looks` | For a task that takes labels: the counts of labelled answers at which a certificate is made, default `[300]` |
+| `mode` | `certificate`, the default, or `average_error`, which marks windows of a task's answers and never certifies them |
+| `window` | In `average_error` mode, the answers per window, default 250 |
 | `callback` | In `average_error` mode, set `{"url": "https://..."}` to receive signed marks for each closed window |
 
 The returned `certificate` includes `threshold`, `alpha`, `delta`, `n`, `certified_share`, `split` and `summary`.
 A `null` threshold certifies nothing.
 Each decision says `certified`, `certificate`, `certificate_kind` and, when relevant, `certified_reason`; check these fields in your application.
+
+A task that takes labels and asks for a certificate certifies from its traffic labels by default, and its response carries `traffic_certification`; a task with a fast table keeps its certificate from examples.
+
+Each answer of a task that takes labels has a `request_id`, which `x-decisio-request-id` also gives for the first question, and `label_requested: true` when the server drew it for a label; send the request's language as `meta.lang` or `x-decisio-lang`.
 
 ### Fast-table settings
 
@@ -121,6 +130,8 @@ See [Add a decision fast path](/docs/tasks/fast-table/) for installation, learni
 
 A task record includes `format`, `id`, `key`, `type`, `options`, `fingerprint`, `calibration`, `head`, `certificate`, `context` and `status`.
 The `calibration` and `head` results say `applied` and `reason`; a declined correction leaves the original model answer available.
+
+The registration response of a choice or yes/no task also carries `label_review`, the labelled examples whose label looks wrong ([Teach a task](/docs/tasks/#check-the-flagged-labels)).
 The complete export includes the data needed to import the record.
 
 With a shared store, `store_version` names the version served.

@@ -101,6 +101,8 @@ At alpha 0.01 and 0.005, none of those multilingual tasks reached a certificate 
 - **Opt in:** `"labels": true`, or settings such as `{"audit_pi": 0.05, "due_days": 7}`. Nothing is logged per request unless the task opts in, and never the request's text or state.
 - **Label:** `GET /v1/tasks/{id}/labels/queue` lists the drawn answers to label, without the served answer, and `POST /v1/tasks/{id}/labels` takes up to 1,000 labels by `request_id`. A drawn answer not labelled by its due date counts as an error.
 - **Serve:** the certificate from examples serves until the first look, at 300 drawn labels by default, and that look's certificate replaces it. A label monitor suspends certification when the labelled error rises above your rate.
+- **Level:** alpha is 0.05 by default, and the level you ask for is the level you get. At alpha 0.01 or 0.005 the task needs hundreds of labels in its region and labels on at least 5% of its answers, and a cohort with labels for fewer than 1 - alpha of its answers certifies nothing.
+- **Fast table:** a task with a fast table keeps its certificate from examples, since the table's answers have no label-free score.
 
 Erasing an answer in the current traffic certificate's cohort withdraws that certificate at once. The server recomputes it, counting the erased answer as wrong at confidence 1. Answers that age out under `ttl_days` are dropped from the cohort before recomputing.
 
